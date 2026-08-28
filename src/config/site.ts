@@ -13,6 +13,12 @@ export interface SocialLink {
   icon: string;
 }
 
+/** Un tramo del horario de apertura: qué días y en qué horas. */
+export interface FranjaHorario {
+  dias: string;
+  horas: string;
+}
+
 // --- Datos en crudo ---------------------------------------------------------
 // Los usan varios sitios (cabecera, pie y la sección de contacto), así que
 // viven sueltos aquí arriba y todo lo demás se deriva de ellos. Editar solo
@@ -26,6 +32,15 @@ const DIRECCION_POSTAL = "Calle Escultor Marín Higuero 6. Es1,pl1,pt7";
 // de wa.me se saca de aquí quitando todo lo que no sea dígito.
 const WHATSAPP_VISIBLE = "+34 600 00 00 00";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_VISIBLE.replace(/\D/g, "")}`;
+
+// TODO: confirmar que es esta calle. Coordenadas del portal resueltas contra
+// Nominatim (OpenStreetMap). Ojo: existe otra "Calle Escultor Marín Higuero"
+// en Arriate, también en Málaga, pero allí no hay número 6.
+//
+// Ya no se usan para pintar nada: el mapa es una imagen estática. Se quedan
+// como referencia de dónde está centrada, que hace falta para regenerarla si
+// cambia la dirección (src/assets/README.md explica cómo).
+const COORDENADAS = { lat: 36.7212034, lon: -4.3645263 };
 
 export const SITE = {
   nombre: "Estimada Carmela",
@@ -56,6 +71,33 @@ export const SOCIAL: SocialLink[] = [
     icon: "simple-icons:whatsapp",
   },
 ];
+
+// TODO: horario real.
+export const HORARIO: FranjaHorario[] = [
+  { dias: "Lunes a viernes", horas: "09:00 – 18:00" },
+  { dias: "Sábados", horas: "10:00 – 14:00" },
+  { dias: "Domingos", horas: "Cerrado" },
+];
+
+export const CONTACTO = {
+  // La ciudad va suelta del resto de la dirección porque en la tarjeta se
+  // pinta aparte, como antetítulo encima de la calle.
+  ciudad: "Málaga",
+  // Titular grande: calle y número y nada más. Es lo único que se lee de lejos.
+  titular: "Escultor Marín Higuero, 6",
+  // Lo que no cabe en el titular pero hace falta para dar con el portal.
+  detalle: "Esc. 1 · Planta 1 · Puerta 7 — 29017",
+  whatsapp: {
+    visible: WHATSAPP_VISIBLE,
+    href: WHATSAPP_URL,
+  },
+  // Centro de la imagen del mapa. No se usa para pintar, pero es el dato que
+  // hace falta para regenerarla (ver src/assets/README.md).
+  coordenadas: COORDENADAS,
+  // Adónde lleva pulsar el mapa: al mapa "de verdad", con navegación paso a
+  // paso. La imagen que se ve es estática y no navega a ninguna parte sola.
+  mapa: SITE.mapa,
+} as const;
 
 // Texto de Carmen, condensado. El original es bastante más largo y aquí no
 // cabe: en esa sección el texto va dentro de la banda roja, y la banda mide lo

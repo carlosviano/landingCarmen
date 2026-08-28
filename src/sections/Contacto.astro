@@ -1,0 +1,167 @@
+---
+// Sección "dónde estamos". Un solo bloque redondeado partido en dos mitades
+// iguales: los datos a la izquierda y el mapa a la derecha, a hueso y con la
+// misma altura.
+//
+// Es el destino del ancla #contacto del NAV.
+//
+// Las dos mitades salen de un grid de dos columnas, así que la altura la
+// iguala el propio grid: la fila mide lo que mida la más alta y la otra se
+// estira sola. El redondeo y el overflow-hidden van en el contenedor y no en
+// cada mitad, que es lo que hace que la costura del medio quede recta y solo
+// se redondeen las cuatro esquinas de fuera.
+//
+// Por debajo de md (768px) se apila: en un móvil dos columnas dejarían la
+// tarjeta en una tira de texto de 200px y el mapa en una rendija.
+//
+// El mapa es una imagen estática, no un iframe. Un mapa incrustado secuestra
+// el scroll: bajar por la página se convierte en un desplazamiento enorme del
+// mapa, y en móvil no hay forma cómoda de salir de ahí. Además así no hay
+// peticiones a terceros ni dependencia de WebGL. A cambio no se puede hacer
+// zoom, y por eso la imagen entera es un enlace: quien quiera moverse por el
+// mapa se va a Google Maps, que es donde de verdad quiere estar.
+import { getImage } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import mapaLocal from "@/assets/mapa-local.png";
+import SocialLinks from "@/components/header/SocialLinks.astro";
+import { CONTACTO, HORARIO } from "@/config/site";
+
+// El mapa se pinta como fondo CSS y no como <img>. Ver la nota larga junto al
+// enlace: es la única forma de que cubra la celda sin depender de cómo resuelva
+// cada navegador una altura en porcentaje.
+//
+// Dos tamaños porque no hay srcset que valga: el pequeño para móvil, donde la
+// celda ocupa el ancho de pantalla, y el grande para dos columnas y pantallas
+// densas.
+const mapaMovil = await getImage({
+  src: mapaLocal,
+  width: 780,
+  format: "webp",
+});
+const mapaAncho = await getImage({
+  src: mapaLocal,
+  width: 1300,
+  format: "webp",
+});
+---
+
+<section id="contacto" class="scroll-mt-20">
+  {
+    /* El diseño no lleva titular visible: la tarjeta se explica sola. Pero el
+      esquema del documento no puede tener una sección muda. */
+  }
+  <h2 class="sr-only">Dónde estamos</h2>
+
+  <div class="mx-auto w-full max-w-7xl px-6 py-16 md:py-24">
+    {
+      /* Blanco y no linen: es lo único de la paleta que se despega del fondo de
+        página. Aun así lleva anillo y sombra, porque los claros de esta paleta
+        se distinguen entre sí por debajo de 1.2 (ver global.css) y el color
+        solo no basta para leerlo como panel. */
+    }
+    <div
+      class="grid overflow-hidden rounded-3xl bg-white shadow-xl shadow-black/5 ring-1 ring-taupe/25 md:grid-cols-2"
+    >
+      {
+        /* justify-center para cuando manda la altura mínima del mapa y sobra
+          sitio: sin esto el texto se quedaría pegado arriba. */
+      }
+      <div class="flex flex-col justify-center p-8 sm:p-10 lg:p-14">
+        <p class="text-xs font-medium tracking-[0.25em] text-rust uppercase">
+          {CONTACTO.ciudad}
+        </p>
+        <p
+          class="mt-3 font-serif text-3xl leading-tight text-balance sm:text-4xl md:text-3xl lg:text-5xl"
+        >
+          {CONTACTO.titular}
+        </p>
+        <p class="mt-3 text-sm text-black/60">{CONTACTO.detalle}</p>
+
+        <dl class="mt-6 space-y-1.5">
+          {
+            HORARIO.map((franja) => (
+              <div class="flex flex-wrap items-baseline gap-x-2 text-sm">
+                <dt class="font-medium">{franja.dias}</dt>
+                <dd class="text-black/70">{franja.horas}</dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        {
+          /* WhatsApp y redes comparten fila. En escritorio sobra ancho, y
+            ahorra los ~44px que en dos filas hacían al bloque más alto que su
+            altura mínima. En pantallas estrechas el flex-wrap las baja, que
+            ahí el alto no aprieta. */
+        }
+        <div class="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4">
+          {
+            /* wa.me y no tel:, que es lo que se espera del icono de al lado:
+              abre la conversación en la app o en la web. */
+          }
+          <p class="text-sm">
+            <a
+              href={CONTACTO.whatsapp.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="font-medium transition-colors hover:text-rust"
+            >
+              WhatsApp: {CONTACTO.whatsapp.visible}
+            </a>
+          </p>
+        </div>
+      </div>
+
+      {
+        /* h-72 solo cuando está apilado, porque ahí no hay hermano que le dé
+          altura.
+
+          En dos columnas es un MÍNIMO, nunca una altura fija: si algún día el
+          texto de al lado crece, el mapa se estira con él. Con altura fija se
+          quedaría corto y dejaría una franja en blanco debajo, que es justo lo
+          que hay que evitar.
+
+          Los 30rem de escritorio están elegidos: con la celda de 616px dan una
+          proporción de 1.28, casi la 1.3 de la imagen, así que el mapa se ve
+          prácticamente sin recortar. */
+      }
+      <a
+        href={CONTACTO.mapa}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group relative block h-72 overflow-hidden md:h-auto md:min-h-[26rem]"
+      >
+        <div
+          aria-hidden="true"
+          style={`--mapa-movil:url('${mapaMovil.src}');--mapa-ancho:url('${mapaAncho.src}')`}
+          class="absolute inset-0 bg-[image:var(--mapa-movil)] bg-cover bg-center transition-transform duration-500 group-hover:scale-[1.03] md:bg-[image:var(--mapa-ancho)]"
+        >
+        </div>
+
+        <span
+          class="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full whitespace-nowrap bg-rust px-6 py-3 text-xs font-medium tracking-widest text-linen uppercase shadow-lg shadow-black/25 transition-colors group-hover:bg-black group-hover:text-white"
+        >
+          <Icon
+            name="lucide:navigation"
+            class="size-4 shrink-0"
+            aria-hidden="true"
+          />
+          Cómo llegar
+        </span>
+
+        {
+          /* Los datos son ODbL: el crédito es obligatorio y tiene que verse.
+            La legibilidad la da un halo blanco por text-shadow y NO un fondo:
+            debajo puede caer cualquier cosa del mapa, pero una caja opaca en la
+            esquina se lee como un agujero, como si la imagen no llegara al
+            borde de abajo. El halo se pega a las letras y no recorta nada. */
+        }
+        <span
+          class="absolute right-3 bottom-2 text-[10px] text-black/60 [text-shadow:0_0_3px_rgb(255_255_255),0_0_6px_rgb(255_255_255)]"
+        >
+          © OpenStreetMap
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
