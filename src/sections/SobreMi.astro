@@ -38,7 +38,7 @@
 // es el saliente, que es un fallo mucho más benigno. Para meter más texto,
 // subir la altura de la foto.
 import { Image } from "astro:assets";
-import fotoSobreMi from "@/assets/sobre-mi.jpg";
+import fotoSobreMi from "@/assets/images/sobre-mi.jpg";
 import { SOBRE_MI } from "@/config/site";
 ---
 
@@ -82,24 +82,30 @@ import { SOBRE_MI } from "@/config/site";
 
     <div class="relative mx-auto w-full max-w-7xl px-6 py-14 lg:py-0">
       <div class="grid items-center gap-10 lg:grid-cols-12 lg:gap-0">
-        {/* lg:py-14 es la red: sin él, un texto más alto que la banda se
+        {
+          /* lg:py-14 es la red: sin él, un texto más alto que la banda se
             saldría a leerse sobre linen. Con él, la fila crece antes y lo que
-            se pierde es el saliente de la foto, que es un fallo benigno. */}
+            se pierde es el saliente de la foto, que es un fallo benigno. */
+        }
         <div
           class="lg:col-start-1 lg:col-end-8 lg:row-start-1 lg:py-14 lg:pr-16"
         >
-          {/* h2 y no p: es el titular de la sección y el destino de #sobre-mi.
+          {
+            /* h2 y no p: es el titular de la sección y el destino de #sobre-mi.
               Contacto.astro lleva uno en sr-only por lo mismo, aunque su
-              diseño no lo enseñe. */}
+              diseño no lo enseñe. */
+          }
           <h2
             class="font-serif text-5xl leading-none text-sand sm:text-6xl lg:text-7xl"
           >
             {SOBRE_MI.titulo}
           </h2>
 
-          {/* Párrafos sueltos, sin subtitular. El hueco entre ellos es más
+          {
+            /* Párrafos sueltos, sin subtitular. El hueco entre ellos es más
               corto que el que los separa del titular: así se leen como un
-              texto seguido y no como tres apartados. */}
+              texto seguido y no como tres apartados. */
+          }
           <div class="mt-8 space-y-6 lg:mt-10 lg:space-y-8">
             {
               SOBRE_MI.parrafos.map((parrafo) => (
@@ -110,8 +116,10 @@ import { SOBRE_MI } from "@/config/site";
             }
           </div>
 
-          {/* La única línea en cursiva de la sección: cierra en primera persona
-              y conviene que se lea distinta de los párrafos. */}
+          {
+            /* La única línea en cursiva de la sección: cierra en primera persona
+              y conviene que se lea distinta de los párrafos. */
+          }
           <p class="mt-10 font-serif text-lg text-sand italic sm:text-xl">
             {SOBRE_MI.firma}
           </p>
