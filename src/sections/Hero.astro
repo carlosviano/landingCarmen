@@ -1,1 +1,222 @@
-<main></main>
+---
+// Hero: banda rust a sangre con el texto a la izquierda y la foto del obrador a
+// la derecha, sobresaliendo por abajo sobre el linen de la página.
+//
+// Es el mismo recurso que SobreMi.astro, movido a lo alto de la página: banda
+// de color de canto a canto, contenido dentro del max-w-7xl y la foto pisando
+// el borde inferior. Se repite a propósito, porque es lo que le da al sitio su
+// ritmo: color, respiro, color.
+//
+// Lo que hace que funcione es cómo TERMINA: el rojo corta en seco y debajo
+// queda una franja de linen con las credenciales. Sin esa franja, el hero
+// desembocaría en el linen de la sección siguiente y el corte no se leería.
+// Por eso la banda no es el fondo de la sección, sino un bloque propio: la
+// franja de credenciales es su hermana, no su interior.
+//
+// Altura: en lg el hero ocupa la pantalla entera menos la cabecera, para que no
+// asome la sección siguiente. Quien pone esa altura es la FOTO, no la sección:
+//
+//   cabecera 4.25rem + pt de la banda 3.5rem + foto + franja 5rem = 100svh
+//
+// de donde sale el lg:h-[calc(100svh_-_12.75rem)] de la foto. En un portátil
+// normal eso deja una imagen de unos 700px de alto por 616 de ancho, que es el
+// rectángulo vertical del diseño; en una pantalla más alta, más vertical aún.
+//
+// Ojo con la tentación de poner lg:h-full en la foto: no funciona. La fila del
+// grid la mide su propio contenido, así que un 100% de altura contra ella es
+// circular, el navegador lo resuelve como "auto" y la imagen se va a su tamaño
+// natural (925px con esta foto), que revienta la pantalla y descoloca el texto.
+// Por eso el alto se mide contra svh, que sí es un número conocido.
+//
+// Los tres sumandos son literales y hay que mantenerlos a mano: 4.25rem es la
+// barra en escritorio (py-4, o sea 2rem, más los 36px de los botones de redes,
+// que son la pieza más alta), 3.5rem es el pt-14 de la banda y 5rem es el
+// lg:h-20 de la franja de abajo. Si cambia cualquiera de los tres, cambia el
+// 12.75rem.
+//
+// Los guiones bajos del calc() tampoco son adorno: en un valor arbitrario de
+// Tailwind no caben espacios, y un calc() sin espacios alrededor del signo es
+// inválido, así que el navegador se come la declaración y la sección se queda
+// corta sin avisar de nada.
+//
+// El min-h de la sección es un cinturón, no el mecanismo: si algún día el texto
+// creciera más que la foto, la sección crece con él en vez de recortarlo.
+//
+// El saliente de la foto es un translate y no un margen: así no cuenta para la
+// altura de la banda y lo que sobresale es exactamente lo que se traslada.
+// Depende de dos cosas que van juntas y hay que tocar juntas:
+//   - la banda no lleva padding abajo en lg (lg:pb-0), o el saliente se lo
+//     comería el propio hueco;
+//   - la franja de credenciales tiene que ser más alta que el saliente
+//     (2.5rem), o la foto se saldría de la sección y pisaría a "Sobre mí".
+//
+// Por debajo de lg no hay saliente: apilado, la foto va detrás del texto dentro
+// de la banda y el corte lo marca igual la franja de abajo. Mismo criterio que
+// SobreMi, que también deja el saliente sólo para pantallas anchas.
+//
+// Ojo con la foto: trabajando2.jpeg está TAMBIÉN en el carrusel de GALERIA, así
+// que ahora mismo se ve dos veces en la misma página. En cuanto haya material
+// de verdad, esa foto debería salir de una de las dos (ver la nota de GALERIA
+// en config/site.ts, que ya arrastra el mismo problema con sobre-mi.jpg).
+//
+// El patrón de ondas es el de SobreMi.astro con ids propios: los dos svg
+// conviven en la misma página y un id repetido hace que el segundo `use` apunte
+// al primero.
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import fotoObrador from "@/assets/images/trabajando2.jpeg";
+import { HERO } from "@/config/site";
+---
+
+<section class="relative lg:min-h-[calc(100svh_-_4.25rem)]">
+  <div class="relative bg-rust">
+    <svg
+      class="pointer-events-none absolute inset-0 h-full w-full text-linen/12"
+      aria-hidden="true"
+    >
+      <defs>
+        <path
+          id="onda-suave-hero"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"></path>
+        <path
+          id="onda-honda-hero"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1"
+          d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"
+        ></path>
+        <pattern
+          id="ondas-hero"
+          width="240"
+          height="132"
+          patternUnits="userSpaceOnUse"
+        >
+          <use href="#onda-suave-hero" transform="translate(0 18)"></use>
+          <use href="#onda-honda-hero" transform="translate(80 54)"></use>
+          <use href="#onda-suave-hero" transform="translate(170 90)"></use>
+          <use href="#onda-honda-hero" transform="translate(45 118)"></use>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#ondas-hero)"></rect>
+    </svg>
+
+    {
+      /* Mismo grid de 12 columnas que SobreMi y Contacto: texto en 1-7 y foto
+        en 7-13. El lg:pb-0 no es un olvido, es lo que deja sitio al saliente
+        de la foto (ver la nota de arriba). */
+    }
+    <div
+      class="relative mx-auto grid w-full max-w-7xl items-center gap-10 px-6 py-14 md:py-16 lg:grid-cols-12 lg:gap-0 lg:pt-14 lg:pb-0"
+    >
+      <div class="lg:col-start-1 lg:col-end-7 lg:row-start-1 lg:pr-10">
+        <p class="text-xs font-medium tracking-[0.25em] text-sand uppercase">
+          {HERO.antetitulo}
+        </p>
+
+        <h1
+          class="mt-5 font-serif text-4xl leading-[1.05] text-balance text-sand sm:text-5xl lg:text-6xl xl:text-7xl"
+        >
+          {HERO.titular}
+        </h1>
+
+        <p
+          class="mt-6 max-w-[30rem] text-base leading-relaxed text-linen/80 sm:text-lg"
+        >
+          {HERO.entradilla}
+        </p>
+
+        {
+          /* La píldora de "Cómo llegar" (Contacto) invertida y una talla más:
+            sobre rust el relleno tiene que ser claro, y px-8 py-4 en vez de
+            px-6 py-3 deja el alto por encima de 44px. El hover a negro es el
+            mismo de los demás botones del sitio. */
+        }
+        <div
+          class="mt-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-6"
+        >
+          <a
+            href={HERO.accion.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex w-full items-center justify-center gap-2 rounded-full bg-sand px-8 py-4 text-xs font-medium tracking-widest text-rust uppercase shadow-lg shadow-black/25 transition-colors hover:bg-black hover:text-white sm:w-auto"
+          >
+            <Icon
+              name="simple-icons:whatsapp"
+              class="size-4 shrink-0"
+              aria-hidden="true"
+            />
+            {HERO.accion.label}
+          </a>
+
+          {
+            /* Subrayado fijo y no el animado de la barra: aquel es de sand y
+              aquí compite con el titular, que ya es sand. */
+          }
+          <a
+            href={HERO.secundario.href}
+            class="flex items-center gap-2 border-b border-linen/35 pb-1 text-xs font-medium tracking-widest text-linen/80 uppercase transition-colors hover:border-linen/60 hover:text-white"
+          >
+            {HERO.secundario.label}
+            <Icon
+              name="lucide:arrow-right"
+              class="size-4 shrink-0"
+              aria-hidden="true"
+            />
+          </a>
+        </div>
+
+        <p class="mt-5 text-xs text-linen/60">{HERO.nota}</p>
+      </div>
+
+      <div class="lg:col-start-7 lg:col-end-13 lg:row-start-1">
+        {
+          /* Mismo tratamiento que la foto de SobreMi: rounded-3xl, anillo claro
+            y sombra. En móvil manda el formato 4:5 (el del carrusel); en lg
+            manda la altura y object-cover recorta por arriba y por abajo, así
+            que el motivo tiene que aguantar un encuadre casi cuadrado. */
+        }
+        <div
+          class="aspect-[4/5] overflow-hidden rounded-3xl shadow-xl shadow-black/20 ring-1 ring-linen/15 lg:aspect-auto lg:h-[calc(100svh_-_12.75rem)] lg:translate-y-10"
+        >
+          <Image
+            src={fotoObrador}
+            alt={HERO.fotoAlt}
+            widths={[400, 640, 900, 1066]}
+            sizes="(min-width: 1024px) 42vw, 100vw"
+            loading="eager"
+            class="h-full w-full object-cover object-center"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {
+    /* La franja que cierra el hero. Va sobre el linen de la página (no lleva
+      fondo propio) y es lo que hace legible el corte de la banda. Su alto
+      mínimo tiene que superar el saliente de la foto: con py-8 y una línea de
+      texto son unos 80px contra los 40 que sobresale. */
+  }
+  <div class="relative">
+    <ul
+      class="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-5 gap-y-2 px-6 py-6 text-[11px] tracking-[0.18em] text-black/50 uppercase lg:h-20 lg:py-0"
+    >
+      {
+        HERO.credenciales.map((casa, indice) => (
+          <li class="flex items-center gap-5">
+            {indice > 0 && (
+              <span
+                class="size-1 shrink-0 rounded-full bg-taupe"
+                aria-hidden="true"
+              />
+            )}
+            {casa}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
