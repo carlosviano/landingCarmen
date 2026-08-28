@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/*
+  Paleta "Estimada Carmela" — 4 colores terrosos.
+  Blanco y negro no se definen: bg-white y text-black ya son nativos.
+
+    linen  #edf0da  fondo de pagina
+    sand   #f0dfad  banda de seccion / acento sobre oscuro
+    taupe  #a89b8c  superficie apagada y bordes decorativos
+    rust   #7c2513  color de marca: cabecera, CTAs, titulares, enlaces
+
+  Combinaciones probadas (contraste WCAG):
+    text-black sobre bg-linen ....... 18.1  titulares
+    text-black sobre bg-sand ........ 15.9
+    text-black sobre bg-taupe .......  7.7
+    text-rust  sobre bg-linen .......  8.5  enlaces y titulares de marca
+    text-rust  sobre bg-sand ........  7.4
+    text-white sobre bg-rust ........  9.9
+    text-linen sobre bg-rust ........  8.5  cabecera y pie
+    text-sand  sobre bg-rust ........  7.4  acentos sobre la cabecera
+
+  Dos reglas que salen de los numeros:
+
+  1. taupe no es color de texto. Sobre linen da 2.34 y sobre sand 2.05.
+     Sirve como fondo (con texto negro) o como borde decorativo. Para un
+     borde funcional (input, foco) hace falta >=3.0: usa rust o black/40.
+
+  2. linen y sand casi no se distinguen (1.14), igual que linen y white
+     (1.16). Valen como bandas de seccion a todo el ancho, donde se
+     aprecia el cambio de tono, pero no como tarjeta sobre fondo: ahi
+     separa con borde o con bg-taupe.
+*/
+@theme {
+  --color-linen: #edf0da;
+  --color-sand: #f0dfad;
+  --color-taupe: #a89b8c;
+  --color-rust: #7c2513;
+}
+
+@layer base {
+  html {
+    background-color: var(--color-linen);
+    color: var(--color-black);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100%;
+  }
+
+  /* rust y no sand: sobre linen, sand seria practicamente invisible */
+  ::selection {
+    background-color: var(--color-rust);
+    color: var(--color-linen);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-rust);
+    outline-offset: 2px;
+  }
+}
