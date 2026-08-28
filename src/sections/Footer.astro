@@ -1,0 +1,42 @@
+---
+// Pie de página. Repite las piezas del header (marca, dirección, navegación y
+// redes) reutilizando sus mismos componentes, y cierra con la línea de firma.
+//
+// Diferencias con la barra superior, todas a propósito:
+//   - más aire vertical (py-12/py-16 frente al py-4 del header).
+//   - no es sticky ni lleva menú móvil: aquí hay sitio para apilar los enlaces
+//     en columna, así que no hace falta desplegable.
+//   - la dirección sí se ve siempre: en la barra se reserva al panel móvil.
+import AddressLink from "@/components/header/AddressLink.astro";
+import Brand from "@/components/header/Brand.astro";
+import NavLinks from "@/components/header/NavLinks.astro";
+import SocialLinks from "@/components/header/SocialLinks.astro";
+import { SITE } from "@/config/site";
+
+// Año de arranque, fijo: no es la fecha de hoy.
+const DESDE = 2026;
+---
+
+<footer class="bg-rust text-linen">
+  <div class="mx-auto w-full max-w-7xl px-6 py-12 md:py-16">
+    <div
+      class="flex flex-col items-center gap-10 text-center md:flex-row md:items-start md:justify-between md:gap-8 md:text-left"
+    >
+      <div class="flex flex-col items-center gap-4 md:items-start">
+        <Brand />
+        <AddressLink class="flex" />
+      </div>
+
+      <div class="flex flex-col items-center gap-8 md:items-end md:gap-6">
+        <NavLinks class="flex-wrap justify-center gap-x-8 gap-y-3" />
+        <SocialLinks />
+      </div>
+    </div>
+
+    <p
+      class="mt-10 border-t border-linen/15 pt-6 text-center text-xs tracking-widest text-linen/70 uppercase md:mt-14"
+    >
+      {SITE.nombre} · trabajando desde {DESDE}
+    </p>
+  </div>
+</footer>

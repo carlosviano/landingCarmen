@@ -1,0 +1,59 @@
+---
+// Iconos de redes. Tres disposiciones con la misma lista:
+//   barra   — la del header, sobre fondo rust.
+//   panel   — la del menú móvil: mismo aspecto, algo más grande para el dedo.
+//   tarjeta — sobre fondo claro (sección de contacto): círculos de sand, que
+//             es el único acento que se ve sobre blanco sin gritar.
+import { Icon } from "astro-icon/components";
+import { SOCIAL } from "@/config/site";
+
+interface Props {
+  variant?: "barra" | "panel" | "tarjeta";
+  class?: string;
+}
+
+const { variant = "barra", class: className } = Astro.props;
+
+const ESTILOS = {
+  barra: {
+    caja: "size-9",
+    aspecto:
+      "rounded-md border border-linen/25 hover:border-linen/60 hover:bg-linen/10",
+  },
+  panel: {
+    caja: "size-10",
+    aspecto:
+      "rounded-md border border-linen/25 hover:border-linen/60 hover:bg-linen/10",
+  },
+  tarjeta: {
+    caja: "size-10",
+    // Invierte al pasar por encima en vez de aclararse: sobre blanco, un
+    // hover a base de opacidad no se percibe.
+    aspecto: "rounded-full bg-sand text-rust hover:bg-rust hover:text-linen",
+  },
+} as const;
+
+const estilo = ESTILOS[variant];
+---
+
+<ul class:list={["flex items-center gap-3", className]}>
+  {
+    SOCIAL.map((social) => (
+      <li>
+        <a
+          href={social.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={social.label}
+          class:list={[
+            "flex items-center justify-center transition-colors",
+            estilo.aspecto,
+            estilo.caja,
+          ]}
+        >
+          <Icon name={social.icon} class="size-4" aria-hidden="true" />
+        </a>
+      </li>
+    ))
+  }
+</ul>

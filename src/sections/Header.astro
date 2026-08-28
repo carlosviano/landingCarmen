@@ -1,0 +1,26 @@
+---
+// Barra superior. Tres zonas: marca a la izquierda, dirección en el centro y
+// navegación con redes a la derecha.
+//
+// Los textos y enlaces no están aquí, sino en @/config/site.
+// El menú móvil (botón + panel) está en MobileMenu.astro.
+import AddressLink from "@/components/header/AddressLink.astro";
+import Brand from "@/components/header/Brand.astro";
+import MobileMenu from "@/components/header/MobileMenu.astro";
+import NavLinks from "@/components/header/NavLinks.astro";
+import SocialLinks from "@/components/header/SocialLinks.astro";
+---
+
+<header class="sticky top-0 z-50 bg-rust text-linen">
+  <div
+    class="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-6 py-4"
+  >
+    <Brand />
+    <div class="hidden items-center gap-10 md:flex">
+      <NavLinks />
+      <SocialLinks />
+    </div>
+
+    <MobileMenu />
+  </div>
+</header>

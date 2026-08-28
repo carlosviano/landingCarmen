@@ -1,0 +1,26 @@
+---
+// Dirección con enlace a Google Maps.
+// La visibilidad por breakpoint la decide quien lo coloca, no este componente:
+// en la barra se oculta por debajo de lg y en el panel móvil siempre se ve.
+import { Icon } from "astro-icon/components";
+import { SITE } from "@/config/site";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<a
+  href={SITE.mapa}
+  target="_blank"
+  rel="noopener noreferrer"
+  class:list={[
+    "items-center gap-2 text-xs tracking-wider text-linen/80 transition-colors hover:text-white",
+    className,
+  ]}
+>
+  <Icon name="lucide:map-pin" class="size-4 shrink-0 text-sand" aria-hidden="true" />
+  <span>{SITE.direccion}</span>
+</a>

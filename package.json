@@ -1,17 +1,22 @@
 {
-  "name": "",
+  "name": "landingCarmen",
   "type": "module",
   "version": "0.0.1",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
+    "dev": "bash -c 'source \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use && astro dev'",
+    "build": "bash -c 'source \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use && astro build'",
+    "preview": "bash -c 'source \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use && astro preview'",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.2.3"
+    "@iconify-json/lucide": "^1.2.124",
+    "@iconify-json/simple-icons": "^1.2.93",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "7.2.3",
+    "astro-icon": "^1.1.5",
+    "tailwindcss": "^4.3.3"
   }
 }

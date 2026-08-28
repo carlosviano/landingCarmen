@@ -1,0 +1,134 @@
+---
+// Sección "sobre mí". Banda de color a todo el ancho con el texto a la
+// izquierda y la foto a la derecha, montada encima y sobresaliendo por arriba
+// y por abajo.
+//
+// Es el destino del ancla #sobre-mi del NAV.
+//
+// La banda sangra de canto a canto a propósito: es la única sección que lo
+// hace y de ahí saca su peso. Si además se metiera en el max-w-7xl como la de
+// contacto, la página entera serían tarjetas flotando sobre linen y esta
+// dejaría de marcar el cambio de ritmo. El contenido sí va contenido: lo que
+// sangra es la banda, no el texto.
+//
+// El solape horizontal es el mismo truco que Contacto.astro: grid de 12
+// columnas, texto en 1-8 y foto en 8-13 compartiendo fila, así que se pisan
+// una columna.
+//
+// El saliente vertical no se puede hacer con la banda envolviendo a la foto:
+// su padding la abrazaría siempre. Así que la banda no envuelve nada, es una
+// capa de fondo en absolute, y lo que la foto sobresale es exactamente su
+// lg:inset-y-10 (2.5rem por lado). Ese es el único número que tocar para que
+// salga más o menos.
+//
+// El py de la sección es el hueco donde cae ese saliente: mantenerlo por
+// encima del inset-y o la foto se pegará a la sección de al lado.
+//
+// La altura de la foto (38rem) no es capricho de encuadre: de ella sale la de
+// la banda, y el texto tiene que caber dentro con aire. Está ajustada para que
+// la sección entera quepa en una pantalla de portátil, unos 770px con el py.
+// Subirla es lo que hay que hacer para meter más texto, pero cada rem que sube
+// es un rem que la sección deja de caber de un vistazo.
+//
+// Consecuencia de todo esto, y es lo que hay que tener en cuenta al tocar el
+// texto: la banda mide lo que la foto menos el saliente, así que el texto
+// tiene un techo. Si crece por encima de él no aparece scroll, se sale de la
+// banda y se lee sobre linen. El lg:py-14 de la columna de texto es la red:
+// obliga a la fila a crecer antes de que eso pase, y entonces lo que se pierde
+// es el saliente, que es un fallo mucho más benigno. Para meter más texto,
+// subir la altura de la foto.
+import { Image } from "astro:assets";
+import fotoSobreMi from "@/assets/sobre-mi.jpg";
+import { SOBRE_MI } from "@/config/site";
+---
+
+<section id="sobre-mi" class="scroll-mt-20 py-16 md:py-20">
+  <div class="relative">
+    <div class="absolute inset-x-0 inset-y-0 bg-rust lg:inset-y-10">
+      <svg
+        class="pointer-events-none absolute inset-0 h-full w-full text-linen/12"
+        aria-hidden="true"
+      >
+        <defs>
+          <path
+            id="onda-suave"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"
+          ></path>
+          <path
+            id="onda-honda"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"
+          ></path>
+          <pattern
+            id="ondas-sobre-mi"
+            width="240"
+            height="132"
+            patternUnits="userSpaceOnUse"
+          >
+            <use href="#onda-suave" transform="translate(0 18)"></use>
+            <use href="#onda-honda" transform="translate(80 54)"></use>
+            <use href="#onda-suave" transform="translate(170 90)"></use>
+            <use href="#onda-honda" transform="translate(45 118)"></use>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#ondas-sobre-mi)"></rect>
+      </svg>
+    </div>
+
+    <div class="relative mx-auto w-full max-w-7xl px-6 py-14 lg:py-0">
+      <div class="grid items-center gap-10 lg:grid-cols-12 lg:gap-0">
+        {/* lg:py-14 es la red: sin él, un texto más alto que la banda se
+            saldría a leerse sobre linen. Con él, la fila crece antes y lo que
+            se pierde es el saliente de la foto, que es un fallo benigno. */}
+        <div
+          class="lg:col-start-1 lg:col-end-8 lg:row-start-1 lg:py-14 lg:pr-16"
+        >
+          {/* h2 y no p: es el titular de la sección y el destino de #sobre-mi.
+              Contacto.astro lleva uno en sr-only por lo mismo, aunque su
+              diseño no lo enseñe. */}
+          <h2
+            class="font-serif text-5xl leading-none text-sand sm:text-6xl lg:text-7xl"
+          >
+            {SOBRE_MI.titulo}
+          </h2>
+
+          {/* Párrafos sueltos, sin subtitular. El hueco entre ellos es más
+              corto que el que los separa del titular: así se leen como un
+              texto seguido y no como tres apartados. */}
+          <div class="mt-8 space-y-6 lg:mt-10 lg:space-y-8">
+            {
+              SOBRE_MI.parrafos.map((parrafo) => (
+                <p class="max-w-prose text-sm leading-relaxed text-linen/80 sm:text-base">
+                  {parrafo}
+                </p>
+              ))
+            }
+          </div>
+
+          {/* La única línea en cursiva de la sección: cierra en primera persona
+              y conviene que se lea distinta de los párrafos. */}
+          <p class="mt-10 font-serif text-lg text-sand italic sm:text-xl">
+            {SOBRE_MI.firma}
+          </p>
+        </div>
+        <div
+          class="relative aspect-[2/3] overflow-hidden rounded-3xl shadow-xl shadow-black/20 ring-1 ring-linen/15 lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:aspect-auto lg:h-[38rem]"
+        >
+          <Image
+            src={fotoSobreMi}
+            alt={SOBRE_MI.fotoAlt}
+            widths={[320, 480, 640, 900, 1066]}
+            sizes="(min-width: 1024px) 42vw, 100vw"
+            loading="lazy"
+            class="h-full w-full object-cover object-center"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
