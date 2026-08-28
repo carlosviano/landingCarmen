@@ -25,6 +25,19 @@ falta la versión del `.nvmrc`, instálala con `nvm install` dentro de la carpet
 Ojo: el dev server no recoge cambios de `astro.config.mjs` en caliente. Si
 tocas la config, reinícialo.
 
+## Tipografía
+
+Sin fuente propia por ahora: los titulares y la marca van con `font-serif`, la
+pila serif por defecto de Tailwind. La elección está pendiente.
+
+Hubo un montaje con **The Seasons** usando la API de fuentes de Astro (`fonts`
+en astro.config.mjs + `<Font>` en el Layout + `@theme inline` en global.css) y
+se retiró: es comercial y requiere licencia Web, que no tenemos. Un corte
+declarado sin su fichero rompe el arranque con `UnknownFilesystemError`.
+
+`src/assets/fonts/README.md` tiene el detalle de licencias, alternativas
+gratuitas y los cuatro pasos para volver a activarlo.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build
