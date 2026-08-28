@@ -1,0 +1,23 @@
+---
+// Marca del header: icono + nombre.
+// TODO: sustituir el icono por el logo oficial cuando esté listo.
+import { Icon } from "astro-icon/components";
+import { SITE } from "@/config/site";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<a
+  href="/"
+  class:list={[
+    "flex items-center gap-3 text-linen transition-opacity hover:opacity-80",
+    className,
+  ]}
+>
+  <Icon name="lucide:flower" class="size-8 shrink-0 text-sand" aria-hidden="true" />
+  <span class="font-serif text-xl leading-tight italic">{SITE.nombre}</span>
+</a>

@@ -1,0 +1,48 @@
+---
+// Enlaces de navegación. Se usan dos veces con la misma lista pero distinta
+// disposición: en fila en la barra de escritorio y en columna en el panel
+// móvil. De ahí la variante.
+import { NAV } from "@/config/site";
+
+interface Props {
+  variant?: "barra" | "panel";
+  class?: string;
+}
+
+const { variant = "barra", class: className } = Astro.props;
+
+const ESTILOS = {
+  barra: {
+    lista: "flex items-center gap-8",
+    enlace:
+      "group relative text-sm font-medium tracking-widest uppercase transition-colors hover:text-white",
+  },
+  panel: {
+    lista: "flex flex-col gap-1",
+    enlace:
+      "block rounded-md px-2 py-3 text-sm font-medium tracking-widest uppercase transition-colors hover:bg-linen/10 hover:text-white",
+  },
+} as const;
+
+const estilo = ESTILOS[variant];
+---
+
+<ul class:list={[estilo.lista, className]}>
+  {
+    NAV.map((item) => (
+      <li>
+        <a href={item.href} class={estilo.enlace}>
+          {item.label}
+          {/* Subrayado animado: el rosa solo se usa como relleno, nunca como
+              color de texto (ver la paleta en global.css). */}
+          {variant === "barra" && (
+            <span
+              class="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-sand transition-transform duration-200 group-hover:scale-x-100 group-focus-visible:scale-x-100"
+              aria-hidden="true"
+            />
+          )}
+        </a>
+      </li>
+    ))
+  }
+</ul>
