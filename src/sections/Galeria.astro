@@ -1,0 +1,128 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { GALERIA } from "@/config/site";
+
+const archivos = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/images/*.{jpeg,jpg,png,webp,avif}",
+  { eager: true },
+);
+
+const fotos = GALERIA.fotos.map((foto) => {
+  const modulo = archivos[`../assets/images/${foto.archivo}`];
+  if (!modulo) {
+    const hay = Object.keys(archivos)
+      .map((ruta) => ruta.split("/").pop())
+      .join(", ");
+    throw new Error(
+      `GALERIA: no existe src/assets/images/${foto.archivo}. Ahí dentro hay: ${hay}`,
+    );
+  }
+  return { ...foto, src: modulo.default };
+});
+
+const ADELANTO = "4rem";
+const margenTira = `max(0.75rem, (100% - 80rem) / 2 + 1.5rem - ${ADELANTO})`;
+
+//TODO: añadir fotos correctas al carrousel cuando las tengamos
+---
+
+<section id="galeria" class="scroll-mt-20 py-16 md:py-24">
+  <h2 class="sr-only">{GALERIA.titulo}</h2>
+
+  <div class="relative" data-carrusel>
+    <div
+      data-tira
+      role="region"
+      aria-label={GALERIA.titulo}
+      tabindex="0"
+      style={`scroll-padding-inline:${margenTira}`}
+      class="snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] motion-safe:scroll-smooth [&::-webkit-scrollbar]:hidden"
+    >
+      <ul
+        class="flex gap-4 py-3 sm:gap-6"
+        style={`padding-inline:${margenTira}`}
+      >
+        {
+          fotos.map((foto) => (
+            <li class="w-[78%] shrink-0 snap-start sm:w-[20rem] lg:w-[23rem]">
+              <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25">
+                <Image
+                  src={foto.src}
+                  alt={foto.alt}
+                  widths={[400, 600, 800, 1000]}
+                  sizes="(min-width: 1024px) 23rem, (min-width: 640px) 20rem, 78vw"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover object-center"
+                />
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <button
+      type="button"
+      data-anterior
+      disabled
+      aria-label="Ver las fotos anteriores"
+      class="absolute top-1/2 left-3 hidden size-11 -translate-y-1/2 place-items-center rounded-full bg-rust text-linen shadow-lg shadow-black/25 transition duration-300 hover:bg-black hover:text-white disabled:pointer-events-none disabled:opacity-0 md:grid"
+    >
+      <Icon name="lucide:chevron-left" class="size-5" aria-hidden="true" />
+    </button>
+    <button
+      type="button"
+      data-siguiente
+      disabled
+      aria-label="Ver las fotos siguientes"
+      class="absolute top-1/2 right-3 hidden size-11 -translate-y-1/2 place-items-center rounded-full bg-rust text-linen shadow-lg shadow-black/25 transition duration-300 hover:bg-black hover:text-white disabled:pointer-events-none disabled:opacity-0 md:grid"
+    >
+      <Icon name="lucide:chevron-right" class="size-5" aria-hidden="true" />
+    </button>
+  </div>
+</section>
+
+<script>
+  for (const carrusel of document.querySelectorAll<HTMLElement>(
+    "[data-carrusel]",
+  )) {
+    const tira = carrusel.querySelector<HTMLElement>("[data-tira]");
+    const lista = tira?.querySelector<HTMLElement>("ul");
+    const anterior =
+      carrusel.querySelector<HTMLButtonElement>("[data-anterior]");
+    const siguiente =
+      carrusel.querySelector<HTMLButtonElement>("[data-siguiente]");
+    if (!tira || !lista || !anterior || !siguiente) continue;
+
+    const paso = () => {
+      const foto = lista.firstElementChild;
+      if (!foto) return tira.clientWidth;
+      const hueco = parseFloat(getComputedStyle(lista).columnGap) || 0;
+      return foto.getBoundingClientRect().width + hueco;
+    };
+
+    const quieto = matchMedia("(prefers-reduced-motion: reduce)");
+    const mover = (sentido: number) => {
+      tira.scrollBy({
+        left: sentido * paso(),
+        behavior: quieto.matches ? "auto" : "smooth",
+      });
+    };
+
+    const repasarBotones = () => {
+      const holgura = 2;
+      const tope = tira.scrollWidth - tira.clientWidth;
+      anterior.disabled = tira.scrollLeft <= holgura;
+      siguiente.disabled = tira.scrollLeft >= tope - holgura;
+    };
+
+    anterior.addEventListener("click", () => mover(-1));
+    siguiente.addEventListener("click", () => mover(1));
+    tira.addEventListener("scroll", repasarBotones, { passive: true });
+    new ResizeObserver(repasarBotones).observe(tira);
+
+    repasarBotones();
+  }
+</script>

@@ -124,3 +124,67 @@ export const SOBRE_MI = {
   // es lo que necesita quien no puede ver la foto.
   fotoAlt: "Emplatando un postre con pinzas, pieza a pieza, en el obrador.",
 } as const;
+
+/** Una foto del carrusel: qué archivo es y qué se ve en ella. */
+export interface FotoGaleria {
+  /**
+   * Nombre del archivo con extensión, tal cual está en `src/assets/images/`.
+   * No es una ruta: la carpeta la pone `Galeria.astro`. Si el nombre no existe,
+   * el build para con un error que lista los archivos que sí hay, así que una
+   * errata aquí se ve en el momento y no como un hueco en la página.
+   */
+  archivo: string;
+  alt: string;
+}
+
+/** La tira de fotos del carrusel: cómo se llama y qué lleva dentro. */
+export interface Galeria {
+  titulo: string;
+  fotos: FotoGaleria[];
+}
+
+// Las fotos del carrusel, en el orden en que se ven.
+//
+// Añadir una es dejar el archivo en `src/assets/images/` y poner su línea aquí.
+// No hace falta recortarla ni igualarla a las demás: el carrusel las mete todas
+// en el mismo hueco 4:5 con `object-cover`, así que lo único que importa es que
+// el motivo aguante un recorte centrado (ver la nota de Galeria.astro).
+//
+// Dos avisos sobre lo que hay puesto ahora, que es de relleno:
+//
+//   - `mapa-local.png` es lo único de `src/assets/images/` que se ha quedado
+//     fuera a propósito: es la captura del mapa de Contacto, no una foto.
+//   - `sobre-mi.jpg` sí está, pero es la MISMA foto que se ve en la sección de
+//     justo encima. Está para que la tira no se quede en dos: en cuanto haya
+//     fotos de verdad, esa línea fuera.
+//
+// Los alt describen lo que se ve y nada más, sin nombres ni pronombres, igual
+// que el de SOBRE_MI: es lo que necesita quien no puede ver la foto.
+export const GALERIA: Galeria = {
+  // No se pinta: el diseño no lleva titular visible, pero ni el esquema del
+  // documento ni un lector de pantalla pueden quedarse sin saber qué es esta
+  // tira. Mismo caso que el h2 en sr-only de Contacto.
+  titulo: "Galería",
+  fotos: [
+    {
+      archivo: "trabajando2.jpeg",
+      alt: "A color,Carmen preparando uno de sus postres con la manga pastelera.",
+    },
+    {
+      archivo: "trabajando.jpeg",
+      alt: "En blanco y negro, colocando con pinzas la decoración sobre dos bocados de chocolate.",
+    },
+    {
+      archivo: "sobre-mi.jpg",
+      alt: "Emplatando un postre con pinzas, pieza a pieza, en el obrador.",
+    },
+    {
+      archivo: "tarta_cumple_kika_2026.jpeg",
+      alt: "Tarta redonda de cumpleaños estilo Paulova",
+    },
+    {
+      archivo: "mesa_cumple_nati.jpeg",
+      alt: "Tarta redonda de cumpleaños estilo Paulova",
+    }
+  ],
+};
