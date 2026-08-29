@@ -47,12 +47,12 @@
 // lg. Apilado, eso da el orden que se quiere en un móvil: primero la promesa y
 // el botón, la foto después. Al revés, el titular quedaría bajo el pliegue.
 //
-// Lo que se perdió al quitar la banda rust y que sigue vigente: el ritmo
-// "color, respiro, color" que compartía con SobreMi.astro (ahora el primer
-// color fuerte de la página es la banda de "Sobre mí", sola en ese papel) y el
-// corte del final del hero, que la franja de credenciales marcaba por
-// contraste y ya no marca. La franja se queda porque las credenciales son la
-// prueba de que el titular se sostiene, no por cómo separa.
+// El ritmo "color, respiro, color" que se perdió al quitar la banda rust de
+// arriba vuelve por abajo: la franja de credenciales es ahora del rojo de la
+// cabecera, así que el linen del hero corta contra color igual que antes, solo
+// que al revés (antes el hero era el color y la franja el respiro). La página
+// vuelve a alternar: cabecera roja, hero en linen, franja roja, galería en
+// linen, "Sobre mí" en rojo.
 //
 // Ojo con la foto: trabajando2.jpeg está TAMBIÉN en el carrusel de GALERIA, así
 // que ahora mismo se ve dos veces en la misma página. En cuanto haya material
@@ -180,28 +180,47 @@ import { HERO } from "@/config/site";
   </div>
 
   {
-    /* La franja de credenciales. Con la banda ya en linen no separa nada (era
-      linen contra rojo), pero se queda porque las cuatro casas son la prueba de
-      que el titular se sostiene, y es lo único que un visitante que llega de
-      Instagram puede comprobar sin bajar.
+    /* La franja de credenciales, en el rojo de la cabecera y centrada. Es la
+      banda de Credenciales.astro de la v2 traída aquí, con dos diferencias: el
+      fondo es rust y no el cacao de allí (aquí no existe ese color), y los
+      nombres van en font-serif y no en la Bodoni, como el resto de esta web.
+
+      Las cuatro casas eran versalitas de 11px en gris, del mismo cuerpo que un
+      pie de foto. Son la prueba de que el titular se sostiene —lo único que un
+      visitante que llega de Instagram puede comprobar sin bajar— y estaban
+      tratadas como letra pequeña. Ahora van a 22px sobre color.
+
+      Efecto secundario que conviene no deshacer sin querer: esta banda le
+      devuelve al hero el corte del final que se perdió al quitar la banda rust
+      de arriba. El linen del hero ahora termina contra el rojo, y de paso
+      vuelve el ritmo "color, respiro, color" de la página: cabecera roja,
+      hero en linen, esta franja, galería en linen, "Sobre mí" en rojo.
+
+      sand sobre rust da 7.4 de contraste (ver la tabla de global.css).
+
+      Los puntos separadores se esconden por debajo de lg: ahí los nombres
+      envuelven a varias líneas y un punto suelto abriendo línea se lee como
+      una viñeta. En lg caben los cuatro en una fila y sí separan.
 
       Su lg:h-20 es uno de los dos sumandos del calc() del bloque de arriba: si
       cambia, hay que cambiar el 9.25rem. */
   }
-  <div>
+  <div class="bg-rust">
     <ul
-      class="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-5 gap-y-2 px-6 py-6 text-[11px] tracking-[0.18em] text-black/50 uppercase lg:h-20 lg:py-0"
+      class="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-1 px-6 py-6 text-center lg:h-20 lg:gap-x-11 lg:py-0"
     >
       {
         HERO.credenciales.map((casa, indice) => (
-          <li class="flex items-center gap-5">
+          <li class="flex items-center gap-8 lg:gap-11">
             {indice > 0 && (
               <span
-                class="size-1 shrink-0 rounded-full bg-taupe"
+                class="hidden size-1 shrink-0 rounded-full bg-sand/40 lg:block"
                 aria-hidden="true"
               />
             )}
-            {casa}
+            <span class="font-serif text-lg tracking-wide text-sand lg:text-[22px]">
+              {casa}
+            </span>
           </li>
         ))
       }
