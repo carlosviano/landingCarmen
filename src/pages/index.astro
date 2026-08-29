@@ -10,9 +10,16 @@ import Footer from "../sections/Footer.astro";
 
 <Layout>
   <Header />
-  <Hero />
-  <SobreMi />
-  <Galeria />
-  <Contacto />
+  {
+    /* El <main> vivía dentro de Hero.astro mientras la sección estaba vacía.
+      Ahora que el hero tiene contenido propio, el landmark envuelve todas las
+      secciones de contenido: cabecera y pie se quedan fuera, que es lo suyo. */
+  }
+  <main>
+    <Hero />
+    <Galeria />
+    <SobreMi />
+    <Contacto />
+  </main>
   <Footer />
 </Layout>

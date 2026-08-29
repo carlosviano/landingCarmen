@@ -99,6 +99,35 @@ export const CONTACTO = {
   mapa: SITE.mapa,
 } as const;
 
+// Hero. Una sola acción principal (WhatsApp) y un enlace secundario al
+// catálogo: dos botones con el mismo peso aquí arriba no dejan ganar a ninguno.
+//
+// El titular no es un eslogan inventado, es de Carmen: sale del último párrafo
+// de SOBRE_MI ("estética y sabor pesan lo mismo"). Y las credenciales son las
+// cuatro casas que ya cuenta ahí. No son adorno: son la prueba de que lo que
+// promete el titular se sostiene, y es lo único que un visitante que llega de
+// Instagram puede comprobar sin bajar.
+export const HERO = {
+  antetitulo: "Alta pastelería · Málaga",
+  titular: "La estética y el sabor pesan lo mismo",
+  entradilla:
+    "Tartas, postres y mesas dulces por encargo. Cada pieza se hace una a una, para el día concreto que celebras.",
+  // A WhatsApp y no a #contacto: el botón dice "encargar", así que tiene que
+  // abrir la conversación, no llevar a una tarjeta con un horario. Ojo: el
+  // número sigue siendo el de relleno de WHATSAPP_VISIBLE.
+  accion: { label: "Encargar por WhatsApp", href: WHATSAPP_URL },
+  secundario: { label: "Ver el catálogo", href: "#catalogo" },
+  // TODO: plazo real. Va en el hero porque es la primera pregunta de quien
+  // encarga una tarta, y porque un encargo sin plazo a la vista se lee como
+  // "para hoy". Mientras siga entre corchetes, se ve que falta el dato.
+  nota: "Todo por encargo · [PLAZO DE ANTELACIÓN]",
+  credenciales: ["Escuela Torreblanca", "Marbella Club", "Saddle", "DSTAgE"],
+  // Sin nombres ni pronombres, igual que el resto de los alt: describe lo que
+  // se ve y nada más.
+  fotoAlt:
+    "Rellenando con manga pastelera un bocado de bizcocho verde sostenido en la mano.",
+} as const;
+
 // Texto de Carmen, condensado. El original es bastante más largo y aquí no
 // cabe: en esa sección el texto va dentro de la banda roja, y la banda mide lo
 // que la foto menos el saliente, así que pasarse no lo hace scroll, lo hace
