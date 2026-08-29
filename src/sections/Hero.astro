@@ -1,72 +1,58 @@
 ---
-// Hero: banda linen a sangre con el texto a la izquierda y la foto del obrador
-// a la derecha, sobresaliendo por abajo.
+// Hero: texto a la izquierda dentro de la retícula y foto a sangre ocupando la
+// mitad derecha de la pantalla, sobre fondo linen.
 //
-// La banda era rust y llevaba un patrón de ondas. Las dos cosas se han
-// quitado: el hero abre ahora en el mismo linen del resto de la página y sin
-// textura de fondo. Es un hero más callado, que deja que hablen el titular y
-// la foto.
+// La composición es la del rediseño de /v2; la ropa del texto es la de esta
+// web. Es decir: de la v2 se trae CÓMO está montado (foto a canto vivo contra
+// el borde de la pantalla, costura al centro, sin banda de color ni ondas), y
+// se queda todo lo de aquí en la columna izquierda: font-serif y no la Bodoni,
+// la escala de cuerpos de siempre, los colores de global.css y las píldoras
+// del resto del sitio. La v2 usa su propia tipografía y su propio color porque
+// va con el resto de SU diseño; aquí desentonaría.
 //
-// Lo que eso se lleva por delante, y conviene saberlo antes de tocar nada más:
+// Cómo casan las dos mitades, que es lo único delicado del montaje: el texto va
+// en `lg:w-1/2` DENTRO del `max-w-7xl mx-auto`, y la foto en `lg:w-1/2` del
+// BLOQUE, que ocupa todo el ancho. Coinciden exactamente porque un contenedor
+// centrado tiene su mitad justo en el centro de la pantalla, mida lo que mida
+// la ventana. Por eso la costura cae a hueso sin ningún calc(): a 1024, a 1440
+// y a 1920.
 //
-//   - el ritmo "color, respiro, color" que compartía con SobreMi.astro. Ahora
-//     el primer color fuerte de la página es la banda rust de "Sobre mí", que
-//     queda sola en ese papel. Si algún día se quiere recuperar el ritmo, el
-//     sitio es esa sección, no esta.
+// La foto ya no lleva rounded-3xl, ni anillo, ni sombra, ni saliente. Se acabó
+// también el translate y su pareja de condiciones (el lg:pb-0 de la banda y el
+// alto mínimo de la franja): la foto ahora no sobresale de nada.
 //
-//   - el corte del final. Antes el rojo cortaba en seco y la franja de
-//     credenciales, en linen, marcaba dónde acababa el hero. Ahora banda y
-//     franja son del mismo color y el corte no se lee: la franja sigue ahí
-//     porque las credenciales son la prueba de que el titular se sostiene,
-//     pero ya no separa nada. Quien quiera volver a marcar ese límite tendrá
-//     que hacerlo con un filete, no con un cambio de color.
+// Altura. En lg el hero sigue ocupando la pantalla entera menos la cabecera,
+// como antes, pero el cálculo se simplifica porque quien la pone ya no es la
+// foto sino el BLOQUE, y la foto se estira contra él con inset-y-0:
 //
-// Todo el color del texto se ha invertido en consecuencia. Sobre rust el
-// relleno era claro (sand y linen); sobre linen tiene que ser oscuro, o no se
-// lee: sand sobre linen da 1.14 de contraste, o sea nada. Los pares nuevos
-// salen de la tabla de global.css: black sobre linen 18.1 para el titular y
-// rust sobre linen 8.5 para el antetítulo y los enlaces.
+//   cabecera 4.25rem + bloque + franja 5rem = 100svh
 //
-// Altura: en lg el hero ocupa la pantalla entera menos la cabecera, para que no
-// asome la sección siguiente. Quien pone esa altura es la FOTO, no la sección:
+// de donde sale el lg:min-h-[calc(100svh_-_9.25rem)] del bloque. Antes eran
+// tres sumandos (había que contar además el pt-14 de la banda) y ahora son
+// dos, los dos con un origen concreto: 4.25rem es la barra en escritorio
+// (py-4, o sea 2rem, más los 36px de los botones de redes, que son la pieza más
+// alta) y 5rem es el lg:h-20 de la franja de abajo. Si cambia cualquiera de los
+// dos, cambia el 9.25rem.
 //
-//   cabecera 4.25rem + pt de la banda 3.5rem + foto + franja 5rem = 100svh
+// Es min-h y no h: si algún día el texto creciera más que la pantalla, el
+// bloque crece con él en vez de recortarlo. La foto, con inset-y-0, crece
+// igual.
 //
-// de donde sale el lg:h-[calc(100svh_-_12.75rem)] de la foto. En un portátil
-// normal eso deja una imagen de unos 700px de alto por 616 de ancho, que es el
-// rectángulo vertical del diseño; en una pantalla más alta, más vertical aún.
-//
-// Ojo con la tentación de poner lg:h-full en la foto: no funciona. La fila del
-// grid la mide su propio contenido, así que un 100% de altura contra ella es
-// circular, el navegador lo resuelve como "auto" y la imagen se va a su tamaño
-// natural (925px con esta foto), que revienta la pantalla y descoloca el texto.
-// Por eso el alto se mide contra svh, que sí es un número conocido.
-//
-// Los tres sumandos son literales y hay que mantenerlos a mano: 4.25rem es la
-// barra en escritorio (py-4, o sea 2rem, más los 36px de los botones de redes,
-// que son la pieza más alta), 3.5rem es el pt-14 de la banda y 5rem es el
-// lg:h-20 de la franja de abajo. Si cambia cualquiera de los tres, cambia el
-// 12.75rem.
-//
-// Los guiones bajos del calc() tampoco son adorno: en un valor arbitrario de
+// Los guiones bajos del calc() no son adorno: en un valor arbitrario de
 // Tailwind no caben espacios, y un calc() sin espacios alrededor del signo es
 // inválido, así que el navegador se come la declaración y la sección se queda
 // corta sin avisar de nada.
 //
-// El min-h de la sección es un cinturón, no el mecanismo: si algún día el texto
-// creciera más que la foto, la sección crece con él en vez de recortarlo.
+// La foto va DESPUÉS del texto en el DOM y solo se hace absolute a partir de
+// lg. Apilado, eso da el orden que se quiere en un móvil: primero la promesa y
+// el botón, la foto después. Al revés, el titular quedaría bajo el pliegue.
 //
-// El saliente de la foto es un translate y no un margen: así no cuenta para la
-// altura de la banda y lo que sobresale es exactamente lo que se traslada.
-// Depende de dos cosas que van juntas y hay que tocar juntas:
-//   - la banda no lleva padding abajo en lg (lg:pb-0), o el saliente se lo
-//     comería el propio hueco;
-//   - la franja de credenciales tiene que ser más alta que el saliente
-//     (2.5rem), o la foto se saldría de la sección y pisaría a "Sobre mí".
-//
-// Por debajo de lg no hay saliente: apilado, la foto va detrás del texto dentro
-// de la banda. Mismo criterio que SobreMi, que también deja el saliente sólo
-// para pantallas anchas.
+// Lo que se perdió al quitar la banda rust y que sigue vigente: el ritmo
+// "color, respiro, color" que compartía con SobreMi.astro (ahora el primer
+// color fuerte de la página es la banda de "Sobre mí", sola en ese papel) y el
+// corte del final del hero, que la franja de credenciales marcaba por
+// contraste y ya no marca. La franja se queda porque las credenciales son la
+// prueba de que el titular se sostiene, no por cómo separa.
 //
 // Ojo con la foto: trabajando2.jpeg está TAMBIÉN en el carrusel de GALERIA, así
 // que ahora mismo se ve dos veces en la misma página. En cuanto haya material
@@ -78,29 +64,31 @@ import fotoObrador from "@/assets/images/trabajando2.jpeg";
 import { HERO } from "@/config/site";
 ---
 
-<section class="relative lg:min-h-[calc(100svh_-_4.25rem)]">
+<section class="bg-linen">
   {
-    /* Sin `relative`: lo era para que el grid se pusiera por encima del svg de
-      ondas, y ese svg ya no está. */
+    /* El centrado vertical lo hace ESTE bloque y no un hijo con h-full: contra
+      un min-h, una altura en porcentaje es indeterminada, el navegador la
+      resuelve como "auto" y el items-center se queda sin efecto (el texto se
+      pega arriba y deja un hueco de linen debajo).
+
+      En lg el bloque es flex con un único hijo en flujo —la foto es absolute y
+      no cuenta—, así que items-center lo centra. Por debajo de lg vuelve a ser
+      un div normal y los dos hijos se apilan. */
   }
-  <div class="bg-linen">
-    {
-      /* Mismo grid de 12 columnas que SobreMi y Contacto: texto en 1-7 y foto
-        en 7-13. El lg:pb-0 no es un olvido, es lo que deja sitio al saliente
-        de la foto (ver la nota de arriba). */
-    }
-    <div
-      class="mx-auto grid w-full max-w-7xl items-center gap-10 px-6 py-14 md:py-16 lg:grid-cols-12 lg:gap-0 lg:pt-14 lg:pb-0"
-    >
-      <div class="lg:col-start-1 lg:col-end-7 lg:row-start-1 lg:pr-10">
+  <div
+    class="relative lg:flex lg:min-h-[calc(100svh_-_9.25rem)] lg:items-center"
+  >
+    <div class="mx-auto w-full max-w-7xl px-6">
+      <div class="w-full py-14 md:py-16 lg:w-1/2 lg:py-0 lg:pr-12">
         <p class="text-xs font-medium tracking-[0.25em] text-rust uppercase">
           {HERO.antetitulo}
         </p>
 
         {
           /* black y no rust: el titular es lo que se lee de más lejos y el
-            negro sobre linen da 18.1 contra los 8.5 del rust. El rust se
-            queda para el antetítulo y los enlaces, que es donde marca marca. */
+            negro sobre linen da 18.1 de contraste contra los 8.5 del rust. El
+            rust se queda para el antetítulo y los enlaces, que es donde marca
+            marca. */
         }
         <h1
           class="mt-5 font-serif text-4xl leading-[1.05] text-balance text-black sm:text-5xl lg:text-6xl xl:text-7xl"
@@ -115,12 +103,9 @@ import { HERO } from "@/config/site";
         </p>
 
         {
-          /* Exactamente la píldora de "Cómo llegar" (Contacto), una talla más:
-            px-8 py-4 en vez de px-6 py-3 deja el alto por encima de 44px.
-            Antes iba invertida (sand sobre rust) porque el fondo era rojo;
-            sobre linen vuelve al relleno rust del resto del sitio, que además
-            es lo único que la hace destacar como botón. El hover a negro es el
-            mismo de los demás botones. */
+          /* La píldora del resto del sitio (la misma de "Cómo llegar" en
+            Contacto), una talla más: px-8 py-4 en vez de px-6 py-3 deja el alto
+            por encima de 44px. El hover a negro es el de los demás botones. */
         }
         <div
           class="mt-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-6"
@@ -159,51 +144,51 @@ import { HERO } from "@/config/site";
 
         <p class="mt-5 text-xs text-black/50">{HERO.nota}</p>
       </div>
+    </div>
 
-      <div class="lg:col-start-7 lg:col-end-13 lg:row-start-1">
-        {
-          /* Mismo rounded-3xl que la foto de SobreMi, pero el anillo y la
-            sombra son los del carrusel (Galeria.astro), que es la otra foto
-            del sitio que va sobre linen: el anillo era ring-linen/15, que
-            sobre una banda roja se ve y sobre linen es literalmente el mismo
-            color, y la sombra baja de /20 a /5 porque sobre fondo claro una
-            sombra fuerte ensucia en vez de levantar.
+    {
+      /* Apilada, la foto manda su propio alto (26rem, y 32rem a partir de sm);
+        en lg se despega y se estira contra el bloque con inset-y-0, así que su
+        alto lo pone el calc() del bloque y no ella.
 
-            En móvil manda el formato 4:5 (el del carrusel); en lg manda la
-            altura y object-cover recorta por arriba y por abajo, así que el
-            motivo tiene que aguantar un encuadre casi cuadrado. */
-        }
-        <div
-          class="aspect-[4/5] overflow-hidden rounded-3xl shadow-lg shadow-black/5 ring-1 ring-taupe/25 lg:aspect-auto lg:h-[calc(100svh_-_12.75rem)] lg:translate-y-10"
-        >
-          <Image
-            src={fotoObrador}
-            alt={HERO.fotoAlt}
-            widths={[400, 640, 900, 1066]}
-            sizes="(min-width: 1024px) 42vw, 100vw"
-            loading="eager"
-            class="h-full w-full object-cover object-center"
-          />
-        </div>
+        object-cover recorta por arriba y por abajo, y en lg el hueco es casi
+        cuadrado, así que el motivo tiene que aguantar ese encuadre. */
+    }
+    <div
+      class="h-[26rem] overflow-hidden sm:h-[32rem] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-1/2"
+    >
+      <Image
+        src={fotoObrador}
+        alt={HERO.fotoAlt}
+        widths={[420, 640, 900, 1066]}
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        loading="eager"
+        class="h-full w-full object-cover object-center"
+      />
+
+      {
+        /* Degradado corto solo en pantallas anchas: sin el rounded-3xl que
+          había antes, el canto entre el linen del texto y la foto es una línea
+          dura. Esto la suaviza sin llegar a velar la imagen. */
+      }
+      <div
+        class="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-linen/50 to-transparent to-25% lg:block"
+        aria-hidden="true"
+      >
       </div>
     </div>
   </div>
 
   {
-    /* La franja de credenciales. Antes hacía dos trabajos: enseñar las cuatro
-      casas y, siendo linen contra la banda roja, marcar dónde acababa el hero.
-      Con la banda ya en linen solo hace el primero, y no se ve como franja
-      sino como continuación del hero.
-
-      Se queda igualmente porque las credenciales son la prueba de que el
-      titular se sostiene, y es lo único que un visitante que llega de
+    /* La franja de credenciales. Con la banda ya en linen no separa nada (era
+      linen contra rojo), pero se queda porque las cuatro casas son la prueba de
+      que el titular se sostiene, y es lo único que un visitante que llega de
       Instagram puede comprobar sin bajar.
 
-      Lo que NO se puede tocar: su alto mínimo tiene que seguir superando el
-      saliente de la foto (unos 80px contra los 40 que sobresale), o la foto se
-      saldría de la sección y pisaría "Sobre mí". */
+      Su lg:h-20 es uno de los dos sumandos del calc() del bloque de arriba: si
+      cambia, hay que cambiar el 9.25rem. */
   }
-  <div class="relative">
+  <div>
     <ul
       class="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-5 gap-y-2 px-6 py-6 text-[11px] tracking-[0.18em] text-black/50 uppercase lg:h-20 lg:py-0"
     >
