@@ -29,6 +29,15 @@
      (1.16). Valen como bandas de seccion a todo el ancho, donde se
      aprecia el cambio de tono, pero no como tarjeta sobre fondo: ahi
      separa con borde o con bg-taupe.
+
+  3. Sobre rust el TEXTO va en linen y sand se reserva para acentos y
+     rellenos: el CTA del hero, el boton de WhatsApp de la barra, el icono
+     de la marca, el subrayado de la navegacion. Sand como texto da 7.4 y
+     es legible, pero deja los titulares del mismo color que el CTA, y
+     entonces el boton deja de destacar: es la unica masa clara de la banda
+     y compite con un titular de 72px. Con el texto en linen (8.5, mas
+     contraste) sand queda como lo que senala la accion, que es el trabajo
+     que le toca.
 */
 @theme {
   --color-linen: #edf0da;

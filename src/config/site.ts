@@ -109,7 +109,7 @@ export const CONTACTO = {
 // Instagram puede comprobar sin bajar.
 export const HERO = {
   antetitulo: "Alta pastelería · Málaga",
-  titular: "La estética y El sabor pesan Lo mismo",
+  titular: "La estética y el sabor pesan lo mismo",
   entradilla:
     "Tartas, postres y mesas dulces por encargo. Cada pieza se hace una a una, para el día concreto que celebras.",
   // A WhatsApp y no a #contacto: el botón dice "encargar", así que tiene que
@@ -122,10 +122,6 @@ export const HERO = {
   // "para hoy". Mientras siga entre corchetes, se ve que falta el dato.
   nota: "Todo por encargo · [PLAZO DE ANTELACIÓN]",
   credenciales: ["Escuela Torreblanca", "Marbella Club", "Saddle", "DSTAgE"],
-  // Rótulo que presenta las credenciales. Sin él, cuatro nombres propios
-  // sueltos y centrados se leen como un menú de navegación: hasta que no dices
-  // qué son, "Saddle" y "DSTAgE" parecen secciones de la web.
-  credencialesRotulo: "Formada y curtida en",
   // Sin nombres ni pronombres, igual que el resto de los alt: describe lo que
   // se ve y nada más.
   fotoAlt:
