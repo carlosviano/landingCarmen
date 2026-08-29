@@ -1,17 +1,31 @@
 ---
-// Hero: banda rust a sangre con el texto a la izquierda y la foto del obrador a
-// la derecha, sobresaliendo por abajo sobre el linen de la página.
+// Hero: banda linen a sangre con el texto a la izquierda y la foto del obrador
+// a la derecha, sobresaliendo por abajo.
 //
-// Es el mismo recurso que SobreMi.astro, movido a lo alto de la página: banda
-// de color de canto a canto, contenido dentro del max-w-7xl y la foto pisando
-// el borde inferior. Se repite a propósito, porque es lo que le da al sitio su
-// ritmo: color, respiro, color.
+// La banda era rust y llevaba un patrón de ondas. Las dos cosas se han
+// quitado: el hero abre ahora en el mismo linen del resto de la página y sin
+// textura de fondo. Es un hero más callado, que deja que hablen el titular y
+// la foto.
 //
-// Lo que hace que funcione es cómo TERMINA: el rojo corta en seco y debajo
-// queda una franja de linen con las credenciales. Sin esa franja, el hero
-// desembocaría en el linen de la sección siguiente y el corte no se leería.
-// Por eso la banda no es el fondo de la sección, sino un bloque propio: la
-// franja de credenciales es su hermana, no su interior.
+// Lo que eso se lleva por delante, y conviene saberlo antes de tocar nada más:
+//
+//   - el ritmo "color, respiro, color" que compartía con SobreMi.astro. Ahora
+//     el primer color fuerte de la página es la banda rust de "Sobre mí", que
+//     queda sola en ese papel. Si algún día se quiere recuperar el ritmo, el
+//     sitio es esa sección, no esta.
+//
+//   - el corte del final. Antes el rojo cortaba en seco y la franja de
+//     credenciales, en linen, marcaba dónde acababa el hero. Ahora banda y
+//     franja son del mismo color y el corte no se lee: la franja sigue ahí
+//     porque las credenciales son la prueba de que el titular se sostiene,
+//     pero ya no separa nada. Quien quiera volver a marcar ese límite tendrá
+//     que hacerlo con un filete, no con un cambio de color.
+//
+// Todo el color del texto se ha invertido en consecuencia. Sobre rust el
+// relleno era claro (sand y linen); sobre linen tiene que ser oscuro, o no se
+// lee: sand sobre linen da 1.14 de contraste, o sea nada. Los pares nuevos
+// salen de la tabla de global.css: black sobre linen 18.1 para el titular y
+// rust sobre linen 8.5 para el antetítulo y los enlaces.
 //
 // Altura: en lg el hero ocupa la pantalla entera menos la cabecera, para que no
 // asome la sección siguiente. Quien pone esa altura es la FOTO, no la sección:
@@ -51,17 +65,13 @@
 //     (2.5rem), o la foto se saldría de la sección y pisaría a "Sobre mí".
 //
 // Por debajo de lg no hay saliente: apilado, la foto va detrás del texto dentro
-// de la banda y el corte lo marca igual la franja de abajo. Mismo criterio que
-// SobreMi, que también deja el saliente sólo para pantallas anchas.
+// de la banda. Mismo criterio que SobreMi, que también deja el saliente sólo
+// para pantallas anchas.
 //
 // Ojo con la foto: trabajando2.jpeg está TAMBIÉN en el carrusel de GALERIA, así
 // que ahora mismo se ve dos veces en la misma página. En cuanto haya material
 // de verdad, esa foto debería salir de una de las dos (ver la nota de GALERIA
 // en config/site.ts, que ya arrastra el mismo problema con sobre-mi.jpg).
-//
-// El patrón de ondas es el de SobreMi.astro con ids propios: los dos svg
-// conviven en la misma página y un id repetido hace que el segundo `use` apunte
-// al primero.
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import fotoObrador from "@/assets/images/trabajando2.jpeg";
@@ -69,70 +79,48 @@ import { HERO } from "@/config/site";
 ---
 
 <section class="relative lg:min-h-[calc(100svh_-_4.25rem)]">
-  <div class="relative bg-rust">
-    <svg
-      class="pointer-events-none absolute inset-0 h-full w-full text-linen/12"
-      aria-hidden="true"
-    >
-      <defs>
-        <path
-          id="onda-suave-hero"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"></path>
-        <path
-          id="onda-honda-hero"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"
-        ></path>
-        <pattern
-          id="ondas-hero"
-          width="240"
-          height="132"
-          patternUnits="userSpaceOnUse"
-        >
-          <use href="#onda-suave-hero" transform="translate(0 18)"></use>
-          <use href="#onda-honda-hero" transform="translate(80 54)"></use>
-          <use href="#onda-suave-hero" transform="translate(170 90)"></use>
-          <use href="#onda-honda-hero" transform="translate(45 118)"></use>
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#ondas-hero)"></rect>
-    </svg>
-
+  {
+    /* Sin `relative`: lo era para que el grid se pusiera por encima del svg de
+      ondas, y ese svg ya no está. */
+  }
+  <div class="bg-linen">
     {
       /* Mismo grid de 12 columnas que SobreMi y Contacto: texto en 1-7 y foto
         en 7-13. El lg:pb-0 no es un olvido, es lo que deja sitio al saliente
         de la foto (ver la nota de arriba). */
     }
     <div
-      class="relative mx-auto grid w-full max-w-7xl items-center gap-10 px-6 py-14 md:py-16 lg:grid-cols-12 lg:gap-0 lg:pt-14 lg:pb-0"
+      class="mx-auto grid w-full max-w-7xl items-center gap-10 px-6 py-14 md:py-16 lg:grid-cols-12 lg:gap-0 lg:pt-14 lg:pb-0"
     >
       <div class="lg:col-start-1 lg:col-end-7 lg:row-start-1 lg:pr-10">
-        <p class="text-xs font-medium tracking-[0.25em] text-sand uppercase">
+        <p class="text-xs font-medium tracking-[0.25em] text-rust uppercase">
           {HERO.antetitulo}
         </p>
 
+        {
+          /* black y no rust: el titular es lo que se lee de más lejos y el
+            negro sobre linen da 18.1 contra los 8.5 del rust. El rust se
+            queda para el antetítulo y los enlaces, que es donde marca marca. */
+        }
         <h1
-          class="mt-5 font-serif text-4xl leading-[1.05] text-balance text-sand sm:text-5xl lg:text-6xl xl:text-7xl"
+          class="mt-5 font-serif text-4xl leading-[1.05] text-balance text-black sm:text-5xl lg:text-6xl xl:text-7xl"
         >
           {HERO.titular}
         </h1>
 
         <p
-          class="mt-6 max-w-[30rem] text-base leading-relaxed text-linen/80 sm:text-lg"
+          class="mt-6 max-w-[30rem] text-base leading-relaxed text-black/70 sm:text-lg"
         >
           {HERO.entradilla}
         </p>
 
         {
-          /* La píldora de "Cómo llegar" (Contacto) invertida y una talla más:
-            sobre rust el relleno tiene que ser claro, y px-8 py-4 en vez de
-            px-6 py-3 deja el alto por encima de 44px. El hover a negro es el
-            mismo de los demás botones del sitio. */
+          /* Exactamente la píldora de "Cómo llegar" (Contacto), una talla más:
+            px-8 py-4 en vez de px-6 py-3 deja el alto por encima de 44px.
+            Antes iba invertida (sand sobre rust) porque el fondo era rojo;
+            sobre linen vuelve al relleno rust del resto del sitio, que además
+            es lo único que la hace destacar como botón. El hover a negro es el
+            mismo de los demás botones. */
         }
         <div
           class="mt-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-6"
@@ -141,7 +129,7 @@ import { HERO } from "@/config/site";
             href={HERO.accion.href}
             target="_blank"
             rel="noopener noreferrer"
-            class="flex w-full items-center justify-center gap-2 rounded-full bg-sand px-8 py-4 text-xs font-medium tracking-widest text-rust uppercase shadow-lg shadow-black/25 transition-colors hover:bg-black hover:text-white sm:w-auto"
+            class="flex w-full items-center justify-center gap-2 rounded-full bg-rust px-8 py-4 text-xs font-medium tracking-widest text-linen uppercase shadow-lg shadow-black/15 transition-colors hover:bg-black hover:text-white sm:w-auto"
           >
             <Icon
               name="simple-icons:whatsapp"
@@ -152,12 +140,13 @@ import { HERO } from "@/config/site";
           </a>
 
           {
-            /* Subrayado fijo y no el animado de la barra: aquel es de sand y
-              aquí compite con el titular, que ya es sand. */
+            /* Subrayado fijo y no el animado de la barra: aquel aparece al
+              pasar por encima y aquí el enlace tiene que verse como enlace
+              desde el primer momento, que es la única alternativa al botón. */
           }
           <a
             href={HERO.secundario.href}
-            class="flex items-center gap-2 border-b border-linen/35 pb-1 text-xs font-medium tracking-widest text-linen/80 uppercase transition-colors hover:border-linen/60 hover:text-white"
+            class="flex items-center gap-2 border-b border-rust/35 pb-1 text-xs font-medium tracking-widest text-rust uppercase transition-colors hover:border-rust hover:text-black"
           >
             {HERO.secundario.label}
             <Icon
@@ -168,18 +157,24 @@ import { HERO } from "@/config/site";
           </a>
         </div>
 
-        <p class="mt-5 text-xs text-linen/60">{HERO.nota}</p>
+        <p class="mt-5 text-xs text-black/50">{HERO.nota}</p>
       </div>
 
       <div class="lg:col-start-7 lg:col-end-13 lg:row-start-1">
         {
-          /* Mismo tratamiento que la foto de SobreMi: rounded-3xl, anillo claro
-            y sombra. En móvil manda el formato 4:5 (el del carrusel); en lg
-            manda la altura y object-cover recorta por arriba y por abajo, así
-            que el motivo tiene que aguantar un encuadre casi cuadrado. */
+          /* Mismo rounded-3xl que la foto de SobreMi, pero el anillo y la
+            sombra son los del carrusel (Galeria.astro), que es la otra foto
+            del sitio que va sobre linen: el anillo era ring-linen/15, que
+            sobre una banda roja se ve y sobre linen es literalmente el mismo
+            color, y la sombra baja de /20 a /5 porque sobre fondo claro una
+            sombra fuerte ensucia en vez de levantar.
+
+            En móvil manda el formato 4:5 (el del carrusel); en lg manda la
+            altura y object-cover recorta por arriba y por abajo, así que el
+            motivo tiene que aguantar un encuadre casi cuadrado. */
         }
         <div
-          class="aspect-[4/5] overflow-hidden rounded-3xl shadow-xl shadow-black/20 ring-1 ring-linen/15 lg:aspect-auto lg:h-[calc(100svh_-_12.75rem)] lg:translate-y-10"
+          class="aspect-[4/5] overflow-hidden rounded-3xl shadow-lg shadow-black/5 ring-1 ring-taupe/25 lg:aspect-auto lg:h-[calc(100svh_-_12.75rem)] lg:translate-y-10"
         >
           <Image
             src={fotoObrador}
@@ -195,10 +190,18 @@ import { HERO } from "@/config/site";
   </div>
 
   {
-    /* La franja que cierra el hero. Va sobre el linen de la página (no lleva
-      fondo propio) y es lo que hace legible el corte de la banda. Su alto
-      mínimo tiene que superar el saliente de la foto: con py-8 y una línea de
-      texto son unos 80px contra los 40 que sobresale. */
+    /* La franja de credenciales. Antes hacía dos trabajos: enseñar las cuatro
+      casas y, siendo linen contra la banda roja, marcar dónde acababa el hero.
+      Con la banda ya en linen solo hace el primero, y no se ve como franja
+      sino como continuación del hero.
+
+      Se queda igualmente porque las credenciales son la prueba de que el
+      titular se sostiene, y es lo único que un visitante que llega de
+      Instagram puede comprobar sin bajar.
+
+      Lo que NO se puede tocar: su alto mínimo tiene que seguir superando el
+      saliente de la foto (unos 80px contra los 40 que sobresale), o la foto se
+      saldría de la sección y pisaría "Sobre mí". */
   }
   <div class="relative">
     <ul
