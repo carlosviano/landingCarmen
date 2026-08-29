@@ -25,14 +25,14 @@
 // como antes, pero el cálculo se simplifica porque quien la pone ya no es la
 // foto sino el BLOQUE, y la foto se estira contra él con inset-y-0:
 //
-//   cabecera 4.25rem + bloque + franja 5rem = 100svh
+//   cabecera 4.25rem + bloque + franja 8rem = 100svh
 //
-// de donde sale el lg:min-h-[calc(100svh_-_9.25rem)] del bloque. Antes eran
+// de donde sale el lg:min-h-[calc(100svh_-_12.25rem)] del bloque. Antes eran
 // tres sumandos (había que contar además el pt-14 de la banda) y ahora son
 // dos, los dos con un origen concreto: 4.25rem es la barra en escritorio
 // (py-4, o sea 2rem, más los 36px de los botones de redes, que son la pieza más
-// alta) y 5rem es el lg:h-20 de la franja de abajo. Si cambia cualquiera de los
-// dos, cambia el 9.25rem.
+// alta) y 8rem es el lg:h-32 de la franja de abajo. Si cambia cualquiera de los
+// dos, cambia el 12.25rem.
 //
 // Es min-h y no h: si algún día el texto creciera más que la pantalla, el
 // bloque crece con él en vez de recortarlo. La foto, con inset-y-0, crece
@@ -76,7 +76,7 @@ import { HERO } from "@/config/site";
       un div normal y los dos hijos se apilan. */
   }
   <div
-    class="relative lg:flex lg:min-h-[calc(100svh_-_9.25rem)] lg:items-center"
+    class="relative lg:flex lg:min-h-[calc(100svh_-_12.25rem)] lg:items-center"
   >
     <div class="mx-auto w-full max-w-7xl px-6">
       <div class="w-full py-14 md:py-16 lg:w-1/2 lg:py-0 lg:pr-12">
@@ -190,40 +190,69 @@ import { HERO } from "@/config/site";
       visitante que llega de Instagram puede comprobar sin bajar— y estaban
       tratadas como letra pequeña. Ahora van a 22px sobre color.
 
-      Efecto secundario que conviene no deshacer sin querer: esta banda le
-      devuelve al hero el corte del final que se perdió al quitar la banda rust
-      de arriba. El linen del hero ahora termina contra el rojo, y de paso
-      vuelve el ritmo "color, respiro, color" de la página: cabecera roja,
-      hero en linen, esta franja, galería en linen, "Sobre mí" en rojo.
+      POR QUÉ ES UN BLOQUE ALTO Y NO UNA BARRA. Con la cabecera también en rust,
+      una franja fina del mismo rojo abajo se emparejaba con ella y encajonaba
+      el hero: dos barras del mismo color, peso y sitio se leen como un marco, y
+      un marco cierra justo donde el hero tiene que invitar a bajar. Peor aún,
+      ese marco solo existe en la posición 0, porque la cabecera es sticky y
+      esta banda no; al primer scroll se deshace.
 
-      sand sobre rust da 7.4 de contraste (ver la tabla de global.css).
+      El marco necesita simetría, así que se rompe quitándosela. De ahí las dos
+      decisiones de aquí: la banda mide 8rem contra los 4.25rem de la cabecera
+      (casi el doble: ya no son un par), y lleva DOS líneas centradas con
+      jerarquía —rótulo pequeño y nombres grandes— frente a la composición de
+      la cabecera, que es marca a la izquierda y navegación a la derecha.
+      Distinta altura y distinta estructura: se lee como una sección con
+      contenido, no como la barra gemela de arriba.
+
+      La cabecera se queda en rojo porque el toldo del local es de ese color con
+      la marca a la izquierda, y que la web repita el rótulo físico vale más que
+      la objeción compositiva.
+
+      Lo que sí se conserva: el corte del final del hero, que el linen termine
+      contra color, y el ritmo de la página (cabecera roja, hero en linen, esta
+      banda, galería en linen, "Sobre mí" en rojo).
+
+      Contrastes sobre rust: sand da 7.4 y sand/75 —el rótulo— da 4.88, que es
+      lo más bajo que pasa AA para un cuerpo de 10px. Bajar esa opacidad lo
+      suspende: sand/70 ya se queda en 4.42.
 
       Los puntos separadores se esconden por debajo de lg: ahí los nombres
       envuelven a varias líneas y un punto suelto abriendo línea se lee como
       una viñeta. En lg caben los cuatro en una fila y sí separan.
 
-      Su lg:h-20 es uno de los dos sumandos del calc() del bloque de arriba: si
-      cambia, hay que cambiar el 9.25rem. */
+      Su lg:h-32 es uno de los dos sumandos del calc() del bloque de arriba: si
+      cambia, hay que cambiar el 12.25rem. */
   }
   <div class="bg-rust">
-    <ul
-      class="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-8 gap-y-1 px-6 py-6 text-center lg:h-20 lg:gap-x-11 lg:py-0"
+    <div
+      class="mx-auto flex w-full max-w-7xl flex-col items-center gap-4 px-6 py-10 text-center lg:h-32 lg:justify-center lg:gap-5 lg:py-0"
     >
-      {
-        HERO.credenciales.map((casa, indice) => (
-          <li class="flex items-center gap-8 lg:gap-11">
-            {indice > 0 && (
-              <span
-                class="hidden size-1 shrink-0 rounded-full bg-sand/40 lg:block"
-                aria-hidden="true"
-              />
-            )}
-            <span class="font-serif text-lg tracking-wide text-sand lg:text-[22px]">
-              {casa}
-            </span>
-          </li>
-        ))
-      }
-    </ul>
+      <p
+        class="text-[10px] font-medium tracking-[0.3em] text-sand/75 uppercase"
+      >
+        {HERO.credencialesRotulo}
+      </p>
+
+      <ul
+        class="flex flex-wrap items-center justify-center gap-x-7 gap-y-1 lg:gap-x-10"
+      >
+        {
+          HERO.credenciales.map((casa, indice) => (
+            <li class="flex items-center gap-7 lg:gap-10">
+              {indice > 0 && (
+                <span
+                  class="hidden size-1 shrink-0 rounded-full bg-sand/40 lg:block"
+                  aria-hidden="true"
+                />
+              )}
+              <span class="font-serif text-lg tracking-wide text-sand lg:text-[22px]">
+                {casa}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </section>

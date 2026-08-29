@@ -122,6 +122,10 @@ export const HERO = {
   // "para hoy". Mientras siga entre corchetes, se ve que falta el dato.
   nota: "Todo por encargo · [PLAZO DE ANTELACIÓN]",
   credenciales: ["Escuela Torreblanca", "Marbella Club", "Saddle", "DSTAgE"],
+  // Rótulo que presenta las credenciales. Sin él, cuatro nombres propios
+  // sueltos y centrados se leen como un menú de navegación: hasta que no dices
+  // qué son, "Saddle" y "DSTAgE" parecen secciones de la web.
+  credencialesRotulo: "Formada y curtida en",
   // Sin nombres ni pronombres, igual que el resto de los alt: describe lo que
   // se ve y nada más.
   fotoAlt:
