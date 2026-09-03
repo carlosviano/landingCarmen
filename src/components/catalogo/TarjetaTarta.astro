@@ -1,0 +1,155 @@
+---
+// Una tarta en la rejilla de la carta. La usan /catalogo y la tira "Otras
+// tartas" del final de la ficha.
+//
+// UN SOLO TÍTULO. Antes llevaba dos líneas de titular: el sabor destacado en
+// mayúsculas y, debajo, el nombre en serif. Se ha quedado el NOMBRE, que es lo
+// que identifica el producto y lo que alguien busca; el sabor se iba en la
+// mitad de los casos a repetir el nombre con otras palabras ("Melocotón
+// asado" encima de "Pavlova de melocotón"), y dos titulares seguidos hacen que
+// ninguno pese. El sabor sigue vivo en la ficha, de antetítulo sobre el h1,
+// donde no compite con nada.
+//
+// SIN CAJA: no hay fondo, ni anillo, ni sombra alrededor. Queda la foto
+// enmarcada y, debajo, la tipografía directamente sobre el fondo de página. Es
+// lo que separa un catálogo editorial de una rejilla de comercio.
+//
+// Consecuencias de no tener caja, las dos resueltas aquí:
+//   - el hover ya no puede ser "la tarjeta se levanta": es la foto que se
+//     acerca un punto y el nombre que se pone en rust.
+//   - el foco de teclado lo sigue dibujando `global.css` (outline rust con
+//     offset) alrededor del enlace entero, foto y texto incluidos.
+//
+// La TARJETA ENTERA es el enlace, así que el objetivo de toque es todo el
+// bloque y no una línea de texto. Por eso dentro no hay ningún otro elemento
+// interactivo.
+import { Image } from "astro:assets";
+import type { Tarta } from "@/config/site";
+
+interface Props {
+  tarta: Tarta;
+  /**
+   * La foto ya resuelta, o `null` si esta tarta todavía no tiene. La resuelve
+   * quien pinta la lista (con `fotoDe`) y no este componente, para no repetir
+   * un `import.meta.glob` por componente: es relativo al archivo que lo
+   * escribe y se rompe al mover carpetas.
+   */
+  foto: ImageMetadata | null;
+  /**
+   * El 01–08 de la carta. Va suelto y no en `Tarta` porque no es un dato de la
+   * tarta: es su posición en la lista, y la decide quien pinta la lista. La
+   * tira de la ficha va sin él.
+   */
+  numero?: number;
+  /** Versión reducida, para la tira del final de la ficha. */
+  compacta?: boolean;
+  /**
+   * Nivel del encabezado del nombre. El nombre de una tarta ES un encabezado,
+   * pero de qué nivel depende de lo que tenga encima en cada página: en
+   * /catalogo cuelga del h1 del titular, y en la ficha del h2 de su sección.
+   * Se pasa a mano porque el componente no puede saber dónde lo están
+   * metiendo, y un esquema de encabezados con saltos es justo lo que hace
+   * ilegible una página con lector de pantalla.
+   */
+  nivel?: 2 | 3;
+  class?: string;
+}
+
+const {
+  tarta,
+  foto,
+  numero,
+  compacta = false,
+  nivel = 3,
+  class: className,
+} = Astro.props;
+
+// Astro pinta la etiqueta que diga la variable si empieza por mayúscula.
+const Titular = nivel === 2 ? "h2" : "h3";
+
+// En la rejilla la tarjeta ocupa media pantalla en móvil y un cuarto de los
+// 1280 del contenedor en escritorio; en la tira de la ficha, 9rem.
+const ANCHOS = compacta ? [160, 320] : [200, 320, 440, 640];
+const SIZES = compacta
+  ? "10rem"
+  : "(min-width: 1024px) 19rem, (min-width: 768px) 26vw, 45vw";
+---
+
+<a href={`/catalogo/${tarta.id}`} class:list={["group block", className]}>
+  {
+    /* El marco es el de la galería del sitio —aspect-[4/5] y rounded-3xl—
+      pero sin su anillo ni su sombra: aquí la foto va sola sobre el fondo, no
+      metida en una tarjeta. */
+  }
+  <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15">
+    {
+      foto ? (
+        <Image
+          src={foto}
+          alt={tarta.alt}
+          widths={ANCHOS}
+          sizes={SIZES}
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
+        />
+      ) : (
+        /* Marco de foto pendiente, y MARCADO a propósito. Antes aquí había una
+          foto de banco: quedaba lleno, pero no dejaba juzgar el diseño ni
+          decía qué falta. Esto sí. El tono alterno lo pone la rejilla, para
+          que seis huecos no se lean como seis errores iguales. */
+        <div class="grid h-full w-full place-items-center">
+          <span class="text-[9px] font-medium tracking-[0.24em] text-rust/70 uppercase">
+            Foto pendiente
+          </span>
+        </div>
+      )
+    }
+  </div>
+
+  {
+    /* Nombre y número en la misma línea: el número es orientación visual, no
+      información, así que va pequeño, apagado y con aria-hidden —quien va con
+      lector de pantalla ya sabe por dónde va la lista. */
+  }
+  <div
+    class:list={[
+      "flex items-baseline gap-2.5",
+      compacta ? "mt-3" : "mt-4.5",
+    ]}
+  >
+    {
+      numero !== undefined && (
+        <span
+          class="text-[10px] tracking-[0.2em] text-black/40 tabular-nums"
+          aria-hidden="true"
+        >
+          {String(numero).padStart(2, "0")}
+        </span>
+      )
+    }
+    <Titular
+      class:list={[
+        "font-display leading-snug transition-colors group-hover:text-rust",
+        compacta ? "text-sm" : "text-xl",
+      ]}
+    >
+      {tarta.nombre}
+    </Titular>
+  </div>
+
+  {
+    /* Filete con las raciones y el precio a los dos extremos. Es el recurso de
+      una carta de restaurante y alinea los precios de cada hilera. */
+    !compacta ? (
+      <div class="mt-3.5 flex items-baseline justify-between gap-3 border-t border-taupe/50 pt-2.5">
+        <span class="text-xs text-black/60">{tarta.raciones}</span>
+        <span class="text-sm font-medium text-rust">{tarta.precio}</span>
+      </div>
+    ) : (
+      <div class="mt-2.5 border-t border-taupe/50 pt-2">
+        <span class="text-xs font-medium text-rust">{tarta.precio}</span>
+      </div>
+    )
+  }
+</a>

@@ -37,6 +37,13 @@
   --color-rust: #7c2513;
 }
 
+/* Prata entra por la API de fuentes de Astro (ver astro.config.mjs). Se expone
+   como utilidad `font-display` para los titulares. El `inline` es el patrón
+   recomendado cuando el valor viene de una variable definida fuera del tema. */
+@theme inline {
+  --font-display: var(--font-prata);
+}
+
 @layer base {
   html {
     background-color: var(--color-linen);

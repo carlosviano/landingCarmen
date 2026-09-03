@@ -1,0 +1,390 @@
+---
+// /catalogo/<id> — la ficha de una tarta.
+//
+// Ruta estática: se genera una página por tarta a partir de CATALOGO, así que
+// añadir una tarta en src/config/site.ts crea su ficha sola. Cada una tiene su
+// URL, y eso es el punto: se comparte por WhatsApp, se guarda en marcadores y
+// la indexa un buscador. Un panel o un modal no dan ninguna de las tres.
+//
+// La página son TRES bloques y en este orden:
+//
+//   1. La tarta (foto + información) y "cómo se hace", juntas UNA PANTALLA en
+//      escritorio. Van dentro del mismo contenedor y por eso se leen como una
+//      sola sección: bajas un poco y la tienes entera delante.
+//   2. La tira con las otras siete, que es cómo se pasa de una tarta a otra.
+//      No hay anterior/siguiente: el lineal obligaba a pasar por cinco fichas
+//      para llegar a la sexta y no decía a dónde llevaba cada paso.
+//
+// Un solo CTA en toda la página. Antes había dos botones idénticos (arriba y
+// al final) y eso no es insistir, es repartir la atención: con dos, ninguno es
+// EL botón.
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/sections/Header.astro";
+import Footer from "@/sections/Footer.astro";
+import TarjetaTarta from "@/components/catalogo/TarjetaTarta.astro";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { CATALOGO, PEDIDO, type Tarta } from "@/config/site";
+import { fotoDe } from "@/lib/fotos";
+
+export function getStaticPaths() {
+  return CATALOGO.tartas.map((tarta, i) => ({
+    params: { tarta: tarta.id },
+    props: { tarta, indice: i },
+  }));
+}
+
+interface Props {
+  tarta: Tarta;
+  indice: number;
+}
+
+const { tarta, indice } = Astro.props;
+const total = CATALOGO.tartas.length;
+
+// Las otras siete, empezando por la que va detrás de esta: se mantiene el
+// orden de la carta, sólo rota. Así la tira no empieza siempre por la primera
+// tarta y la de al lado queda a mano, que es la que más se compara.
+const otras = Array.from({ length: total - 1 }, (_, k) => {
+  const otra = CATALOGO.tartas[(indice + 1 + k) % total]!;
+  return { tarta: otra, foto: fotoDe(otra.archivo) };
+});
+
+// `null` cuando esta tarta todavía no tiene foto: seis de las ocho están así.
+const foto = fotoDe(tarta.archivo);
+
+// Adónde lleva el CTA. Sale entero de site.ts para que cambiar el destino
+// —hoy WhatsApp, mañana un formulario— no obligue a tocar esta página.
+const pedido = PEDIDO.enlace(tarta.nombre);
+
+// Los datos de la tarta, en el orden en que se preguntan. Se declaran aquí y
+// no en el marcado para que el <dl> quede en tres líneas y se vea de un golpe
+// qué filas tiene.
+// Ojo: NO lleva "Tamaño". Las raciones ya se ven arriba, al lado del precio,
+// que es donde se buscan; repetirlas aquí era una fila que no aportaba nada y
+// obligaba a leer dos veces lo mismo.
+const datos = [
+  { termino: "Conservación", valor: tarta.conservacion },
+  { termino: "Encargo", valor: PEDIDO.antelacion },
+];
+---
+
+<Layout titulo={tarta.nombre} descripcion={tarta.descripcion}>
+  <Header />
+
+  <main>
+    <div class="mx-auto w-full max-w-7xl px-6">
+      {
+        /* Vuelta a la carta, y con forma de botón: es la salida de esta
+          pantalla y tiene que verse desde el primer pantallazo. Es un <a> y no
+          un <button> porque navega a una URL — así se abre en otra pestaña, se
+          copia el enlace y funciona sin JS. La flecha es decorativa
+          (aria-hidden) porque el texto ya dice a dónde va. */
+      }
+      <div class="pt-8">
+        <a
+          href="/catalogo"
+          class="inline-flex items-center gap-2 rounded-full border border-black/40 px-5 py-2.5 text-[11px] font-medium tracking-[0.16em] text-rust uppercase transition-colors duration-200 hover:border-rust hover:bg-rust hover:text-linen"
+        >
+          <Icon name="lucide:arrow-left" class="size-3.5" aria-hidden="true" />
+          Volver a la carta
+        </a>
+      </div>
+    </div>
+
+    {
+      /* --- La tarta y "cómo se hace": UNA pantalla ---
+
+        En escritorio las dos cosas van dentro de este contenedor de
+        `min-h-[calc(100svh-5rem)]`, así que juntas llenan la ventana y se leen
+        como una sola sección. El 5rem es el alto de la cabecera, que es sticky
+        y está siempre ahí: sin restarlo, la banda quedaría un pie por debajo
+        del pliegue. Es el mismo valor con el que el sitio ya compensa la
+        cabecera en sus anclas (`scroll-mt-20`).
+
+        `min-h` y no `h`: si el contenido no cabe —una ventana baja, un nombre
+        muy largo, texto ampliado por el usuario— la sección CRECE y no se
+        recorta nada. Forzar la altura exacta obligaría a encoger la letra, y
+        eso es justo lo que no se puede hacer.
+
+        `svh` y no `vh`: `vh` cuenta con la barra del navegador móvil
+        escondida, así que da un salto al aparecer. Aquí sólo aplica desde lg,
+        pero el valor estable es el correcto.
+
+        En móvil no se aplica: apilado, foto + información + banda en una
+        pantalla sólo caben con letra ilegible. */
+    }
+    <div class="lg:flex lg:min-h-[calc(100svh-5rem)] lg:flex-col">
+      <div class="lg:flex lg:flex-1 lg:items-center">
+        <div class="mx-auto w-full max-w-7xl px-6">
+          <div
+            class="grid items-center gap-10 py-11 lg:grid-cols-2 lg:gap-14 lg:py-8"
+          >
+            <div
+              class="mx-auto w-full max-w-[26rem] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25 lg:max-w-[27rem]"
+            >
+              {
+                foto ? (
+                  <Image
+                    src={foto}
+                    alt={tarta.alt}
+                    widths={[420, 640, 900]}
+                    sizes="(min-width: 1024px) 27rem, (min-width: 640px) 26rem, 90vw"
+                    loading="eager"
+                    decoding="async"
+                    class="aspect-[4/5] h-full w-full object-cover object-center"
+                  />
+                ) : (
+                  <div class="grid aspect-[4/5] w-full place-items-center">
+                    <span class="text-[10px] font-medium tracking-[0.24em] text-rust/70 uppercase">
+                      Foto pendiente
+                    </span>
+                  </div>
+                )
+              }
+            </div>
+
+            {
+              /* La columna de información, en cuatro bloques y en el orden en
+                que se decide un encargo: QUÉ es y CUÁNTO cuesta, CÓMO es, QUÉ
+                LLEVA, y sólo al final CÓMO SE PIDE. Los bloques se separan con
+                el `gap` del flex y no con márgenes sueltos, así que el ritmo
+                vertical es uno y no cinco distintos.
+
+                Lo que se ha quitado, que era el ruido:
+                  - el antetítulo en mayúsculas con el sabor destacado encima
+                    del h1 ("MELOCOTÓN ASADO" sobre "Pavlova de melocotón"):
+                    dos titulares seguidos y el de arriba repitiendo al de
+                    abajo.
+                  - el precio de acompañante del botón, al final, donde nadie
+                    lo busca.
+                  - los datos en tres columnas de 180px, donde "Se come recién
+                    montada" caía en cuatro líneas. */
+            }
+            <div class="flex flex-col gap-7 lg:gap-6">
+              <div>
+                {
+                  /* El nombre en serif y en rust: 8.5:1 sobre linen, así que
+                    el acento no cuesta legibilidad. Y encima de la
+                    información, nunca detrás de la foto: ahí el contraste
+                    dependería de qué píxel de la tarta le tocara debajo. */
+                }
+                <h1
+                  class="font-display text-4xl leading-[1.12] text-balance text-rust sm:text-5xl lg:text-[3.1rem]"
+                >
+                  {tarta.nombre}
+                </h1>
+
+                {
+                  /* Precio y tamaño juntos y arriba: son las dos preguntas que
+                    se hacen antes que ninguna otra. */
+                }
+                <p class="mt-4 flex flex-wrap items-baseline gap-x-3.5 gap-y-1">
+                  <span class="text-2xl font-medium text-rust"
+                    >{tarta.precio}</span
+                  >
+                  <span class="text-sm text-black/60">{tarta.raciones}</span>
+                </p>
+              </div>
+
+              <p class="max-w-[46ch] leading-relaxed text-black/70">
+                {tarta.descripcion}
+              </p>
+
+              {
+                /* Qué lleva: lista con viñetas de verdad (<ul>/<li>), que un
+                  lector de pantalla anuncia como "lista de N elementos" y
+                  deja saltar de una a otra. El nombre del componente va en
+                  seminegrita y el detalle detrás, en menor y más apagado: el
+                  recorrido rápido son los nombres, y el detalle sólo se lee
+                  si interesa. */
+              }
+              <div>
+                <h2
+                  class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase"
+                >
+                  Qué lleva
+                </h2>
+                <ul class="mt-3.5 list-disc space-y-2 pl-5 marker:text-rust">
+                  {
+                    tarta.componentes.map((componente) => (
+                      <li class="leading-snug">
+                        <span class="font-medium">{componente.etiqueta}</span>
+                        <span class="text-sm text-black/65">
+                          {" — "}
+                          {componente.descripcionCorta}
+                        </span>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </div>
+
+              {
+                /* Los datos, en filas de término y valor con su filete.
+                  SIEMPRE en filas, a cualquier ancho: una tabla de dos
+                  columnas se lee de un barrido y no se descoloca. */
+              }
+              <dl class="border-t border-taupe/45">
+                {
+                  datos.map((dato) => (
+                    <div class="flex items-baseline justify-between gap-6 border-b border-taupe/45 py-2.5">
+                      <dt class="text-[10px] tracking-[0.2em] text-black/60 uppercase">
+                        {dato.termino}
+                      </dt>
+                      <dd class="text-right text-sm text-black/80">
+                        {dato.valor}
+                      </dd>
+                    </div>
+                  ))
+                }
+              </dl>
+
+              {
+                /* El único CTA de la página, y al final: cuando ya se ha leído
+                  lo que hace falta para pulsarlo.
+
+                  El texto sale de `PEDIDO.etiqueta` y nombra WhatsApp a
+                  propósito: un botón que te saca de la página tiene que decir
+                  a dónde te lleva. Y la línea de debajo dice qué pasa al
+                  pulsarlo —otra ventana, mensaje escrito, sin enviar—, que es
+                  lo que evita el miedo a mandar un pedido sin querer. Va como
+                  texto visible y no en un `aria-label`, porque esa duda la
+                  tiene todo el mundo y no sólo quien usa lector de pantalla. */
+              }
+              <div>
+                <a
+                  href={pedido}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2.5 rounded-full bg-rust px-7 py-4 text-xs font-medium tracking-[0.16em] text-linen uppercase shadow-lg shadow-black/25 transition-colors duration-300 hover:bg-black hover:text-white"
+                >
+                  <Icon
+                    name="simple-icons:whatsapp"
+                    class="size-4"
+                    aria-hidden="true"
+                  />
+                  {PEDIDO.etiqueta}
+                </a>
+                <p class="mt-3 max-w-[42ch] text-xs leading-relaxed text-black/60">
+                  Se abre WhatsApp en una ventana nueva, con el nombre de la
+                  tarta ya escrito. No se envía nada hasta que lo envíes tú.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {
+        /* --- Cómo se hace: la misma banda roja de "Sobre mí" ---
+
+          Va DENTRO del contenedor de una pantalla, pegada a la tarta: son la
+          misma sección. `shrink-0` para que el flex vertical no la comprima
+          cuando la tarta reclama sitio. */
+      }
+      <section class="relative shrink-0 overflow-hidden bg-rust">
+      <svg
+        class="pointer-events-none absolute inset-0 h-full w-full text-linen/12"
+        aria-hidden="true"
+      >
+        <defs>
+          <path
+            id="onda-suave-ficha"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"></path>
+          <path
+            id="onda-honda-ficha"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"
+          ></path>
+          <pattern
+            id="ondas-ficha"
+            width="240"
+            height="132"
+            patternUnits="userSpaceOnUse"
+          >
+            <use href="#onda-suave-ficha" transform="translate(0 18)"></use>
+            <use href="#onda-honda-ficha" transform="translate(80 54)"></use>
+            <use href="#onda-suave-ficha" transform="translate(170 90)"></use>
+            <use href="#onda-honda-ficha" transform="translate(45 118)"></use>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#ondas-ficha)"></rect>
+      </svg>
+
+        <div class="relative mx-auto w-full max-w-7xl px-6 py-12 lg:py-8">
+        <h2 class="text-[10px] font-medium tracking-[0.3em] text-sand uppercase">
+          Cómo se hace
+        </h2>
+        <ol class="mt-7 grid gap-9 md:grid-cols-3 md:gap-11 lg:mt-6">
+          {
+            tarta.pasos.map((paso, i) => (
+              <li class="flex flex-col gap-3.5">
+                <span class="font-display text-3xl leading-none text-sand">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span aria-hidden="true" class="h-px bg-sand/35" />
+                <p class="leading-relaxed text-linen/85">{paso}</p>
+              </li>
+            ))
+          }
+        </ol>
+        </div>
+      </section>
+    </div>
+
+    {
+      /* --- Otras tartas: la tira que sustituye al anterior/siguiente ---
+
+        Es una tira horizontal de verdad a cualquier tamaño: siete miniaturas
+        de ancho fijo en una fila. En escritorio caben las siete de una vez; en
+        móvil se arrastra, con `snap-x` para que pare encajada en una tarjeta y
+        no a mitad de foto.
+
+        Las tarjetas son enlaces normales, así que el tabulador las recorre y
+        el navegador desplaza la tira solo al llegar a una que está fuera de
+        vista: no hace falta ningún control de teclado propio.
+
+        El `py-2.5` no es decorativo: sin él, `overflow-x-auto` recortaría por
+        arriba la elevación de la tarjeta al pasar el puntero. */
+    }
+    <nav
+      aria-labelledby="otras-tartas"
+      class="mx-auto w-full max-w-7xl px-6 py-13 md:py-16"
+    >
+      {
+        /* El landmark se nombra con su propio titular (`aria-labelledby`) y no
+          con un `aria-label` aparte: con las dos cosas, un lector de pantalla
+          leería el nombre de la región y acto seguido el encabezado, diciendo
+          lo mismo dos veces. */
+      }
+      <h2
+        id="otras-tartas"
+        class="text-[10px] font-medium tracking-[0.3em] text-black/60 uppercase"
+      >
+        Otras tartas
+      </h2>
+      <ul class="mt-6 flex snap-x gap-4 overflow-x-auto py-2.5">
+        {
+          otras.map((entrada) => (
+            <li class="w-36 shrink-0 snap-start sm:w-40">
+              <TarjetaTarta
+                tarta={entrada.tarta}
+                foto={entrada.foto}
+                nivel={3}
+                compacta
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </main>
+
+  <Footer />
+</Layout>

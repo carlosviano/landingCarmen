@@ -11,6 +11,17 @@ interface Props {
 
 const { variant = "barra", class: className } = Astro.props;
 
+// Desde que existen /catalogo y /catalogo/<tarta>, el sitio ya no es una sola
+// página: un `href="#contacto"` sólo funciona si estás EN la portada. Fuera de
+// ella hay que anteponer la barra para volver primero a "/" y bajar después.
+//
+// Se hace condicional y no siempre con barra para no perder el scroll suave en
+// la portada, que es donde más se usa el menú. Las rutas de verdad (las que no
+// empiezan por #) se quedan como están.
+const enPortada = Astro.url.pathname === "/";
+const destino = (href: string) =>
+  href.startsWith("#") && !enPortada ? `/${href}` : href;
+
 const ESTILOS = {
   barra: {
     lista: "flex items-center gap-8",
@@ -31,7 +42,7 @@ const estilo = ESTILOS[variant];
   {
     NAV.map((item) => (
       <li>
-        <a href={item.href} class={estilo.enlace}>
+        <a href={destino(item.href)} class={estilo.enlace}>
           {item.label}
           {/* Subrayado animado: el rosa solo se usa como relleno, nunca como
               color de texto (ver la paleta en global.css). */}

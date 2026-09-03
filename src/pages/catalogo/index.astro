@@ -1,0 +1,127 @@
+---
+// /catalogo — la carta entera, con su URL propia.
+//
+// Es a donde lleva "Catálogo" del menú y el único enlace del escaparate de la
+// portada. Los dos hacen trabajos opuestos y por eso no se parecen: la portada
+// es un ESCAPARATE (una tarta, a sangre, para dar ganas) y esto es un ÍNDICE
+// (las ocho, comparables, filtrables). Aquí se llega ya decidido a mirar.
+//
+// La cabecera va apretada a propósito: no es un hero. Quien entra quiere ver
+// tartas, así que el titular sitúa y se quita de en medio.
+//
+// La banda de "Por encargo" parte la rejilla por la mitad —cuatro tartas
+// encima y cuatro debajo— y para eso va DENTRO de la rejilla, como una celda a
+// todo lo ancho, no como una sección hermana. El motivo está en Carta.astro:
+// con dos rejillas separadas, filtrar una categoría deja una de las dos vacía.
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/sections/Header.astro";
+import Footer from "@/sections/Footer.astro";
+import Carta from "@/components/catalogo/Carta.astro";
+import { Image } from "astro:assets";
+import { CATALOGO, ESCAPARATE, PEDIDO } from "@/config/site";
+import { fotoDe } from "@/lib/fotos";
+
+// La foto se nombra en site.ts y la resuelve `fotoDe` (src/lib/fotos.ts). El
+// `!` es seguro: sólo devuelve null si se le pasa null, y este nombre es
+// obligatorio en `Escaparate`.
+const detalle = fotoDe(ESCAPARATE.archivoDetalle)!;
+---
+
+<Layout titulo={CATALOGO.tituloPagina} descripcion={CATALOGO.entradilla}>
+  <Header />
+
+  {
+    /* `overflow-x-clip` y no `hidden`: la banda se sale a sangre con un margen
+      negativo en `vw`, y `100vw` incluye la barra de scroll, así que sobresale
+      unos píxeles por cada lado. `clip` los recorta sin crear un contenedor de
+      scroll ni romper el `position: sticky` de nada. */
+  }
+  <main class="overflow-x-clip">
+    <div class="mx-auto w-full max-w-7xl px-6 pt-14 pb-15 md:pt-20 lg:pb-17">
+      {/* Cabecera centrada: antetítulo en mayúsculas y titular en serif. */}
+      <p
+        class="text-center text-xs font-medium tracking-[0.25em] text-rust uppercase"
+      >
+        {CATALOGO.etiqueta}
+      </p>
+      <h1
+        class="mt-3.5 text-center font-display text-4xl leading-tight sm:text-5xl lg:text-[3.25rem]"
+      >
+        {CATALOGO.tituloPagina}
+      </h1>
+      <p
+        class="mx-auto mt-4.5 max-w-[54ch] text-center leading-relaxed text-black/62"
+      >
+        {CATALOGO.entradilla}
+      </p>
+
+      {/* Las tarjetas cuelgan del h1 de esta página, así que su nombre es un h2. */}
+      <Carta
+        tartas={CATALOGO.tartas}
+        tras={4}
+        nivelTarjeta={2}
+        class="mt-11 md:mt-12"
+      >
+        {
+          /* --- Banda de encargo, entre la cuarta y la quinta tarta ---
+
+            Sale a sangre desde dentro de la rejilla: `calc(50% - 50vw)` de
+            margen a cada lado, donde el 50% es la mitad del ancho de la celda
+            (que ocupa las cuatro columnas) y 50vw la mitad de la ventana. La
+            diferencia es exactamente el margen del contenedor, así que la
+            banda llega a los dos bordes de la pantalla a cualquier tamaño, sin
+            números a mano y sin salirse del componente.
+
+            Es SAND y no rust por la misma razón que antes: el pie ya es rust,
+            y aunque ahora la banda no lo toca, las dos hileras de tartas no
+            son suficiente separación para que no se lean como el mismo bloque.
+
+            Repite el detalle del escaparate de la portada —la misma foto, de
+            muy cerca— así que las dos pantallas se reconocen como parte de lo
+            mismo. */
+        }
+        <section
+          slot="intermedio"
+          aria-labelledby="por-encargo"
+          class="mx-[calc(50%-50vw)] grid grid-cols-1 lg:grid-cols-3"
+        >
+          <div
+            class="relative h-56 overflow-hidden bg-taupe sm:h-72 lg:col-span-2 lg:h-[19rem]"
+          >
+            <Image
+              src={detalle}
+              alt={ESCAPARATE.altDetalle}
+              widths={[420, 640, 900, 1200]}
+              sizes="(min-width: 1024px) 67vw, 100vw"
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover object-center"
+            />
+          </div>
+
+          <div
+            class="flex flex-col justify-center gap-4 bg-sand px-6 py-11 sm:px-10 lg:h-[19rem] lg:px-11 lg:py-0"
+          >
+            <p
+              class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase"
+            >
+              Por encargo
+            </p>
+            <h2
+              id="por-encargo"
+              class="font-display text-2xl leading-snug lg:text-[1.7rem]"
+            >
+              Se monta la víspera
+            </h2>
+            <p class="max-w-[38ch] text-sm leading-relaxed text-black/70">
+              Ninguna se hace con antelación. Avisando con {PEDIDO.antelacion},
+              entra en el obrador el día antes de tu fecha.
+            </p>
+          </div>
+        </section>
+      </Carta>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
