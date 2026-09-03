@@ -13,6 +13,16 @@ export interface SocialLink {
   icon: string;
 }
 
+/** La dirección partida en piezas, para poder escribirla de varias formas. */
+export interface Direccion {
+  /** Calle y número: la línea que se lee de lejos. */
+  calle: string;
+  /** Escalera, planta y puerta: lo que hace falta para dar con el portal. */
+  portal: string;
+  cp: string;
+  ciudad: string;
+}
+
 /** Un tramo del horario de apertura: qué días y en qué horas. */
 export interface FranjaHorario {
   dias: string;
@@ -24,9 +34,22 @@ export interface FranjaHorario {
 // viven sueltos aquí arriba y todo lo demás se deriva de ellos. Editar solo
 // estas constantes: los enlaces se recalculan solos.
 
-// Nota: el resto del sitio habla en primera persona ("Sobre mí") y esto en
-// plural ("Encuéntranos"). Conviene unificar el trato.
-const DIRECCION_POSTAL = "Calle Escultor Marín Higuero 6. Es1,pl1,pt7";
+// La dirección va partida y no en una sola cadena. Antes era el renglón
+// "Calle Escultor Marín Higuero 6. Es1,pl1,pt7", que en el pie no se leía:
+// escalera, planta y puerta abreviadas y pegadas a la calle parecen una
+// errata más que una dirección. Con las piezas sueltas cada sitio la compone
+// como le conviene —el pie en bloque, el panel móvil en una línea corta y
+// Contacto con la calle de titular— y siguen saliendo todas de aquí.
+export const DIRECCION: Direccion = {
+  calle: "Escultor Marín Higuero, 6",
+  portal: "Esc. 1 · Planta 1 · Puerta 7",
+  cp: "29017",
+  ciudad: "Málaga",
+};
+
+// Lo que se busca en Google Maps. Lleva el CP y la ciudad a propósito: son los
+// que descartan la otra calle del mismo nombre (ver la nota de COORDENADAS).
+const DIRECCION_POSTAL = `Calle ${DIRECCION.calle}, ${DIRECCION.cp} ${DIRECCION.ciudad}`;
 
 // TODO: número real. Se escribe tal cual se quiere ver en pantalla; el enlace
 // de wa.me se saca de aquí quitando todo lo que no sea dígito.
@@ -44,7 +67,14 @@ const COORDENADAS = { lat: 36.7212034, lon: -4.3645263 };
 
 export const SITE = {
   nombre: "Estimada Carmela",
-  direccion: "Encuéntranos en Calle Escultor Marín Higuero 6. Es1,pl1,pt7",
+  // Antetítulo de la dirección en el pie.
+  //
+  // Nota: el resto del sitio habla en primera persona ("Sobre mí") y esto en
+  // plural. Conviene unificar el trato.
+  encuentranos: "Encuéntranos",
+  // La dirección en un renglón, para donde solo cabe uno (el panel móvil). Sin
+  // el portal: ahí no hay sitio, y quien va a ir se abre el mapa o baja al pie.
+  direccion: `${DIRECCION.calle} · ${DIRECCION.ciudad}`,
   mapa: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     DIRECCION_POSTAL,
   )}`,
@@ -82,11 +112,11 @@ export const HORARIO: FranjaHorario[] = [
 export const CONTACTO = {
   // La ciudad va suelta del resto de la dirección porque en la tarjeta se
   // pinta aparte, como antetítulo encima de la calle.
-  ciudad: "Málaga",
+  ciudad: DIRECCION.ciudad,
   // Titular grande: calle y número y nada más. Es lo único que se lee de lejos.
-  titular: "Escultor Marín Higuero, 6",
+  titular: DIRECCION.calle,
   // Lo que no cabe en el titular pero hace falta para dar con el portal.
-  detalle: "Esc. 1 · Planta 1 · Puerta 7 — 29017",
+  detalle: `${DIRECCION.portal} — ${DIRECCION.cp}`,
   whatsapp: {
     visible: WHATSAPP_VISIBLE,
     href: WHATSAPP_URL,

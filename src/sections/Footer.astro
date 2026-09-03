@@ -6,7 +6,9 @@
 //   - más aire vertical (py-12/py-16 frente al py-4 del header).
 //   - no es sticky ni lleva menú móvil: aquí hay sitio para apilar los enlaces
 //     en columna, así que no hace falta desplegable.
-//   - la dirección sí se ve siempre: en la barra se reserva al panel móvil.
+//   - la dirección sí se ve siempre (en la barra se reserva al panel móvil) y
+//     va apilada, con el mismo desglose que la tarjeta de "dónde estamos": un
+//     renglón seguido con el portal abreviado no se leía.
 import AddressLink from "@/components/header/AddressLink.astro";
 import Brand from "@/components/header/Brand.astro";
 import NavLinks from "@/components/header/NavLinks.astro";
@@ -24,7 +26,16 @@ const DESDE = 2026;
     >
       <div class="flex flex-col items-center gap-4 md:items-start">
         <Brand />
-        <AddressLink class="flex" />
+
+        <div class="flex flex-col items-center gap-1.5 md:items-start">
+          {/* Antetítulo pequeño y en versalitas, como el "MÁLAGA" de la
+              tarjeta de contacto: dice qué es lo que viene debajo sin gastar
+              una línea de dirección en decirlo. */}
+          <p class="text-xs font-medium tracking-[0.25em] text-sand uppercase">
+            {SITE.encuentranos}
+          </p>
+          <AddressLink variant="bloque" class="flex" />
+        </div>
       </div>
 
       <div class="flex flex-col items-center gap-8 md:items-end md:gap-6">

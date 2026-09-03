@@ -1,9 +1,16 @@
 ---
 // Iconos de redes. Tres disposiciones con la misma lista:
-//   barra   — la del header, sobre fondo rust.
+//   barra   — la del header y el pie, sobre fondo rust.
 //   panel   — la del menú móvil: mismo aspecto, algo más grande para el dedo.
 //   tarjeta — sobre fondo claro (sección de contacto): círculos de sand, que
 //             es el único acento que se ve sobre blanco sin gritar.
+//
+// Sobre rust van a hueso, sin recuadro: el borde los convertía en dos botones
+// que no cuadraban con los enlaces de al lado, que son texto suelto. Sin caja,
+// el icono pesa lo mismo que una palabra y se alinea con ella. El enlace sí
+// mantiene una caja invisible de 24px, que es el mínimo que hay que poder
+// pulsar (WCAG 2.5.8); el hover, que antes lo daba el fondo, ahora lo da el
+// propio icono aclarándose.
 import { Icon } from "astro-icon/components";
 import { SOCIAL } from "@/config/site";
 
@@ -16,27 +23,26 @@ const { variant = "barra", class: className } = Astro.props;
 
 const ESTILOS = {
   barra: {
-    caja: "size-9",
-    aspecto:
-      "rounded-md border border-linen/25 hover:border-linen/60 hover:bg-linen/10",
+    enlace: "size-6 text-linen/80 hover:text-white",
+    icono: "size-5",
   },
   panel: {
-    caja: "size-10",
-    aspecto:
-      "rounded-md border border-linen/25 hover:border-linen/60 hover:bg-linen/10",
+    enlace: "size-8 text-linen/80 hover:text-white",
+    icono: "size-6",
   },
   tarjeta: {
-    caja: "size-10",
     // Invierte al pasar por encima en vez de aclararse: sobre blanco, un
     // hover a base de opacidad no se percibe.
-    aspecto: "rounded-full bg-sand text-rust hover:bg-rust hover:text-linen",
+    enlace:
+      "size-10 rounded-full bg-sand text-rust hover:bg-rust hover:text-linen",
+    icono: "size-4",
   },
 } as const;
 
 const estilo = ESTILOS[variant];
 ---
 
-<ul class:list={["flex items-center gap-3", className]}>
+<ul class:list={["flex items-center gap-4", className]}>
   {
     SOCIAL.map((social) => (
       <li>
@@ -47,11 +53,10 @@ const estilo = ESTILOS[variant];
           aria-label={social.label}
           class:list={[
             "flex items-center justify-center transition-colors",
-            estilo.aspecto,
-            estilo.caja,
+            estilo.enlace,
           ]}
         >
-          <Icon name={social.icon} class="size-4" aria-hidden="true" />
+          <Icon name={social.icon} class={estilo.icono} aria-hidden="true" />
         </a>
       </li>
     ))

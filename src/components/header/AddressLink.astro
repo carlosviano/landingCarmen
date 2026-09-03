@@ -1,15 +1,38 @@
 ---
-// Dirección con enlace a Google Maps.
-// La visibilidad por breakpoint la decide quien lo coloca, no este componente:
-// en la barra se oculta por debajo de lg y en el panel móvil siempre se ve.
+// Dirección con enlace a Google Maps. Dos formas de escribirla, misma fuente:
+//   linea  — un renglón: calle y ciudad y nada más. La del panel móvil.
+//   bloque — apilada: calle, portal y CP con ciudad, cada cosa en su línea.
+//            La del pie, calcada de la tarjeta de "dónde estamos", porque
+//            seguido y abreviado ("Es1,pl1,pt7") no se leía.
+//
+// La visibilidad por breakpoint y el display los decide quien lo coloca, no
+// este componente: en la barra se oculta por debajo de lg y en el panel móvil
+// y el pie siempre se ve.
 import { Icon } from "astro-icon/components";
-import { SITE } from "@/config/site";
+import { DIRECCION, SITE } from "@/config/site";
 
 interface Props {
+  variant?: "linea" | "bloque";
   class?: string;
 }
 
-const { class: className } = Astro.props;
+const { variant = "linea", class: className } = Astro.props;
+
+const ESTILOS = {
+  linea: {
+    // items-center: con una sola línea, el alfiler va centrado con el texto.
+    enlace: "items-center text-xs tracking-wider",
+    icono: "",
+  },
+  bloque: {
+    // items-start y no center: el alfiler marca la calle, la primera línea, no
+    // el centro del bloque. El mt-0.5 lo baja hasta la altura de esas letras.
+    enlace: "items-start text-sm leading-relaxed",
+    icono: "mt-0.5",
+  },
+} as const;
+
+const estilo = ESTILOS[variant];
 ---
 
 <a
@@ -17,10 +40,29 @@ const { class: className } = Astro.props;
   target="_blank"
   rel="noopener noreferrer"
   class:list={[
-    "items-center gap-2 text-xs tracking-wider text-linen/80 transition-colors hover:text-white",
+    "gap-2 text-linen/80 transition-colors hover:text-white",
+    estilo.enlace,
     className,
   ]}
 >
-  <Icon name="lucide:map-pin" class="size-4 shrink-0 text-sand" aria-hidden="true" />
-  <span>{SITE.direccion}</span>
+  <Icon
+    name="lucide:map-pin"
+    class:list={["size-4 shrink-0 text-sand", estilo.icono]}
+    aria-hidden="true"
+  />
+  {
+    variant === "linea" ? (
+      <span>{SITE.direccion}</span>
+    ) : (
+      <span>
+        {/* La jerarquía la da el grosor y no el color: con un color propio por
+            línea, el hover del enlace no se vería. */}
+        <span class="block font-medium">{DIRECCION.calle}</span>
+        <span class="block">{DIRECCION.portal}</span>
+        <span class="block">
+          {DIRECCION.cp} {DIRECCION.ciudad}
+        </span>
+      </span>
+    )
+  }
 </a>
