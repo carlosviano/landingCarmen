@@ -23,8 +23,12 @@
 import { getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import mapaLocal from "@/assets/images/mapa-local.png";
-import SocialLinks from "@/components/header/SocialLinks.astro";
-import { CONTACTO, HORARIO } from "@/config/site";
+import { CONTACTO, HORARIO, SOCIAL } from "@/config/site";
+
+// WhatsApp ya tiene su propio botón aquí abajo, así que se cae de la lista de
+// redes: repetirlo al lado no añade un canal, solo un segundo sitio donde
+// pulsar para lo mismo.
+const REDES = SOCIAL.filter((red) => red.href !== CONTACTO.whatsapp.href);
 
 // El mapa se pinta como fondo CSS y no como <img>. Ver la nota larga junto al
 // enlace: es la única forma de que cubra la celda sin depender de cómo resuelva
@@ -77,38 +81,87 @@ const mapaAncho = await getImage({
         </p>
         <p class="mt-3 text-sm text-black/60">{CONTACTO.detalle}</p>
 
-        <dl class="mt-6 space-y-1.5">
+        {
+          /* El horario en tabla y no en lista corrida: el día a la izquierda,
+            su hora pegada al margen derecho y una línea fina debajo. Así se lee
+            por columnas y de un vistazo, en vez de palabra a palabra, que es lo
+            que convierte el bloque en una ficha consultable.
+
+            La línea va debajo de TODAS las filas, la última incluida: es lo que
+            cierra el horario por abajo y lo separa del botón. Solo entre filas,
+            el bloque se derrama sobre la acción y deja de leerse como una
+            unidad.
+
+            taupe/40 y no un gris cualquiera: taupe es el color de borde
+            decorativo de la paleta (ver global.css) y a esa opacidad marca la
+            fila sin convertirse en una reja. Nunca como texto, que ahí no
+            contrasta.
+
+            tabular-nums alinea los dígitos en columna: sin él el 1 de las 10:00
+            es más estrecho que el 0 de las 09:00 y las dos filas de horas
+            quedan descuadradas por medio carácter justo donde el ojo baja en
+            vertical. */
+        }
+        <dl class="mt-8">
           {
             HORARIO.map((franja) => (
-              <div class="flex flex-wrap items-baseline gap-x-2 text-sm">
+              <div class="flex items-baseline justify-between gap-x-6 border-b border-taupe/40 py-3 text-sm">
                 <dt class="font-medium">{franja.dias}</dt>
-                <dd class="text-black/70">{franja.horas}</dd>
+                <dd class="text-right tabular-nums text-black/60">
+                  {franja.horas}
+                </dd>
               </div>
             ))
           }
         </dl>
 
         {
-          /* WhatsApp y redes comparten fila. En escritorio sobra ancho, y
-            ahorra los ~44px que en dos filas hacían al bloque más alto que su
-            altura mínima. En pantallas estrechas el flex-wrap las baja, que
-            ahí el alto no aprieta. */
+          /* La píldora de "Cómo llegar" del mapa, aquí sobre claro: relleno
+            rust y texto linen. Sustituye al enlace de texto de antes, que con
+            el horario ya en tabla se perdía entre las líneas y no se leía como
+            LA acción de la sección.
+
+            Dentro va el número y no la palabra "WhatsApp": el icono ya dice
+            cuál es el canal y lo que hace falta ver es a qué número se escribe.
+            El sr-only le devuelve el verbo a quien no ve el icono.
+
+            Las redes que quedan van de enlace subrayado y no de círculo de
+            iconos: al lado de una píldora rellena, dos círculos de sand pesan
+            casi lo mismo que ella y la fila se queda sin jerarquía. Es el mismo
+            secundario del hero, con el subrayado fijo por lo mismo que allí:
+            tiene que verse como enlace desde el primer momento.
+
+            wa.me y no tel:, que es lo que se espera del icono: abre la
+            conversación en la app o en la web. */
         }
-        <div class="mt-6 flex flex-wrap items-center gap-x-8 gap-y-4">
+        <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
+          <a
+            href={CONTACTO.whatsapp.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 rounded-full bg-rust px-6 py-3 text-xs font-medium tracking-widest text-linen uppercase shadow-lg shadow-black/20 transition-colors hover:bg-black hover:text-white"
+          >
+            <Icon
+              name="simple-icons:whatsapp"
+              class="size-4 shrink-0"
+              aria-hidden="true"
+            />
+            <span class="sr-only">Escribir por WhatsApp al</span>
+            {CONTACTO.whatsapp.visible}
+          </a>
+
           {
-            /* wa.me y no tel:, que es lo que se espera del icono de al lado:
-              abre la conversación en la app o en la web. */
+            REDES.map((red) => (
+              <a
+                href={red.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="border-b border-taupe/50 pb-1 text-xs font-medium tracking-widest uppercase transition-colors hover:border-rust hover:text-rust"
+              >
+                {red.label}
+              </a>
+            ))
           }
-          <p class="text-sm">
-            <a
-              href={CONTACTO.whatsapp.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="font-medium transition-colors hover:text-rust"
-            >
-              WhatsApp: {CONTACTO.whatsapp.visible}
-            </a>
-          </p>
         </div>
       </div>
 
