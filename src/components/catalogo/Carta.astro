@@ -1,0 +1,232 @@
+---
+// La vista catálogo: fila de filtros + rejilla con las ocho tartas.
+//
+// Los FILTROS ya no son chips rellenos, sino una fila tipográfica colgada de
+// un filete, con el recuento de cada familia al lado del nombre. Dos motivos,
+// y ninguno es estético:
+//
+//   1. El recuento contesta por adelantado "¿cuántas hay de esto?", así que
+//      nadie pulsa un filtro para encontrarse dos tartas y volver atrás.
+//   2. Un chip relleno pesa lo mismo que un botón de acción, y filtrar no es
+//      la acción de esta pantalla —abrir una ficha lo es—. En filete pesa lo
+//      que tiene que pesar.
+//
+// El estado accesible es el mismo que con los chips: `aria-pressed` en un
+// <button> de verdad, y de ese atributo cuelga también el estilo (variante
+// `aria-pressed:` de Tailwind), así que no hay manera de que el color diga una
+// cosa y el lector de pantalla otra.
+//
+// El filtrado es EN CLIENTE y sobre HTML ya pintado: las ocho tarjetas están
+// siempre en el documento y los filtros sólo ocultan las que no encajan. Sin
+// JS la página sigue entera —se ven las ocho, que es el estado útil—; un
+// filtro que rompe el catálogo cuando falla el script no vale.
+import { CATALOGO, CATEGORIAS, type Tarta } from "@/config/site";
+import { FILTRO_TODAS, slugCategoria } from "@/lib/tartas";
+import { fotoDe } from "@/lib/fotos";
+import TarjetaTarta from "./TarjetaTarta.astro";
+
+interface Props {
+  tartas: Tarta[];
+  /**
+   * Tras cuántas tarjetas se mete la banda del slot `intermedio`. Sin él (o
+   * sin slot) la rejilla va de corrido.
+   */
+  tras?: number;
+  /**
+   * Nivel del encabezado de cada tarjeta. Depende de la cabecera que tenga
+   * encima la página que monta la rejilla (ver TarjetaTarta).
+   */
+  nivelTarjeta?: 2 | 3;
+  class?: string;
+}
+
+const { tartas, tras, nivelTarjeta = 3, class: className } = Astro.props;
+
+// La banda es una CELDA de la rejilla, a todo lo ancho, y no un hermano entre
+// dos rejillas. Es lo que la hace sobrevivir al filtro: con dos rejillas de
+// cuatro, filtrar «Clásicas» deja la de arriba vacía y la banda flotando sobre
+// la nada (las categorías no están repartidas mitad y mitad, ni tienen por qué
+// estarlo). Siendo una celda, al ocultarse tarjetas la rejilla reflúye sola y
+// no queda ningún hueco.
+const conBanda = tras !== undefined && Astro.slots.has("intermedio");
+// Se resuelven aquí y no en la tarjeta: `import.meta.glob` es relativo al
+// archivo que lo escribe, así que repetido por componente cada uno lleva su
+// propia ruta y basta mover una carpeta para romper una en silencio.
+//
+// El tono del marco de "foto pendiente" alterna según la posición, para que
+// los huecos no se lean como seis errores idénticos en fila.
+const conFoto = tartas.map((tarta, i) => ({
+  tarta,
+  foto: fotoDe(tarta.archivo),
+  numero: i + 1,
+  tono: i % 2 === 0 ? "" : "[&>div:first-child]:bg-sand/55",
+}));
+
+const antes = conBanda ? conFoto.slice(0, tras) : conFoto;
+const despues = conBanda ? conFoto.slice(tras) : [];
+
+// "Todas" primero y activo, y detrás las categorías en el orden de site.ts,
+// cada una con cuántas tartas tiene. Los recuentos se cuentan aquí y no se
+// escriben a mano: si mañana una tarta cambia de familia, el número la sigue.
+const filtros = [
+  { etiqueta: CATALOGO.filtroTodas, valor: FILTRO_TODAS, cuenta: tartas.length },
+  ...CATEGORIAS.map((categoria) => ({
+    etiqueta: categoria,
+    valor: slugCategoria(categoria),
+    cuenta: tartas.filter((tarta) => tarta.categoria === categoria).length,
+  })),
+];
+---
+
+<div data-carta class={className}>
+  {
+    /* `justify-start` en móvil y centrado a partir de md: con
+      `justify-center` y desbordamiento horizontal a la vez, el navegador deja
+      el principio de la fila fuera de alcance y no hay manera de llegar al
+      primer filtro. */
+  }
+  <div class="border-t border-taupe/55">
+    <div
+      role="group"
+      aria-label="Filtrar la carta por categoría"
+      class="flex items-baseline justify-start overflow-x-auto [scrollbar-width:none] md:justify-center [&::-webkit-scrollbar]:hidden"
+    >
+      {
+        filtros.map((filtro) => (
+          <button
+            type="button"
+            data-filtro={filtro.valor}
+            aria-pressed={filtro.valor === FILTRO_TODAS}
+            class="-mt-px flex shrink-0 items-baseline gap-2 border-t-2 border-transparent px-4 pt-4.5 pb-4 text-[11px] font-medium tracking-[0.18em] text-black/65 uppercase transition-colors duration-200 hover:text-rust aria-pressed:border-t-rust aria-pressed:text-rust sm:px-6"
+          >
+            {filtro.etiqueta}
+            <span class="text-[10px] tracking-normal text-black/40 tabular-nums">
+              {filtro.cuenta}
+            </span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  {
+    /* Cuántas se están viendo. Va en sr-only porque ahora el recuento de cada
+      familia se ve en su propio filtro; lo que esto aporta es la región viva:
+      con `role="status"` el número se anuncia al filtrar, que es la única
+      señal que le llega a quien no ve desaparecer las tarjetas. Al cargar no
+      anuncia nada, porque el texto ya viene pintado. */
+  }
+  <p data-recuento role="status" class="sr-only">{tartas.length} tartas</p>
+
+  {
+    /* Es un <div> y no un <ul>, y esto es el único precio de tener la banda
+      dentro de la rejilla: una nota de encargo no es un elemento más de la
+      lista de tartas, así que meterla en un <li> haría que un lector de
+      pantalla anunciara "lista de 9 elementos" con una que no es tarta.
+      Entre las dos cosas, se ha ido la lista: "cuántas tartas hay" ya lo
+      dicen el recuento de cada filtro y la región viva de arriba, que además
+      lo dicen mejor porque se actualizan al filtrar.
+
+      Las celdas NO llevan clase de display. Filtrar pone el atributo
+      `hidden`, y `hidden` es sólo `display:none` de la hoja del navegador:
+      cualquier utilidad de display (`grid`, `flex`, `block`) le ganaría y la
+      tarjeta "oculta" se seguiría viendo. */
+  }
+  <div
+    data-rejilla
+    class="mt-11 grid grid-cols-2 gap-x-4 gap-y-11 sm:gap-x-6 md:mt-13 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-7"
+  >
+    {
+      antes.map((entrada) => (
+        <div data-categoria={slugCategoria(entrada.tarta.categoria)}>
+          <TarjetaTarta
+            tarta={entrada.tarta}
+            foto={entrada.foto}
+            numero={entrada.numero}
+            nivel={nivelTarjeta}
+            class={entrada.foto ? undefined : entrada.tono}
+          />
+        </div>
+      ))
+    }
+
+    {
+      conBanda && (
+        <div data-banda class="col-span-full my-4 lg:my-6">
+          <slot name="intermedio" />
+        </div>
+      )
+    }
+
+    {
+      despues.map((entrada) => (
+        <div data-categoria={slugCategoria(entrada.tarta.categoria)}>
+          <TarjetaTarta
+            tarta={entrada.tarta}
+            foto={entrada.foto}
+            numero={entrada.numero}
+            nivel={nivelTarjeta}
+            class={entrada.foto ? undefined : entrada.tono}
+          />
+        </div>
+      ))
+    }
+  </div>
+
+</div>
+
+<script>
+  import { FILTRO_TODAS } from "@/lib/tartas";
+
+  for (const carta of document.querySelectorAll<HTMLElement>("[data-carta]")) {
+    const chips = [
+      ...carta.querySelectorAll<HTMLButtonElement>("[data-filtro]"),
+    ];
+    const items = [...carta.querySelectorAll<HTMLElement>("[data-categoria]")];
+    const recuento = carta.querySelector<HTMLElement>("[data-recuento]");
+    const banda = carta.querySelector<HTMLElement>("[data-banda]");
+
+    if (chips.length === 0 || items.length === 0) continue;
+
+    const aplicar = (filtro: string) => {
+      let visibles = 0;
+
+      for (const item of items) {
+        const encaja =
+          filtro === FILTRO_TODAS || item.dataset.categoria === filtro;
+        // `hidden` y no una clase: saca la tarjeta del árbol de accesibilidad
+        // además de dejar de pintarla, así que el tabulador tampoco pasa por
+        // un enlace que no se ve. Con `opacity-0` o `invisible` seguiría
+        // recibiendo el foco.
+        item.hidden = !encaja;
+        if (encaja) visibles++;
+      }
+
+      // El estado vive en el atributo, y de él cuelga el estilo
+      // (`aria-pressed:` en las clases del filtro). Una sola fuente.
+      for (const chip of chips) {
+        chip.setAttribute(
+          "aria-pressed",
+          String(chip.dataset.filtro === filtro),
+        );
+      }
+
+      // La banda existe para partir una rejilla larga. Filtrada a dos o tres
+      // tartas no hay nada que partir, así que se retira: dejarla sería una
+      // interrupción de nada, y encima quedaría pegada al final. Vuelve sola
+      // al volver a "Todas", que es el estado por defecto.
+      if (banda) banda.hidden = filtro !== FILTRO_TODAS;
+
+      if (recuento) {
+        recuento.textContent = `${visibles} ${visibles === 1 ? "tarta" : "tartas"}`;
+      }
+    };
+
+    for (const chip of chips) {
+      chip.addEventListener("click", () => {
+        const filtro = chip.dataset.filtro;
+        if (filtro) aplicar(filtro);
+      });
+    }
+  }
+</script>

@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Header from "../sections/Header.astro";
 import Hero from "../sections/Hero.astro";
+import Catalogo from "../sections/Catalogo.astro";
 import SobreMi from "../sections/SobreMi.astro";
 import Galeria from "../sections/Galeria.astro";
 import Contacto from "../sections/Contacto.astro";
@@ -10,16 +11,10 @@ import Footer from "../sections/Footer.astro";
 
 <Layout>
   <Header />
-  {
-    /* El <main> vivía dentro de Hero.astro mientras la sección estaba vacía.
-      Ahora que el hero tiene contenido propio, el landmark envuelve todas las
-      secciones de contenido: cabecera y pie se quedan fuera, que es lo suyo. */
-  }
-  <main>
-    <Hero />
-    <Galeria />
-    <SobreMi />
-    <Contacto />
-  </main>
+  <Hero />
+  <Catalogo />
+  <SobreMi />
+  <Galeria />
+  <Contacto />
   <Footer />
 </Layout>

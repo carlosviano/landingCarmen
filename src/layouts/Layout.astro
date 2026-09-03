@@ -1,17 +1,32 @@
 ---
+import { Font } from "astro:assets";
+import { SITE } from "@/config/site";
 import "../styles/global.css";
+
+interface Props {
+  /**
+   * Se antepone al nombre del sitio en el <title>. Sin él queda solo el
+   * nombre, que es lo que quiere la portada.
+   */
+  titulo?: string;
+  descripcion?: string;
+}
+
+const { titulo, descripcion = SITE.nombre } = Astro.props;
+const title = titulo ? `${titulo} · ${SITE.nombre}` : SITE.nombre;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="description" content="Estimada Carmela" />
+    <meta name="description" content={descripcion} />
     <meta name="author" content="Carlos Viano" />
-    <title>Estimada Carmela</title>
+    <Font cssVariable="--font-prata" preload />
+    <title>{title}</title>
   </head>
   <body class="min-h-full w-full bg-linen text-black">
     <slot />

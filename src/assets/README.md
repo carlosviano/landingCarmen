@@ -84,3 +84,104 @@ una foto de producto; y `sobre-mi.jpg` es la misma que preside la sección de
 justo encima, así que se ve dos veces en la misma pantalla. Está de relleno
 para que la tira no se quede en dos fotos y debería salir en cuanto haya
 material de verdad.
+
+---
+
+# El díptico de la portada
+
+`tarta_cumple_kika_2026.jpeg` + `tarta_cumple_kika_2026_detalle.jpeg`
+
+La sección de catálogo de la portada es un díptico a sangre: **la misma tarta
+dos veces**, entera a la izquierda y de muy cerca a la derecha. Quién sale se
+decide en `ESCAPARATE`, dentro de `src/config/site.ts`; el componente es
+`src/sections/Catalogo.astro`.
+
+El recurso vive de que sean **la misma toma**. El plano entero dice qué es y el
+detalle dice cómo está hecha; con dos tartas distintas no funciona, se lee como
+dos fotos puestas juntas. Así que al sustituirlas:
+
+1. Se elige la mejor foto de producto que haya. Es lo primero que ve quien
+   entra.
+2. **El detalle se recorta DE esa misma foto**, no se busca otra. El que hay
+   salió así, con `sips`:
+
+   ```
+   sips tarta_cumple_kika_2026.jpeg -c 1000 800 --cropOffset 200 175 --out /tmp/_det.jpeg
+   sips /tmp/_det.jpeg -s format jpeg -s formatOptions 88 --out tarta_cumple_kika_2026_detalle.jpeg
+   ```
+
+   `-c` es alto y ancho; `--cropOffset` es arriba e izquierda. Los cuatro
+   números salen de dónde está el motivo en la foto original y hay que
+   recalcularlos para cada una.
+3. Se recorta **generoso**: el detalle se sirve hasta 1200 px de ancho y Astro
+   no reescala hacia arriba. Con menos de 800 px de recorte se verá blando en
+   pantallas densas.
+
+Estas dos sí pasan por el `<Image>` de Astro (viven en `src/assets/`, no son
+URLs remotas), así que el build les saca sus webp y sus tamaños.
+
+El detalle se usa **dos veces**: aquí y en la banda de cierre de `/catalogo`.
+Es a propósito — repetir la foto es lo que hace que las dos pantallas se
+reconozcan como parte de lo mismo.
+
+---
+
+# Las imágenes del catálogo
+
+Quién es cada una se decide en `CATALOGO`, dentro de `src/config/site.ts`, con
+el campo `archivo`. Las resuelve `fotoDe()` (`src/lib/fotos.ts`), que **revienta
+el build** con la lista de lo que sí hay si el nombre no existe — así una
+errata se ve en el momento y no como un hueco en la página.
+
+**Ya no hay imágenes de banco.** Antes las ocho tiraban de Unsplash por URL.
+Eso tenía dos problemas: no se podía juzgar el diseño con fotos que no eran de
+Carmen, y la mitad de los nombres de la carta estaban escritos para que pegaran
+con el stock que les tocaba. Al pasar a fotos propias, `mil-hojas-de-frambuesa`
+se convirtió en `pavlova-de-melocoton`, que es lo que la foto enseña de verdad.
+
+## `archivo: null` es un estado, no un error
+
+Seis de las ocho no tienen foto todavía y llevan `archivo: null`. La rejilla y
+la ficha pintan en su lugar un **marco de "FOTO PENDIENTE" marcado**, con el
+tono alternando entre `taupe/15` y `sand/55` para que seis huecos no se lean
+como seis errores idénticos.
+
+Es deliberado que se vea. Un relleno de stock deja la página "llena" pero
+esconde lo que falta; esto lo dice.
+
+## Las dos que sí hay
+
+| `archivo` | Quién es | Dónde sale |
+|---|---|---|
+| `tarta_silueta_v2.png` | Fresas y nata | Carta 01 |
+| `tarta_cumple_kika_2026.jpeg` | Pavlova de melocotón | Carta 02, y el escaparate de la portada |
+
+Las dos son de encargos concretos, así que el encuadre no coincide con el de
+las demás. Llevan su `TODO`: cuando se haga la sesión, repetirlas con el mismo
+encuadre que el resto.
+
+## Cómo se hacen las que faltan
+
+Fotografiar cada tarta **sobre fondo blanco liso y bien iluminada**, y dejar el
+archivo aquí; luego poner su nombre en el `archivo` de su tarta y el marco de
+"foto pendiente" desaparece solo.
+
+Detalles que se notan en pantalla:
+
+- **el encuadre tiene que ser parecido entre las ocho.** El hueco mide lo mismo
+  para todas (`aspect-[4/5]`, `object-cover`), así que una foto muy apaisada y
+  otra muy vertical se ven de tamaños distintos aunque ocupen el mismo sitio.
+- **el motivo, centrado**, porque el recorte va desde el centro.
+- **al menos 640 px de ancho** para la rejilla y 900 para la ficha: son los
+  mayores `widths` que se piden, y Astro no reescala hacia arriba.
+- **el fondo se ve si la foto tiene transparencia.** `tarta_silueta_v2.png` la
+  tiene en las esquinas, y por eso el hueco lleva `bg-taupe/15` debajo. Es
+  también el color que se ve mientras la foto carga.
+- **la sombra la pone el CSS**, no hace falta que la foto la traiga pintada.
+
+## Sí pasan por `<Image>` de Astro
+
+Al vivir en `src/assets/` (y no ser URLs remotas), el build les saca sus `webp`
+en varios anchos: la pavlova baja de 112 kB a entre 17 y 64 kB según el hueco.
+Esta carpeta era antes la única parte del sitio que no pasaba por `<Image>`;
+ya no lo es.
