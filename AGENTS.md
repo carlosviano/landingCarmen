@@ -25,6 +25,32 @@ falta la versión del `.nvmrc`, instálala con `nvm install` dentro de la carpet
 Ojo: el dev server no recoge cambios de `astro.config.mjs` en caliente. Si
 tocas la config, reinícialo.
 
+### El build de CI: `build:ci`
+
+Hay dos scripts de build y no son intercambiables:
+
+| Script             | Comando             | Quién lo usa     |
+| ------------------ | ------------------- | ---------------- |
+| `npm run build`    | nvm + `astro build` | Tú, en local     |
+| `npm run build:ci` | `astro build`       | Cloudflare Pages |
+
+`build:ci` existe porque en el runner de Cloudflare **no hay nvm**: el
+`source .../nvm.sh` del script local falla y se lleva el build por delante. Así
+que `build:ci` llama a `astro build` directamente, sin envoltorio.
+
+Eso no se salta el requisito de versión de Node, solo lo resuelve en otro
+sitio: Cloudflare Pages lee el `.nvmrc` del repo y arranca el contenedor con
+esa versión ya puesta, así que cuando corre `build:ci` el Node correcto es el
+que hay. En local ese trabajo lo hace `nvm use`, y por eso el script local
+sigue sourceando nvm: es intencionado, no un resto.
+
+Regla práctica: **en local usa siempre `npm run build`**. `build:ci` sin `nvm
+use` delante corre con el Node que tengas suelto en el shell, que puede ser
+más viejo que el `.nvmrc` y reventar con el error de versión de Astro.
+
+El montaje de Cloudflare (ramas, entornos, robots.txt por rama) está en el
+README.
+
 ## Tipografía
 
 Sin fuente propia por ahora: los titulares y la marca van con `font-serif`, la

@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "bash -c 'source \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use && astro dev'",
     "build": "bash -c 'source \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use && astro build'",
+    "build:ci": "astro build",
     "preview": "bash -c 'source \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use && astro preview'",
     "astro": "astro"
   },
