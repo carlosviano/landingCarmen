@@ -1,0 +1,53 @@
+---
+// El patrón de ondas de fondo que ya usan Hero, SobreMi y la ficha de tarta
+// (mismo trazo, mismo <pattern>), parametrizado por `id`.
+//
+// Por qué existe como componente aquí y no allí: un id de <path>/<pattern> es
+// único por PÁGINA, no por instancia del SVG. Copiado a mano en tres sitios ya
+// se cuida de darle a cada uno sus propios ids (onda-suave-hero,
+// onda-suave-ficha...); /eventos necesita el mismo recurso tres veces más
+// (cabecera de la página, tarjeta destacada y banda final), y a esa cantidad
+// copiar y pegar el bloque entero cada vez es más riesgo de un id repetido
+// que la propia repetición. Hero/SobreMi/ficha se quedan como están: no es su
+// duplicado el que hay que resolver.
+interface Props {
+  /** Prefijo único en la página para los ids internos del patrón. */
+  id: string;
+  class?: string;
+}
+
+const { id, class: className } = Astro.props;
+---
+
+<svg
+  class:list={["pointer-events-none absolute inset-0 h-full w-full", className]}
+  aria-hidden="true"
+>
+  <defs>
+    <path
+      id={`onda-suave-${id}`}
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1"
+      d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"></path>
+    <path
+      id={`onda-honda-${id}`}
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1"
+      d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"
+    ></path>
+    <pattern
+      id={`ondas-${id}`}
+      width="240"
+      height="132"
+      patternUnits="userSpaceOnUse"
+    >
+      <use href={`#onda-suave-${id}`} transform="translate(0 18)"></use>
+      <use href={`#onda-honda-${id}`} transform="translate(80 54)"></use>
+      <use href={`#onda-suave-${id}`} transform="translate(170 90)"></use>
+      <use href={`#onda-honda-${id}`} transform="translate(45 118)"></use>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill={`url(#ondas-${id})`}></rect>
+</svg>
