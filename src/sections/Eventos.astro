@@ -1,0 +1,116 @@
+---
+// Sección "eventos" de la portada: escaparate de dos montajes distintos, cada
+// uno con su propio remate, y un único enlace a /eventos, que es donde está
+// la lista completa.
+//
+// El NAV "Eventos" va directo a /eventos, no a esta ancla —igual que
+// "Catálogo" va directo a /catalogo y no a #catalogo—: por eso el id=eventos
+// de esta sección no lo usa ningún enlace todavía. Se deja puesto igual que
+// el #catalogo de Catalogo.astro, para el día en que algo de la propia
+// portada (el Hero, por ejemplo) quiera bajar aquí en vez de navegar fuera.
+//
+// A diferencia de Catalogo.astro —la variante PURISTA, sin titular ni
+// entradilla visibles, porque ahí sólo hay UNA tarta que enseñar dos veces—
+// aquí SÍ hay titular y entradilla: son dos historias distintas y hace falta
+// el texto para situarlas antes de las fotos.
+//
+// A partir de lg la sección entera cabe en una pantalla: mismo criterio que
+// SobreMi.astro ("para que la sección quepa en una pantalla de portátil"),
+// aplicado con `lg:h-screen` en vez de una altura en rem porque aquí no hay
+// una sola foto que mande la altura, sino texto + dos fotos en paralelo.
+// `lg:flex lg:flex-col lg:justify-center` centra ese contenido dentro de la
+// pantalla: el respiro de arriba y abajo no es un padding fijo, es lo que
+// sobra de los 100vh una vez descontado el contenido, así que crece solo en
+// pantallas más altas en vez de dejar un hueco fijo en las bajas. El `py-10`
+// del contenido es el mínimo de ese respiro aunque el contenido llegue a
+// ocupar la pantalla entera. Las fotos pasan a `lg:aspect-[3/2]` (más bajas
+// que el `md:aspect-[5/4]` de tablet) para que el conjunto quepa con margen
+// en los ~800px útiles de un portátil de 13"; si algún día el texto crece
+// mucho, la sección se sale de la pantalla en vez de recortarse —mismo trato
+// que SobreMi, no hay overflow-hidden escondiendo el problema.
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { ESCAPARATE_EVENTOS, EVENTOS } from "@/config/site";
+import { fotoDe } from "@/lib/fotos";
+
+// Los nombres se resuelven aquí y no en el componente: `fotoDe` revienta el
+// build si no existen (ver src/lib/fotos.ts), y los dos son obligatorios en
+// `EscaparateEventos`.
+const primero = fotoDe(ESCAPARATE_EVENTOS.primero.archivo)!;
+const segundo = fotoDe(ESCAPARATE_EVENTOS.segundo.archivo)!;
+
+const ANCHOS = [420, 640, 860, 1080];
+const SIZES = "(min-width: 768px) 50vw, 100vw";
+---
+
+<section
+  id="eventos"
+  class="scroll-mt-20 lg:flex lg:h-screen lg:flex-col lg:justify-center"
+>
+  <div class="mx-auto w-full max-w-7xl px-6 py-16 md:py-20 lg:py-10">
+    <p class="text-xs font-medium tracking-[0.25em] text-rust uppercase">
+      {EVENTOS.etiqueta}
+    </p>
+    <h2
+      class="mt-5 max-w-2xl font-serif text-4xl leading-[1.05] text-balance sm:text-5xl"
+    >
+      {EVENTOS.titulo}
+    </h2>
+    <p
+      class="mt-6 max-w-[34rem] text-base leading-relaxed text-black/80 sm:text-lg"
+    >
+      {EVENTOS.entradilla}
+    </p>
+
+    <div class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:mt-8">
+      <div>
+        <div
+          class="relative aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-md shadow-black/5 ring-1 ring-taupe/40 md:aspect-[5/4] lg:aspect-[3/2]"
+        >
+          <Image
+            src={primero}
+            alt={ESCAPARATE_EVENTOS.primero.alt}
+            widths={ANCHOS}
+            sizes={SIZES}
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover object-[50%_62%]"
+          />
+        </div>
+        <p class="mt-4 text-[11px] tracking-[0.18em] text-black/50 uppercase">
+          {ESCAPARATE_EVENTOS.primero.pie}
+        </p>
+      </div>
+
+      <div>
+        <a
+          href="/eventos"
+          class="group relative block aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-md shadow-black/5 ring-1 ring-taupe/40 md:aspect-[5/4] lg:aspect-[3/2]"
+        >
+          <Image
+            src={segundo}
+            alt={ESCAPARATE_EVENTOS.segundo.alt}
+            widths={ANCHOS}
+            sizes={SIZES}
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover object-[50%_55%] transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
+          />
+          <span
+            class="absolute bottom-6 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-rust px-6 py-3 text-xs font-medium tracking-widest whitespace-nowrap text-linen uppercase shadow-lg shadow-black/25 transition-colors group-hover:bg-black"
+          >
+            {ESCAPARATE_EVENTOS.cta}
+            <Icon
+              name="lucide:arrow-right"
+              class="size-3.5 shrink-0"
+              aria-hidden="true"
+            />
+          </span>
+        </a>
+        <p class="mt-4 text-[11px] tracking-[0.18em] text-black/50 uppercase">
+          {ESCAPARATE_EVENTOS.segundo.pie}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

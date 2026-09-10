@@ -51,8 +51,8 @@ export const SITE = {
 } as const;
 
 export const NAV: NavItem[] = [
-  
-  { label: "Eventos", href: "#eventos" },
+
+  { label: "Eventos", href: "/eventos" },
   { label: "Catálogo", href: "/catalogo" },
   { label: "Sobre mí", href: "#sobre-mi" },
   { label: "Contacto", href: "#contacto" }
@@ -216,6 +216,146 @@ export const GALERIA: Galeria = {
       alt: "Tarta redonda de cumpleaños estilo Paulova",
     }
   ],
+};
+
+// --- Eventos -----------------------------------------------------------
+
+/**
+ * Un montaje ya servido: qué se hizo, para qué celebración y cómo. Cada uno
+ * es una tarjeta de /eventos, en el orden de esta lista.
+ */
+export interface Montaje {
+  /**
+   * Antetítulo de la tarjeta: el tipo de celebración. Entre corchetes hasta
+   * que se sepa de qué evento real es cada foto (mismo criterio que el
+   * precio de `Tarta`: se ve en pantalla y así no se publica sin querer).
+   */
+  tipoEvento: string;
+  titulo: string;
+  descripcion: string;
+  /** Nombre del archivo en `src/assets/images/`. A diferencia de `Tarta.archivo`
+   * no puede ser `null`: un montaje sin foto no cuenta nada, así que no se
+   * publica hasta tener una. */
+  archivo: string;
+  alt: string;
+  /** "[MES 2026]" hasta que se fechen los montajes de verdad. */
+  mes: string;
+  lugar: string;
+  /**
+   * Punto de la foto que no se puede recortar, como `object-position` en CSS
+   * ("50% 62%"). Va suelto de `archivo` porque depende del encuadre de CADA
+   * foto y no se puede derivar de nada; sin él, el recorte por defecto
+   * (centro) basta.
+   */
+  enfoque?: string;
+}
+
+export interface Eventos {
+  // Portada: sección "eventos" de la home.
+  etiqueta: string;
+  titulo: string;
+  entradilla: string;
+  // /eventos: la página con la lista completa.
+  etiquetaPagina: string;
+  tituloPagina: string;
+  entradillaPagina: string;
+  /** Enlace de cierre de la lista, hacia el perfil de Instagram. */
+  masMontajes: string;
+  // Banda final de /eventos, antes del pie.
+  ctaEtiqueta: string;
+  ctaTitulo: string;
+  ctaTexto: string;
+  montajes: Montaje[];
+}
+
+export const EVENTOS: Eventos = {
+  etiqueta: "Eventos · Mesas dulces",
+  titulo: "Cada celebración, una mesa distinta",
+  entradilla:
+    "Mesas dulces, tartas y postres para el día que celebras. El montaje se piensa con la fecha, el sitio y los invitados delante, así que no sale dos veces igual.",
+  etiquetaPagina: "Eventos · Málaga",
+  tituloPagina: "Para el día concreto que celebras",
+  entradillaPagina:
+    "Mesas dulces, tartas y postres por encargo. Estos son algunos de los montajes ya servidos: qué se hizo, para qué celebración y cómo se resolvió.",
+  masMontajes: "Hay más montajes en Instagram",
+  ctaEtiqueta: "¿Tienes fecha?",
+  ctaTitulo: "Cuéntame qué celebras",
+  ctaTexto:
+    "Escríbeme con la fecha, el sitio y cuántos sois. Con eso te digo qué se puede montar y en qué plazo.",
+  montajes: [
+    {
+      tipoEvento: "Cumpleaños",
+      titulo: "Mesa dulce sobre musgo y eucalipto",
+      descripcion:
+        "Un montaje largo sobre mantel negro, con el verde haciendo de estructura: musgo, eucalipto y paniculata sostienen la línea y los dulces se apoyan en ella. Cada bocado va en su propia pieza, con su cucharilla, para cogerlo de pie y sin tener que cortar nada.",
+      archivo: "mesa_cumple_nati.jpeg",
+      alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
+      mes: "[MES 2026]",
+      lugar: "Málaga",
+      enfoque: "50% 62%",
+    },
+    {
+      tipoEvento: "Cumpleaños",
+      titulo: "Pavlova de melocotón",
+      descripcion:
+        "Merengue, nata montada a mano y melocotón en gajos colocado uno a uno hasta cerrar la corona. Se monta el mismo día de la fiesta: ni la fruta ni el merengue aguantan una noche de nevera sin perder el punto.",
+      archivo: "tarta_cumple_kika_2026.jpeg",
+      alt: "Tarta redonda de merengue y nata coronada con gajos de melocotón, sobre una bandeja dorada.",
+      mes: "[MES 2026]",
+      lugar: "Málaga",
+      enfoque: "50% 55%",
+    },
+    {
+      tipoEvento: "[TIPO DE EVENTO]",
+      titulo: "Pavlova de fresas de temporada",
+      descripcion:
+        "La misma base de merengue, esta vez con fresas partidas a mano y un bosque de nata alrededor. La corona no es solo decoración: sujeta la fruta por fuera y hace que la tarta llegue entera hasta la última ración.",
+      archivo: "tarta_cumple_kika_2026_detalle.jpeg",
+      alt: "Vista desde arriba de una tarta de merengue rizado cubierta de fresas partidas.",
+      mes: "[MES 2026]",
+      lugar: "Málaga",
+    },
+    {
+      tipoEvento: "[TIPO DE EVENTO]",
+      titulo: "Postre emplatado, pieza a pieza",
+      descripcion:
+        "Para una mesa sentada el postre se termina en el sitio y a su hora: bizcocho, crema y el crujiente encima justo antes de salir. Es el trabajo que se aprende en cocina de estrella y el que no se ve en la foto del final.",
+      archivo: "trabajando.jpeg",
+      alt: "En blanco y negro, colocando con pinzas la decoración sobre dos bocados de chocolate.",
+      mes: "[MES 2026]",
+      lugar: "Málaga",
+      enfoque: "50% 25%",
+    },
+  ],
+};
+
+/**
+ * El díptico de la sección de eventos de la portada: dos montajes distintos,
+ * cada uno con su propio remate. A diferencia de `ESCAPARATE` (una tarta, dos
+ * veces) aquí son dos historias, así que no se derivan de `EVENTOS.montajes`:
+ * cada panel lleva su texto propio y punto, igual que el escaparate del
+ * catálogo no depende de cómo esté ordenada `CATALOGO.tartas`.
+ */
+export interface EscaparateEventos {
+  primero: { archivo: string; alt: string; pie: string };
+  /** El panel con el enlace a /eventos. */
+  segundo: { archivo: string; alt: string; pie: string };
+  /** Texto del único enlace de la sección. */
+  cta: string;
+}
+
+export const ESCAPARATE_EVENTOS: EscaparateEventos = {
+  primero: {
+    archivo: "mesa_cumple_nati.jpeg",
+    alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
+    pie: "Mesa dulce sobre musgo y eucalipto",
+  },
+  segundo: {
+    archivo: "tarta_cumple_kika_2026.jpeg",
+    alt: "Tarta redonda de merengue y nata coronada con gajos de melocotón, sobre una bandeja dorada.",
+    pie: "Pavlova de melocotón · encargo de cumpleaños",
+  },
+  cta: "Ver todos los eventos",
 };
 
 // --- Escaparate de portada --------------------------------------------------
