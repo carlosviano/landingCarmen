@@ -25,6 +25,7 @@
 // interactivo.
 import { Image } from "astro:assets";
 import type { Tarta } from "@/config/site";
+import { precioVisible } from "@/lib/pedido";
 
 interface Props {
   tarta: Tarta;
@@ -35,6 +36,11 @@ interface Props {
    * escribe y se rompe al mover carpetas.
    */
   foto: ImageMetadata | null;
+  /**
+   * El recorte sin fondo, ya resuelto, o `null`. Sólo se usa si no hay `foto`:
+   * mejor la tarta de verdad sobre el marco que un "foto pendiente".
+   */
+  recorte?: ImageMetadata | null;
   /**
    * El 01–08 de la carta. Va suelto y no en `Tarta` porque no es un dato de la
    * tarta: es su posición en la lista, y la decide quien pinta la lista. La
@@ -58,6 +64,7 @@ interface Props {
 const {
   tarta,
   foto,
+  recorte = null,
   numero,
   compacta = false,
   nivel = 3,
@@ -70,6 +77,11 @@ const Titular = nivel === 2 ? "h2" : "h3";
 // En la rejilla la tarjeta ocupa media pantalla en móvil y un cuarto de los
 // 1280 del contenedor en escritorio; en la tira de la ficha, 9rem.
 const ANCHOS = compacta ? [160, 320] : [200, 320, 440, 640];
+
+// La franja de abajo: para cuántos y desde cuánto. Los tamaños van de menor a
+// mayor, así que el primero es el más barato.
+const personas = `${tarta.tamanos.map((tamano) => tamano.personas).join(" · ")} personas`;
+const desde = `${tarta.tamanos.length > 1 ? "desde " : ""}${precioVisible(tarta.tamanos[0].precio)}`;
 const SIZES = compacta
   ? "10rem"
   : "(min-width: 1024px) 19rem, (min-width: 768px) 26vw, 45vw";
@@ -92,6 +104,19 @@ const SIZES = compacta
           loading="lazy"
           decoding="async"
           class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
+        />
+      ) : recorte ? (
+        /* Sin foto con fondo pero con recorte: la tarta entera, sin recortar,
+          centrada sobre el marco. `object-contain` porque un recorte apaisado
+          en un hueco 4:5 con `cover` perdería media tarta. */
+        <Image
+          src={recorte}
+          alt={tarta.alt}
+          widths={ANCHOS}
+          sizes={SIZES}
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-contain object-center p-3 transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
         />
       ) : (
         /* Marco de foto pendiente, y MARCADO a propósito. Antes aquí había una
@@ -139,16 +164,16 @@ const SIZES = compacta
   </div>
 
   {
-    /* Filete con las raciones y el precio a los dos extremos. Es el recurso de
+    /* Filete con los tamaños y el precio a los dos extremos. Es el recurso de
       una carta de restaurante y alinea los precios de cada hilera. */
     !compacta ? (
       <div class="mt-3.5 flex items-baseline justify-between gap-3 border-t border-taupe/50 pt-2.5">
-        <span class="text-xs text-black/60">{tarta.raciones}</span>
-        <span class="text-sm font-medium text-rust">{tarta.precio}</span>
+        <span class="text-xs text-black/60">{personas}</span>
+        <span class="text-sm font-medium whitespace-nowrap text-rust">{desde}</span>
       </div>
     ) : (
       <div class="mt-2.5 border-t border-taupe/50 pt-2">
-        <span class="text-xs font-medium text-rust">{tarta.precio}</span>
+        <span class="text-xs font-medium text-rust">{desde}</span>
       </div>
     )
   }
