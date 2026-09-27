@@ -1,0 +1,32 @@
+# Cabeceras que sirve Cloudflare Pages. Este fichero se copia tal cual a la
+# raíz del sitio publicado; Pages lo lee y no llega al visitante.
+#
+# Es estático: no puede depender de la rama. Lo que cambia según el entorno es
+# el robots.txt, que se genera en el build (src/pages/robots.txt.ts).
+
+/*
+  # No adivines el tipo de un fichero: sirve el Content-Type que se declara.
+  X-Content-Type-Options: nosniff
+
+  # Al salir a otro dominio manda solo el origen, no la URL completa. Importa
+  # porque las URL de staging y de preview son privadas y no deberían viajar
+  # en el Referer de un enlace a Instagram o a WhatsApp.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Nadie mete este sitio en un iframe. X-Frame-Options es el que entienden
+  # los navegadores viejos; frame-ancestors de la CSP es el que cuenta hoy.
+  X-Frame-Options: DENY
+
+  # No se usa ninguna de estas API. Negarlas evita que se las pida un script
+  # de terceros que entre más adelante.
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
+
+  # Solo las tres directivas que no pueden romper el renderizado.
+  #
+  # A propósito NO hay script-src ni style-src: Astro empaqueta los <script>
+  # de los componentes a /_astro/, pero `inlineStylesheets` viene en 'auto' y
+  # mete el CSS pequeño en un <style> dentro del HTML. Un style-src 'self'
+  # dejaría el sitio sin estilos. Para cerrar la CSP de verdad hay que fijar
+  # `inlineStylesheets: 'never'` en astro.config.mjs y comprobarlo en una
+  # preview, y esta rama no toca el sitio.
+  Content-Security-Policy: frame-ancestors 'none'; base-uri 'self'; form-action 'self'

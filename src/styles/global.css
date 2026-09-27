@@ -49,6 +49,13 @@
 /* Prata entra por la API de fuentes de Astro (ver astro.config.mjs). Se expone
    como utilidad `font-display` para los titulares. El `inline` es el patrón
    recomendado cuando el valor viene de una variable definida fuera del tema. */
+/* `bajo:` — escritorio de poca altura (portátiles de 768–900 px). La ficha de
+   tarta usa esta variante para apretar el espacio vertical y que la tarta y la
+   banda "Cómo se hace" quepan juntas en una pantalla. Por debajo de ~720 px de
+   alto ya no se intenta: encoger más obligaría a letra pequeña, y es mejor
+   bajar un poco. */
+@custom-variant bajo (@media (min-width: 64rem) and (max-height: 56.25rem));
+
 @theme inline {
   --font-display: var(--font-prata);
 }
