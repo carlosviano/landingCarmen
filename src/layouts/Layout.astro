@@ -15,6 +15,10 @@ interface Props {
 
 const { titulo, descripcion = SITE.nombre } = Astro.props;
 const title = titulo ? `${titulo} · ${SITE.nombre}` : SITE.nombre;
+
+// Proyecto web de Adobe Fonts con The Seasons. Es de una cuenta de Creative
+// Cloud que no es de la clienta (ver README, "Tipografía").
+const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
 ---
 
 <!doctype html>
@@ -27,7 +31,19 @@ const title = titulo ? `${titulo} · ${SITE.nombre}` : SITE.nombre;
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="description" content={descripcion} />
     <meta name="author" content="Carlos Viano" />
-    <Font cssVariable="--font-prata" preload />
+    {/* The Seasons: la sirve Adobe (use.typekit.net), que es lo que cubre su
+        licencia. Ni se descarga ni va por la API de fuentes de Astro. Trae
+        Light, Regular y Bold con sus cursivas; el navegador solo baja los que
+        se pintan. Ver src/styles/global.css, "Tipografía". */}
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+    <link rel="preconnect" href="https://p.typekit.net" crossorigin />
+    <link rel="stylesheet" href={ADOBE_FONTS} />
+    {/* Solo se precarga el texto corrido (400 latino): es lo primero que se lee.
+        Los demás cortes llegan al pintarse. */}
+    <Font
+      cssVariable="--font-karla"
+      preload={[{ weight: 400, style: "normal", subset: "latin" }]}
+    />
     <slot name="head" />
     <title>{title}</title>
   </head>

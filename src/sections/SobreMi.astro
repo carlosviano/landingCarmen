@@ -96,7 +96,7 @@ import { SOBRE_MI } from "@/config/site";
               diseño no lo enseñe. */
           }
           <h2
-            class="font-serif text-5xl leading-none text-linen sm:text-6xl lg:text-7xl"
+            class="titulo text-5xl leading-none text-linen sm:text-6xl lg:text-7xl"
           >
             {SOBRE_MI.titulo}
           </h2>
@@ -117,10 +117,11 @@ import { SOBRE_MI } from "@/config/site";
           </div>
 
           {
-            /* La única línea en cursiva de la sección: cierra en primera persona
-              y conviene que se lea distinta de los párrafos. */
+            /* Cierra en primera persona y conviene que se lea distinta de los
+              párrafos: por eso va en The Seasons Light. Sin cursiva, ver
+              "Tipografía" en global.css. */
           }
-          <p class="mt-10 font-serif text-lg text-linen italic sm:text-xl">
+          <p class="mt-10 titular text-xl text-linen sm:text-2xl">
             {SOBRE_MI.firma}
           </p>
         </div>

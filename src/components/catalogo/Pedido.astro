@@ -13,8 +13,11 @@
 // `href` y el total cada vez que cambia el formulario, y parar el pedido si
 // la fecha no vale.
 //
-// La fecha mínima también la pone el script, y no el build: un `min` fijado al
-// compilar se quedaría viejo al día siguiente de publicar.
+// La fecha se elige en un calendario propio y no en `<input type="date">`: el
+// del iPhone no hace caso de `min` (deja elegir mañana) y ninguno deja apagar
+// sábados y domingos. Aquí los días que no valen salen apagados en todos los
+// navegadores. Lo pinta el script, y no el build: la fecha mínima calculada al
+// compilar se quedaría vieja al día siguiente de publicar.
 import { Icon } from "astro-icon/components";
 import { PEDIDO, type Tarta } from "@/config/site";
 import { mensajePedido, precioVisible } from "@/lib/pedido";
@@ -46,7 +49,7 @@ const conSelector = tarta.tamanos.length > 1;
       son suyos; el aspecto lo pone la pastilla (`peer-checked:`). */
     conSelector && (
       <fieldset class="min-w-0">
-        <legend class="mb-2.5 bajo:mb-2 text-[10px] font-medium tracking-[0.3em] text-rust uppercase">
+        <legend class="mb-2.5 bajo:mb-2 leyenda text-rust">
           Tamaño
         </legend>
         <div
@@ -65,7 +68,7 @@ const conSelector = tarta.tamanos.length > 1;
                 class="peer absolute inset-0 m-0 cursor-pointer opacity-0"
               />
               <span class="flex flex-col items-center rounded-2xl border border-black/40 px-1 py-2 text-[11px] bajo:py-1.5 tracking-[0.06em] text-black/70 transition-colors duration-200 peer-checked:border-rust peer-checked:bg-rust peer-checked:text-linen/90 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-rust hover:border-rust motion-reduce:transition-none peer-checked:[&>b]:text-linen">
-                <b class="font-display text-[1.2rem] leading-tight bajo:text-[1.05rem] font-normal tracking-normal text-black">
+                <b class="titulo text-[1.2rem] leading-tight bajo:text-[1.05rem] text-black">
                   {tamano.personas}
                 </b>
                 personas
@@ -77,11 +80,15 @@ const conSelector = tarta.tamanos.length > 1;
     )
   }
 
-  <div class="grid grid-cols-[auto_minmax(0,1fr)] gap-3.5">
+  {
+    /* `relative`: el calendario se abre debajo de esta fila y con su ancho
+      entero, no con el de la columna de la fecha, que en móvil es estrecha. */
+  }
+  <div class="relative grid grid-cols-[auto_minmax(0,1fr)] gap-3.5">
     <div class="flex flex-col gap-2">
       <label
         for="pedido-cantidad"
-        class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase"
+        class="leyenda text-rust"
       >
         Cantidad
       </label>
@@ -115,20 +122,67 @@ const conSelector = tarta.tamanos.length > 1;
     </div>
 
     <div class="flex min-w-0 flex-col gap-2">
-      <label
-        for="pedido-fecha"
-        class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase"
-      >
+      <span id="pedido-fecha-etiqueta" class="leyenda text-rust">
         Fecha de entrega
-      </label>
-      <input
+      </span>
+      {
+        /* `aria-labelledby` con los dos ids: se anuncia "Fecha de entrega,
+          mié, 30 sept" y no sólo lo que diga el botón. */
+      }
+      <button
         id="pedido-fecha"
-        data-fecha
-        type="date"
-        required
+        type="button"
+        data-fecha-boton
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="pedido-calendario"
+        aria-labelledby="pedido-fecha-etiqueta pedido-fecha"
         aria-describedby="pedido-fecha-nota"
-        class="h-11 w-full min-w-0 bajo:h-10 rounded-full border border-black/40 bg-transparent px-4 accent-rust hover:border-rust aria-invalid:border-2 aria-invalid:border-rust"
-      />
+        class="flex h-11 w-full min-w-0 items-center justify-between gap-2 bajo:h-10 rounded-full border border-black/40 px-4 text-left hover:border-rust aria-invalid:border-2 aria-invalid:border-rust"
+      >
+        <span data-fecha-texto class="truncate text-black/60">Elige día</span>
+        <Icon name="lucide:calendar" class="size-4 shrink-0 text-rust" aria-hidden="true" />
+      </button>
+      <input type="hidden" name="fecha" data-fecha />
+    </div>
+
+    {
+      /* Lo rellena el script: cabecera con el mes y sus flechas, y la
+        cuadrícula de días. Empieza en lunes, como se lee un calendario aquí. */
+    }
+    <div
+      id="pedido-calendario"
+      data-calendario
+      role="dialog"
+      aria-label="Elegir fecha de entrega"
+      hidden
+      class="absolute inset-x-0 top-full z-20 mt-2 rounded-3xl border border-taupe/45 bg-linen p-4 shadow-xl shadow-black/15"
+    >
+      <div class="mb-3 flex items-center justify-between">
+        <button
+          type="button"
+          data-mes="-1"
+          aria-label="Mes anterior"
+          class="grid size-9 place-items-center rounded-full text-rust hover:bg-rust/8 disabled:opacity-30 disabled:hover:bg-transparent"
+        >
+          <Icon name="lucide:chevron-left" class="size-4" aria-hidden="true" />
+        </button>
+        <p data-mes-titulo aria-live="polite" class="titulo text-lg text-black first-letter:uppercase"></p>
+        <button
+          type="button"
+          data-mes="1"
+          aria-label="Mes siguiente"
+          class="grid size-9 place-items-center rounded-full text-rust hover:bg-rust/8"
+        >
+          <Icon name="lucide:chevron-right" class="size-4" aria-hidden="true" />
+        </button>
+      </div>
+      <div class="grid grid-cols-7 gap-1 text-center" aria-hidden="true">
+        {["L", "M", "X", "J", "V", "S", "D"].map((dia) => (
+          <span class="leyenda py-1 text-black/60">{dia}</span>
+        ))}
+      </div>
+      <div data-dias class="mt-1 grid grid-cols-7 gap-1"></div>
     </div>
   </div>
 
@@ -138,7 +192,7 @@ const conSelector = tarta.tamanos.length > 1;
 
   <dl class="border-y border-taupe/45">
     <div class="flex items-baseline justify-between gap-6 py-2.5">
-      <dt class="text-[10px] tracking-[0.2em] text-black/60 uppercase">
+      <dt class="dato text-[10px] text-black/60">
         Conservación
       </dt>
       <dd class="text-right text-sm text-black/80">{tarta.conservacion}</dd>
@@ -152,7 +206,7 @@ const conSelector = tarta.tamanos.length > 1;
   }
   <div class="mt-1 flex items-center justify-between gap-4 bajo:mt-0">
     <p class="flex flex-col leading-none">
-      <span class="text-[10px] tracking-[0.2em] text-black/60 uppercase">Total</span>
+      <span class="dato text-[10px] text-black/60">Total</span>
       <span
         data-total
         aria-live="polite"
@@ -171,7 +225,7 @@ const conSelector = tarta.tamanos.length > 1;
       href={PEDIDO.enlace(mensajePedido(tarta.nombre))}
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex flex-1 items-center justify-center gap-2.5 rounded-full bg-rust px-4 py-4 text-[11px] font-medium tracking-[0.12em] whitespace-nowrap text-linen uppercase shadow-lg shadow-black/25 transition-colors duration-300 hover:bg-black hover:text-white sm:flex-none sm:px-6 sm:text-xs sm:tracking-[0.16em]"
+      class="inline-flex flex-1 items-center justify-center gap-2.5 rounded-full bg-rust px-4 py-4 accion text-[11px] whitespace-nowrap text-linen shadow-lg shadow-black/25 transition-colors duration-300 hover:bg-black hover:text-white sm:flex-none sm:px-6 sm:text-xs sm:tracking-[0.16em]"
     >
       <Icon name="simple-icons:whatsapp" class="size-4 shrink-0" aria-hidden="true" />
       {PEDIDO.etiqueta}
@@ -194,22 +248,151 @@ const conSelector = tarta.tamanos.length > 1;
   import { PEDIDO } from "@/config/site";
   import {
     aISO,
+    deISO,
+    esLaborable,
+    fechaCorta,
     fechaMinima,
     mensajePedido,
     precioVisible,
     problemaFecha,
   } from "@/lib/pedido";
 
+  // El calendario de la fecha. Devuelve cómo abrirlo, para que quien avisa de
+  // un error pueda llevar al cliente de vuelta a él.
+  function montarCalendario(
+    boton: HTMLButtonElement,
+    panel: HTMLElement,
+    elegir: (iso: string) => void,
+  ) {
+    const titulo = panel.querySelector<HTMLElement>("[data-mes-titulo]")!;
+    const dias = panel.querySelector<HTMLElement>("[data-dias]")!;
+    const anterior = panel.querySelector<HTMLButtonElement>('[data-mes="-1"]')!;
+
+    let elegida = "";
+    // El primer día del mes que se está viendo.
+    let mes = new Date();
+
+    const minima = () => aISO(fechaMinima());
+    const vale = (fecha: Date) => aISO(fecha) >= minima() && esLaborable(fecha);
+
+    const pintar = () => {
+      const primero = new Date(mes.getFullYear(), mes.getMonth(), 1);
+      const minimaMes = deISO(minima());
+      titulo.textContent = primero.toLocaleDateString("es-ES", {
+        month: "long",
+        year: "numeric",
+      });
+      // No se vuelve a meses en los que no queda ningún día elegible.
+      anterior.disabled =
+        primero <= new Date(minimaMes.getFullYear(), minimaMes.getMonth(), 1);
+
+      dias.replaceChildren();
+      // getDay() empieza en domingo; la cuadrícula, en lunes.
+      const hueco = (primero.getDay() + 6) % 7;
+      for (let i = 0; i < hueco; i++) dias.append(document.createElement("span"));
+
+      const total = new Date(mes.getFullYear(), mes.getMonth() + 1, 0).getDate();
+      for (let d = 1; d <= total; d++) {
+        const fecha = new Date(mes.getFullYear(), mes.getMonth(), d);
+        const iso = aISO(fecha);
+        const dia = document.createElement("button");
+        dia.type = "button";
+        dia.textContent = String(d);
+        dia.dataset.iso = iso;
+        dia.disabled = !vale(fecha);
+        dia.setAttribute(
+          "aria-label",
+          fecha.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" }),
+        );
+        if (iso === elegida) dia.setAttribute("aria-pressed", "true");
+        dia.className =
+          "mx-auto grid size-10 place-items-center rounded-full text-sm tabular-nums text-black hover:bg-rust/10 disabled:text-black/25 disabled:line-through disabled:hover:bg-transparent aria-pressed:bg-rust aria-pressed:text-linen";
+        dias.append(dia);
+      }
+    };
+
+    const abierto = () => !panel.hidden;
+
+    const abrir = () => {
+      // Se abre en el mes de la fecha elegida o, si no hay, en el de la mínima.
+      const base = deISO(elegida || minima());
+      mes = new Date(base.getFullYear(), base.getMonth(), 1);
+      pintar();
+      panel.hidden = false;
+      boton.setAttribute("aria-expanded", "true");
+      const foco =
+        dias.querySelector<HTMLButtonElement>("[aria-pressed]") ??
+        dias.querySelector<HTMLButtonElement>("button:not(:disabled)");
+      foco?.focus();
+    };
+
+    const cerrar = (devolverFoco = false) => {
+      panel.hidden = true;
+      boton.setAttribute("aria-expanded", "false");
+      if (devolverFoco) boton.focus();
+    };
+
+    boton.addEventListener("click", () => (abierto() ? cerrar() : abrir()));
+
+    for (const flecha of panel.querySelectorAll<HTMLButtonElement>("[data-mes]")) {
+      flecha.addEventListener("click", () => {
+        mes = new Date(mes.getFullYear(), mes.getMonth() + Number(flecha.dataset.mes), 1);
+        pintar();
+      });
+    }
+
+    dias.addEventListener("click", (evento) => {
+      const dia = (evento.target as HTMLElement).closest<HTMLButtonElement>("button[data-iso]");
+      if (!dia || dia.disabled) return;
+      elegida = dia.dataset.iso!;
+      elegir(elegida);
+      cerrar(true);
+    });
+
+    // Flechas: un día a los lados, una semana arriba y abajo, saltando a los
+    // días que se pueden elegir del mes que se ve.
+    const PASOS: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+    dias.addEventListener("keydown", (evento) => {
+      const paso = PASOS[evento.key];
+      const actual = (evento.target as HTMLElement).closest<HTMLButtonElement>("button[data-iso]");
+      if (!paso || !actual) return;
+      evento.preventDefault();
+      const fecha = deISO(actual.dataset.iso!);
+      for (let i = 0; i < 31; i++) {
+        fecha.setDate(fecha.getDate() + paso);
+        const destino = dias.querySelector<HTMLButtonElement>(`button[data-iso="${aISO(fecha)}"]`);
+        if (!destino) return;
+        if (!destino.disabled) return destino.focus();
+      }
+    });
+
+    panel.addEventListener("keydown", (evento) => {
+      if (evento.key === "Escape") cerrar(true);
+    });
+
+    // Un toque fuera lo cierra, como cualquier desplegable.
+    document.addEventListener("click", (evento) => {
+      const donde = evento.target as Node;
+      if (abierto() && !panel.contains(donde) && !boton.contains(donde)) cerrar();
+    });
+
+    return abrir;
+  }
+
   for (const form of document.querySelectorAll<HTMLFormElement>("[data-pedido]")) {
     const nombre = form.dataset.nombre ?? "";
     const cantidad = form.querySelector<HTMLInputElement>("[data-cantidad]");
     const fecha = form.querySelector<HTMLInputElement>("[data-fecha]");
+    const botonFecha = form.querySelector<HTMLButtonElement>("[data-fecha-boton]");
+    const textoFecha = form.querySelector<HTMLElement>("[data-fecha-texto]");
+    const calendario = form.querySelector<HTMLElement>("[data-calendario]");
     const total = form.querySelector<HTMLElement>("[data-total]");
     const cta = form.querySelector<HTMLAnchorElement>("[data-cta]");
     const error = form.querySelector<HTMLElement>("[data-error]");
-    if (!cantidad || !fecha || !total || !cta || !error) continue;
-
-    fecha.min = aISO(fechaMinima());
+    if (
+      !cantidad || !fecha || !botonFecha || !textoFecha || !calendario ||
+      !total || !cta || !error
+    ) continue;
 
     // El tamaño marcado; sin selector (un solo tamaño), el del propio <form>.
     const tamano = () =>
@@ -219,8 +402,8 @@ const conSelector = tarta.tamanos.length > 1;
     const avisar = (problema: string | null) => {
       error.hidden = problema === null;
       error.textContent = problema ?? "";
-      if (problema) fecha.setAttribute("aria-invalid", "true");
-      else fecha.removeAttribute("aria-invalid");
+      if (problema) botonFecha.setAttribute("aria-invalid", "true");
+      else botonFecha.removeAttribute("aria-invalid");
     };
 
     const actualizar = () => {
@@ -248,23 +431,27 @@ const conSelector = tarta.tamanos.length > 1;
       cantidad.value = String(unidades());
     });
 
-    // Un sábado o una fecha demasiado pronto se avisan al elegirlos, no al
-    // pulsar el botón: así se corrige antes de llegar a él.
-    fecha.addEventListener("change", () => {
-      avisar(fecha.value ? problemaFecha(fecha.value) : null);
+    const abrirCalendario = montarCalendario(botonFecha, calendario, (iso) => {
+      fecha.value = iso;
+      textoFecha.textContent = fechaCorta(iso);
+      textoFecha.classList.remove("text-black/60");
+      avisar(null);
+      actualizar();
     });
 
     form.addEventListener("input", actualizar);
     form.addEventListener("change", actualizar);
 
-    // Sin fecha válida no se abre WhatsApp: se explica por qué y se lleva el
-    // foco al campo.
+    // Sin fecha válida no se abre WhatsApp: se explica por qué y se abre el
+    // calendario para elegir otra.
     cta.addEventListener("click", (evento) => {
       const problema = problemaFecha(fecha.value);
       if (problema) {
         evento.preventDefault();
+        // Que este clic no llegue al "clic fuera" que cierra el calendario.
+        evento.stopPropagation();
         avisar(problema);
-        fecha.focus();
+        abrirCalendario();
       }
     });
 

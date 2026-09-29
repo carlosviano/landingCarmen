@@ -134,12 +134,12 @@ import { HERO } from "@/config/site";
 
     <div class="relative mx-auto w-full max-w-7xl px-6 lg:z-20">
       <div class="w-full py-14 md:py-16 lg:w-1/2 lg:py-0 lg:pr-12">
-        <p class="text-xs font-medium tracking-[0.25em] text-linen uppercase">
+        <p class="antetitulo text-linen">
           {HERO.antetitulo}
         </p>
 
         <h1
-          class="mt-5 font-serif text-4xl leading-[1.05] text-balance text-linen sm:text-5xl lg:text-6xl xl:text-7xl"
+          class="mt-5 titular text-4xl leading-[1.05] text-balance text-linen sm:text-5xl lg:text-6xl xl:text-7xl"
         >
           {HERO.titular}
         </h1>
@@ -170,7 +170,7 @@ import { HERO } from "@/config/site";
             href={HERO.accion.href}
             target="_blank"
             rel="noopener noreferrer"
-            class="flex w-full items-center justify-center gap-2 rounded-full bg-sand px-8 py-4 text-xs font-medium tracking-widest text-rust uppercase shadow-lg shadow-black/25 transition-colors hover:bg-black hover:text-white sm:w-auto"
+            class="flex w-full items-center justify-center gap-2 rounded-full bg-sand px-8 py-4 accion text-xs text-rust shadow-lg shadow-black/25 transition-colors hover:bg-black hover:text-white sm:w-auto"
           >
             <Icon
               name="simple-icons:whatsapp"
@@ -187,7 +187,7 @@ import { HERO } from "@/config/site";
           }
           <a
             href={HERO.secundario.href}
-            class="flex items-center gap-2 border-b border-linen/35 pb-1 text-xs font-medium tracking-widest text-linen/80 uppercase transition-colors hover:border-linen/60 hover:text-white"
+            class="flex items-center gap-2 border-b border-linen/35 pb-1 accion text-xs text-linen/80 transition-colors hover:border-linen/60 hover:text-white"
           >
             {HERO.secundario.label}
             <Icon
@@ -280,7 +280,7 @@ import { HERO } from "@/config/site";
   }
   <div class="relative">
     <ul
-      class="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-6 lg:gap-x-5 text-[11px] tracking-[0.18em] text-black/50 uppercase lg:h-20 lg:py-0"
+      class="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-6 lg:gap-x-5 dato text-[11px] text-black/50 lg:h-20 lg:py-0"
     >
       {
         HERO.credenciales.map((casa, indice) => (
