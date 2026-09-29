@@ -58,6 +58,7 @@ const conBanda = tras !== undefined && Astro.slots.has("intermedio");
 const conFoto = tartas.map((tarta, i) => ({
   tarta,
   foto: fotoDe(tarta.archivo),
+  recorte: tarta.recorte ? fotoDe(tarta.recorte) : null,
   numero: i + 1,
   tono: i % 2 === 0 ? "" : "[&>div:first-child]:bg-sand/55",
 }));
@@ -68,14 +69,23 @@ const despues = conBanda ? conFoto.slice(tras) : [];
 // "Todas" primero y activo, y detrás las categorías en el orden de site.ts,
 // cada una con cuántas tartas tiene. Los recuentos se cuentan aquí y no se
 // escriben a mano: si mañana una tarta cambia de familia, el número la sigue.
-const filtros = [
-  { etiqueta: CATALOGO.filtroTodas, valor: FILTRO_TODAS, cuenta: tartas.length },
-  ...CATEGORIAS.map((categoria) => ({
-    etiqueta: categoria,
-    valor: slugCategoria(categoria),
-    cuenta: tartas.filter((tarta) => tarta.categoria === categoria).length,
-  })),
-];
+//
+// Una familia sin tartas no se pinta: un filtro que deja la rejilla vacía es un
+// callejón. Y si sólo queda una familia, no hay nada que filtrar ("Todas" y
+// esa familia enseñarían lo mismo), así que la fila entera se va.
+const familias = CATEGORIAS.map((categoria) => ({
+  etiqueta: categoria,
+  valor: slugCategoria(categoria),
+  cuenta: tartas.filter((tarta) => tarta.categoria === categoria).length,
+})).filter((familia) => familia.cuenta > 0);
+
+const filtros =
+  familias.length > 1
+    ? [
+        { etiqueta: CATALOGO.filtroTodas, valor: FILTRO_TODAS, cuenta: tartas.length },
+        ...familias,
+      ]
+    : [];
 ---
 
 <div data-carta class={className}>
@@ -85,7 +95,12 @@ const filtros = [
       el principio de la fila fuera de alcance y no hay manera de llegar al
       primer filtro. */
   }
+  {
+    /* Sin filtros (una sola familia) queda el filete solo, que sigue
+      separando la cabecera de la rejilla. */
+  }
   <div class="border-t border-taupe/55">
+    {filtros.length > 0 && (
     <div
       role="group"
       aria-label="Filtrar la carta por categoría"
@@ -107,6 +122,7 @@ const filtros = [
         ))
       }
     </div>
+    )}
   </div>
 
   {
@@ -142,9 +158,10 @@ const filtros = [
           <TarjetaTarta
             tarta={entrada.tarta}
             foto={entrada.foto}
+            recorte={entrada.recorte}
             numero={entrada.numero}
             nivel={nivelTarjeta}
-            class={entrada.foto ? undefined : entrada.tono}
+            class={entrada.foto || entrada.recorte ? undefined : entrada.tono}
           />
         </div>
       ))
@@ -164,9 +181,10 @@ const filtros = [
           <TarjetaTarta
             tarta={entrada.tarta}
             foto={entrada.foto}
+            recorte={entrada.recorte}
             numero={entrada.numero}
             nivel={nivelTarjeta}
-            class={entrada.foto ? undefined : entrada.tono}
+            class={entrada.foto || entrada.recorte ? undefined : entrada.tono}
           />
         </div>
       ))

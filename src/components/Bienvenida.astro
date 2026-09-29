@@ -1,0 +1,189 @@
+---
+// Modal de bienvenida: cómo funciona el obrador (solo recogida, horario,
+// antelación y dirección) con la ilustración de la fachada al lado, para
+// reconocer el local desde la calle.
+//
+// Va en el Layout y no en la portada: quien llega de Instagram suele entrar
+// directo a una ficha de /catalogo, y es justo quien no sabe que no hay envíos.
+//
+// Es un <dialog> nativo abierto con showModal(), que ya trae el foco atrapado
+// dentro, el Escape y el resto de la página inerte. Sin JS no se abre nunca:
+// la misma información está en la sección de contacto, así que no se pierde
+// nada.
+//
+// Se enseña una vez. Al cerrarlo (con la X, con "Entendido", con Escape o
+// pulsando fuera) se apunta en localStorage y ya no vuelve. Si cambia algo que
+// merezca volver a enseñarlo, sube VISTO: la clave nueva no la tiene nadie.
+//
+// Dos maquetas en una: por debajo de md se apila (imagen en franja arriba y
+// una línea por punto) y desde md va en dos columnas, con la ilustración
+// entera a la izquierda y el detalle de cada punto debajo de su titular.
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import fachada from "@/assets/images/fachada-ilustracion.jpeg";
+import { BIENVENIDA } from "@/config/site";
+
+const VISTO = "bienvenida-vista-v1";
+---
+
+<dialog
+  id="bienvenida"
+  data-visto={VISTO}
+  aria-labelledby="bienvenida-titulo"
+  class="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-md bg-linen p-0 text-black shadow-2xl shadow-black/35 backdrop:bg-[rgb(28_16_10/0.58)] md:max-w-[920px]"
+>
+  <div class="relative md:grid md:min-h-[600px] md:grid-cols-[10fr_13fr]">
+    <div class="relative bg-white">
+      {
+        /* object-[center_40%] y no centrado: en la franja de móvil es lo que
+          deja el toldo en medio en vez de la fachada vacía de arriba. En
+          escritorio la columna es casi de la proporción del dibujo (2:3) y
+          apenas recorta. */
+      }
+      <Image
+        src={fachada}
+        alt={BIENVENIDA.fotoAlt}
+        widths={[400, 800]}
+        sizes="(min-width: 768px) 400px, 100vw"
+        class="h-[260px] w-full object-cover object-[center_40%] md:absolute md:inset-0 md:h-full"
+      />
+      <p
+        class="absolute inset-x-5 bottom-5 hidden rounded bg-linen/95 px-4 py-3 text-[13px] leading-snug md:block"
+      >
+        {BIENVENIDA.pista.antes}<span class="font-semibold text-rust"
+          >{BIENVENIDA.pista.resaltado}</span
+        >{BIENVENIDA.pista.despues}
+      </p>
+    </div>
+
+    <div
+      class="flex flex-col gap-[18px] px-[22px] pt-6 pb-[22px] md:gap-7 md:py-[52px] md:pr-14 md:pl-[52px]"
+    >
+      <div class="flex flex-col gap-2 md:gap-3">
+        <p class="text-[11px] tracking-[0.16em] text-rust uppercase md:text-xs">
+          {BIENVENIDA.antetitulo}
+        </p>
+        <h2
+          id="bienvenida-titulo"
+          class="font-serif text-[26px] leading-tight md:text-4xl"
+        >
+          {BIENVENIDA.titulo}
+        </h2>
+      </div>
+
+      <ul class="border-t border-rust/25">
+        {
+          BIENVENIDA.puntos.map((punto) => (
+            <li class="flex gap-3 border-b border-rust/25 py-[11px] md:gap-4 md:py-4">
+              <Icon
+                name={punto.icono}
+                class="size-5 shrink-0 text-rust md:mt-px md:size-[22px]"
+                aria-hidden="true"
+              />
+              <div class="flex flex-col gap-0.5 md:gap-1">
+                <p class="text-sm font-semibold md:text-[15px]">
+                  {punto.corto ? (
+                    <>
+                      <span class="md:hidden">{punto.corto}</span>
+                      <span class="hidden md:inline">{punto.titulo}</span>
+                    </>
+                  ) : (
+                    punto.titulo
+                  )}
+                </p>
+                <p
+                  class:list={[
+                    "text-[13px] leading-snug text-black/75 md:block md:text-sm md:leading-normal",
+                    !punto.detalleEnMovil && "hidden",
+                  ]}
+                >
+                  {punto.detalle}
+                </p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      {
+        /* autofocus para que showModal() deje el foco en la acción y no en la
+          X, que va antes en el orden de lectura del diseño pero no es lo que
+          se espera que pulse nadie. */
+      }
+      {
+        /* El hover oscurece el rust en vez de aclararlo con opacidad: rust/90
+          sobre linen apenas se distinguía del reposo. Y cursor-pointer a mano
+          porque Tailwind 4 deja los <button> con el cursor por defecto. */
+      }
+      <button
+        type="button"
+        data-cerrar
+        autofocus
+        class="h-12 w-full cursor-pointer rounded bg-rust px-7 text-[15px] font-semibold text-linen transition-colors hover:bg-[color-mix(in_oklab,var(--color-rust),black_30%)] md:mt-auto md:w-auto md:self-center"
+      >
+        {BIENVENIDA.boton}
+      </button>
+    </div>
+
+    {
+      /* En móvil lleva círculo claro porque cae encima de la ilustración; en
+        escritorio cae sobre el linen del texto y basta la X sola. */
+    }
+    <button
+      type="button"
+      data-cerrar
+      aria-label="Cerrar"
+      class="absolute top-2.5 right-2.5 flex size-11 cursor-pointer items-center justify-center rounded-full bg-linen/95 shadow-md shadow-black/15 transition-colors hover:bg-linen md:top-4 md:right-4 md:bg-transparent md:shadow-none md:hover:bg-black/5"
+    >
+      <Icon name="lucide:x" class="size-[18px] md:size-5" aria-hidden="true" />
+    </button>
+  </div>
+</dialog>
+
+<style is:global>
+  /* showModal() deja inerte el resto, pero no para el scroll de la página de
+     debajo: sin esto la rueda mueve la web por detrás del velo. */
+  html:has(#bienvenida[open]) {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  const modal = document.querySelector<HTMLDialogElement>("#bienvenida");
+
+  if (modal) {
+    const clave = modal.dataset.visto ?? "";
+
+    // localStorage puede no estar (modo privado estricto, cookies bloqueadas)
+    // y entonces lanza. En ese caso se enseña cada vez: mejor repetido que
+    // nunca.
+    const yaVisto = () => {
+      try {
+        return localStorage.getItem(clave) !== null;
+      } catch {
+        return false;
+      }
+    };
+
+    // Cualquier forma de cerrar pasa por el evento "close", Escape incluido.
+    modal.addEventListener("close", () => {
+      try {
+        localStorage.setItem(clave, "1");
+      } catch {
+        // Sin almacenamiento no hay nada que apuntar.
+      }
+    });
+
+    modal.querySelectorAll("[data-cerrar]").forEach((boton) => {
+      boton.addEventListener("click", () => modal.close());
+    });
+
+    // Un clic en el velo llega al propio <dialog>: el contenido lo tapa por
+    // completo, así que si el destino es el dialog es que se ha pulsado fuera.
+    modal.addEventListener("click", (evento) => {
+      if (evento.target === modal) modal.close();
+    });
+
+    if (!yaVisto()) modal.showModal();
+  }
+</script>

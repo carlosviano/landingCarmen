@@ -75,8 +75,9 @@ export const SOCIAL: SocialLink[] = [
 // TODO: horario real.
 export const HORARIO: FranjaHorario[] = [
   { dias: "Lunes a viernes", horas: "09:00 – 18:00" },
-  { dias: "Sábados", horas: "10:00 – 14:00" },
-  { dias: "Domingos", horas: "Cerrado" },
+  // Fines de semana cerrado: coincide con PEDIDO, que sólo entrega de lunes a
+  // viernes. Si algún día abre el sábado, hay que cambiar las dos cosas.
+  { dias: "Sábados y domingos", horas: "Cerrado" },
 ];
 
 export const CONTACTO = {
@@ -117,10 +118,9 @@ export const HERO = {
   // número sigue siendo el de relleno de WHATSAPP_VISIBLE.
   accion: { label: "Encargar por WhatsApp", href: WHATSAPP_URL },
   secundario: { label: "Ver el catálogo", href: "#catalogo" },
-  // TODO: plazo real. Va en el hero porque es la primera pregunta de quien
-  // encarga una tarta, y porque un encargo sin plazo a la vista se lee como
-  // "para hoy". Mientras siga entre corchetes, se ve que falta el dato.
-  nota: "Todo por encargo · [PLAZO DE ANTELACIÓN]",
+  // Va en el hero porque es la primera pregunta de quien encarga una tarta,
+  // y porque un encargo sin plazo a la vista se lee como "para hoy".
+  nota: "Todo por encargo · con dos días laborables de antelación",
   credenciales: ["Escuela Torreblanca", "Marbella Club", "Saddle", "DSTAgE"],
   // Sin nombres ni pronombres, igual que el resto de los alt: describe lo que
   // se ve y nada más.
@@ -395,15 +395,61 @@ export const ESCAPARATE: Escaparate = {
 
 // --- Catálogo ---------------------------------------------------------------
 
-/** Una parte de la tarta, de las que se listan en "de qué está hecha". */
+/**
+ * Una parte de la tarta, de las que se listan en "qué lleva".
+ *
+ * En la ficha, cada componente puede llevar una línea que sale de su etiqueta
+ * y llega a su sitio en la foto recortada (`Tarta.recorte`). Lo que dice
+ * ADÓNDE llega son `punto`, `franja` y `dentro`, y son datos de cada tarta, no
+ * código: la ficha es una sola plantilla y pinta las líneas donde digan estos
+ * números. Una tarta montada de otra manera lleva otros números, no otra
+ * página.
+ *
+ * Los tres son opcionales. Si a un solo componente le falta el `punto`, la
+ * ficha entera sale sin líneas (ver `estaAnotada` en src/lib/pedido.ts): una
+ * ficha medio anotada parece rota.
+ */
 export interface ComponenteTarta {
   etiqueta: string;
   descripcionCorta: string;
+  /**
+   * Dónde acaba la línea, en % del recorte: x de izquierda a derecha, y de
+   * arriba abajo. En porcentaje y no en píxeles para que siga apuntando al
+   * mismo sitio a cualquier tamaño.
+   *
+   * En móvil sólo se ve la mitad izquierda de la tarta (sangra por la
+   * derecha), así que x tiene que quedar por debajo de ~40.
+   */
+  punto?: { x: number; y: number };
+  /**
+   * De qué altura a qué altura va la capa, en % del alto del recorte. Pinta
+   * la llave de móvil. Sólo tiene sentido en capas: una ralladura o una
+   * decoración van sin franja, sólo con punto.
+   */
+  franja?: [desde: number, hasta: number];
+  /**
+   * Está dentro y no se ve en la foto (una crema bajo el merengue). La línea
+   * sale discontinua y el punto hueco, para no prometer algo que no se ve.
+   */
+  dentro?: boolean;
+}
+
+/** Un tamaño de encargo: para cuántos es y cuánto cuesta. */
+export interface TamanoTarta {
+  /** Texto corto con guion largo: "4–6". La palabra "personas" la pone quien pinta. */
+  personas: string;
+  /**
+   * En euros y como NÚMERO: el total del pedido lo multiplica por la cantidad.
+   * Se pinta con `precioVisible()`, que lo pone entre corchetes mientras
+   * `PRECIOS_PROVISIONALES` siga en true.
+   */
+  precio: number;
 }
 
 /**
  * Las familias de la carta. Son las que se pintan como chips de filtro en la
  * rejilla, en este orden, así que añadir una aquí la añade al filtro sola.
+ * Una familia sin tartas no se pinta.
  */
 export const CATEGORIAS = ["Clásicas", "Intensas", "Frescas"] as const;
 
@@ -417,6 +463,9 @@ export type CategoriaTarta = (typeof CATEGORIAS)[number];
  * tarjeta y la ficha. Se ha ido de los tres: era un segundo titular que
  * repetía al primero con otras palabras, y el ingrediente que nombraba ya
  * está —mejor explicado— en `componentes`.
+ *
+ * También tuvo `precio` y `raciones` sueltos. Ahora los dos salen de
+ * `tamanos`, porque cada tamaño tiene su precio.
  */
 export interface Tarta {
   /**
@@ -428,31 +477,32 @@ export interface Tarta {
   /** Familia a la que pertenece. Es por lo que filtran los chips de la carta. */
   categoria: CategoriaTarta;
   /**
-   * Nombre del archivo en `src/assets/images/`, o `null` si esta tarta
-   * todavía no tiene foto.
-   *
-   * `null` NO es un caso de error, es el estado normal de seis de las ocho:
-   * la rejilla pinta en su lugar un marco de "foto pendiente" MARCADO, en vez
-   * de una foto de banco que no es de Carmen. Con relleno de stock no se
-   * puede juzgar el diseño ni se sabe qué falta.
+   * Foto CON fondo, para la tarjeta de la carta: nombre del archivo en
+   * `src/assets/images/`, o `null` si todavía no hay.
    *
    * Se mete en un hueco 4:5 con `object-cover`, así que el motivo tiene que
-   * aguantar un recorte centrado. Mismo encuadre que el carrusel de la
-   * galería.
+   * aguantar un recorte centrado. Sin ella, la tarjeta usa el recorte (si lo
+   * hay) sobre el fondo, y si tampoco, el marco de "foto pendiente".
    */
   archivo: string | null;
+  /**
+   * Foto SIN fondo (PNG con transparencia) para la ficha, que es donde van
+   * las líneas de `componentes`. Va aparte de `archivo` porque son dos fotos
+   * distintas: esta no aguanta un `object-cover`, se lo comería.
+   *
+   * Recortada PEGADA a la tarta, sin margen transparente: los porcentajes de
+   * `punto` y `franja` son del archivo entero, y el margen los descuadraría.
+   */
+  recorte?: string;
   /** Describe la tarta, sin nombres ni pronombres, como el resto del sitio. */
   alt: string;
-  /** Texto corto: "8–10 raciones", "Por unidad"... */
-  raciones: string;
+  /**
+   * Los tamaños que se pueden encargar, de menor a mayor. El primero es el
+   * que viene marcado. Con uno solo, la ficha no pinta el selector.
+   */
+  tamanos: [TamanoTarta, ...TamanoTarta[]];
   /** Texto corto: "Nevera, 24 h", "Fuera de nevera, 2 días"... */
   conservacion: string;
-  /**
-   * Ya formateado y listo para pintar, con su moneda: es un texto, no un
-   * número, porque no se suma ni se compara con nada. Va en color rust tanto
-   * en la tarjeta como en la ficha.
-   */
-  precio: string;
   /** De 2 a 4. Por encima de 4 las líneas de la ficha se apelotonan. */
   componentes: ComponenteTarta[];
   /** Párrafo de la ficha y de la portada. Dos o tres frases. */
@@ -475,16 +525,29 @@ export interface Catalogo {
   tartas: Tarta[];
 }
 
-// Todo lo del CTA de pedido en un solo sitio, porque está sin decidir: el
-// destino puede acabar siendo un formulario, un carrito o el WhatsApp de
-// ahora, y cambiarlo tiene que ser cambiar `enlace` y nada más.
+// TODO: precios reales. Mientras esto siga en true, todos los precios de la
+// web salen entre corchetes ("[28 €]"), para que se vea que son de relleno y
+// no se publiquen sin querer. Cuando estén todos, a false.
+export const PRECIOS_PROVISIONALES = true;
+
+// Todo lo del CTA de pedido en un solo sitio: el destino puede acabar siendo
+// un formulario, un carrito o el WhatsApp de ahora, y cambiarlo tiene que ser
+// cambiar `enlace` y nada más.
 //
-// El precio ya NO vive aquí: es de cada tarta (`Tarta.precio`).
-//
-// TODO: antelación real. Va entre corchetes a propósito: se ve en pantalla y
-// así no se publica sin querer.
+// El precio NO vive aquí: es de cada tamaño de cada tarta (`Tarta.tamanos`).
 export const PEDIDO = {
-  antelacion: "[ANTELACIÓN]",
+  /**
+   * Días LABORABLES de antelación. Sólo se entrega de lunes a viernes, así
+   * que un encargo hecho el viernes o el fin de semana sale como pronto el
+   * martes. La fecha mínima la calcula el navegador (src/lib/pedido.ts), no
+   * el build: la web es estática y un mínimo fijado al compilar se quedaría
+   * viejo al día siguiente.
+   *
+   * TODO: festivos. Hoy sólo se descartan sábados y domingos.
+   */
+  diasAntelacion: 2,
+  /** El mismo plazo, en texto, para los sitios donde se cuenta. */
+  antelacion: "dos días laborables",
   /**
    * Texto del único CTA de la ficha. Nombra el destino a propósito: un botón
    * que te saca de la página tiene que decir a dónde te lleva.
@@ -494,231 +557,152 @@ export const PEDIDO = {
    */
   etiqueta: "Pedir por WhatsApp",
   /**
-   * Adónde lleva el CTA. Hoy abre WhatsApp con el nombre de la tarta ya
-   * escrito, que es lo que convierte el botón en un pedido y no en un
-   * "escríbeme y ya veremos". Si mañana hay formulario o carrito, se cambia
-   * esta función y la ficha no se toca.
+   * Adónde lleva el CTA: WhatsApp con el mensaje ya escrito. Sin JS se llama
+   * sólo con el nombre (es el `href` que sale del build); con JS, la ficha lo
+   * vuelve a llamar con tamaño, cantidad y fecha cada vez que cambian.
+   *
+   * Lo pueden llamar las dos puntas —el servidor y el script de la ficha—,
+   * así que no puede depender de nada que sólo exista en una de ellas.
    */
-  enlace: (nombre: string) =>
-    `${WHATSAPP_URL}?text=${encodeURIComponent(
-      `Hola Carmen, quería pedir la tarta «${nombre}».`,
-    )}`,
+  enlace: (texto: string) => `${WHATSAPP_URL}?text=${encodeURIComponent(texto)}`,
 } as const;
 
 // Las fotos son de Carmen y viven en `src/assets/images/`. Se nombran aquí y
 // las resuelve `fotoDe()` (src/lib/fotos.ts), que revienta el build si el
-// nombre no existe.
+// nombre no existe. Ver src/assets/README.md para cómo se hacen.
 //
-// Ya NO hay imágenes de banco. Antes las ocho tiraban de Unsplash por URL, y
-// eso tenía dos problemas: no se podía juzgar el diseño con fotos que no eran
-// las suyas, y la mitad de los nombres de la carta estaban escritos para que
-// pegaran con el stock que les tocaba. Ahora sólo hay foto donde hay foto de
-// verdad; las demás llevan `archivo: null` y salen con su marco marcado.
-//
-// Ver src/assets/README.md para cómo se hacen las que faltan.
-
-// Los textos son verosímiles pero inventados, y los nombres están puestos para
-// que peguen con la imagen de relleno que les toca. Al sustituir las fotos hay
-// que repasarlos: ahora describen lo que se ve, no lo que hace Carmen.
+// Ahora mismo la carta tiene UNA tarta: la única de la que hay recorte sin
+// fondo. Las otras siete (con sus textos inventados) se quitaron a la espera
+// de fotos; están en el historial de git, en el commit anterior a este cambio.
+// Las fichas se irán añadiendo según lleguen los recortes.
 export const CATALOGO: Catalogo = {
-  // Antes decía "Edición limitada / Especial de temporada": era el marco de un
-  // escaparate que enseñaba UNA tarta destacada. Ahora las dos vistas enseñan
-  // las ocho a la vez, así que el antetítulo nombra la carta y no una edición.
   etiqueta: "Nuestra carta",
-  titulo: "Ocho tartas de temporada",
+  titulo: "Tartas de temporada",
   tituloPagina: "La carta",
   entradilla:
-    "Ocho tartas fijas, todas por encargo. El tamaño, la conservación y la antelación de cada una están en su ficha.",
+    "Todas por encargo. El tamaño, la conservación y la antelación de cada una están en su ficha.",
   filtroTodas: "Todas",
   tartas: [
     {
-      id: "frutos-rojos-y-nata",
-      nombre: "Frutos rojos y nata",
+      id: "limon-y-merengue",
+      nombre: "Limón y merengue",
       categoria: "Frescas",
-      // TODO: es de Carmen, pero de un encargo concreto. Repetir la toma
-      // con el encuadre de las demás cuando se haga la sesión.
-      archivo: "tarta_silueta_v2.png",
-      alt: "Tarta cubierta de nata y coronada de fresas partidas.",
-      raciones: "8–10 raciones",
-      conservacion: "Nevera. Se come el mismo día",
-      // TODO: precio real. Entre corchetes para que no se publique sin querer.
-      precio: "[34 €]",
-      componentes: [
-        { etiqueta: "Nata de la sierra", descripcionCorta: "Montada al momento, sin estabilizar" },
-        { etiqueta: "Fresón de temporada", descripcionCorta: "De Málaga mientras dura la campaña" },
-        { etiqueta: "Bizcocho genovés", descripcionCorta: "Ligero, calado en su propio jugo" },
-      ],
-      descripcion:
-        "La tarta de siempre, hecha con fruta que valga la pena. Fuera de campaña se cambia la fruta y se avisa.",
-      pasos: [
-        "Se monta el mismo día del evento: la nata va sin estabilizar y no aguanta horas de pie.",
-        "El bizcocho se cala en su propio jugo, nunca en almíbar.",
-        "El fresón se coloca a última hora, entero y sin brillo.",
-      ],
-    },
-    {
-      // Ojo: cambiar un `id` rompe los enlaces ya compartidos. Este se puede
-      // porque el sitio no está publicado; a partir de que lo esté, no.
-      id: "pavlova-de-melocoton",
-      nombre: "Pavlova de melocotón",
-      categoria: "Frescas",
-      // TODO: es de Carmen, pero de un encargo concreto. Repetir la toma
-      // con el encuadre de las demás cuando se haga la sesión.
-      archivo: "tarta_cumple_kika_2026.jpeg",
-      alt: "Merengue cubierto de nata y coronado de gajos de melocotón asado.",
-      raciones: "8–10 raciones",
-      conservacion: "Se come recién montada",
-      // TODO: precio real. Entre corchetes para que no se publique sin querer.
-      precio: "[32 €]",
-      componentes: [
-        { etiqueta: "Merengue seco", descripcionCorta: "Horneado la noche antes, crujiente por fuera" },
-        { etiqueta: "Nata montada al momento", descripcionCorta: "Sin estabilizar, no aguanta de pie" },
-        { etiqueta: "Melocotón asado", descripcionCorta: "Al horno con su jugo, nada de almíbar" },
-      ],
-      descripcion:
-        "El merengue se reblandece en cuanto toca la nata, así que se monta a última hora. Fuera de campaña se cambia la fruta y se avisa.",
-      pasos: [
-        "El merengue se hornea la noche antes y se deja secar en el horno apagado.",
-        "El melocotón se asa con su propio jugo, sin almíbar, y se deja enfriar.",
-        "Se monta a última hora: el merengue no aguanta ni una hora bajo la nata.",
-      ],
-    },
-    {
-      id: "chocolate-y-flor-de-sal",
-      nombre: "Chocolate y flor de sal",
-      categoria: "Intensas",
+      // TODO: foto con fondo para la tarjeta. Mientras no haya, la tarjeta
+      // pinta el recorte sobre el fondo.
       archivo: null,
-      alt: "Tarta redonda con la cobertura de chocolate extendida a mano.",
-      raciones: "10–12 raciones",
-      conservacion: "Fuera de nevera, 2 días",
-      // TODO: precio real. Entre corchetes para que no se publique sin querer.
-      precio: "[38 €]",
+      // Recortado del original (tarta-limon-sin-fondo.png, 1536×1024) a la
+      // tarta: 1400×775 desde x 80, y 150. Los puntos de abajo son de ESTE.
+      recorte: "tarta-limon-recorte.png",
+      alt: "Tarta redonda de base de galleta gruesa, cubierta de picos de merengue con ralladura de lima.",
+      // TODO: precios reales.
+      tamanos: [
+        { personas: "4–6", precio: 28 },
+        { personas: "8–10", precio: 38 },
+      ],
+      conservacion: "Nevera, 48 h",
+      // TODO: textos reales. Los de esta tarta son de relleno, escritos para
+      // la maqueta de la ficha.
       componentes: [
-        { etiqueta: "Cobertura espejo", descripcionCorta: "Colada templada, se alisa sola" },
-        { etiqueta: "Bizcocho húmedo", descripcionCorta: "De cacao puro, sin colorantes" },
-        { etiqueta: "Flor de sal", descripcionCorta: "Escamas por encima, al terminar" },
-        { etiqueta: "Aceite de oliva", descripcionCorta: "Arbequina, en lugar de mantequilla" },
+        {
+          etiqueta: "Ralladura de lima",
+          descripcionCorta: "Rallada al servir, no antes",
+          punto: { x: 24.9, y: 15.2 },
+        },
+        {
+          etiqueta: "Merengue italiano",
+          descripcionCorta: "Picos a manga, uno a uno",
+          punto: { x: 8.6, y: 38.7 },
+          franja: [22, 50.5],
+        },
+        {
+          etiqueta: "Crema de limón",
+          descripcionCorta: "Por dentro, bajo el merengue",
+          punto: { x: 6.4, y: 56.8 },
+          franja: [51.5, 59.5],
+          dentro: true,
+        },
+        {
+          etiqueta: "Base de sablé",
+          descripcionCorta: "Gruesa, de mantequilla y almendra",
+          punto: { x: 8.6, y: 76.1 },
+          franja: [60.5, 97],
+        },
       ],
       descripcion:
-        "La más sobria de todas y la que menos azúcar lleva. La sal no se nota como sal: levanta el cacao y lo deja más largo.",
+        "Ácida, con el merengue justo para calmarla. El sablé es grueso a propósito: aguanta la crema sin reblandecerse y cruje hasta el último trozo.",
       pasos: [
-        "El bizcocho lleva arbequina en lugar de mantequilla: queda más húmedo y más largo.",
-        "La cobertura se cuela templada sobre la tarta fría y se alisa sola.",
-        "Las escamas de sal van al terminar, nunca antes: se disolverían.",
-      ],
-    },
-    {
-      id: "corazon-de-fresa",
-      nombre: "Corazón de fresa",
-      categoria: "Frescas",
-      archivo: null,
-      alt: "Tarta con forma de corazón, la base a la vista y la superficie cubierta de fresas.",
-      raciones: "8 raciones",
-      conservacion: "Nevera, 24 h",
-      // TODO: precio real. Entre corchetes para que no se publique sin querer.
-      precio: "[30 €]",
-      componentes: [
-        { etiqueta: "Masa quebrada", descripcionCorta: "Con mantequilla fría, se deshace" },
-        { etiqueta: "Fresa de temporada", descripcionCorta: "Cortada gruesa, se tiene que notar" },
-      ],
-      descripcion:
-        "La que más se encarga para aniversarios, por la forma y porque no lleva nata: aguanta bien una mesa larga.",
-      pasos: [
-        "La masa se hornea a ciegas el día antes y se deja enfriar entera.",
-        "La fresa se corta gruesa por la mañana, para que se note al morder.",
-        "Sin nata: por eso aguanta una mesa larga sin perder la forma.",
-      ],
-    },
-    {
-      id: "hojaldre-de-almendra",
-      nombre: "Hojaldre de almendra",
-      categoria: "Clásicas",
-      archivo: null,
-      alt: "Tarta redonda de hojaldre dorado, con dibujos rayados en la superficie.",
-      raciones: "8–10 raciones",
-      conservacion: "Fuera de nevera. Mejor al día siguiente",
-      // TODO: precio real. Entre corchetes para que no se publique sin querer.
-      precio: "[28 €]",
-      componentes: [
-        { etiqueta: "Almendra marcona", descripcionCorta: "Molida con su piel, sin tostar" },
-        { etiqueta: "Hojaldre de mantequilla", descripcionCorta: "Seis vueltas, hechas en dos días" },
-        { etiqueta: "Ron añejo", descripcionCorta: "Una cucharada, solo para el fondo" },
-      ],
-      descripcion:
-        "Seca por fuera y jugosa por dentro, de las pocas que mejoran al día siguiente. Se sirve tibia, nunca fría de nevera.",
-      pasos: [
-        "Seis vueltas de hojaldre, hechas en dos días.",
-        "La almendra se muele con su piel y sin tostar, para que no amargue.",
-        "Se hornea hasta que suena hueco y se sirve tibia.",
-      ],
-    },
-    {
-      id: "brazo-de-nata",
-      nombre: "Brazo de nata",
-      categoria: "Clásicas",
-      archivo: null,
-      alt: "Brazo de gitano enrollado, con el relleno de crema a la vista en el corte.",
-      raciones: "8 raciones",
-      conservacion: "Nevera, 24 h",
-      // TODO: precio real. Entre corchetes para que no se publique sin querer.
-      precio: "[26 €]",
-      componentes: [
-        { etiqueta: "Plancha de bizcocho", descripcionCorta: "Enrollada en caliente, sin grietas" },
-        { etiqueta: "Nata ligera", descripcionCorta: "Poco montada, para que no pese" },
-        { etiqueta: "Frambuesa liofilizada", descripcionCorta: "En polvo, es lo que tiñe la capa" },
-      ],
-      descripcion:
-        "El color no lleva colorante: es frambuesa liofilizada molida. Se corta grueso, de dos dedos.",
-      pasos: [
-        "La plancha se enrolla en caliente, que es cuando aguanta la curva.",
-        "La nata se monta poco, para que no pese.",
-        "El rosa es frambuesa liofilizada molida: no lleva colorante.",
-      ],
-    },
-    {
-      id: "bollo-de-vainilla",
-      nombre: "Bollo de vainilla",
-      categoria: "Clásicas",
-      archivo: null,
-      alt: "Bollo redondo y dorado, con un hueco de crema en el centro.",
-      raciones: "Por unidad",
-      conservacion: "El mismo día",
-      // TODO: precio real. Entre corchetes para que no se publique sin querer.
-      precio: "[3,50 €]",
-      componentes: [
-        { etiqueta: "Vainilla de Madagascar", descripcionCorta: "Vaina raspada, se ven los granos" },
-        { etiqueta: "Masa de brioche", descripcionCorta: "Levada despacio, toda la noche" },
-      ],
-      descripcion:
-        "Lo más parecido a un desayuno que hay en la carta. Se come el mismo día: al siguiente ya no es lo mismo.",
-      pasos: [
-        "La masa leva toda la noche en frío: de ahí le viene la hebra.",
-        "La vaina se raspa a mano y los granos se ven en la crema.",
-        "Se hornea por la mañana y se come el mismo día.",
-      ],
-    },
-    {
-      id: "bundt-de-chocolate",
-      nombre: "Bundt de chocolate",
-      categoria: "Intensas",
-      archivo: null,
-      alt: "Bizcocho con agujero en el centro, bañado de chocolate.",
-      raciones: "12–14 raciones",
-      conservacion: "Fuera de nevera, 3 días",
-      // TODO: precio real. Entre corchetes para que no se publique sin querer.
-      precio: "[36 €]",
-      componentes: [
-        { etiqueta: "Ganache de cacao 70 %", descripcionCorta: "Batida templada, brillo natural" },
-        { etiqueta: "Bizcocho de yogur", descripcionCorta: "Alto y tierno, se corta en frío" },
-        { etiqueta: "Fideos de colores", descripcionCorta: "Solo si la tarta es para un niño" },
-      ],
-      descripcion:
-        "La de los cumpleaños de casa: se corta en porciones grandes y se come con la mano.",
-      pasos: [
-        "El bizcocho lleva yogur: sube alto y se queda tierno.",
-        "Se corta en frío para que el molde salga limpio.",
-        "La ganache se bate templada y coge brillo sola.",
+        "El sablé se hornea el día antes, grueso, y se enfría en el molde.",
+        "La crema se cuece al baño maría y se vierte templada sobre la base.",
+        "El merengue se escudilla pico a pico justo antes de entregar.",
       ],
     },
   ],
 };
+
+// --- Modal de bienvenida ----------------------------------------------------
+
+/** Un punto de "Así trabajamos": icono, titular y una línea de detalle. */
+export interface PuntoBienvenida {
+  /** Nombre de icono de Iconify, p. ej. "lucide:clock". */
+  icono: string;
+  titulo: string;
+  detalle: string;
+  /**
+   * Lo que se lee en móvil, en una sola línea. Allí no hay sitio para
+   * titular más detalle, así que cada punto se queda en esto. Si falta, sale
+   * `titulo`.
+   */
+  corto?: string;
+  /** El detalle también se ve en móvil. Sólo la dirección lo necesita. */
+  detalleEnMovil?: boolean;
+}
+
+// El modal que ve quien entra por primera vez. Cuenta lo que cambia cómo se
+// encarga (que no hay envíos, cuándo se recoge, con cuánto plazo y dónde) y
+// nada más: es lo que alguien que llega de Instagram no sabe y le hace falta
+// antes de pedir.
+//
+// El horario, el plazo y la dirección salen de las constantes de arriba: si
+// cambian allí, cambian aquí solos.
+const LABORABLES = HORARIO[0];
+
+export const BIENVENIDA = {
+  antetitulo: "Bienvenida",
+  titulo: "Así trabajamos",
+  // Va sobre la ilustración, sólo en escritorio: en móvil la imagen es una
+  // franja y la nota taparía justo el toldo.
+  pista: {
+    antes: "Busca el ",
+    resaltado: "toldo rojo",
+    despues: " en la primera planta, encima del bajo comercial.",
+  },
+  fotoAlt:
+    "Ilustración de la fachada: un toldo rojo con el nombre Estimada Carmela sobre el ventanal de la primera planta, con el rótulo Pastelería.",
+  puntos: [
+    {
+      icono: "lucide:shopping-bag",
+      titulo: "Solo recogida",
+      detalle: "No hacemos envíos: los pedidos se recogen en el obrador.",
+    },
+    {
+      icono: "lucide:clock",
+      titulo: "Horario de recogida",
+      detalle: `${LABORABLES.dias}, ${LABORABLES.horas}`,
+      // Sin "Recogida de" delante: con la fuente del sistema parte en dos
+      // líneas a 390px, y el punto de arriba ya dice que es recogida.
+      corto: `${LABORABLES.dias}, ${LABORABLES.horas}`,
+    },
+    {
+      icono: "lucide:calendar",
+      titulo: `${PEDIDO.antelacion[0].toUpperCase()}${PEDIDO.antelacion.slice(1)} de antelación`,
+      detalle: "Todo se hace por encargo. Un pedido del viernes sale el martes.",
+    },
+    {
+      icono: "lucide:map-pin",
+      titulo: `${CONTACTO.titular} · ${CONTACTO.ciudad}`,
+      detalle: CONTACTO.detalle,
+      detalleEnMovil: true,
+    },
+  ] satisfies PuntoBienvenida[],
+  boton: "Entendido",
+} as const;
