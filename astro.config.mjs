@@ -23,6 +23,28 @@ export default defineConfig({
       // cargar no salta el layout.
       fallbacks: ['Georgia', 'serif'],
     },
+    // Fraunces y Karla: SOLO para la pantalla de "próximamente". Karla es el
+    // texto; Fraunces es el respaldo del titular, que va en The Seasons desde
+    // Adobe Fonts (ver src/pages/proximamente.astro). Solo las carga la página
+    // que pone su <Font>, así que el resto del sitio no descarga nada de más.
+    {
+      provider: fontProviders.google(),
+      name: 'Fraunces',
+      cssVariable: '--font-fraunces',
+      weights: ['300 600'],
+      styles: ['normal', 'italic'],
+      subsets: ['latin', 'latin-ext'],
+      fallbacks: ['Georgia', 'serif'],
+    },
+    {
+      provider: fontProviders.google(),
+      name: 'Karla',
+      cssVariable: '--font-karla',
+      weights: [400, 500, 600],
+      styles: ['normal'],
+      subsets: ['latin', 'latin-ext'],
+      fallbacks: ['system-ui', 'sans-serif'],
+    },
   ],
 
   vite: {

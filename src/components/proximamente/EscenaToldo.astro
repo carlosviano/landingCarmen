@@ -1,0 +1,410 @@
+---
+// La cocinera montando el toldo de la tienda: la ilustración de la pantalla de
+// "próximamente". SVG en línea y animación en CSS, sin JS y sin imágenes.
+//
+// El toldo es el de verdad (la foto del alzado que pasó Carmen): lona lisa
+// rust, sin rayas, con el faldón rotulado "Estimada Carmela" en sand, el mismo
+// amarillo del "PASTELERÍA" del escaparate. Si cambia el rótulo del toldo
+// real, cambia aquí.
+//
+// Un ciclo son 10 s, y todas las piezas comparten reloj: cada una tiene su
+// @keyframes con los mismos porcentajes, así que se mueven juntas sin JS.
+//
+//   0–19 %   sube la escalera con la caja de herramientas
+//   21–57 %  deja la caja arriba y gira la manivela: el toldo baja a tirones
+//   57 %     aparece "Estimada Carmela" en el faldón
+//   57–75 %  recoge la caja, baja y la deja en el suelo
+//   75–88 %  dos pasos atrás, manos en la cintura, se seca la frente
+//   88–95 %  el toldo se recoge solo de golpe: manos a la cabeza
+//   95–100 % vuelve corriendo a la escalera
+//
+// Ojo al tocar un porcentaje: casi siempre hay otro que va en pareja. Los
+// brazos, por ejemplo, son seis juegos superpuestos (con la caja, en la
+// manivela, sueltos, en jarras, secándose la frente, a la cabeza) y en cada
+// momento solo uno tiene opacidad 1; si se descuadran, sale con cuatro brazos.
+//
+// Las poses sin animar son la escena fija que pide prefers-reduced-motion: en
+// lo alto de la escalera, con la mano en la manivela y el toldo a medio abrir.
+// Por eso cada pieza declara su valor de reposo fuera del @keyframes.
+---
+
+<svg
+  class="escena block h-auto w-full overflow-visible"
+  viewBox="0 22 600 378"
+  role="img"
+  aria-label="La cocinera, subida a una escalera, despliega con la manivela el toldo rojo de Estimada Carmela sobre el escaparate de la pastelería."
+>
+  <!-- acera y bolardo -->
+  <line class="ln" x1="14" y1="380" x2="586" y2="380"></line>
+  <line class="ln deco thin" x1="14" y1="394" x2="586" y2="394"></line>
+  <line class="ln" x1="34" y1="352" x2="34" y2="380"></line>
+  <circle class="ln f-cream" cx="34" cy="350" r="4"></circle>
+
+  <!-- fachada -->
+  <rect class="ln f-cream" x="60" y="30" width="480" height="350"></rect>
+  <line class="ln thin" x1="60" y1="62" x2="540" y2="62"></line>
+  <line class="ln deco thin" x1="60" y1="70" x2="540" y2="70"></line>
+
+  <!-- puerta -->
+  <rect class="ln f-cream" x="98" y="176" width="88" height="204"></rect>
+  <rect class="ln glass" x="108" y="186" width="68" height="150" rx="1"></rect>
+  <line class="ln grueso" x1="168" y1="250" x2="168" y2="280"></line>
+  <line class="ln thin" x1="108" y1="352" x2="176" y2="352"></line>
+
+  <!-- escaparate, con la jardinera -->
+  <rect class="ln f-cream" x="198" y="176" width="304" height="186"></rect>
+  <rect class="ln glass" x="206" y="184" width="288" height="170" rx="1"></rect>
+  <text class="rotulo" x="352" y="236">PASTELERÍA</text>
+  <line class="ln thin" x1="206" y1="288" x2="494" y2="288"></line>
+  <path
+    class="ln thin f-cream"
+    d="M206 292 q9 -5 18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 t18 0 V354 H206 Z"
+  ></path>
+  <path class="ln deco thin" d="M242 300 V350 M296 300 V350 M350 300 V350 M404 300 V350 M458 300 V350"></path>
+  <rect class="ln f-taupe" x="194" y="362" width="312" height="18"></rect>
+  <path
+    class="ln thin"
+    d="M226 330 C224 316 220 310 214 306 M232 330 C233 314 238 306 244 302 M229 330 C229 318 229 310 229 300"
+  ></path>
+  <path
+    class="f-taupe"
+    d="M214 306 q-6 -2 -6 -8 q6 1 6 8 Z M244 302 q2 -6 8 -6 q-1 6 -8 6 Z M229 300 q-4 -5 0 -10 q4 5 0 10 Z"
+  ></path>
+  <rect class="ln f-rust" x="214" y="330" width="30" height="24" rx="1.5"></rect>
+
+  <!-- toldo: sombra, lona, faldón y cofre, de atrás adelante -->
+  <g class="aw-val">
+    <rect class="aw-sombra" x="94" y="138" width="412" height="14"></rect>
+  </g>
+  <g class="aw-lona">
+    <rect class="ln f-rust" x="90" y="114" width="420" height="64"></rect>
+    <line class="aw-pliegue" x1="90" y1="135" x2="510" y2="135"></line>
+    <line class="aw-pliegue" x1="90" y1="157" x2="510" y2="157"></line>
+  </g>
+  <g class="aw-val">
+    <rect class="ln f-rust" x="90" y="114" width="420" height="25"></rect>
+    <line class="aw-ribete" x1="94" y1="117.5" x2="506" y2="117.5"></line>
+    <text class="aw-nombre" x="104" y="133">Estimada Carmela</text>
+  </g>
+  <rect class="ln f-taupe" x="84" y="100" width="432" height="15" rx="2.5"></rect>
+  <path class="ln" d="M94 115 v6 M506 115 v6"></path>
+
+  <!-- manivela -->
+  <rect class="ln f-taupe" x="510" y="103" width="12" height="12" rx="2"></rect>
+  <line class="ln" x1="516" y1="115" x2="516" y2="166"></line>
+  <g class="manivela">
+    <path class="ln" d="M516 166 H525 V173"></path>
+    <circle class="ln f-rust" cx="525" cy="175" r="2.4"></circle>
+  </g>
+
+  <!-- escalera de tijera -->
+  <line class="ln larguero" x1="468" y1="380" x2="486" y2="205"></line>
+  <line class="ln larguero" x1="536" y1="380" x2="518" y2="205"></line>
+  <path class="ln" d="M471.6 345 H532.4 M475.2 310 H528.8 M478.8 275 H525.2 M482.4 240 H521.6"></path>
+  <rect class="ln f-sand" x="480" y="198" width="44" height="8" rx="1.5"></rect>
+
+  <!-- caja de herramientas: la de lo alto de la escalera y la del suelo -->
+  <g transform="translate(506 198)">
+    <g class="caja-arriba">
+      <line class="ln thin" x1="12" y1="-11" x2="16" y2="-19"></line>
+      <rect class="ln f-taupe" x="0" y="-11" width="18" height="11" rx="1.5"></rect>
+      <path class="ln thin" d="M4 -11 V-15 H14 V-11"></path>
+    </g>
+  </g>
+  <g transform="translate(505 380)">
+    <g class="caja-suelo">
+      <line class="ln thin" x1="12" y1="-11" x2="16" y2="-19"></line>
+      <rect class="ln f-taupe" x="0" y="-11" width="18" height="11" rx="1.5"></rect>
+      <path class="ln thin" d="M4 -11 V-15 H14 V-11"></path>
+    </g>
+  </g>
+
+  <!-- cocinera: los pies en el origen, mirando a la derecha -->
+  <g transform="translate(500 380)">
+    <g class="cocinera">
+      <g class="orientacion">
+        <path class="ln pierna" d="M-5 -30 L-5 0 L-1 0"></path>
+        <path class="ln pierna pierna-b" d="M5 -30 L5 0 L9 0"></path>
+        <path class="ln f-cream" d="M-12 -29 L-11 -55 Q0 -61 11 -55 L12 -29 Z"></path>
+        <path class="ln f-rust" d="M-7 -50 L7 -50 L10 -25 L-10 -25 Z"></path>
+        <circle class="ln f-taupe" cx="-8.5" cy="-66" r="3.2"></circle>
+        <circle class="ln f-sand" cx="1" cy="-68" r="9.5"></circle>
+        <circle class="f-ink" cx="5.5" cy="-69.5" r="1.3"></circle>
+        <circle class="rubor" cx="3.5" cy="-65.2" r="2"></circle>
+        <path class="ln thin" d="M4 -64.5 Q6.5 -63 8.5 -65"></path>
+        <path
+          class="ln f-cream"
+          d="M-8 -80 C-15 -82 -14 -95 -6 -92 C-5 -101 7 -101 7 -92 C15 -95 16 -82 9 -80 Z"
+        ></path>
+        <rect class="ln f-cream" x="-8" y="-80" width="17" height="6" rx="1.5"></rect>
+
+        <g class="brazos-caja">
+          <path class="ln" d="M-3 -53 Q-7 -45 -9 -38"></path>
+          <g transform="translate(5 -12)">
+            <line class="ln thin" x1="12" y1="-11" x2="16" y2="-19"></line>
+            <rect class="ln f-taupe" x="0" y="-11" width="18" height="11" rx="1.5"></rect>
+            <path class="ln thin" d="M4 -11 V-15 H14 V-11"></path>
+          </g>
+          <path class="ln" d="M4 -53 L10 -40 L14 -27"></path>
+          <circle class="ln f-sand" cx="14" cy="-27" r="2.3"></circle>
+        </g>
+        <g class="brazos-manivela">
+          <path class="ln" d="M-1 -53 L7 -63 L15 -71"></path>
+          <path class="ln" d="M4 -52 L11 -61 L17 -69"></path>
+          <circle class="ln f-sand" cx="15.5" cy="-71.5" r="2.3"></circle>
+          <circle class="ln f-sand" cx="17" cy="-69" r="2.3"></circle>
+        </g>
+        <g class="brazos-sueltos">
+          <path class="ln" d="M-3 -53 Q-7 -45 -9 -38"></path>
+          <path class="ln" d="M4 -53 Q8 -45 11 -39"></path>
+        </g>
+        <g class="brazos-jarras">
+          <path class="ln" d="M-2 -53 L-13 -44 L-9 -34"></path>
+          <path class="ln" d="M4 -53 L15 -44 L11 -34"></path>
+        </g>
+        <g class="brazos-frente">
+          <path class="ln" d="M-2 -53 L-13 -44 L-9 -34"></path>
+          <path class="ln" d="M4 -53 L14 -61 L7 -72"></path>
+          <circle class="ln f-sand" cx="7" cy="-72" r="2.3"></circle>
+        </g>
+        <g class="brazos-cabeza">
+          <path class="ln" d="M-2 -53 L-12 -64 L-6 -78"></path>
+          <path class="ln" d="M4 -53 L14 -64 L8 -79"></path>
+          <circle class="ln f-sand" cx="-6" cy="-78" r="2.3"></circle>
+          <circle class="ln f-sand" cx="8" cy="-79" r="2.3"></circle>
+        </g>
+        <text class="exclamacion" x="14" y="-98">!</text>
+        <path class="ln thin f-cream gota" d="M11 -76 q3 4 0 6 q-3 -2 0 -6 Z"></path>
+      </g>
+    </g>
+  </g>
+</svg>
+
+<style>
+  /* Colores: los de la paleta (global.css) y dos derivados de taupe, el cristal
+     y la sombra, que no son texto y no entran en las cuentas de contraste. El
+     "cream" es el blanco roto del gorro, la chaqueta y los marcos. */
+  .ln {
+    fill: none;
+    stroke: var(--color-black);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .thin { stroke-width: 1.4; }
+  .grueso { stroke-width: 3; }
+  .larguero { stroke-width: 2.6; }
+  .deco { stroke: var(--color-taupe); }
+  .f-cream { fill: #fbfaf1; }
+  .f-sand { fill: var(--color-sand); }
+  .f-taupe { fill: var(--color-taupe); }
+  .f-rust { fill: var(--color-rust); }
+  .f-ink { fill: var(--color-black); }
+  .glass { fill: #8f8377; }
+  .rubor { fill: var(--color-rust); opacity: 0.22; }
+
+  .rotulo {
+    font-family: var(--font-karla), sans-serif;
+    font-weight: 600;
+    font-size: 25px;
+    letter-spacing: 0.2em;
+    fill: var(--color-sand);
+    text-anchor: middle;
+  }
+  .aw-nombre {
+    font-family: var(--font-titular, var(--font-fraunces)), serif;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    fill: var(--color-sand);
+  }
+  .aw-ribete { stroke: #fbfaf1; stroke-width: 1; opacity: 0.55; }
+  .aw-sombra { fill: var(--color-taupe); opacity: 0.22; }
+  /* La lona se estira con scaleY; sin esto el trazo se estiraría con ella y
+     el borde de arriba engordaría según baja el toldo. */
+  .aw-lona * { vector-effect: non-scaling-stroke; }
+  .aw-pliegue { stroke: #5e1b0d; stroke-width: 1; opacity: 0.45; }
+  .exclamacion {
+    font-family: var(--font-titular, var(--font-fraunces)), serif;
+    /* 400 y no negrita: la única negrita de la página sería este signo, y
+       obligaría a descargar el Bold de The Seasons solo para él. */
+    font-weight: 400;
+    font-size: 16px;
+    fill: var(--color-rust);
+  }
+
+  /* --- Animación --------------------------------------------------------- */
+
+  .cocinera, .orientacion, .pierna, .brazos-caja, .brazos-manivela,
+  .brazos-sueltos, .brazos-jarras, .brazos-frente, .brazos-cabeza,
+  .exclamacion, .gota, .caja-arriba, .caja-suelo, .aw-lona, .aw-val,
+  .aw-nombre, .manivela {
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+
+  /* Valores de reposo = la escena fija de prefers-reduced-motion. Los
+     transform-origin van en unidades del propio grupo (la cocinera tiene los
+     pies en 0,0; las piernas giran desde la cadera, a 30 de altura). */
+  .cocinera { transform: translate(0, -140px); animation-name: cocinera; }
+  .orientacion { transform-origin: 0 0; animation-name: orientacion; }
+  .pierna { --lado: 1; transform-origin: -5px -30px; animation-name: paso; }
+  .pierna-b { --lado: -1; transform-origin: 5px -30px; }
+  .brazos-caja { opacity: 0; animation-name: brazos-caja; }
+  .brazos-manivela { opacity: 1; animation-name: brazos-manivela; }
+  .brazos-sueltos { opacity: 0; animation-name: brazos-sueltos; }
+  .brazos-jarras { opacity: 0; animation-name: brazos-jarras; }
+  .brazos-frente { opacity: 0; animation-name: brazos-frente; }
+  .brazos-cabeza { opacity: 0; animation-name: brazos-cabeza; }
+  .exclamacion { opacity: 0; animation-name: exclamacion; }
+  .gota { opacity: 0; animation-name: gota; }
+  .caja-arriba { opacity: 1; animation-name: caja-arriba; }
+  .caja-suelo { opacity: 0; animation-name: caja-suelo; }
+  .aw-lona { transform-origin: 0 114px; transform: scaleY(0.5); animation-name: lona; }
+  .aw-val { transform: translate(0, 32px); animation-name: faldon; }
+  .aw-nombre { opacity: 0; animation-name: nombre; }
+  .manivela { transform-origin: 516px 166px; animation-name: manivela; }
+
+  /* Cuatro peldaños de 35 arriba, la manivela, cuatro abajo, 72 a la
+     izquierda para mirar el toldo, un saltito del susto y vuelta. */
+  @keyframes cocinera {
+    0%, 4% { transform: translate(0, 0); }
+    7%, 8% { transform: translate(0, -35px); }
+    11%, 12% { transform: translate(0, -70px); }
+    15%, 16% { transform: translate(0, -105px); }
+    19%, 60% { transform: translate(0, -140px); }
+    63%, 64% { transform: translate(0, -105px); }
+    67%, 68% { transform: translate(0, -70px); }
+    71%, 72% { transform: translate(0, -35px); }
+    75% { transform: translate(0, 0); }
+    80%, 90% { transform: translate(-72px, 0); }
+    90.8% { transform: translate(-72px, -9px); }
+    91.6%, 95% { transform: translate(-72px, 0); }
+    99%, 100% { transform: translate(0, 0); }
+  }
+  @keyframes orientacion {
+    0%, 75% { transform: scaleX(1); }
+    75.8%, 79.2% { transform: scaleX(-1); }
+    80%, 100% { transform: scaleX(1); }
+  }
+  /* Las piernas solo se mueven mientras se desplaza: quietas en la manivela,
+     mirando el toldo y durante el susto. */
+  @keyframes paso {
+    0%, 4%, 7%, 8%, 11%, 12%, 15%, 16%, 19%, 60%, 63%, 64%, 67%, 68%, 71%,
+    72%, 75%, 77.5%, 80%, 95%, 97%, 99%, 100% { transform: rotate(0deg); }
+    5.5%, 13.5%, 61.5%, 69.5%, 76.25%, 96% { transform: rotate(calc(var(--lado) * 20deg)); }
+    9.5%, 17.5%, 65.5%, 73.5%, 78.75%, 98% { transform: rotate(calc(var(--lado) * -20deg)); }
+  }
+  @keyframes brazos-caja {
+    0%, 20.8% { opacity: 1; }
+    21%, 57.3% { opacity: 0; }
+    57.5%, 74.8% { opacity: 1; }
+    75%, 99.3% { opacity: 0; }
+    99.5%, 100% { opacity: 1; }
+  }
+  @keyframes brazos-manivela {
+    0%, 20.8% { opacity: 0; }
+    21%, 57.3% { opacity: 1; }
+    57.5%, 100% { opacity: 0; }
+  }
+  @keyframes brazos-sueltos {
+    0%, 74.8% { opacity: 0; }
+    75%, 79.8% { opacity: 1; }
+    80%, 94.8% { opacity: 0; }
+    95%, 99.3% { opacity: 1; }
+    99.5%, 100% { opacity: 0; }
+  }
+  @keyframes brazos-jarras {
+    0%, 79.8% { opacity: 0; }
+    80%, 83.8% { opacity: 1; }
+    84%, 100% { opacity: 0; }
+  }
+  @keyframes brazos-frente {
+    0%, 83.8% { opacity: 0; }
+    84%, 88.3% { opacity: 1; }
+    88.5%, 100% { opacity: 0; }
+  }
+  @keyframes brazos-cabeza {
+    0%, 88.3% { opacity: 0; }
+    88.5%, 94.8% { opacity: 1; }
+    95%, 100% { opacity: 0; }
+  }
+  @keyframes exclamacion {
+    0%, 89.2% { opacity: 0; transform: translate(0, 3px); }
+    89.8%, 94.5% { opacity: 1; transform: translate(0, 0); }
+    95%, 100% { opacity: 0; transform: translate(0, 0); }
+  }
+  @keyframes gota {
+    0%, 84.8% { opacity: 0; transform: translate(0, 0); }
+    85.6% { opacity: 1; transform: translate(0, 0); }
+    87.6% { opacity: 1; transform: translate(3px, 9px); }
+    88.3%, 100% { opacity: 0; transform: translate(3px, 11px); }
+  }
+  @keyframes caja-arriba {
+    0%, 20.8% { opacity: 0; }
+    21%, 57.3% { opacity: 1; }
+    57.5%, 100% { opacity: 0; }
+  }
+  @keyframes caja-suelo {
+    0%, 74.8% { opacity: 0; }
+    75%, 99.3% { opacity: 1; }
+    99.5%, 100% { opacity: 0; }
+  }
+  /* Cuatro vueltas de manivela, y en cada una el toldo baja en dos tirones
+     con un parón en medio. Lona y faldón van en pareja: el faldón baja 64 × la
+     escala de la lona, que mide 64 de alto. */
+  @keyframes lona {
+    0%, 23% { transform: scaleY(0); }
+    27%, 28% { transform: scaleY(0.18); }
+    30%, 33% { transform: scaleY(0.25); }
+    36%, 37% { transform: scaleY(0.42); }
+    39%, 42% { transform: scaleY(0.5); }
+    45%, 46% { transform: scaleY(0.67); }
+    48%, 51% { transform: scaleY(0.75); }
+    54%, 55% { transform: scaleY(0.92); }
+    56.5%, 88.5% { transform: scaleY(1); }
+    89.3%, 100% { transform: scaleY(0); }
+  }
+  @keyframes faldon {
+    0%, 23% { transform: translate(0, 0); }
+    27%, 28% { transform: translate(0, 11.5px); }
+    30%, 33% { transform: translate(0, 16px); }
+    36%, 37% { transform: translate(0, 27px); }
+    39%, 42% { transform: translate(0, 32px); }
+    45%, 46% { transform: translate(0, 43px); }
+    48%, 51% { transform: translate(0, 48px); }
+    54%, 55% { transform: translate(0, 59px); }
+    56.5%, 88.5% { transform: translate(0, 64px); }
+    89.3%, 100% { transform: translate(0, 0); }
+  }
+  @keyframes nombre {
+    0%, 56.5% { opacity: 0; }
+    58.5%, 88.4% { opacity: 1; }
+    88.6%, 100% { opacity: 0; }
+  }
+  /* El giro de la manivela vista de frente: el brazo pasa de un lado al otro
+     del eje, que en plano es un scaleX de 1 a -1. */
+  @keyframes manivela {
+    0%, 23% { transform: scaleX(1); }
+    24.75% { transform: scaleX(-1); }
+    26.5% { transform: scaleX(1); }
+    28.25% { transform: scaleX(-1); }
+    30%, 33% { transform: scaleX(1); }
+    34.5% { transform: scaleX(-1); }
+    36% { transform: scaleX(1); }
+    37.5% { transform: scaleX(-1); }
+    39%, 42% { transform: scaleX(1); }
+    43.5% { transform: scaleX(-1); }
+    45% { transform: scaleX(1); }
+    46.5% { transform: scaleX(-1); }
+    48%, 51% { transform: scaleX(1); }
+    52.4% { transform: scaleX(-1); }
+    53.8% { transform: scaleX(1); }
+    55.2% { transform: scaleX(-1); }
+    56.5%, 100% { transform: scaleX(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .escena * { animation: none !important; }
+  }
+</style>
