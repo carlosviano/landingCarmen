@@ -5,7 +5,7 @@
   Blanco y negro no se definen: bg-white y text-black ya son nativos.
 
     linen  #edf0da  fondo de pagina
-    sand   #f0dfad  banda de seccion / acento sobre oscuro
+    sand   #f0dfad  banda de seccion y texto sobre rust (cabecera y pie)
     taupe  #a89b8c  superficie apagada y bordes decorativos
     rust   #7c2513  color de marca: cabecera, CTAs, titulares, enlaces
 
@@ -16,8 +16,10 @@
     text-rust  sobre bg-linen .......  8.5  enlaces y titulares de marca
     text-rust  sobre bg-sand ........  7.4
     text-white sobre bg-rust ........  9.9
-    text-linen sobre bg-rust ........  8.5  cabecera y pie
-    text-sand  sobre bg-rust ........  7.4  acentos sobre la cabecera
+    text-linen sobre bg-rust ........  8.5
+    text-sand  sobre bg-rust ........  7.4  cabecera y pie
+    text-sand/80 sobre bg-rust ......  5.3  enlaces e iconos en reposo
+    text-sand/70 sobre bg-rust ......  4.4  NO: se queda corto para AA
 
   Dos reglas que salen de los numeros:
 
@@ -29,6 +31,11 @@
      (1.16). Valen como bandas de seccion a todo el ancho, donde se
      aprecia el cambio de tono, pero no como tarjeta sobre fondo: ahi
      separa con borde o con bg-taupe.
+
+  3. Sobre rust, la cabecera y el pie escriben en sand, no en linen ni en
+     blanco. Los enlaces van a sand/80 y aclaran a sand pleno al pasar por
+     encima: el hover se queda dentro del amarillo en vez de lavarlo. Con
+     opacidad no se baja de /80, que es donde AA empieza a fallar.
 */
 @theme {
   --color-linen: #edf0da;
@@ -57,5 +64,13 @@
   :focus-visible {
     outline: 2px solid var(--color-rust);
     outline-offset: 2px;
+  }
+
+  /* Sobre rust el outline rust no se ve: es el mismo color contra si mismo y
+     deja el foco de teclado invisible en toda la navegacion. sand da 7.4, de
+     sobra para un indicador no textual (hace falta >=3.0). */
+  header :focus-visible,
+  footer :focus-visible {
+    outline-color: var(--color-sand);
   }
 }

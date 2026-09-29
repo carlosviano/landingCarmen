@@ -17,7 +17,7 @@ export interface SocialLink {
 export interface Direccion {
   /** Calle y número: la línea que se lee de lejos. */
   calle: string;
-  /** Escalera, planta y puerta: lo que hace falta para dar con el portal. */
+  /** La planta: lo que hace falta para dar con la puerta una vez dentro. */
   portal: string;
   cp: string;
   ciudad: string;
@@ -42,7 +42,7 @@ export interface FranjaHorario {
 // Contacto con la calle de titular— y siguen saliendo todas de aquí.
 export const DIRECCION: Direccion = {
   calle: "Escultor Marín Higuero, 6",
-  portal: "Esc. 1 · Planta 1 · Puerta 7",
+  portal: "Primera planta",
   cp: "29017",
   ciudad: "Málaga",
 };
@@ -102,11 +102,10 @@ export const SOCIAL: SocialLink[] = [
   },
 ];
 
-// TODO: horario real.
 export const HORARIO: FranjaHorario[] = [
-  { dias: "Lunes a viernes", horas: "09:00 – 18:00" },
-  { dias: "Sábados", horas: "10:00 – 14:00" },
-  { dias: "Domingos", horas: "Cerrado" },
+  { dias: "Lunes a jueves", horas: "09:00 – 14:00 · 17:00 – 19:30" },
+  { dias: "Viernes", horas: "09:00 – 18:30" },
+  { dias: "Sábado y domingo", horas: "Cerrado" },
 ];
 
 export const CONTACTO = {
