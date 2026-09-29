@@ -1,0 +1,128 @@
+---
+// Una tarjeta de /eventos: foto y ficha en dos columnas.
+//
+// Zigzag deliberado: la foto alterna de lado tarjeta a tarjeta (lo decide
+// `fotoIzquierda`, que pasa quien pinta la lista según el índice), para que
+// cuatro fichas seguidas no se lean como una tabla repetida. Apilado no hay
+// zigzag que mantener: la foto va siempre primero y `fotoIzquierda` no toca
+// nada por debajo de md (ver el `md:order-*` de abajo).
+//
+// La primera tarjeta de la lista va `destacado`: fondo rust con las ondas del
+// resto del sitio, para que la lista no sean cuatro fichas blancas seguidas
+// (mismo recurso que Hero y SobreMi, aquí a tamaño de tarjeta).
+import { Image } from "astro:assets";
+import Ondas from "@/components/Ondas.astro";
+import type { Montaje } from "@/config/site";
+
+interface Props {
+  montaje: Montaje;
+  /** La foto ya resuelta. A diferencia de `TarjetaTarta`, un montaje siempre
+   * tiene foto (ver la nota de `Montaje.archivo`), así que no hace falta el
+   * marco de "foto pendiente". */
+  foto: ImageMetadata;
+  destacado?: boolean;
+  fotoIzquierda?: boolean;
+  /**
+   * Único en la página: se lo pasa `Ondas` a sus ids internos. Sólo importa
+   * cuando `destacado`, pero se acepta siempre para no condicionar el prop a
+   * otro prop.
+   */
+  id?: string;
+  class?: string;
+}
+
+const {
+  montaje,
+  foto,
+  destacado = false,
+  fotoIzquierda = true,
+  id = "evento",
+  class: className,
+} = Astro.props;
+
+const ANCHOS = [420, 640, 900, 1080];
+const SIZES = "(min-width: 768px) 50vw, 100vw";
+---
+
+{
+  /* La foto va en `aspect-*`, no en `min-h-*`: como la propia foto va con
+    `h-full w-full` (no `absolute`), un min-height sólo pone un suelo y dentro
+    de un grid la fila termina creciendo hasta la relación de aspecto NATURAL
+    de la imagen (retrato, ~3/4) en vez de quedarse en el mínimo — así es como
+    una tarjeta llegaba a ocupar casi toda la pantalla. `aspect-*` sí fija un
+    alto real independiente del contenido, igual que en TarjetaTarta/Galeria. */
+}
+<article
+  class:list={[
+    "grid overflow-hidden rounded-3xl md:grid-cols-2",
+    destacado
+      ? "bg-rust shadow-xl shadow-black/20"
+      : "bg-white shadow-lg shadow-black/10 ring-1 ring-taupe/60",
+    className,
+  ]}
+>
+  <div
+    class:list={[
+      "relative aspect-[4/3] overflow-hidden bg-taupe/15 md:aspect-[6/5] lg:aspect-[3/2]",
+      !fotoIzquierda && "md:order-2",
+    ]}
+  >
+    <Image
+      src={foto}
+      alt={montaje.alt}
+      widths={ANCHOS}
+      sizes={SIZES}
+      loading="lazy"
+      decoding="async"
+      style={montaje.enfoque ? `object-position:${montaje.enfoque}` : undefined}
+      class="h-full w-full object-cover object-center"
+    />
+  </div>
+
+  <div
+    class:list={[
+      "relative flex flex-col justify-center p-8 sm:p-10 lg:p-14",
+      !fotoIzquierda && "md:order-1",
+    ]}
+  >
+    {destacado && <Ondas id={id} class="text-linen/12" />}
+
+    <div class="relative">
+      <p
+        class:list={[
+          "text-xs font-medium tracking-[0.25em] uppercase",
+          destacado ? "text-sand" : "text-rust",
+        ]}
+      >
+        {montaje.tipoEvento}
+      </p>
+      <h3
+        class:list={[
+          "mt-3 font-display text-3xl leading-[1.1] text-balance lg:text-4xl",
+          destacado ? "text-linen" : "text-black",
+        ]}
+      >
+        {montaje.titulo}
+      </h3>
+      <p
+        class:list={[
+          "mt-5 text-sm leading-relaxed",
+          destacado ? "text-linen/80" : "text-black/70",
+        ]}
+      >
+        {montaje.descripcion}
+      </p>
+      <div
+        class:list={[
+          "mt-8 flex items-baseline justify-between gap-6 border-t pt-6 text-[11px] tracking-[0.18em] uppercase",
+          destacado
+            ? "border-linen/15 text-linen/60"
+            : "border-taupe/45 text-black/50",
+        ]}
+      >
+        <span class="tabular-nums">{montaje.mes}</span>
+        <span>{montaje.lugar}</span>
+      </div>
+    </div>
+  </div>
+</article>

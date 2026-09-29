@@ -1,0 +1,276 @@
+---
+// El pedido de la ficha: tamaño, cantidad, fecha, total y el único CTA de la
+// página, que abre WhatsApp con todo eso ya escrito.
+//
+// No se envía nada desde aquí: no hay servidor, la web es estática. El
+// formulario sólo sirve para escribir el mensaje, y quien lo manda es el
+// cliente desde WhatsApp. Por eso la cantidad no tiene máximo: es
+// orientativa, y la confirma Carmen hablando con él.
+//
+// Funciona sin JS, a medias y a propósito: el CTA es un <a> normal cuyo `href`
+// sale del build con el mensaje de siempre ("quería pedir la tarta X"), así
+// que el botón abre WhatsApp igual. Lo que hace el script es rehacer ese
+// `href` y el total cada vez que cambia el formulario, y parar el pedido si
+// la fecha no vale.
+//
+// La fecha mínima también la pone el script, y no el build: un `min` fijado al
+// compilar se quedaría viejo al día siguiente de publicar.
+import { Icon } from "astro-icon/components";
+import { PEDIDO, type Tarta } from "@/config/site";
+import { mensajePedido, precioVisible } from "@/lib/pedido";
+
+interface Props {
+  tarta: Tarta;
+}
+
+const { tarta } = Astro.props;
+const [primero] = tarta.tamanos;
+
+// Con un solo tamaño no hay nada que elegir, así que no se pinta el selector.
+// El script lee entonces el tamaño de los `data-` del propio <form>.
+const conSelector = tarta.tamanos.length > 1;
+---
+
+<form
+  data-pedido
+  data-nombre={tarta.nombre}
+  data-personas={primero.personas}
+  data-precio={primero.precio}
+  novalidate
+  class="flex flex-col gap-4 bajo:gap-3"
+>
+  {
+    /* Radios de verdad dentro de un <fieldset> con su <legend>: el lector de
+      pantalla anuncia "Tamaño, grupo" y las flechas pasan de uno a otro. El
+      radio va encima de su pastilla, transparente, así que el clic y el foco
+      son suyos; el aspecto lo pone la pastilla (`peer-checked:`). */
+    conSelector && (
+      <fieldset class="min-w-0">
+        <legend class="mb-2.5 bajo:mb-2 text-[10px] font-medium tracking-[0.3em] text-rust uppercase">
+          Tamaño
+        </legend>
+        <div
+          class="grid gap-2"
+          style={`grid-template-columns: repeat(${tarta.tamanos.length}, minmax(0, 1fr))`}
+        >
+          {tarta.tamanos.map((tamano, i) => (
+            <label class="relative cursor-pointer">
+              <input
+                type="radio"
+                name="tamano"
+                value={tamano.personas}
+                data-personas={tamano.personas}
+                data-precio={tamano.precio}
+                checked={i === 0}
+                class="peer absolute inset-0 m-0 cursor-pointer opacity-0"
+              />
+              <span class="flex flex-col items-center rounded-2xl border border-black/40 px-1 py-2 text-[11px] bajo:py-1.5 tracking-[0.06em] text-black/70 transition-colors duration-200 peer-checked:border-rust peer-checked:bg-rust peer-checked:text-linen/90 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-rust hover:border-rust motion-reduce:transition-none peer-checked:[&>b]:text-linen">
+                <b class="font-display text-[1.2rem] leading-tight bajo:text-[1.05rem] font-normal tracking-normal text-black">
+                  {tamano.personas}
+                </b>
+                personas
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    )
+  }
+
+  <div class="grid grid-cols-[auto_minmax(0,1fr)] gap-3.5">
+    <div class="flex flex-col gap-2">
+      <label
+        for="pedido-cantidad"
+        class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase"
+      >
+        Cantidad
+      </label>
+      <div class="flex h-11 items-center bajo:h-10 rounded-full border border-black/40">
+        <button
+          type="button"
+          data-paso="-1"
+          aria-label="Quitar una"
+          class="grid h-full w-10 place-items-center rounded-full text-rust hover:bg-rust/8"
+        >
+          <Icon name="lucide:minus" class="size-4" aria-hidden="true" />
+        </button>
+        <input
+          id="pedido-cantidad"
+          data-cantidad
+          type="number"
+          min="1"
+          value="1"
+          inputmode="numeric"
+          class="w-9 bg-transparent text-center font-medium [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        />
+        <button
+          type="button"
+          data-paso="1"
+          aria-label="Añadir una"
+          class="grid h-full w-10 place-items-center rounded-full text-rust hover:bg-rust/8"
+        >
+          <Icon name="lucide:plus" class="size-4" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+
+    <div class="flex min-w-0 flex-col gap-2">
+      <label
+        for="pedido-fecha"
+        class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase"
+      >
+        Fecha de entrega
+      </label>
+      <input
+        id="pedido-fecha"
+        data-fecha
+        type="date"
+        required
+        aria-describedby="pedido-fecha-nota"
+        class="h-11 w-full min-w-0 bajo:h-10 rounded-full border border-black/40 bg-transparent px-4 accent-rust hover:border-rust aria-invalid:border-2 aria-invalid:border-rust"
+      />
+    </div>
+  </div>
+
+  <p id="pedido-fecha-nota" class="-mt-1.5 text-xs text-black/60">
+    De lunes a viernes, con {PEDIDO.antelacion} de antelación.
+  </p>
+
+  <dl class="border-y border-taupe/45">
+    <div class="flex items-baseline justify-between gap-6 py-2.5">
+      <dt class="text-[10px] tracking-[0.2em] text-black/60 uppercase">
+        Conservación
+      </dt>
+      <dd class="text-right text-sm text-black/80">{tarta.conservacion}</dd>
+    </div>
+  </dl>
+
+  {
+    /* El precio va AQUÍ, al lado del botón, y no arriba con el nombre: depende
+      del tamaño y de la cantidad, así que es un total, y un total se lee
+      donde se decide. `aria-live` para que se anuncie al cambiar. */
+  }
+  <div class="mt-1 flex items-center justify-between gap-4 bajo:mt-0">
+    <p class="flex flex-col leading-none">
+      <span class="text-[10px] tracking-[0.2em] text-black/60 uppercase">Total</span>
+      <span
+        data-total
+        aria-live="polite"
+        class="mt-1.5 text-2xl font-medium whitespace-nowrap text-rust tabular-nums lg:text-[1.65rem] bajo:text-2xl"
+      >
+        {precioVisible(primero.precio)}
+      </span>
+    </p>
+
+    {
+      /* El texto sale de `PEDIDO.etiqueta` y nombra WhatsApp a propósito: un
+        botón que te saca de la página tiene que decir a dónde te lleva. */
+    }
+    <a
+      data-cta
+      href={PEDIDO.enlace(mensajePedido(tarta.nombre))}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex flex-1 items-center justify-center gap-2.5 rounded-full bg-rust px-4 py-4 text-[11px] font-medium tracking-[0.12em] whitespace-nowrap text-linen uppercase shadow-lg shadow-black/25 transition-colors duration-300 hover:bg-black hover:text-white sm:flex-none sm:px-6 sm:text-xs sm:tracking-[0.16em]"
+    >
+      <Icon name="simple-icons:whatsapp" class="size-4 shrink-0" aria-hidden="true" />
+      {PEDIDO.etiqueta}
+    </a>
+  </div>
+
+  <p data-error role="alert" hidden class="text-sm font-medium text-rust"></p>
+
+  {
+    /* Qué pasa al pulsar, como texto visible y no en un `aria-label`: la duda
+      de "¿se envía ya?" la tiene todo el mundo. */
+  }
+  <p class="max-w-[42ch] text-xs leading-relaxed text-black/60">
+    Se abre WhatsApp con el pedido ya escrito: tamaño, cantidad y fecha. No se
+    envía nada hasta que lo envíes tú.
+  </p>
+</form>
+
+<script>
+  import { PEDIDO } from "@/config/site";
+  import {
+    aISO,
+    fechaMinima,
+    mensajePedido,
+    precioVisible,
+    problemaFecha,
+  } from "@/lib/pedido";
+
+  for (const form of document.querySelectorAll<HTMLFormElement>("[data-pedido]")) {
+    const nombre = form.dataset.nombre ?? "";
+    const cantidad = form.querySelector<HTMLInputElement>("[data-cantidad]");
+    const fecha = form.querySelector<HTMLInputElement>("[data-fecha]");
+    const total = form.querySelector<HTMLElement>("[data-total]");
+    const cta = form.querySelector<HTMLAnchorElement>("[data-cta]");
+    const error = form.querySelector<HTMLElement>("[data-error]");
+    if (!cantidad || !fecha || !total || !cta || !error) continue;
+
+    fecha.min = aISO(fechaMinima());
+
+    // El tamaño marcado; sin selector (un solo tamaño), el del propio <form>.
+    const tamano = () =>
+      form.querySelector<HTMLInputElement>('input[name="tamano"]:checked') ?? form;
+    const unidades = () => Math.max(1, Math.round(Number(cantidad.value) || 1));
+
+    const avisar = (problema: string | null) => {
+      error.hidden = problema === null;
+      error.textContent = problema ?? "";
+      if (problema) fecha.setAttribute("aria-invalid", "true");
+      else fecha.removeAttribute("aria-invalid");
+    };
+
+    const actualizar = () => {
+      const { personas, precio } = tamano().dataset;
+      total.textContent = precioVisible(Number(precio) * unidades());
+      cta.href = PEDIDO.enlace(
+        mensajePedido(nombre, {
+          personas,
+          cantidad: unidades(),
+          fecha: fecha.value || undefined,
+        }),
+      );
+    };
+
+    for (const boton of form.querySelectorAll<HTMLButtonElement>("[data-paso]")) {
+      boton.addEventListener("click", () => {
+        cantidad.value = String(Math.max(1, unidades() + Number(boton.dataset.paso)));
+        actualizar();
+      });
+    }
+
+    // Al salir del campo se deja en un entero de 1 para arriba: mientras se
+    // escribe no, que borrar para teclear otro número pasa por el vacío.
+    cantidad.addEventListener("change", () => {
+      cantidad.value = String(unidades());
+    });
+
+    // Un sábado o una fecha demasiado pronto se avisan al elegirlos, no al
+    // pulsar el botón: así se corrige antes de llegar a él.
+    fecha.addEventListener("change", () => {
+      avisar(fecha.value ? problemaFecha(fecha.value) : null);
+    });
+
+    form.addEventListener("input", actualizar);
+    form.addEventListener("change", actualizar);
+
+    // Sin fecha válida no se abre WhatsApp: se explica por qué y se lleva el
+    // foco al campo.
+    cta.addEventListener("click", (evento) => {
+      const problema = problemaFecha(fecha.value);
+      if (problema) {
+        evento.preventDefault();
+        avisar(problema);
+        fecha.focus();
+      }
+    });
+
+    // Intro en un campo enviaría el formulario, y no hay adónde enviarlo.
+    form.addEventListener("submit", (evento) => evento.preventDefault());
+
+    actualizar();
+  }
+</script>

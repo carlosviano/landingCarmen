@@ -1,0 +1,596 @@
+---
+// /catalogo/<id> — la ficha de una tarta.
+//
+// Ruta estática: se genera una página por tarta a partir de CATALOGO, así que
+// añadir una tarta en src/config/site.ts crea su ficha sola. Cada una tiene su
+// URL, y eso es el punto: se comparte por WhatsApp, se guarda en marcadores y
+// la indexa un buscador. Un panel o un modal no dan ninguna de las tres.
+//
+// UNA SOLA PLANTILLA PARA TODAS. Lo que cambia de una tarta a otra —la foto,
+// adónde apunta cada línea, qué capas tiene— son datos de `site.ts`, no
+// código. Una tarta montada de otra manera lleva otros números, no otra
+// página.
+//
+// La página son estos bloques y en este orden:
+//
+//   1. La tarta y el pedido. Con recorte anotado (ver `estaAnotada`), la
+//      tarta va en el centro con las etiquetas de "qué lleva" a la izquierda y
+//      una línea de cada una a su capa; el texto y el pedido, a la derecha.
+//      Sin recorte, foto normal (o "foto pendiente") y la lista sin líneas.
+//   2. "Cómo se hace", la banda rust. En escritorio, 1 y 2 llenan juntos una
+//      pantalla.
+//   3. La tira con las otras tartas, que es cómo se pasa de una a otra. Si no
+//      hay otras, no se pinta.
+//
+// Un solo CTA en toda la página, el de WhatsApp del pedido.
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/sections/Header.astro";
+import Footer from "@/sections/Footer.astro";
+import TarjetaTarta from "@/components/catalogo/TarjetaTarta.astro";
+import Pedido from "@/components/catalogo/Pedido.astro";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { CATALOGO, type Tarta } from "@/config/site";
+import { fotoDe } from "@/lib/fotos";
+import { estaAnotada } from "@/lib/pedido";
+
+export function getStaticPaths() {
+  return CATALOGO.tartas.map((tarta, i) => ({
+    params: { tarta: tarta.id },
+    props: { tarta, indice: i },
+  }));
+}
+
+interface Props {
+  tarta: Tarta;
+  indice: number;
+}
+
+const { tarta, indice } = Astro.props;
+const total = CATALOGO.tartas.length;
+
+// Las otras, empezando por la que va detrás de esta: se mantiene el orden de
+// la carta, sólo rota. Así la tira no empieza siempre por la primera tarta y
+// la de al lado queda a mano, que es la que más se compara.
+const otras = Array.from({ length: total - 1 }, (_, k) => {
+  const otra = CATALOGO.tartas[(indice + 1 + k) % total]!;
+  return {
+    tarta: otra,
+    foto: fotoDe(otra.archivo),
+    recorte: otra.recorte ? fotoDe(otra.recorte) : null,
+  };
+});
+
+// Con líneas sólo si hay recorte Y todos los componentes tienen punto. Si
+// falta algo, la ficha sale sin líneas: medio anotada parecería rota.
+const anotada = estaAnotada(tarta);
+const recorte = anotada ? fotoDe(tarta.recorte!) : null;
+
+// La foto con fondo, para cuando no hay recorte anotado. `null` = pendiente.
+const foto = anotada ? null : fotoDe(tarta.archivo);
+---
+
+<Layout titulo={tarta.nombre} descripcion={tarta.descripcion}>
+  <Header />
+
+  {
+    /* `overflow-x-clip`: en móvil la tarta anotada se pinta más ancha que la
+      pantalla y sangra por la derecha. `clip` y no `hidden` para no crear un
+      contenedor de scroll ni romper nada `sticky`. */
+  }
+  <main class="overflow-x-clip">
+    {
+      /* --- Volver, la tarta y "cómo se hace": UNA pantalla en escritorio ---
+
+        `min-h` y no `h`: si el contenido no cabe, la sección crece y no se
+        recorta nada. Forzar la altura exacta obligaría a recortar o a
+        encoger la letra. El 4.25rem es el alto real de la cabecera sticky (68 px,
+        medido; `py-4` + el logo). Si la cabecera cambia de alto, hay que
+        cambiarlo aquí.
+
+        El botón de volver va DENTRO: fuera, el bloque medía una pantalla pero
+        empezaba debajo de él, y la banda se salía siempre por abajo lo que
+        mide el botón.
+
+        En portátiles bajos (768–900 px) no cabe con el espaciado normal, así
+        que la variante `bajo:` (global.css) aprieta rellenos y huecos. */
+    }
+    <div class="lg:flex lg:min-h-[calc(100svh-4.25rem)] lg:flex-col">
+      <div class="mx-auto w-full max-w-7xl px-6">
+        {
+          /* Vuelta a la carta, y con forma de botón: es la salida de esta
+            pantalla y tiene que verse desde el primer pantallazo. */
+        }
+        <div class="pt-8 bajo:pt-5">
+          <a
+            href="/catalogo"
+            class="inline-flex items-center gap-2 rounded-full border border-black/40 px-5 py-2.5 text-[11px] font-medium tracking-[0.16em] text-rust uppercase transition-colors duration-200 hover:border-rust hover:bg-rust hover:text-linen"
+          >
+            <Icon name="lucide:arrow-left" class="size-3.5" aria-hidden="true" />
+            Volver a la carta
+          </a>
+        </div>
+      </div>
+
+      <div class="lg:flex lg:flex-1 lg:items-center">
+        <div class="mx-auto w-full max-w-7xl px-6">
+          <div class="ficha py-11 lg:py-8 bajo:py-3" data-anotada={anotada ? "" : undefined}>
+            {
+              /* El nombre centrado encima de la tarta, en rust (8.5:1 sobre
+                linen). Encima y nunca detrás de la foto: ahí el contraste
+                dependería de qué píxel de la tarta le tocara debajo. */
+            }
+            <h1
+              class="ficha-titulo text-center font-display text-4xl leading-[1.12] text-balance text-rust sm:text-5xl lg:text-[3.1rem]"
+            >
+              {tarta.nombre}
+            </h1>
+
+            <div class="ficha-foto">
+              {
+                anotada ? (
+                  /* La lista "qué lleva" es una <ul> de verdad, después de la
+                    imagen, con su h2. Lo que la coloca junto a la tarta es CSS
+                    (abajo): cada <li> se estira desde la columna de la
+                    izquierda hasta su punto, en % del recorte. Las líneas y
+                    las llaves son decorativas y van con aria-hidden. */
+                  <figure class="anotada">
+                    <div class="lienzo">
+                      <Image
+                        src={recorte!}
+                        alt={tarta.alt}
+                        widths={[560, 840, 1120, 1400]}
+                        sizes="(min-width: 64rem) 42rem, (min-width: 48rem) 100vw, 140vw"
+                        loading="eager"
+                        fetchpriority="high"
+                        decoding="async"
+                      />
+                      <span class="llaves" aria-hidden="true">
+                        {tarta.componentes.map((componente) =>
+                          componente.franja ? (
+                            <i
+                              class:list={{ dentro: componente.dentro }}
+                              style={`--desde:${componente.franja[0]};--hasta:${componente.franja[1]}`}
+                            />
+                          ) : null,
+                        )}
+                      </span>
+                    </div>
+
+                    <h2 class="que-lleva text-[10px] font-medium tracking-[0.3em] text-rust uppercase">
+                      Qué lleva
+                    </h2>
+                    <ul class="etiquetas">
+                      {tarta.componentes.map((componente) => (
+                        <li
+                          class:list={{ dentro: componente.dentro }}
+                          style={`--x:${componente.punto!.x};--y:${componente.punto!.y}`}
+                        >
+                          <span class="etiqueta">
+                            <span class="font-medium text-black">
+                              {componente.etiqueta}
+                            </span>
+                            <span class="detalle text-black/65">
+                              {componente.descripcionCorta}
+                            </span>
+                          </span>
+                          <span class="linea" aria-hidden="true" />
+                        </li>
+                      ))}
+                    </ul>
+                  </figure>
+                ) : (
+                  <div class="mx-auto w-full max-w-[26rem] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25 lg:max-w-[27rem]">
+                    {foto ? (
+                      <Image
+                        src={foto}
+                        alt={tarta.alt}
+                        widths={[420, 640, 900]}
+                        sizes="(min-width: 1024px) 27rem, (min-width: 640px) 26rem, 90vw"
+                        loading="eager"
+                        decoding="async"
+                        class="aspect-[4/5] h-full w-full object-cover object-center"
+                      />
+                    ) : (
+                      <div class="grid aspect-[4/5] w-full place-items-center">
+                        <span class="text-[10px] font-medium tracking-[0.24em] text-rust/70 uppercase">
+                          Foto pendiente
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )
+              }
+            </div>
+
+            <div class="ficha-info flex flex-col gap-6 bajo:gap-4">
+              <p class="max-w-[46ch] leading-relaxed text-black/70">
+                {tarta.descripcion}
+              </p>
+
+              {
+                /* Sin recorte anotado, "qué lleva" vuelve a su sitio de
+                  siempre: una lista con viñetas en esta columna. */
+                !anotada && (
+                  <div>
+                    <h2 class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase">
+                      Qué lleva
+                    </h2>
+                    <ul class="mt-3.5 list-disc space-y-2 pl-5 marker:text-rust">
+                      {tarta.componentes.map((componente) => (
+                        <li class="leading-snug">
+                          <span class="font-medium">{componente.etiqueta}</span>
+                          <span class="text-sm text-black/65">
+                            {" — "}
+                            {componente.descripcionCorta}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              }
+
+              <Pedido tarta={tarta} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {
+        /* --- Cómo se hace: la misma banda roja de "Sobre mí" ---
+
+          Va DENTRO del contenedor de una pantalla, pegada a la tarta: son la
+          misma sección. `shrink-0` para que el flex vertical no la comprima. */
+      }
+      <section class="relative shrink-0 overflow-hidden bg-rust">
+        <svg
+          class="pointer-events-none absolute inset-0 h-full w-full text-linen/12"
+          aria-hidden="true"
+        >
+          <defs>
+            <path
+              id="onda-suave-ficha"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"
+            ></path>
+            <path
+              id="onda-honda-ficha"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"
+            ></path>
+            <pattern
+              id="ondas-ficha"
+              width="240"
+              height="132"
+              patternUnits="userSpaceOnUse"
+            >
+              <use href="#onda-suave-ficha" transform="translate(0 18)"></use>
+              <use href="#onda-honda-ficha" transform="translate(80 54)"></use>
+              <use href="#onda-suave-ficha" transform="translate(170 90)"></use>
+              <use href="#onda-honda-ficha" transform="translate(45 118)"></use>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#ondas-ficha)"></rect>
+        </svg>
+
+        <div class="relative mx-auto w-full max-w-7xl px-6 py-12 lg:py-8 bajo:py-5">
+          <h2 class="text-[10px] font-medium tracking-[0.3em] text-sand uppercase">
+            Cómo se hace
+          </h2>
+          <ol class="mt-7 grid gap-9 md:grid-cols-3 md:gap-11 lg:mt-6 bajo:mt-4">
+            {
+              tarta.pasos.map((paso, i) => (
+                <li class="flex flex-col gap-3.5 bajo:gap-2.5">
+                  <span class="font-display text-3xl leading-none text-sand bajo:text-2xl">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span aria-hidden="true" class="h-px bg-sand/35" />
+                  <p class="leading-relaxed text-linen/85 bajo:leading-normal">{paso}</p>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    {
+      /* --- Otras tartas ---
+
+        Tira horizontal: en escritorio caben todas de una vez; en móvil se
+        arrastra, con `snap-x` para que pare encajada en una tarjeta. El
+        `py-2.5` evita que `overflow-x-auto` recorte la elevación del hover.
+
+        Con una sola tarta en la carta no hay otras que enseñar, y una
+        sección con su titular y nada debajo se leería como un fallo. */
+      otras.length > 0 && (
+        <nav
+          aria-labelledby="otras-tartas"
+          class="mx-auto w-full max-w-7xl px-6 py-13 md:py-16"
+        >
+          <h2
+            id="otras-tartas"
+            class="text-[10px] font-medium tracking-[0.3em] text-black/60 uppercase"
+          >
+            Otras tartas
+          </h2>
+          <ul class="mt-6 flex snap-x gap-4 overflow-x-auto py-2.5">
+            {otras.map((entrada) => (
+              <li class="w-36 shrink-0 snap-start sm:w-40">
+                <TarjetaTarta
+                  tarta={entrada.tarta}
+                  foto={entrada.foto}
+                  recorte={entrada.recorte}
+                  nivel={3}
+                  compacta
+                />
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /*
+    La geometría de la ficha anotada. Va en CSS y no en utilidades porque es
+    aritmética con variables (`--x`, `--y`, `--lab`) que en clases de Tailwind
+    sería ilegible.
+
+    Todo se mide en % del lienzo, que tiene la proporción del recorte. Por eso
+    las líneas apuntan al mismo sitio a cualquier tamaño: el <li> va de la
+    columna de etiquetas (`left: -var(--lab)`) hasta su punto (`right:
+    100% - x%`), a la altura `y%`, y la línea rellena lo que sobra.
+
+    DOS COMPOSICIONES, UN SOLO MARCADO:
+      - móvil y tableta: la tarta se pinta más ancha que la pantalla
+        (`--zoom`) y sangra por la derecha. Se ve la mitad izquierda, que es
+        donde apuntan las líneas, y a su izquierda queda sitio para las
+        etiquetas. Cada capa lleva su llave.
+      - escritorio (lg): tres columnas —etiquetas, tarta, texto y pedido— con
+        el nombre centrado encima de la tarta. Sin llaves.
+  */
+
+  /* --- móvil: el nombre, la tarta y el pedido, apilados --- */
+  .ficha {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ficha-foto {
+    margin-top: 1.75rem;
+  }
+
+  .ficha-info {
+    margin-top: 2.25rem;
+  }
+
+  .anotada {
+    --lab: 140px;
+    --zoom: 2.4;
+    position: relative;
+    /* Deja sitio encima para el "Qué lleva", que cuelga por fuera. */
+    margin-top: 1.5rem;
+    margin-left: var(--lab);
+    /* Del hueco que queda a la derecha de las etiquetas hasta el borde de la
+       pantalla (el 1.5rem es el `px-6` del contenedor), multiplicado. */
+    width: calc((100% - var(--lab) + 1.5rem) * var(--zoom));
+  }
+
+  .lienzo {
+    position: relative;
+    aspect-ratio: 1400 / 775;
+  }
+
+  .lienzo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .que-lleva {
+    position: absolute;
+    top: -1.9rem;
+    left: calc(-1 * var(--lab));
+  }
+
+  .etiquetas {
+    position: absolute;
+    inset: 0;
+  }
+
+  .etiquetas li {
+    position: absolute;
+    top: calc(var(--y) * 1%);
+    left: calc(-1 * var(--lab));
+    right: calc(100% - var(--x) * 1%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transform: translateY(-50%);
+  }
+
+  .etiqueta {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 1px;
+    width: calc(var(--lab) - 14px);
+    font-size: 13px;
+    line-height: 1.25;
+    text-align: right;
+  }
+
+  .detalle {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .dentro .detalle {
+    font-style: italic;
+  }
+
+  /* La línea: taupe no, que en el merengue blanco no se ve; rust al 60 %. Es
+     decorativa, así que no le aplica el mínimo de contraste de texto. */
+  .linea {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: color-mix(in srgb, var(--color-rust) 60%, transparent);
+  }
+
+  /* El punto, con un halo linen para que no se pierda sobre el sablé. */
+  .linea::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-rust);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-linen) 90%, transparent);
+    transform: translateY(-50%);
+  }
+
+  /* Lo que está dentro y no se ve: línea discontinua y punto hueco. */
+  .dentro .linea {
+    background: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-rust) 60%, transparent) 0 4px,
+      transparent 4px 7px
+    );
+  }
+
+  .dentro .linea::after {
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--color-rust);
+    background: var(--color-linen);
+  }
+
+  /* Las llaves de capa: de `desde` a `hasta` en % del alto, pegadas por la
+     izquierda al lienzo. */
+  .llaves i {
+    position: absolute;
+    top: calc(var(--desde) * 1%);
+    left: -9px;
+    width: 5px;
+    height: calc((var(--hasta) - var(--desde)) * 1%);
+    border: 1px solid var(--color-rust);
+    border-right: 0;
+    opacity: 0.75;
+  }
+
+  .llaves i.dentro {
+    border-style: dashed;
+    background: repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-rust) 35%, transparent) 0 1px,
+      transparent 1px 4px
+    );
+  }
+
+  /* --- tableta: la tarta crece menos, que a 800 px ya sobra sitio --- */
+  @media (min-width: 40rem) {
+    .anotada {
+      --lab: 180px;
+      --zoom: 1.6;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .anotada {
+      --zoom: 1.25;
+    }
+  }
+
+  /* --- escritorio: la propuesta A --- */
+  @media (min-width: 64rem) {
+    .ficha {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr) 340px;
+      grid-template-areas:
+        ". titulo info"
+        ". foto   info";
+      column-gap: 3rem;
+      row-gap: 1.875rem;
+    }
+
+    /* Sin recorte no hay etiquetas que colgar a la izquierda: dos columnas,
+       foto y texto, como la ficha de antes. */
+    .ficha:not([data-anotada]) {
+      grid-template-columns: minmax(0, 1fr) 400px;
+      grid-template-areas:
+        "titulo info"
+        "foto   info";
+      column-gap: 3.5rem;
+    }
+
+    .ficha-titulo {
+      grid-area: titulo;
+      align-self: end;
+    }
+
+    .ficha-foto {
+      grid-area: foto;
+      align-self: start;
+      margin-top: 0;
+    }
+
+    .ficha-info {
+      grid-area: info;
+      align-self: center;
+      margin-top: 0;
+    }
+
+    /* En pantallas bajas la columna del pedido se ensancha: con el texto en
+       menos líneas pierde altura, que es lo que falta. La tarta estrecha un
+       poco, pero es apaisada y le sobra alto. */
+    @media (max-height: 56.25rem) {
+      .ficha {
+        grid-template-columns: 190px minmax(0, 1fr) 380px;
+      }
+    }
+
+    .anotada {
+      /* 190 de columna + 48 de hueco: las etiquetas empiezan en el borde
+         izquierdo del contenedor. */
+      --lab: 238px;
+      margin: 0;
+      width: auto;
+    }
+
+    .que-lleva {
+      top: 0;
+    }
+
+    .etiquetas li {
+      gap: 14px;
+    }
+
+    .etiqueta {
+      width: 176px;
+      font-size: 14px;
+    }
+
+    .detalle {
+      font-size: 12px;
+    }
+
+    .llaves {
+      display: none;
+    }
+  }
+</style>

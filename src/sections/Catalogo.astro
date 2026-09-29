@@ -1,0 +1,102 @@
+---
+// Sección "catálogo" de la portada: el escaparate. Un díptico a sangre con una
+// sola tarta —entera a un lado, de muy cerca al otro— y un único enlace a la
+// carta. Es el destino del ancla #catalogo del NAV.
+//
+// Es la variante PURISTA del diseño: no lleva titular visible, ni entradilla,
+// ni nombre de la tarta. Sólo las dos fotos y el botón. Tres consecuencias que
+// conviene tener presentes antes de tocarla:
+//
+//   1. Quien baja rápido por la portada no lee "carta" en ninguna parte: lo
+//      que le hace parar es la foto. Es el precio de este diseño y está
+//      aceptado.
+//   2. El titular sigue existiendo para el esquema del documento y para un
+//      lector de pantalla, en `sr-only`. Igual que en Galería y en Contacto:
+//      que el diseño no lo pinte no significa que la página pueda no tenerlo.
+//   3. El pie con el nombre y el precio de la tarta se ha quitado con el
+//      resto del texto. Está en la variante con titular, en el diseño.
+//
+// Lo que esta sección NO hace, y es deliberado: no es el catálogo. No enseña
+// las ocho, no deja comparar y no filtra. Para eso está /catalogo, que es un
+// índice; esto es un escaparate, y son trabajos distintos. Aquí no hay nada
+// escondido detrás de un gesto —el único enlace lleva a la carta entera—, que
+// es lo que separa esto del coverflow de bolas que había antes.
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { CATALOGO, ESCAPARATE } from "@/config/site";
+import { fotoDe } from "@/lib/fotos";
+
+// Las fotos se nombran en site.ts y las resuelve `fotoDe`, que revienta el
+// build si el nombre no existe (ver src/lib/fotos.ts).
+// El `!` es seguro: `fotoDe` sólo devuelve null si se le pasa null, y estos
+// dos nombres son obligatorios en `Escaparate`.
+const entera = fotoDe(ESCAPARATE.archivoEntera)!;
+const detalle = fotoDe(ESCAPARATE.archivoDetalle)!;
+
+// Cada panel ocupa media pantalla en escritorio, y toda en móvil.
+const ANCHOS = [420, 640, 860, 1080];
+const SIZES = "(min-width: 768px) 50vw, 100vw";
+
+// El velo del botón: un óvalo oscuro centrado, sólo detrás de él. La
+// referencia del cliente usa un contorno blanco a pelo, y sobre el merengue
+// blanco de la foto eso desaparece. Así se mantiene la silueta y el contraste
+// queda garantizado sin tapar la textura, que es lo que se ha venido a ver.
+const VELO =
+  "radial-gradient(ellipse 46% 34% at 50% 50%, rgba(48,18,9,0.52) 0%, rgba(48,18,9,0.22) 55%, rgba(48,18,9,0) 78%)";
+---
+
+{/* A sangre: sin el `max-w-7xl px-6` del resto de las secciones. El díptico
+  vive de llegar a los dos bordes de la pantalla. */}
+<section id="catalogo" class="scroll-mt-20">
+  <h2 class="sr-only">{CATALOGO.titulo}</h2>
+
+  {/* Sin `gap`: los dos paneles se tocan. El canal entre ellos rompería el
+    efecto de una sola imagen partida. */}
+  <div class="grid grid-cols-1 md:grid-cols-2">
+    {/* Plano entero primero, también en móvil apilado: establece qué se está
+      mirando antes de enseñar la textura. Un macro sin contexto delante no se
+      entiende. */}
+    <div
+      class="relative h-72 overflow-hidden bg-taupe sm:h-80 md:h-[34rem] lg:h-[43.75rem]"
+    >
+      <Image
+        src={entera}
+        alt={ESCAPARATE.altEntera}
+        widths={ANCHOS}
+        sizes={SIZES}
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover object-[50%_46%]"
+      />
+    </div>
+
+    <div
+      class="relative h-72 overflow-hidden bg-taupe sm:h-80 md:h-[34rem] lg:h-[43.75rem]"
+    >
+      <Image
+        src={detalle}
+        alt={ESCAPARATE.altDetalle}
+        widths={ANCHOS}
+        sizes={SIZES}
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover object-center"
+      />
+
+      <div aria-hidden="true" class="absolute inset-0" style={`background:${VELO}`}>
+      </div>
+
+      {/* El único enlace de la sección. `py-4` con `text-xs` deja el botón en
+        unos 48px de alto, por encima del mínimo de 44 para el pulgar. */}
+      <div class="absolute inset-0 grid place-items-center">
+        <a
+          href="/catalogo"
+          class="inline-flex items-center gap-3 rounded-full border-[1.5px] border-linen/90 bg-rust/70 px-8 py-4 text-xs font-medium tracking-[0.2em] text-linen uppercase backdrop-blur-[2px] transition-colors duration-300 hover:bg-rust sm:px-10"
+        >
+          {ESCAPARATE.cta}
+          <Icon name="lucide:arrow-right" class="size-3.5" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

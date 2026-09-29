@@ -1,0 +1,173 @@
+---
+// /eventos — la lista de montajes ya servidos, con su URL propia.
+//
+// Es a donde lleva "Eventos" del menú y el único enlace del escaparate de la
+// portada. Misma relación que /catalogo con Catalogo.astro: la portada es un
+// ESCAPARATE (dos montajes, para dar ganas) y esto es el ÍNDICE (todos,
+// leídos uno a uno). Por eso lleva su propia cabecera —franja rust con las
+// mismas ondas y la misma franja de credenciales del Hero de portada— en vez
+// de la cabecera apretada de /catalogo: aquí no se llega a comparar filas de
+// una carta, se llega a leer historias, y cada una quiere su sitio.
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/sections/Header.astro";
+import Footer from "@/sections/Footer.astro";
+import Ondas from "@/components/Ondas.astro";
+import TarjetaEvento from "@/components/eventos/TarjetaEvento.astro";
+import { Icon } from "astro-icon/components";
+import { EVENTOS, HERO, SOCIAL } from "@/config/site";
+import { fotoDe } from "@/lib/fotos";
+
+// Un montaje siempre tiene foto (ver la nota de `Montaje.archivo`), así que
+// el `!` es seguro: sólo la habría sin ella si `archivo` no existiera en
+// src/assets/images, y entonces `fotoDe` ya habría reventado el build antes.
+const conFoto = EVENTOS.montajes.map((montaje, i) => ({
+  montaje,
+  foto: fotoDe(montaje.archivo)!,
+  // Sólo el primero abre en rust: marca el destacado sin ninguna etiqueta.
+  destacado: i === 0,
+  // Zigzag: impares con la foto a la izquierda, pares a la derecha (la
+  // destacada, en i=0, abre con el texto a la izquierda).
+  fotoIzquierda: i % 2 === 1,
+}));
+
+// El enlace de cierre de la lista va al perfil, no a un post: busca el mismo
+// SOCIAL que usan cabecera y pie, para no mantener la URL dos veces.
+const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
+---
+
+<Layout titulo={EVENTOS.tituloPagina} descripcion={EVENTOS.entradillaPagina}>
+  <Header />
+
+  <main>
+    <section class="relative overflow-hidden bg-rust">
+      <Ondas id="eventos-mast" class="text-linen/12" />
+
+      <div
+        class="relative mx-auto w-full max-w-7xl px-6 pt-12 pb-16 sm:pt-14 md:pt-16 md:pb-20"
+      >
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 border-b border-linen/35 pb-1 text-xs font-medium tracking-widest text-linen/80 uppercase transition-colors hover:border-linen/60 hover:text-white"
+        >
+          <Icon name="lucide:arrow-left" class="size-4 shrink-0" aria-hidden="true" />
+          Inicio
+        </a>
+
+        <p class="mt-8 text-xs font-medium tracking-[0.25em] text-linen uppercase sm:mt-10">
+          {EVENTOS.etiquetaPagina}
+        </p>
+        <h1
+          class="mt-5 max-w-3xl font-display text-4xl leading-[1.05] text-balance text-linen sm:text-5xl lg:text-[3.75rem]"
+        >
+          {EVENTOS.tituloPagina}
+        </h1>
+        <p class="mt-6 max-w-[35rem] text-base leading-relaxed text-linen/80 sm:text-lg">
+          {EVENTOS.entradillaPagina}
+        </p>
+      </div>
+    </section>
+
+    {
+      /* La misma franja de credenciales del Hero de portada, con sus mismos
+        datos (HERO.credenciales): es la pareja de la banda rust de arriba,
+        igual que allí. */
+    }
+    <div class="relative">
+      <ul
+        class="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-6 text-[11px] tracking-[0.18em] text-black/50 uppercase md:h-20 md:py-0"
+      >
+        {
+          HERO.credenciales.map((casa, indice) => (
+            <li class="flex items-center gap-5">
+              {indice > 0 && (
+                <span
+                  class="hidden size-1 shrink-0 rounded-full bg-taupe md:block"
+                  aria-hidden="true"
+                />
+              )}
+              {casa}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <section class="py-12 md:py-16 lg:pb-24">
+      <div class="mx-auto flex w-full max-w-7xl flex-col gap-10 px-6 lg:gap-14">
+        {
+          conFoto.map(({ montaje, foto, destacado, fotoIzquierda }, i) => (
+            <TarjetaEvento
+              montaje={montaje}
+              foto={foto}
+              destacado={destacado}
+              fotoIzquierda={fotoIzquierda}
+              id={`evento-${i}`}
+            />
+          ))
+        }
+      </div>
+
+      <div class="mt-14 flex justify-center px-6">
+        <a
+          href={instagram.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 border-b border-taupe/40 pb-1 text-center text-xs font-medium tracking-widest text-black uppercase transition-colors hover:border-black"
+        >
+          <Icon name={instagram.icon} class="size-4 shrink-0" aria-hidden="true" />
+          {EVENTOS.masMontajes}
+          <Icon name="lucide:arrow-right" class="size-4 shrink-0" aria-hidden="true" />
+        </a>
+      </div>
+    </section>
+
+    <section class="relative overflow-hidden bg-rust">
+      <Ondas id="eventos-cta" class="text-linen/12" />
+
+      <div
+        class="relative mx-auto flex w-full max-w-7xl flex-col items-center px-6 py-16 text-center md:py-24"
+      >
+        <p class="text-xs font-medium tracking-[0.25em] text-sand uppercase">
+          {EVENTOS.ctaEtiqueta}
+        </p>
+        <h2
+          class="mt-5 font-display text-4xl leading-tight text-balance text-linen sm:text-5xl"
+        >
+          {EVENTOS.ctaTitulo}
+        </h2>
+        <p class="mt-6 max-w-[35rem] text-base leading-relaxed text-linen/80 sm:text-lg">
+          {EVENTOS.ctaTexto}
+        </p>
+
+        <div class="mt-10 flex flex-col items-center gap-6 sm:flex-row sm:gap-8">
+          <a
+            href={HERO.accion.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center gap-2 rounded-full bg-sand px-8 py-4 text-xs font-medium tracking-widest text-rust uppercase shadow-lg shadow-black/25 transition-colors hover:bg-black hover:text-white"
+          >
+            <Icon name="simple-icons:whatsapp" class="size-4 shrink-0" aria-hidden="true" />
+            {HERO.accion.label}
+          </a>
+
+          {
+            /* A /catalogo directo y no a "#catalogo": esa ancla sólo
+              funciona en la portada (ver la nota de NavLinks.astro) y aquí
+              no se está en ella. */
+          }
+          <a
+            href="/catalogo"
+            class="flex items-center gap-2 border-b border-linen/35 pb-1 text-xs font-medium tracking-widest text-linen/80 uppercase transition-colors hover:border-linen/60 hover:text-white"
+          >
+            Ver el catálogo
+            <Icon name="lucide:arrow-right" class="size-4 shrink-0" aria-hidden="true" />
+          </a>
+        </div>
+
+        <p class="mt-6 text-xs text-linen/60">{HERO.nota}</p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

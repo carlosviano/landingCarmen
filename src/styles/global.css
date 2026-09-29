@@ -32,16 +32,36 @@
      aprecia el cambio de tono, pero no como tarjeta sobre fondo: ahi
      separa con borde o con bg-taupe.
 
-  3. Sobre rust, la cabecera y el pie escriben en sand, no en linen ni en
-     blanco. Los enlaces van a sand/80 y aclaran a sand pleno al pasar por
-     encima: el hover se queda dentro del amarillo en vez de lavarlo. Con
-     opacidad no se baja de /80, que es donde AA empieza a fallar.
+  3. Sobre rust la cabecera y el pie escriben en sand. Los enlaces van a
+     sand/80 y aclaran a sand pleno al pasar por encima: el hover se queda
+     dentro del amarillo en vez de lavarlo. Con opacidad no se baja de /80,
+     que es donde AA empieza a fallar.
+
+     En el resto de bandas rust (el hero) el TEXTO va en linen y sand se
+     reserva para acentos y rellenos, como el CTA. Sand como texto ahi deja
+     los titulares del mismo color que el boton, y el boton deja de
+     destacar: es la unica masa clara de la banda y compite con un titular
+     de 72px. Con el texto en linen (8.5) sand senala la accion.
 */
 @theme {
   --color-linen: #edf0da;
   --color-sand: #f0dfad;
   --color-taupe: #a89b8c;
   --color-rust: #7c2513;
+}
+
+/* Prata entra por la API de fuentes de Astro (ver astro.config.mjs). Se expone
+   como utilidad `font-display` para los titulares. El `inline` es el patrón
+   recomendado cuando el valor viene de una variable definida fuera del tema. */
+/* `bajo:` — escritorio de poca altura (portátiles de 768–900 px). La ficha de
+   tarta usa esta variante para apretar el espacio vertical y que la tarta y la
+   banda "Cómo se hace" quepan juntas en una pantalla. Por debajo de ~720 px de
+   alto ya no se intenta: encoger más obligaría a letra pequeña, y es mejor
+   bajar un poco. */
+@custom-variant bajo (@media (min-width: 64rem) and (max-height: 56.25rem));
+
+@theme inline {
+  --font-display: var(--font-prata);
 }
 
 @layer base {
