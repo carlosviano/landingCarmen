@@ -11,9 +11,14 @@ interface Props {
    */
   titulo?: string;
   descripcion?: string;
+  /**
+   * Monta el modal de bienvenida. La pantalla de próximamente lo apaga: es
+   * una pantalla de espera y el modal hablaría de una web que aún no está.
+   */
+  bienvenida?: boolean;
 }
 
-const { titulo, descripcion = SITE.nombre } = Astro.props;
+const { titulo, descripcion = SITE.nombre, bienvenida = true } = Astro.props;
 const title = titulo ? `${titulo} · ${SITE.nombre}` : SITE.nombre;
 
 // Proyecto web de Adobe Fonts con The Seasons. Es de una cuenta de Creative
@@ -49,6 +54,6 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
   </head>
   <body class="min-h-full w-full bg-linen text-black">
     <slot />
-    <Bienvenida />
+    {bienvenida && <Bienvenida />}
   </body>
 </html>
