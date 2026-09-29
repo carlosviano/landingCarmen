@@ -59,9 +59,19 @@ export function fechaLarga(iso: string): string {
   });
 }
 
+/** "mié, 30 sept": la que cabe en el botón del calendario en un móvil. */
+export function fechaCorta(iso: string): string {
+  return deISO(iso).toLocaleDateString("es-ES", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
 /**
- * Por qué una fecha no vale, o `null` si vale. El calendario del navegador no
- * deja apagar sábados y domingos, así que esto es lo que los para.
+ * Por qué una fecha no vale, o `null` si vale. El calendario ya apaga los días
+ * que no valen, pero la regla vive aquí: es lo que para el pedido si la fecha
+ * falta o se ha quedado vieja (la ficha abierta desde ayer).
  */
 export function problemaFecha(iso: string, hoy: Date = new Date()): string | null {
   if (!iso) return "Elige una fecha de entrega para poder pedirla.";
