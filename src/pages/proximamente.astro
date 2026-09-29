@@ -10,7 +10,6 @@
 //
 // Sin cabecera, pie, menú ni redes a propósito: es una pantalla de espera, no
 // una página del sitio, y cualquier enlace llevaría a la web a medias.
-import { Font } from "astro:assets";
 import Layout from "@/layouts/Layout.astro";
 import EscenaToldo from "@/components/proximamente/EscenaToldo.astro";
 import { PROXIMAMENTE } from "@/config/site";
@@ -18,23 +17,8 @@ import { modoProximamente } from "@/lib/proximamente";
 
 const { titular, entradilla, apertura, pie } = PROXIMAMENTE;
 
-// The Seasons llega de un proyecto web de Adobe Fonts (Typekit): la hoja de
-// estilos y los ficheros los sirve Adobe desde use.typekit.net, que es como lo
-// cubre su licencia. NO se puede descargar ni meter en src/assets: eso es
-// self-hosting y Adobe no lo permite. Por lo mismo no va por la API de fuentes
-// de Astro, que sí descarga los ficheros en el build.
-//
-// El proyecto es de una cuenta ajena (ver README, "Tipografía"): si esa
-// suscripción se cae o se borra el proyecto, la hoja deja de servir la fuente y
-// el titular cae a Fraunces, que es la gratuita más parecida. Por eso Fraunces
-// se sigue cargando, aunque sin preload.
-//
-// Estilos que usa la página: Light (300) en el titular y Regular (400) en la
-// marca, la fecha y el toldo, los dos con su cursiva. Los decide el proyecto de
-// Adobe, no este repo: si alguno se quita de allí, el navegador tira del peso
-// más cercano que quede. El proyecto trae también Bold, que aquí no se usa y
-// por tanto no se descarga.
-const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
+// Tipografía: la de toda la web (src/styles/global.css). The Seasons en el
+// titular, la marca y la fecha; Karla en el resto. Las dos las carga el Layout.
 
 // Cuando NO es la portada (staging, previews, local), que no la indexe nadie:
 // ahí es una página suelta de revisión, no el sitio.
@@ -46,17 +30,11 @@ const esPortada = modoProximamente();
   descripcion={`Alta pastelería por encargo en Málaga. ${apertura.antetitulo} ${apertura.texto}.`}
 >
   <Fragment slot="head">
-    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
-    <link rel="preconnect" href="https://p.typekit.net" crossorigin />
-    <link rel="stylesheet" href={ADOBE_FONTS} />
-    <Font cssVariable="--font-fraunces" />
-    <Font cssVariable="--font-karla" preload />
     {!esPortada && <meta name="robots" content="noindex" />}
   </Fragment>
 
   <main
-    style="--font-titular: 'the-seasons', var(--font-fraunces), Georgia, serif"
-    class="relative flex min-h-svh flex-col items-center px-4 pt-14 pb-16 font-(family-name:--font-karla) lg:justify-center lg:px-6 lg:py-18"
+    class="relative flex min-h-svh flex-col items-center px-4 pt-14 pb-16 lg:justify-center lg:px-6 lg:py-18"
   >
     <div
       class="grid w-full max-w-310 grid-cols-1 items-center gap-7 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14"
@@ -64,14 +42,14 @@ const esPortada = modoProximamente();
       <div
         class="flex flex-col items-center gap-4.5 text-center lg:items-start lg:gap-5.5 lg:text-left"
       >
-        <p class="font-(family-name:--font-titular) text-xl text-rust">
+        <p class="titulo text-xl text-rust">
           Estimada Carmela
         </p>
         <h1
-          class="font-(family-name:--font-titular) text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] font-light tracking-[-0.02em] text-balance"
+          class="titular text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] text-balance"
         >
           {titular.antes}
-          <em class="text-rust">{titular.destacado}</em>
+          <em class="text-rust not-italic">{titular.destacado}</em>
         </h1>
         <p
           class="max-w-[32em] text-[clamp(1.0625rem,1.5vw,1.1875rem)] leading-[1.55] text-pretty text-black/80"
@@ -82,12 +60,12 @@ const esPortada = modoProximamente();
           class="mt-1.5 flex w-full max-w-75 flex-col items-center gap-1.5 border-t border-taupe pt-4.5 lg:w-auto lg:max-w-none lg:min-w-65 lg:items-start"
         >
           <span
-            class="text-xs font-semibold tracking-[0.16em] text-black/65 uppercase"
+            class="antetitulo text-black/65"
           >
             {apertura.antetitulo}
           </span>
           <time
-            class="font-(family-name:--font-titular) text-[clamp(1.625rem,2.6vw,2.125rem)] font-normal tracking-[-0.01em] whitespace-nowrap text-rust"
+            class="titulo text-[clamp(1.625rem,2.6vw,2.125rem)] whitespace-nowrap text-rust"
             datetime={apertura.iso}
           >
             {apertura.texto}
@@ -101,7 +79,7 @@ const esPortada = modoProximamente();
     </div>
 
     <p
-      class="absolute inset-x-0 bottom-6 px-6 text-center text-xs tracking-[0.16em] text-black/65 uppercase"
+      class="absolute inset-x-0 bottom-6 px-6 text-center dato text-xs text-black/65"
     >
       {pie}
     </p>

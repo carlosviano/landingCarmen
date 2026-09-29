@@ -13,6 +13,16 @@ export interface SocialLink {
   icon: string;
 }
 
+/** La dirección partida en piezas, para poder escribirla de varias formas. */
+export interface Direccion {
+  /** Calle y número: la línea que se lee de lejos. */
+  calle: string;
+  /** La planta: lo que hace falta para dar con la puerta una vez dentro. */
+  portal: string;
+  cp: string;
+  ciudad: string;
+}
+
 /** Un tramo del horario de apertura: qué días y en qué horas. */
 export interface FranjaHorario {
   dias: string;
@@ -24,9 +34,22 @@ export interface FranjaHorario {
 // viven sueltos aquí arriba y todo lo demás se deriva de ellos. Editar solo
 // estas constantes: los enlaces se recalculan solos.
 
-// Nota: el resto del sitio habla en primera persona ("Sobre mí") y esto en
-// plural ("Encuéntranos"). Conviene unificar el trato.
-const DIRECCION_POSTAL = "Calle Escultor Marín Higuero 6. Es1,pl1,pt7";
+// La dirección va partida y no en una sola cadena. Antes era el renglón
+// "Calle Escultor Marín Higuero 6. Es1,pl1,pt7", que en el pie no se leía:
+// escalera, planta y puerta abreviadas y pegadas a la calle parecen una
+// errata más que una dirección. Con las piezas sueltas cada sitio la compone
+// como le conviene —el pie en bloque, el panel móvil en una línea corta y
+// Contacto con la calle de titular— y siguen saliendo todas de aquí.
+export const DIRECCION: Direccion = {
+  calle: "Escultor Marín Higuero, 6",
+  portal: "Primera planta",
+  cp: "29017",
+  ciudad: "Málaga",
+};
+
+// Lo que se busca en Google Maps. Lleva el CP y la ciudad a propósito: son los
+// que descartan la otra calle del mismo nombre (ver la nota de COORDENADAS).
+const DIRECCION_POSTAL = `Calle ${DIRECCION.calle}, ${DIRECCION.cp} ${DIRECCION.ciudad}`;
 
 // TODO: número real. Se escribe tal cual se quiere ver en pantalla; el enlace
 // de wa.me se saca de aquí quitando todo lo que no sea dígito.
@@ -44,15 +67,22 @@ const COORDENADAS = { lat: 36.7212034, lon: -4.3645263 };
 
 export const SITE = {
   nombre: "Estimada Carmela",
-  direccion: "Encuéntranos en Calle Escultor Marín Higuero 6. Es1,pl1,pt7",
+  // Antetítulo de la dirección en el pie.
+  //
+  // Nota: el resto del sitio habla en primera persona ("Sobre mí") y esto en
+  // plural. Conviene unificar el trato.
+  encuentranos: "Encuéntranos",
+  // La dirección en un renglón, para donde solo cabe uno (el panel móvil). Sin
+  // el portal: ahí no hay sitio, y quien va a ir se abre el mapa o baja al pie.
+  direccion: `${DIRECCION.calle} · ${DIRECCION.ciudad}`,
   mapa: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     DIRECCION_POSTAL,
   )}`,
 } as const;
 
 export const NAV: NavItem[] = [
-  
-  { label: "Eventos", href: "#eventos" },
+
+  { label: "Eventos", href: "/eventos" },
   { label: "Catálogo", href: "/catalogo" },
   { label: "Sobre mí", href: "#sobre-mi" },
   { label: "Contacto", href: "#contacto" }
@@ -72,21 +102,21 @@ export const SOCIAL: SocialLink[] = [
   },
 ];
 
-// TODO: horario real.
 export const HORARIO: FranjaHorario[] = [
   { dias: "Lunes a viernes", horas: "09:00 – 18:00" },
-  { dias: "Sábados", horas: "10:00 – 14:00" },
-  { dias: "Domingos", horas: "Cerrado" },
+  // Fines de semana cerrado: coincide con PEDIDO, que sólo entrega de lunes a
+  // viernes. Si algún día abre el sábado, hay que cambiar las dos cosas.
+  { dias: "Sábados y domingos", horas: "Cerrado" },
 ];
 
 export const CONTACTO = {
   // La ciudad va suelta del resto de la dirección porque en la tarjeta se
   // pinta aparte, como antetítulo encima de la calle.
-  ciudad: "Málaga",
+  ciudad: DIRECCION.ciudad,
   // Titular grande: calle y número y nada más. Es lo único que se lee de lejos.
-  titular: "Escultor Marín Higuero, 6",
+  titular: DIRECCION.calle,
   // Lo que no cabe en el titular pero hace falta para dar con el portal.
-  detalle: "Esc. 1 · Planta 1 · Puerta 7 — 29017",
+  detalle: `${DIRECCION.portal} — ${DIRECCION.cp}`,
   whatsapp: {
     visible: WHATSAPP_VISIBLE,
     href: WHATSAPP_URL,
@@ -215,6 +245,146 @@ export const GALERIA: Galeria = {
       alt: "Tarta redonda de cumpleaños estilo Paulova",
     }
   ],
+};
+
+// --- Eventos -----------------------------------------------------------
+
+/**
+ * Un montaje ya servido: qué se hizo, para qué celebración y cómo. Cada uno
+ * es una tarjeta de /eventos, en el orden de esta lista.
+ */
+export interface Montaje {
+  /**
+   * Antetítulo de la tarjeta: el tipo de celebración. Entre corchetes hasta
+   * que se sepa de qué evento real es cada foto (mismo criterio que el
+   * precio de `Tarta`: se ve en pantalla y así no se publica sin querer).
+   */
+  tipoEvento: string;
+  titulo: string;
+  descripcion: string;
+  /** Nombre del archivo en `src/assets/images/`. A diferencia de `Tarta.archivo`
+   * no puede ser `null`: un montaje sin foto no cuenta nada, así que no se
+   * publica hasta tener una. */
+  archivo: string;
+  alt: string;
+  /** "[MES 2026]" hasta que se fechen los montajes de verdad. */
+  mes: string;
+  lugar: string;
+  /**
+   * Punto de la foto que no se puede recortar, como `object-position` en CSS
+   * ("50% 62%"). Va suelto de `archivo` porque depende del encuadre de CADA
+   * foto y no se puede derivar de nada; sin él, el recorte por defecto
+   * (centro) basta.
+   */
+  enfoque?: string;
+}
+
+export interface Eventos {
+  // Portada: sección "eventos" de la home.
+  etiqueta: string;
+  titulo: string;
+  entradilla: string;
+  // /eventos: la página con la lista completa.
+  etiquetaPagina: string;
+  tituloPagina: string;
+  entradillaPagina: string;
+  /** Enlace de cierre de la lista, hacia el perfil de Instagram. */
+  masMontajes: string;
+  // Banda final de /eventos, antes del pie.
+  ctaEtiqueta: string;
+  ctaTitulo: string;
+  ctaTexto: string;
+  montajes: Montaje[];
+}
+
+export const EVENTOS: Eventos = {
+  etiqueta: "Eventos · Mesas dulces",
+  titulo: "Cada celebración, una mesa distinta",
+  entradilla:
+    "Mesas dulces, tartas y postres para el día que celebras. El montaje se piensa con la fecha, el sitio y los invitados delante, así que no sale dos veces igual.",
+  etiquetaPagina: "Eventos · Málaga",
+  tituloPagina: "Para el día concreto que celebras",
+  entradillaPagina:
+    "Mesas dulces, tartas y postres por encargo. Estos son algunos de los montajes ya servidos: qué se hizo, para qué celebración y cómo se resolvió.",
+  masMontajes: "Hay más montajes en Instagram",
+  ctaEtiqueta: "¿Tienes fecha?",
+  ctaTitulo: "Cuéntame qué celebras",
+  ctaTexto:
+    "Escríbeme con la fecha, el sitio y cuántos sois. Con eso te digo qué se puede montar y en qué plazo.",
+  montajes: [
+    {
+      tipoEvento: "Cumpleaños",
+      titulo: "Mesa dulce sobre musgo y eucalipto",
+      descripcion:
+        "Un montaje largo sobre mantel negro, con el verde haciendo de estructura: musgo, eucalipto y paniculata sostienen la línea y los dulces se apoyan en ella. Cada bocado va en su propia pieza, con su cucharilla, para cogerlo de pie y sin tener que cortar nada.",
+      archivo: "mesa_cumple_nati.jpeg",
+      alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
+      mes: "[MES 2026]",
+      lugar: "Málaga",
+      enfoque: "50% 62%",
+    },
+    {
+      tipoEvento: "Cumpleaños",
+      titulo: "Pavlova de melocotón",
+      descripcion:
+        "Merengue, nata montada a mano y melocotón en gajos colocado uno a uno hasta cerrar la corona. Se monta el mismo día de la fiesta: ni la fruta ni el merengue aguantan una noche de nevera sin perder el punto.",
+      archivo: "tarta_cumple_kika_2026.jpeg",
+      alt: "Tarta redonda de merengue y nata coronada con gajos de melocotón, sobre una bandeja dorada.",
+      mes: "[MES 2026]",
+      lugar: "Málaga",
+      enfoque: "50% 55%",
+    },
+    {
+      tipoEvento: "[TIPO DE EVENTO]",
+      titulo: "Pavlova de fresas de temporada",
+      descripcion:
+        "La misma base de merengue, esta vez con fresas partidas a mano y un bosque de nata alrededor. La corona no es solo decoración: sujeta la fruta por fuera y hace que la tarta llegue entera hasta la última ración.",
+      archivo: "tarta_cumple_kika_2026_detalle.jpeg",
+      alt: "Vista desde arriba de una tarta de merengue rizado cubierta de fresas partidas.",
+      mes: "[MES 2026]",
+      lugar: "Málaga",
+    },
+    {
+      tipoEvento: "[TIPO DE EVENTO]",
+      titulo: "Postre emplatado, pieza a pieza",
+      descripcion:
+        "Para una mesa sentada el postre se termina en el sitio y a su hora: bizcocho, crema y el crujiente encima justo antes de salir. Es el trabajo que se aprende en cocina de estrella y el que no se ve en la foto del final.",
+      archivo: "trabajando.jpeg",
+      alt: "En blanco y negro, colocando con pinzas la decoración sobre dos bocados de chocolate.",
+      mes: "[MES 2026]",
+      lugar: "Málaga",
+      enfoque: "50% 25%",
+    },
+  ],
+};
+
+/**
+ * El díptico de la sección de eventos de la portada: dos montajes distintos,
+ * cada uno con su propio remate. A diferencia de `ESCAPARATE` (una tarta, dos
+ * veces) aquí son dos historias, así que no se derivan de `EVENTOS.montajes`:
+ * cada panel lleva su texto propio y punto, igual que el escaparate del
+ * catálogo no depende de cómo esté ordenada `CATALOGO.tartas`.
+ */
+export interface EscaparateEventos {
+  primero: { archivo: string; alt: string; pie: string };
+  /** El panel con el enlace a /eventos. */
+  segundo: { archivo: string; alt: string; pie: string };
+  /** Texto del único enlace de la sección. */
+  cta: string;
+}
+
+export const ESCAPARATE_EVENTOS: EscaparateEventos = {
+  primero: {
+    archivo: "mesa_cumple_nati.jpeg",
+    alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
+    pie: "Mesa dulce sobre musgo y eucalipto",
+  },
+  segundo: {
+    archivo: "tarta_cumple_kika_2026.jpeg",
+    alt: "Tarta redonda de merengue y nata coronada con gajos de melocotón, sobre una bandeja dorada.",
+    pie: "Pavlova de melocotón · encargo de cumpleaños",
+  },
+  cta: "Ver todos los eventos",
 };
 
 // --- Escaparate de portada --------------------------------------------------
@@ -497,6 +667,74 @@ export const CATALOGO: Catalogo = {
     },
   ],
 };
+
+// --- Modal de bienvenida ----------------------------------------------------
+
+/** Un punto de "Así trabajamos": icono, titular y una línea de detalle. */
+export interface PuntoBienvenida {
+  /** Nombre de icono de Iconify, p. ej. "lucide:clock". */
+  icono: string;
+  titulo: string;
+  detalle: string;
+  /**
+   * Lo que se lee en móvil, en una sola línea. Allí no hay sitio para
+   * titular más detalle, así que cada punto se queda en esto. Si falta, sale
+   * `titulo`.
+   */
+  corto?: string;
+  /** El detalle también se ve en móvil. Sólo la dirección lo necesita. */
+  detalleEnMovil?: boolean;
+}
+
+// El modal que ve quien entra por primera vez. Cuenta lo que cambia cómo se
+// encarga (que no hay envíos, cuándo se recoge, con cuánto plazo y dónde) y
+// nada más: es lo que alguien que llega de Instagram no sabe y le hace falta
+// antes de pedir.
+//
+// El horario, el plazo y la dirección salen de las constantes de arriba: si
+// cambian allí, cambian aquí solos.
+const LABORABLES = HORARIO[0];
+
+export const BIENVENIDA = {
+  antetitulo: "Bienvenida",
+  titulo: "Así trabajamos",
+  // Va sobre la ilustración, sólo en escritorio: en móvil la imagen es una
+  // franja y la nota taparía justo el toldo.
+  pista: {
+    antes: "Busca el ",
+    resaltado: "toldo rojo",
+    despues: " en la primera planta, encima del bajo comercial.",
+  },
+  fotoAlt:
+    "Ilustración de la fachada: un toldo rojo con el nombre Estimada Carmela sobre el ventanal de la primera planta, con el rótulo Pastelería.",
+  puntos: [
+    {
+      icono: "lucide:shopping-bag",
+      titulo: "Solo recogida",
+      detalle: "No hacemos envíos: los pedidos se recogen en el obrador.",
+    },
+    {
+      icono: "lucide:clock",
+      titulo: "Horario de recogida",
+      detalle: `${LABORABLES.dias}, ${LABORABLES.horas}`,
+      // Sin "Recogida de" delante: con la fuente del sistema parte en dos
+      // líneas a 390px, y el punto de arriba ya dice que es recogida.
+      corto: `${LABORABLES.dias}, ${LABORABLES.horas}`,
+    },
+    {
+      icono: "lucide:calendar",
+      titulo: `${PEDIDO.antelacion[0].toUpperCase()}${PEDIDO.antelacion.slice(1)} de antelación`,
+      detalle: "Todo se hace por encargo. Un pedido del viernes sale el martes.",
+    },
+    {
+      icono: "lucide:map-pin",
+      titulo: `${CONTACTO.titular} · ${CONTACTO.ciudad}`,
+      detalle: CONTACTO.detalle,
+      detalleEnMovil: true,
+    },
+  ] satisfies PuntoBienvenida[],
+  boton: "Entendido",
+} as const;
 
 // --- Próximamente -----------------------------------------------------------
 
