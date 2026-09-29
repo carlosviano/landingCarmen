@@ -53,16 +53,27 @@ README.
 
 ## Tipografía
 
-Sin fuente propia por ahora: los titulares y la marca van con `font-serif`, la
-pila serif por defecto de Tailwind. La elección está pendiente.
+Dos fuentes: **The Seasons** (titulares, desde Adobe Fonts por `<link>` en el
+Layout) y **Karla** (todo lo demás, por la API de fuentes de Astro). Ninguna
+otra: `global.css` borra las pilas de Tailwind con `--font-*: initial`, así
+que `font-serif` y `font-mono` no existen.
 
-Hubo un montaje con **The Seasons** usando la API de fuentes de Astro (`fonts`
-en astro.config.mjs + `<Font>` en el Layout + `@theme inline` en global.css) y
-se retiró: es comercial y requiere licencia Web, que no tenemos. Un corte
-declarado sin su fichero rompe el arranque con `UnknownFilesystemError`.
+Para texto nuevo usa los papeles de `global.css` en vez de combinar clases:
 
-`src/assets/fonts/README.md` tiene el detalle de licencias, alternativas
-gratuitas y los cuatro pasos para volver a activarlo.
+| Papel        | Para qué                               | Fuente / peso               |
+| ------------ | -------------------------------------- | --------------------------- |
+| `titular`    | h1                                     | The Seasons 300             |
+| `titulo`     | h2, h3, nombres de tarta, marca        | The Seasons 400             |
+| `antetitulo` | línea sobre un titular                 | Karla 600, xs, 0.25em, MAY. |
+| `leyenda`    | etiquetas dentro de una pieza          | Karla 600, 10px, 0.3em, MAY.|
+| `dato`       | metadatos en línea                     | Karla 400, 0.18em, MAY.     |
+| `accion`     | botones, navegación, chips             | Karla 500, 0.1em, MAY.      |
+
+El texto corrido no lleva clase: `html` ya va en Karla 400. Nunca cursiva
+de The Seasons (la i parece acentuada) ni negrita.
+
+El detalle, la licencia de Adobe y qué pasa si se cae el kit: README,
+«Tipografía».
 
 ## Documentation
 

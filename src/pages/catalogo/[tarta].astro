@@ -104,7 +104,7 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
         <div class="pt-8 bajo:pt-5">
           <a
             href="/catalogo"
-            class="inline-flex items-center gap-2 rounded-full border border-black/40 px-5 py-2.5 text-[11px] font-medium tracking-[0.16em] text-rust uppercase transition-colors duration-200 hover:border-rust hover:bg-rust hover:text-linen"
+            class="inline-flex items-center gap-2 rounded-full border border-black/40 px-5 py-2.5 accion text-[11px] text-rust transition-colors duration-200 hover:border-rust hover:bg-rust hover:text-linen"
           >
             <Icon name="lucide:arrow-left" class="size-3.5" aria-hidden="true" />
             Volver a la carta
@@ -121,7 +121,7 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
                 dependería de qué píxel de la tarta le tocara debajo. */
             }
             <h1
-              class="ficha-titulo text-center font-display text-4xl leading-[1.12] text-balance text-rust sm:text-5xl lg:text-[3.1rem]"
+              class="ficha-titulo text-center titular text-4xl leading-[1.12] text-balance text-rust sm:text-5xl lg:text-[3.1rem]"
             >
               {tarta.nombre}
             </h1>
@@ -157,7 +157,7 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
                       </span>
                     </div>
 
-                    <h2 class="que-lleva text-[10px] font-medium tracking-[0.3em] text-rust uppercase">
+                    <h2 class="que-lleva leyenda text-rust">
                       Qué lleva
                     </h2>
                     <ul class="etiquetas">
@@ -193,7 +193,7 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
                       />
                     ) : (
                       <div class="grid aspect-[4/5] w-full place-items-center">
-                        <span class="text-[10px] font-medium tracking-[0.24em] text-rust/70 uppercase">
+                        <span class="leyenda text-rust/70">
                           Foto pendiente
                         </span>
                       </div>
@@ -213,7 +213,7 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
                   siempre: una lista con viñetas en esta columna. */
                 !anotada && (
                   <div>
-                    <h2 class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase">
+                    <h2 class="leyenda text-rust">
                       Qué lleva
                     </h2>
                     <ul class="mt-3.5 list-disc space-y-2 pl-5 marker:text-rust">
@@ -279,14 +279,14 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
         </svg>
 
         <div class="relative mx-auto w-full max-w-7xl px-6 py-12 lg:py-8 bajo:py-5">
-          <h2 class="text-[10px] font-medium tracking-[0.3em] text-sand uppercase">
+          <h2 class="leyenda text-sand">
             Cómo se hace
           </h2>
           <ol class="mt-7 grid gap-9 md:grid-cols-3 md:gap-11 lg:mt-6 bajo:mt-4">
             {
               tarta.pasos.map((paso, i) => (
                 <li class="flex flex-col gap-3.5 bajo:gap-2.5">
-                  <span class="font-display text-3xl leading-none text-sand bajo:text-2xl">
+                  <span class="titulo text-3xl leading-none text-sand bajo:text-2xl">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span aria-hidden="true" class="h-px bg-sand/35" />
@@ -315,7 +315,7 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
         >
           <h2
             id="otras-tartas"
-            class="text-[10px] font-medium tracking-[0.3em] text-black/60 uppercase"
+            class="leyenda text-black/60"
           >
             Otras tartas
           </h2>

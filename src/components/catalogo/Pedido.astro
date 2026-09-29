@@ -46,7 +46,7 @@ const conSelector = tarta.tamanos.length > 1;
       son suyos; el aspecto lo pone la pastilla (`peer-checked:`). */
     conSelector && (
       <fieldset class="min-w-0">
-        <legend class="mb-2.5 bajo:mb-2 text-[10px] font-medium tracking-[0.3em] text-rust uppercase">
+        <legend class="mb-2.5 bajo:mb-2 leyenda text-rust">
           Tamaño
         </legend>
         <div
@@ -65,7 +65,7 @@ const conSelector = tarta.tamanos.length > 1;
                 class="peer absolute inset-0 m-0 cursor-pointer opacity-0"
               />
               <span class="flex flex-col items-center rounded-2xl border border-black/40 px-1 py-2 text-[11px] bajo:py-1.5 tracking-[0.06em] text-black/70 transition-colors duration-200 peer-checked:border-rust peer-checked:bg-rust peer-checked:text-linen/90 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-rust hover:border-rust motion-reduce:transition-none peer-checked:[&>b]:text-linen">
-                <b class="font-display text-[1.2rem] leading-tight bajo:text-[1.05rem] font-normal tracking-normal text-black">
+                <b class="titulo text-[1.2rem] leading-tight bajo:text-[1.05rem] text-black">
                   {tamano.personas}
                 </b>
                 personas
@@ -81,7 +81,7 @@ const conSelector = tarta.tamanos.length > 1;
     <div class="flex flex-col gap-2">
       <label
         for="pedido-cantidad"
-        class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase"
+        class="leyenda text-rust"
       >
         Cantidad
       </label>
@@ -117,7 +117,7 @@ const conSelector = tarta.tamanos.length > 1;
     <div class="flex min-w-0 flex-col gap-2">
       <label
         for="pedido-fecha"
-        class="text-[10px] font-medium tracking-[0.3em] text-rust uppercase"
+        class="leyenda text-rust"
       >
         Fecha de entrega
       </label>
@@ -138,7 +138,7 @@ const conSelector = tarta.tamanos.length > 1;
 
   <dl class="border-y border-taupe/45">
     <div class="flex items-baseline justify-between gap-6 py-2.5">
-      <dt class="text-[10px] tracking-[0.2em] text-black/60 uppercase">
+      <dt class="dato text-[10px] text-black/60">
         Conservación
       </dt>
       <dd class="text-right text-sm text-black/80">{tarta.conservacion}</dd>
@@ -152,7 +152,7 @@ const conSelector = tarta.tamanos.length > 1;
   }
   <div class="mt-1 flex items-center justify-between gap-4 bajo:mt-0">
     <p class="flex flex-col leading-none">
-      <span class="text-[10px] tracking-[0.2em] text-black/60 uppercase">Total</span>
+      <span class="dato text-[10px] text-black/60">Total</span>
       <span
         data-total
         aria-live="polite"
@@ -171,7 +171,7 @@ const conSelector = tarta.tamanos.length > 1;
       href={PEDIDO.enlace(mensajePedido(tarta.nombre))}
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex flex-1 items-center justify-center gap-2.5 rounded-full bg-rust px-4 py-4 text-[11px] font-medium tracking-[0.12em] whitespace-nowrap text-linen uppercase shadow-lg shadow-black/25 transition-colors duration-300 hover:bg-black hover:text-white sm:flex-none sm:px-6 sm:text-xs sm:tracking-[0.16em]"
+      class="inline-flex flex-1 items-center justify-center gap-2.5 rounded-full bg-rust px-4 py-4 accion text-[11px] whitespace-nowrap text-linen shadow-lg shadow-black/25 transition-colors duration-300 hover:bg-black hover:text-white sm:flex-none sm:px-6 sm:text-xs sm:tracking-[0.16em]"
     >
       <Icon name="simple-icons:whatsapp" class="size-4 shrink-0" aria-hidden="true" />
       {PEDIDO.etiqueta}
