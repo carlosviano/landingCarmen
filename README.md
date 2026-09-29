@@ -143,3 +143,48 @@ Un deploy malo en producción se revierte desde el panel de Cloudflare
 (**Deployments** → el deploy bueno → **Rollback**), que es instantáneo y no
 necesita build. Después hay que arreglar `main` de verdad, porque el siguiente
 push vuelve a publicar.
+
+### Pantalla de «próximamente»
+
+Hasta la apertura, **producción no publica la web: publica una pantalla de
+espera** (la cocinera montando el toldo, con la fecha de apertura). Todo lo
+demás sigue igual: staging, las previews de los PR y el local ven la web
+completa, así que el desarrollo sigue su curso y `main` puede recibir merges
+sin que se vea nada a medias.
+
+Cómo funciona, en tres piezas:
+
+- [`src/lib/proximamente.ts`](./src/lib/proximamente.ts) decide si el build
+  va en modo «próximamente». Lo mismo que el `robots.txt`: mira
+  `CF_PAGES_BRANCH`, y solo `main` lo activa.
+- [`src/middleware.ts`](./src/middleware.ts) reescribe **todas** las rutas
+  (portada, `/catalogo`, cada ficha) con el contenido de `/proximamente`. Es un
+  rewrite en el build, no una redirección: las URL no cambian y en Cloudflare
+  solo hay HTML estático.
+- [`src/pages/proximamente.astro`](./src/pages/proximamente.astro) es la
+  pantalla. Fuera de producción vive en `/proximamente` con `noindex`, para
+  enseñársela a la clienta en staging.
+
+Para verla en local tal como saldrá en producción:
+
+```sh
+PROXIMAMENTE=1 npm run dev
+```
+
+**Tipografía.** El titular, la fecha y el rótulo del toldo van en **The
+Seasons**, servida desde un proyecto web de Adobe Fonts
+(`use.typekit.net/gwa1cko.css`) de una cuenta de Creative Cloud que **no es
+de la clienta**. Tres consecuencias:
+
+- La fuente la sirve Adobe. No se puede descargar ni copiar a `src/assets`
+  (sería self-hosting, que la licencia de Adobe Fonts no cubre).
+- Si esa suscripción se cancela o se borra el proyecto, el titular cae solo a
+  **Fraunces**, que es la gratuita más parecida y se sigue cargando de respaldo.
+- Qué estilos llegan lo decide el proyecto de Adobe, no el repo. La página usa
+  Light (300) y Regular (400) con sus cursivas; si se quita alguno allí, el
+  navegador tira del peso más cercano que quede.
+
+**Abrir la web** es poner `PROXIMAMENTE.enProduccion` a `false` en
+[`src/config/site.ts`](./src/config/site.ts) y seguir el flujo de siempre
+(PR → staging → main). No se apaga sola el día de la fecha: el sitio es
+estático y nadie lo reconstruye a medianoche.

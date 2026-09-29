@@ -21,11 +21,13 @@ const title = titulo ? `${titulo} · ${SITE.nombre}` : SITE.nombre;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="description" content={descripcion} />
     <meta name="author" content="Carlos Viano" />
     <Font cssVariable="--font-prata" preload />
+    <slot name="head" />
     <title>{title}</title>
   </head>
   <body class="min-h-full w-full bg-linen text-black">
