@@ -1,5 +1,6 @@
 ---
 import { Font } from "astro:assets";
+import Bienvenida from "@/components/Bienvenida.astro";
 import { SITE } from "@/config/site";
 import "../styles/global.css";
 
@@ -30,5 +31,6 @@ const title = titulo ? `${titulo} · ${SITE.nombre}` : SITE.nombre;
   </head>
   <body class="min-h-full w-full bg-linen text-black">
     <slot />
+    <Bienvenida />
   </body>
 </html>
