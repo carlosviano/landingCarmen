@@ -50,9 +50,6 @@
   --color-rust: #7c2513;
 }
 
-/* Prata entra por la API de fuentes de Astro (ver astro.config.mjs). Se expone
-   como utilidad `font-display` para los titulares. El `inline` es el patrón
-   recomendado cuando el valor viene de una variable definida fuera del tema. */
 /* `bajo:` — escritorio de poca altura (portátiles de 768–900 px). La ficha de
    tarta usa esta variante para apretar el espacio vertical y que la tarta y la
    banda "Cómo se hace" quepan juntas en una pantalla. Por debajo de ~720 px de
@@ -60,8 +57,102 @@
    bajar un poco. */
 @custom-variant bajo (@media (min-width: 64rem) and (max-height: 56.25rem));
 
-@theme inline {
-  --font-display: var(--font-prata);
+/*
+  Tipografía — dos familias, cada una con su trabajo:
+
+    The Seasons  emociona: titulares, nombres de tarta, la marca, la firma.
+                 Serif de alto contraste; es la voz de alta pastelería.
+    Karla        informa: texto, botones, datos, rótulos. Grotesca sobria que
+                 se lee bien a tamaño de móvil, que es por donde llega casi
+                 todo el tráfico (Instagram).
+
+  `--font-*: initial` borra las pilas de Tailwind (sans, serif, mono) para que
+  no quede una tercera fuente a mano: solo existen `font-display` y
+  `font-sans`, y `font-sans` es la de `html`, así que Karla no hay que ponerla.
+
+  `static` hace que las dos variables salgan siempre en :root aunque ninguna
+  clase las use, porque el CSS de algunos componentes (el toldo) las lee.
+
+  Pesos que se usan y ninguno más (cada uno es una descarga):
+
+    The Seasons  300 Light    titular (h1): a tamaño grande el trazo fino
+                              es lo elegante y no pesa
+                 400 Regular  titulo (h2, h3, nombres de tarta, la marca)
+                 Sin cursiva: la de The Seasons dibuja el punto de la i como
+                 un trazo inclinado que en castellano se lee como tilde (la
+                 marca salía "Estímada Carmela"). Sin negrita: una serif de
+                 contraste en bold se ve de catálogo barato. Y nunca por
+                 debajo de ~18px: el trazo fino se rompe.
+    Karla        400 texto corrido
+                 500 accion (botones, navegación) y datos (precios, horarios)
+                 600 antetitulo y leyenda, y el <b> del texto
+                 cursiva 400 solo en la ficha, para lo que va "dentro" de la
+                 tarta (a Karla no le pasa lo de la i)
+*/
+@theme static {
+  --font-*: initial;
+  --font-display: "the-seasons", Georgia, serif;
+  --font-sans: var(--font-karla);
+}
+
+/*
+  Papeles tipográficos. Cada uno fija familia, peso, tracking y caja; el tamaño
+  y el color los pone quien lo usa, salvo en antetitulo y leyenda, que son
+  siempre del mismo tamaño. Usarlos en vez de combinar clases sueltas es lo que
+  mantiene la web coherente: cambiar el tracking de los antetítulos es cambiar
+  una línea aquí.
+*/
+
+/* h1 de cada página. */
+@utility titular {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: -0.015em;
+}
+
+/* h2 y h3, nombres de tarta, cifras grandes. */
+@utility titulo {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+/* La línea que va encima de un titular: "Nuestra carta", "Eventos"... */
+@utility antetitulo {
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* Etiquetas pequeñas dentro de una pieza: "Qué lleva", la categoría de una
+   tarta, las leyendas del pedido. Un escalón por debajo del antetítulo. */
+@utility leyenda {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* Metadatos en línea: credenciales, fecha y lugar de un evento, el pie legal.
+   Informa sin pedir atención, así que va en peso de texto. */
+@utility dato {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Todo lo que se pulsa: botones, navegación, enlaces-botón, chips. */
+@utility accion {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 @layer base {

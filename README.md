@@ -171,20 +171,39 @@ Para verla en local tal como saldrá en producción:
 PROXIMAMENTE=1 npm run dev
 ```
 
-**Tipografía.** El titular, la fecha y el rótulo del toldo van en **The
-Seasons**, servida desde un proyecto web de Adobe Fonts
+**Abrir la web** es poner `PROXIMAMENTE.enProduccion` a `false` en
+[`src/config/site.ts`](./src/config/site.ts) y seguir el flujo de siempre
+(PR → staging → main). No se apaga sola el día de la fecha: el sitio es
+estático y nadie lo reconstruye a medianoche.
+
+## Tipografía
+
+Dos fuentes y ninguna más. El sistema completo (qué papel va con qué peso y
+por qué) está comentado en [`src/styles/global.css`](./src/styles/global.css),
+«Tipografía».
+
+| Fuente          | Para qué                                           | De dónde llega                           |
+| --------------- | -------------------------------------------------- | ---------------------------------------- |
+| **The Seasons** | titulares, nombres de tarta, marca, firma          | Adobe Fonts, `<link>` en el Layout        |
+| **Karla**       | texto, botones, datos, antetítulos                 | API de fuentes de Astro (se autoaloja)    |
+
+En los componentes no se combinan pesos y trackings sueltos: se usa el papel
+(`titular`, `titulo`, `antetitulo`, `leyenda`, `dato`, `accion`), y el tamaño
+y el color van aparte.
+
+The Seasons se sirve desde un proyecto web de Adobe Fonts
 (`use.typekit.net/gwa1cko.css`) de una cuenta de Creative Cloud que **no es
 de la clienta**. Tres consecuencias:
 
 - La fuente la sirve Adobe. No se puede descargar ni copiar a `src/assets`
   (sería self-hosting, que la licencia de Adobe Fonts no cubre).
-- Si esa suscripción se cancela o se borra el proyecto, el titular cae solo a
-  **Fraunces**, que es la gratuita más parecida y se sigue cargando de respaldo.
-- Qué estilos llegan lo decide el proyecto de Adobe, no el repo. La página usa
-  Light (300) y Regular (400) con sus cursivas; si se quita alguno allí, el
-  navegador tira del peso más cercano que quede.
+- Si esa suscripción se cancela o se borra el proyecto, **todos los
+  titulares de la web** caen a Georgia. Antes de abrir conviene que el
+  proyecto pase a una cuenta de la clienta.
+- Qué estilos llegan lo decide el proyecto de Adobe, no el repo. Hoy trae
+  Light, Regular y Bold con sus cursivas; la web usa Light (300) y Regular
+  (400), rectas. Si se quita alguno allí, el navegador tira del más cercano.
 
-**Abrir la web** es poner `PROXIMAMENTE.enProduccion` a `false` en
-[`src/config/site.ts`](./src/config/site.ts) y seguir el flujo de siempre
-(PR → staging → main). No se apaga sola el día de la fecha: el sitio es
-estático y nadie lo reconstruye a medianoche.
+**Sin cursiva de The Seasons.** Dibuja el punto de la i como un trazo
+inclinado que en castellano se lee como tilde: la marca salía «Estímada
+Carmela». La cursiva de Karla sí se puede usar.
