@@ -15,11 +15,10 @@
 //
 //   1. La tarta y el pedido. Con recorte anotado (ver `estaAnotada`), la
 //      tarta va en el centro con las etiquetas de "qué lleva" a la izquierda y
-//      una línea de cada una a su capa; el texto y el pedido, a la derecha.
-//      Sin recorte, foto normal (o "foto pendiente") y la lista sin líneas.
-//   2. "Cómo se hace", la banda rust. En escritorio, 1 y 2 llenan juntos una
-//      pantalla.
-//   3. La tira con las otras tartas, que es cómo se pasa de una a otra. Si no
+//      una línea de cada una a su capa; el pedido, a la derecha. Sin recorte,
+//      foto normal (o "foto pendiente") y la lista sin líneas. En escritorio
+//      llena una pantalla.
+//   2. La tira con las otras tartas, que es cómo se pasa de una a otra. Si no
 //      hay otras, no se pinta.
 //
 // Un solo CTA en toda la página, el de WhatsApp del pedido.
@@ -80,7 +79,7 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
   }
   <main class="overflow-x-clip">
     {
-      /* --- Volver, la tarta y "cómo se hace": UNA pantalla en escritorio ---
+      /* --- Volver y la tarta: UNA pantalla en escritorio ---
 
         `min-h` y no `h`: si el contenido no cabe, la sección crece y no se
         recorta nada. Forzar la altura exacta obligaría a recortar o a
@@ -89,7 +88,7 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
         cambiarlo aquí.
 
         El botón de volver va DENTRO: fuera, el bloque medía una pantalla pero
-        empezaba debajo de él, y la banda se salía siempre por abajo lo que
+        empezaba debajo de él, y se salía siempre por abajo lo que
         mide el botón.
 
         En portátiles bajos (768–900 px) no cabe con el espaciado normal, así
@@ -204,10 +203,6 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
             </div>
 
             <div class="ficha-info flex flex-col gap-6 bajo:gap-4">
-              <p class="max-w-[46ch] leading-relaxed text-black/70">
-                {tarta.descripcion}
-              </p>
-
               {
                 /* Sin recorte anotado, "qué lleva" vuelve a su sitio de
                   siempre: una lista con viñetas en esta columna. */
@@ -236,67 +231,6 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
           </div>
         </div>
       </div>
-
-      {
-        /* --- Cómo se hace: la misma banda roja de "Sobre mí" ---
-
-          Va DENTRO del contenedor de una pantalla, pegada a la tarta: son la
-          misma sección. `shrink-0` para que el flex vertical no la comprima. */
-      }
-      <section class="relative shrink-0 overflow-hidden bg-rust">
-        <svg
-          class="pointer-events-none absolute inset-0 h-full w-full text-linen/12"
-          aria-hidden="true"
-        >
-          <defs>
-            <path
-              id="onda-suave-ficha"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1"
-              d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"
-            ></path>
-            <path
-              id="onda-honda-ficha"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1"
-              d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"
-            ></path>
-            <pattern
-              id="ondas-ficha"
-              width="240"
-              height="132"
-              patternUnits="userSpaceOnUse"
-            >
-              <use href="#onda-suave-ficha" transform="translate(0 18)"></use>
-              <use href="#onda-honda-ficha" transform="translate(80 54)"></use>
-              <use href="#onda-suave-ficha" transform="translate(170 90)"></use>
-              <use href="#onda-honda-ficha" transform="translate(45 118)"></use>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#ondas-ficha)"></rect>
-        </svg>
-
-        <div class="relative mx-auto w-full max-w-7xl px-6 py-12 lg:py-8 bajo:py-5">
-          <h2 class="leyenda text-sand">
-            Cómo se hace
-          </h2>
-          <ol class="mt-7 grid gap-9 md:grid-cols-3 md:gap-11 lg:mt-6 bajo:mt-4">
-            {
-              tarta.pasos.map((paso, i) => (
-                <li class="flex flex-col gap-3.5 bajo:gap-2.5">
-                  <span class="titulo text-3xl leading-none text-sand bajo:text-2xl">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span aria-hidden="true" class="h-px bg-sand/35" />
-                  <p class="leading-relaxed text-linen/85 bajo:leading-normal">{paso}</p>
-                </li>
-              ))
-            }
-          </ol>
-        </div>
-      </section>
     </div>
 
     {
