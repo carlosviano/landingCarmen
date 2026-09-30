@@ -139,30 +139,15 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
           {EVENTOS.ctaTexto}
         </p>
 
-        <div class="mt-10 flex flex-col items-center gap-6 sm:flex-row sm:gap-8">
-          <a
-            href={HERO.accion.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex items-center gap-2 rounded-full bg-sand px-8 py-4 accion text-xs text-rust shadow-lg shadow-black/25 transition-colors hover:bg-black hover:text-white"
-          >
-            <Icon name="simple-icons:whatsapp" class="size-4 shrink-0" aria-hidden="true" />
-            {HERO.accion.label}
-          </a>
-
-          {
-            /* A /catalogo directo y no a "#catalogo": esa ancla sólo
-              funciona en la portada (ver la nota de NavLinks.astro) y aquí
-              no se está en ella. */
-          }
-          <a
-            href="/catalogo"
-            class="flex items-center gap-2 border-b border-linen/35 pb-1 accion text-xs text-linen/80 transition-colors hover:border-linen/60 hover:text-white"
-          >
-            Ver el catálogo
-            <Icon name="lucide:arrow-right" class="size-4 shrink-0" aria-hidden="true" />
-          </a>
-        </div>
+        <a
+          href={HERO.accion.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-10 flex items-center gap-2 rounded-full bg-sand px-8 py-4 accion text-xs text-rust shadow-lg shadow-black/25 transition-colors hover:bg-black hover:text-white"
+        >
+          <Icon name="simple-icons:whatsapp" class="size-4 shrink-0" aria-hidden="true" />
+          {HERO.accion.label}
+        </a>
 
         <p class="mt-6 text-xs text-linen/60">{HERO.nota}</p>
       </div>

@@ -534,10 +534,8 @@ export interface Tarta {
   conservacion: string;
   /** De 2 a 4. Por encima de 4 las líneas de la ficha se apelotonan. */
   componentes: ComponenteTarta[];
-  /** Párrafo de la ficha y de la portada. Dos o tres frases. */
+  /** La descripción de la ficha para buscadores y al compartir el enlace (no se pinta en la página). Dos o tres frases. */
   descripcion: string;
-  /** Los tres pasos de "cómo se hace". Una frase cada uno. */
-  pasos: [string, string, string];
 }
 
 export interface Catalogo {
@@ -659,11 +657,6 @@ export const CATALOGO: Catalogo = {
       ],
       descripcion:
         "Ácida, con el merengue justo para calmarla. El sablé es grueso a propósito: aguanta la crema sin reblandecerse y cruje hasta el último trozo.",
-      pasos: [
-        "El sablé se hornea el día antes, grueso, y se enfría en el molde.",
-        "La crema se cuece al baño maría y se vierte templada sobre la base.",
-        "El merengue se escudilla pico a pico justo antes de entregar.",
-      ],
     },
   ],
 };
