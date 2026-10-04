@@ -1,0 +1,82 @@
+---
+// Un campo de "elige uno de estos" con el panel del calendario: el botón que
+// lo abre, el <input> oculto que lleva el valor y la lista de opciones.
+//
+// Propio y no un <select>: el panel nativo lo pinta cada sistema a su manera
+// y no se puede vestir, y al lado del calendario se notaba. Este usa el mismo
+// marco, el mismo fondo linen y el mismo rust para lo elegido.
+//
+// Sólo es el marcado; lo hace funcionar `montarDesplegable`
+// (src/lib/desplegable.ts). Lleva su propio `relative`: el panel se abre con
+// el ancho del campo.
+import { Icon } from "astro-icon/components";
+import { CAMPO, OPCION_LISTA, PANEL } from "./estilos";
+
+interface Props {
+  /** Id del botón. La lista se llama `<id>-opciones`. */
+  id: string;
+  /** `name` del <input> oculto: con él viaja lo elegido en el formulario. */
+  nombre: string;
+  /** Id de la etiqueta visible, que se anuncia junto a lo elegido. */
+  etiquetaId: string;
+  opciones: readonly string[];
+  /** Lo que dice el botón mientras no hay nada elegido. */
+  placeholder: string;
+}
+
+const { id, nombre, etiquetaId, opciones, placeholder } = Astro.props;
+const listaId = `${id}-opciones`;
+---
+
+<div data-desplegable class="relative">
+  <button
+    id={id}
+    type="button"
+    data-desplegable-boton
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    aria-controls={listaId}
+    aria-labelledby={`${etiquetaId} ${id}`}
+    class={`${CAMPO} group justify-between gap-2`}
+  >
+    <span data-desplegable-texto data-vacio class="truncate data-vacio:text-black/60">
+      {placeholder}
+    </span>
+    <Icon
+      name="lucide:chevron-down"
+      class="size-4 shrink-0 text-rust transition-transform group-aria-expanded:rotate-180 motion-reduce:transition-none"
+      aria-hidden="true"
+    />
+  </button>
+  <input type="hidden" name={nombre} data-desplegable-valor />
+
+  <ul
+    id={listaId}
+    role="listbox"
+    aria-labelledby={etiquetaId}
+    hidden
+    data-desplegable-lista
+    class={`${PANEL} inset-x-0 flex flex-col gap-1 p-2`}
+  >
+    {
+      opciones.map((opcion) => (
+        <li role="none">
+          <button
+            type="button"
+            role="option"
+            aria-selected="false"
+            data-valor={opcion}
+            class={OPCION_LISTA}
+          >
+            {opcion}
+            <Icon
+              name="lucide:check"
+              class="size-4 shrink-0 opacity-0 group-aria-selected:opacity-100"
+              aria-hidden="true"
+            />
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+</div>
