@@ -159,10 +159,9 @@ export const CONTACTO = {
   mapa: SITE.mapa,
 } as const;
 
-// Hero. Sin botones: la clienta quiere que quien llega baje y vea la web
-// antes de pedir (ver la nota en Hero.astro). El pedido se hace desde la
-// ficha de cada tarta del catálogo (ver PEDIDO), con el WhatsApp ya
-// estructurado.
+// Hero. Lleva un botón por servicio, a su página: es el camino más corto a
+// encargar (ver la nota en Hero.astro). El pedido de la carta se hace desde
+// la ficha de cada tarta (ver PEDIDO), con el WhatsApp ya estructurado.
 //
 // El titular no es un eslogan inventado, es de Carmen: sale del último párrafo
 // de SOBRE_MI ("estética y sabor pesan lo mismo"). Y las credenciales son las
@@ -170,7 +169,7 @@ export const CONTACTO = {
 // promete el titular se sostiene, y es lo único que un visitante que llega de
 // Instagram puede comprobar sin bajar.
 //
-// La entradilla nombra los tres SERVICIOS, uno por cada enlace que el hero
+// La entradilla nombra los tres SERVICIOS, uno por cada botón que el hero
 // pinta debajo: quien llega tiene que saber sin bajar que hay carta, tartas a
 // medida y eventos.
 export const HERO = {
@@ -180,6 +179,8 @@ export const HERO = {
     "Tartas de temporada, tartas a tu medida y mesas dulces para tus celebraciones. Cada pieza se hace una a una, para el día concreto que celebras.",
   // Va en el hero porque es la primera pregunta de quien encarga una tarta,
   // y porque un encargo sin plazo a la vista se lee como "para hoy".
+  // La leyenda sobre los botones: dice que se pide desde ahí.
+  encarga: "Haz tu encargo",
   nota: "Todo por encargo · con dos días laborables de antelación",
   credenciales: ["Escuela Torreblanca", "Marbella Club", "Saddle", "DSTAgE"],
   // Sin nombres ni pronombres, igual que el resto de los alt: describe lo que
@@ -485,6 +486,8 @@ export const SOLICITUD_EVENTO = {
     antes: "¿Prefieres hablar?",
     enlace: "Escríbeme por WhatsApp",
   },
+  // La leyenda sobre los botones: dice que se pide desde ahí.
+  encarga: "Haz tu encargo",
   nota: "Todo por encargo · con dos días laborables de antelación",
 };
 

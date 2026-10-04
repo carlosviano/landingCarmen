@@ -29,7 +29,7 @@
 // Altura: en lg el hero —banda más franja de credenciales— llena la pantalla
 // justa, de la cabecera al borde de abajo. Antes dejaba asomar 8rem de la
 // sección siguiente para que se supiera que la página seguía; ahora eso lo
-// dicen los enlaces a los servicios, que bajan a esas secciones.
+// dice la franja de credenciales, que cierra la banda a la vista.
 //
 // El alto, el de la franja y su retícula los pone el marco común
 // (components/Hero.astro), igual que en todos los heros de la web: aquí solo va
@@ -68,9 +68,8 @@
 // cambiar esta foto, que no sea ninguna de las de ESCAPARATE ni
 // ESCAPARATE_EVENTOS.
 //
-// Los enlaces a los tres servicios (SERVICIOS) no son botones: son anclas a
-// sus secciones de la propia portada, así que no sacan a nadie de ella (ver
-// la nota junto a ellos).
+// Los tres servicios (SERVICIOS) son botones que llevan a sus páginas: el
+// camino más corto a encargar (ver la nota junto a ellos).
 //
 // El patrón de ondas es el de SobreMi.astro con ids propios: los dos svg
 // conviven en la misma página y un id repetido hace que el segundo `use` apunte
@@ -159,27 +158,34 @@ import { HERO, SERVICIOS } from "@/config/site";
       </p>
 
       {
-        /* Sin botones ni flecha de "baja", a propósito: el Hero no saca a
-          nadie de la portada. Quien llega tiene que bajar y ver el trabajo
-          antes de pedir; los CTA están al final de cada sección, y quien ya
-          viene decidido tiene los servicios en la barra.
+        /* Los tres servicios como botones, y van a sus PÁGINAS, no a sus
+          secciones de la portada: son el camino más corto a encargar, y
+          quien llega de Instagram ya decidido no tiene por qué hacer scroll
+          para pedir. Quien quiera ver antes el trabajo baja igual.
 
-          Lo que sí hay son los tres servicios, para que se entienda sin
-          hacer scroll qué se puede encargar. Son también lo que dice que la
-          página sigue, ahora que el hero llena la pantalla (ver la nota del
-          alto, arriba). Son anclas a sus secciones de la portada, no a sus
-          páginas: bajan, no sacan. Van con el enlace
-          subrayado de las bandas rust (el mismo de la banda final de
-          /eventos), que se lee como navegación y no compite con el titular
-          como lo haría una píldora. */
+          La carta va rellena en sand (la masa clara de la banda, ver la
+          regla 3 de global.css): es el encargo más directo, del escaparate
+          al WhatsApp en dos pasos. Personalizadas y eventos van con borde
+          linen: se leen igual de pulsables sin quitarle el foco.
+
+          En móvil, rejilla de dos: la carta a todo el ancho y las otras dos
+          debajo, a medias. En fila envolvían a dos líneas sin orden.
+          `py-4` con `text-xs` deja cada botón en ~48px, por encima de los
+          44 del pulgar. */
       }
-      <ul class="mt-7 flex flex-wrap gap-x-7 gap-y-3">
+      <p class="mt-8 leyenda text-linen/80">{HERO.encarga}</p>
+      <ul class="mt-4 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
         {
-          Object.values(SERVICIOS).map(({ nombre, ancla }) => (
-            <li>
+          Object.values(SERVICIOS).map(({ nombre, ruta }, indice) => (
+            <li class:list={[indice === 0 && "col-span-2"]}>
               <a
-                href={`#${ancla}`}
-                class="border-b border-linen/35 pb-1 accion text-xs text-linen/80 transition-colors hover:border-linen/60 hover:text-white"
+                href={ruta}
+                class:list={[
+                  "block rounded-full px-7 py-4 text-center accion text-xs whitespace-nowrap transition-colors duration-300",
+                  indice === 0
+                    ? "bg-sand text-rust shadow-lg shadow-black/25 hover:bg-white"
+                    : "border-[1.5px] border-linen/70 text-linen hover:border-linen hover:bg-linen hover:text-rust",
+                ]}
               >
                 {nombre}
               </a>

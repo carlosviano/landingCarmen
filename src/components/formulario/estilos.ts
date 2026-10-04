@@ -36,7 +36,7 @@ export const PASTILLA =
 
 /** El botón principal de un formulario: el que pide o envía. */
 export const BOTON =
-  "inline-flex items-center justify-center gap-2.5 rounded-full bg-rust px-4 py-4 accion text-[11px] whitespace-nowrap text-linen shadow-lg shadow-black/25 transition-colors duration-300 hover:bg-black hover:text-white disabled:pointer-events-none disabled:opacity-60 sm:px-6 sm:text-xs sm:tracking-[0.16em] motion-reduce:transition-none";
+  "inline-flex items-center justify-center gap-2.5 rounded-full bg-rust px-4 py-4 accion text-[11px] whitespace-nowrap text-linen shadow-lg shadow-black/25 transition-colors duration-300 hover:bg-rust-hondo disabled:pointer-events-none disabled:opacity-60 sm:px-6 sm:text-xs sm:tracking-[0.16em] motion-reduce:transition-none";
 
 /**
  * El panel que se abre bajo un campo: el calendario y el desplegable. Va
