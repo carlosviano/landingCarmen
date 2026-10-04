@@ -75,6 +75,20 @@ de The Seasons (la i parece acentuada) ni negrita.
 El detalle, la licencia de Adobe y qué pasa si se cae el kit: README,
 «Tipografía».
 
+## Hero
+
+Toda página que abra con un hero lo monta dentro de `src/components/Hero.astro`
+(portada y /eventos ya lo hacen). El componente es el MARCO, no el diseño: fija
+las proporciones —en todos los tamaños, móvil primero (referencia: iPhone 14
+Pro Max, 430×932), banda y franja llenan la pantalla bajo la cabecera; la
+franja mide `lg:h-20` (`py-6` en móvil) y su contenido va en la retícula de
+`max-w-7xl px-6`— y deja a cada página el fondo (`claseBanda`, `claseFranja`)
+y lo que va dentro: la banda por el slot por defecto, la franja por
+`slot="franja"` y lo que tenga que pintarse a todo el ancho de la franja (unas
+ondas) por `slot="fondo-franja"`. No le pongas alturas propias a un hero desde
+fuera: si las proporciones tienen que cambiar, cambian en el componente y para
+todas las páginas.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build
