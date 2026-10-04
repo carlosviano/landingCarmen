@@ -1,0 +1,55 @@
+---
+// Un campo de formulario: su etiqueta, el control (por el slot) y el hueco
+// del mensaje de error, debajo.
+//
+// El error lo escribe el script del formulario, que encuentra el campo por
+// `data-campo` (el `name` del control) y su hueco por `data-error`. Pasando
+// por aquí, los mensajes salen siempre en el mismo sitio y con el mismo
+// aspecto. Un campo que no encaje (la casilla de privacidad, con el texto al
+// lado y no encima) lleva esos dos `data-` a mano.
+//
+// `grupo` es para un conjunto de radios: se pinta como <fieldset> con su
+// <legend>, que es lo que hace que el lector de pantalla anuncie "Tipo de
+// evento, grupo" antes de las opciones.
+import { ERROR, ETIQUETA } from "./estilos";
+
+interface Props {
+  /** El `name` del control. Es lo que casa el campo con su error. */
+  nombre: string;
+  etiqueta: string;
+  /** Id del control, para el `for` de la etiqueta. Sin él, la etiqueta es un
+   * <span> con id `<nombre>-etiqueta`, para `aria-labelledby`. */
+  para?: string;
+  obligatorio?: boolean;
+  grupo?: boolean;
+  class?: string;
+}
+
+const {
+  nombre,
+  etiqueta,
+  para,
+  obligatorio = false,
+  grupo = false,
+  class: className,
+} = Astro.props;
+
+const Raiz = grupo ? "fieldset" : "div";
+const Etiqueta = grupo ? "legend" : para ? "label" : "span";
+---
+
+<Raiz data-campo={nombre} class:list={["min-w-0", className]}>
+  <Etiqueta
+    id={`${nombre}-etiqueta`}
+    for={Etiqueta === "label" ? para : undefined}
+    class={`block ${ETIQUETA}`}
+  >
+    {etiqueta}
+    {obligatorio && <span aria-hidden="true">*</span>}
+    {!obligatorio && <span class="ml-1 text-black/50">· opcional</span>}
+  </Etiqueta>
+  <div class="mt-2.5">
+    <slot />
+  </div>
+  <p id={`${nombre}-error`} data-error hidden class={`mt-2 ${ERROR}`}></p>
+</Raiz>
