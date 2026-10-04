@@ -80,12 +80,42 @@ export const SITE = {
   )}`,
 } as const;
 
-export const NAV: NavItem[] = [
+/** Una de las tres cosas que se encargan. */
+export interface Servicio {
+  /** Cómo se llama en el menú y en el botón que lleva a su página. */
+  nombre: string;
+  /** Su página propia. */
+  ruta: string;
+  /** El id de su sección en la portada, sin "#". */
+  ancla: string;
+}
 
-  { label: "Eventos", href: "/eventos" },
-  { label: "Catálogo", href: "/catalogo" },
+// Las tres formas de encargar, en el orden en que salen en la portada. De aquí
+// leen el menú, los enlaces del hero y los dos escaparates, así que renombrar
+// un servicio o moverle la página es cambiar una línea.
+//
+// "La carta" y no "Catálogo": es como se llama la página (/catalogo se queda
+// como URL para no romper enlaces ya compartidos).
+export const SERVICIOS = {
+  carta: { nombre: "La carta", ruta: "/catalogo", ancla: "carta" },
+  // TODO: la página todavía no existe. Hasta entonces el enlace da 404.
+  personalizadas: {
+    nombre: "Personalizadas",
+    ruta: "/tartas-personalizadas",
+    ancla: "personalizadas",
+  },
+  eventos: { nombre: "Eventos", ruta: "/eventos", ancla: "eventos" },
+} as const satisfies Record<string, Servicio>;
+
+// Los servicios van primero y en el orden de la portada: el menú se lee de
+// izquierda a derecha igual que la página de arriba abajo.
+export const NAV: NavItem[] = [
+  ...Object.values(SERVICIOS).map(({ nombre, ruta }) => ({
+    label: nombre,
+    href: ruta,
+  })),
   { label: "Sobre mí", href: "#sobre-mi" },
-  { label: "Contacto", href: "#contacto" }
+  { label: "Contacto", href: "#contacto" },
 ];
 
 // TODO: enlaces reales de redes.
@@ -129,24 +159,25 @@ export const CONTACTO = {
   mapa: SITE.mapa,
 } as const;
 
-// Hero. Una sola acción principal (WhatsApp) y un enlace secundario al
-// catálogo: dos botones con el mismo peso aquí arriba no dejan ganar a ninguno.
+// Hero. Sin botones: la clienta quiere que quien llega baje y vea la web
+// antes de pedir (ver la nota en Hero.astro). El pedido se hace desde la
+// ficha de cada tarta del catálogo (ver PEDIDO), con el WhatsApp ya
+// estructurado.
 //
 // El titular no es un eslogan inventado, es de Carmen: sale del último párrafo
 // de SOBRE_MI ("estética y sabor pesan lo mismo"). Y las credenciales son las
 // cuatro casas que ya cuenta ahí. No son adorno: son la prueba de que lo que
 // promete el titular se sostiene, y es lo único que un visitante que llega de
 // Instagram puede comprobar sin bajar.
+//
+// La entradilla nombra los tres SERVICIOS, uno por cada enlace que el hero
+// pinta debajo: quien llega tiene que saber sin bajar que hay carta, tartas a
+// medida y eventos.
 export const HERO = {
   antetitulo: "Alta pastelería · Málaga",
   titular: "La estética y el sabor pesan lo mismo",
   entradilla:
-    "Tartas, postres y mesas dulces por encargo. Cada pieza se hace una a una, para el día concreto que celebras.",
-  // A WhatsApp y no a #contacto: el botón dice "encargar", así que tiene que
-  // abrir la conversación, no llevar a una tarjeta con un horario. Ojo: el
-  // número sigue siendo el de relleno de WHATSAPP_VISIBLE.
-  accion: { label: "Encargar por WhatsApp", href: WHATSAPP_URL },
-  secundario: { label: "Ver el catálogo", href: "#catalogo" },
+    "Tartas de temporada, tartas a tu medida y mesas dulces para tus celebraciones. Cada pieza se hace una a una, para el día concreto que celebras.",
   // Va en el hero porque es la primera pregunta de quien encarga una tarta,
   // y porque un encargo sin plazo a la vista se lee como "para hoy".
   nota: "Todo por encargo · con dos días laborables de antelación",
@@ -154,7 +185,7 @@ export const HERO = {
   // Sin nombres ni pronombres, igual que el resto de los alt: describe lo que
   // se ve y nada más.
   fotoAlt:
-    "Rellenando con manga pastelera un bocado de bizcocho verde sostenido en la mano.",
+    "Pintando a pincel el glaseado rojo de una tarta rosa con borde de merengue, sobre una rejilla del obrador.",
 } as const;
 
 // Texto de Carmen, condensado. El original es bastante más largo y aquí no
@@ -294,11 +325,14 @@ export interface Eventos {
   ctaEtiqueta: string;
   ctaTitulo: string;
   ctaTexto: string;
+  /** El botón de la banda final: WhatsApp suelto, porque un evento no cabe en
+   * el mensaje estructurado de una tarta del catálogo. */
+  ctaAccion: { label: string; href: string };
   montajes: Montaje[];
 }
 
 export const EVENTOS: Eventos = {
-  etiqueta: "Eventos · Mesas dulces",
+  etiqueta: "Eventos",
   titulo: "Cada celebración, una mesa distinta",
   entradilla:
     "Mesas dulces, tartas y postres para el día que celebras. El montaje se piensa con la fecha, el sitio y los invitados delante, así que no sale dos veces igual.",
@@ -311,6 +345,7 @@ export const EVENTOS: Eventos = {
   ctaTitulo: "Cuéntame qué celebras",
   ctaTexto:
     "Escríbeme con la fecha, el sitio y cuántos sois. Con eso te digo qué se puede montar y en qué plazo.",
+  ctaAccion: { label: "Encargar por WhatsApp", href: WHATSAPP_URL },
   montajes: [
     {
       tipoEvento: "Cumpleaños",
@@ -359,68 +394,95 @@ export const EVENTOS: Eventos = {
 };
 
 /**
- * El díptico de la sección de eventos de la portada: dos montajes distintos,
- * cada uno con su propio remate. A diferencia de `ESCAPARATE` (una tarta, dos
- * veces) aquí son dos historias, así que no se derivan de `EVENTOS.montajes`:
- * cada panel lleva su texto propio y punto, igual que el escaparate del
- * catálogo no depende de cómo esté ordenada `CATALOGO.tartas`.
+ * Una foto de escaparate de la portada: qué archivo es, qué se ve y por dónde
+ * se recorta.
  */
-export interface EscaparateEventos {
-  primero: { archivo: string; alt: string; pie: string };
-  /** El panel con el enlace a /eventos. */
-  segundo: { archivo: string; alt: string; pie: string };
-  /** Texto del único enlace de la sección. */
+export interface FotoEscaparate {
+  /** Nombre del archivo en `src/assets/images/`. */
+  archivo: string;
+  /** Describe lo que se ve, sin nombres ni pronombres, como el resto del sitio. */
+  alt: string;
+  /**
+   * Punto que no se puede recortar, como `object-position` en CSS ("50% 62%").
+   * Mismo criterio que `Montaje.enfoque`: depende del encuadre de cada foto.
+   */
+  enfoque: string;
+}
+
+/**
+ * La foto de la sección de eventos de la portada: UN montaje y un único
+ * enlace, a /eventos. Solo eventos: las tartas tienen su propio escaparate
+ * (`ESCAPARATE`), y mezclarlas aquí era justo lo que confundía.
+ *
+ * No se deriva de `EVENTOS.montajes` por lo mismo que el escaparate del
+ * catálogo no depende de `CATALOGO.tartas`: aquí se elige la mejor foto, no
+ * la primera de la lista.
+ */
+export interface EscaparateEventos extends FotoEscaparate {
+  /** Pie en `dato` bajo la foto: qué montaje es. */
+  pie: string;
+  /** Texto del botón. El destino es siempre `SERVICIOS.eventos`. */
   cta: string;
 }
 
+// TODO: cuando haya una foto HORIZONTAL de una mesa, va aquí. Esta es vertical
+// (1200×1600) y la portada la recorta a 3:1 en escritorio, así que de ella
+// solo se ve una franja.
 export const ESCAPARATE_EVENTOS: EscaparateEventos = {
-  primero: {
-    archivo: "mesa_cumple_nati.jpeg",
-    alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
-    pie: "Mesa dulce sobre musgo y eucalipto",
-  },
-  segundo: {
-    archivo: "tarta_cumple_kika_2026.jpeg",
-    alt: "Tarta redonda de merengue y nata coronada con gajos de melocotón, sobre una bandeja dorada.",
-    pie: "Pavlova de melocotón · encargo de cumpleaños",
-  },
+  archivo: "mesa_cumple_nati.jpeg",
+  alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
+  enfoque: "50% 62%",
+  pie: "Mesa dulce sobre musgo y eucalipto · cumpleaños",
   cta: "Ver todos los eventos",
 };
 
 // --- Escaparate de portada --------------------------------------------------
 
 /**
- * El díptico de la sección de catálogo de la portada: UNA tarta, dos veces —
- * entera a un lado y de muy cerca al otro.
+ * Una mitad del díptico: una forma de encargar una tarta, con su foto.
  *
- * Las dos fotos salen de la misma toma a propósito: el plano entero dice qué
- * es y el detalle dice cómo está hecha. Si fueran dos tartas distintas el
- * recurso se cae, así que al sustituirlas hay que recortar el detalle DE la
- * foto entera, no buscar otra.
+ * El botón no tiene texto propio: lleva el nombre del servicio, para que diga
+ * lo mismo que el menú.
  */
-export interface Escaparate {
-  /** Plano entero. Archivo tal cual está en `src/assets/images/`. */
-  archivoEntera: string;
-  /** El mismo pastel recortado de cerca. Ver la nota de src/assets/README.md. */
-  archivoDetalle: string;
-  /** Describe lo que se ve, sin nombres ni pronombres, como el resto del sitio. */
-  altEntera: string;
-  altDetalle: string;
-  /** Texto del único enlace de la sección. */
-  cta: string;
+export interface EntradaEscaparate extends FotoEscaparate {
+  servicio: Servicio;
+  /** La línea sobre el botón: lo que distingue esta forma de encargar de la otra. */
+  leyenda: string;
 }
 
-// TODO: sustituir por la tarta que se quiera destacar. Es la primera cosa que
-// ve quien entra, así que conviene que sea la mejor foto que haya.
+/**
+ * El díptico de la sección de tartas de la portada: las dos formas de encargar
+ * una, una por mitad. Es una tupla de dos y no una lista porque el díptico
+ * solo funciona con dos: con una o con tres deja de ser un díptico.
+ */
+export interface Escaparate {
+  /** El h2 de la sección. No se pinta (va en `sr-only`), ver Catalogo.astro. */
+  titulo: string;
+  entradas: [EntradaEscaparate, EntradaEscaparate];
+}
+
+// TODO: la pavlova no está en la carta. Hace falta una foto CON fondo de una
+// tarta de la carta (de Limón y merengue solo hay el recorte sin fondo, que no
+// aguanta un object-cover).
 export const ESCAPARATE: Escaparate = {
-  archivoEntera: "tarta_cumple_kika_2026.jpeg",
-  archivoDetalle: "tarta_cumple_kika_2026_detalle.jpeg",
-  altEntera:
-    "Pavlova coronada de gajos de melocotón asado, vista desde arriba sobre una base dorada.",
-  altDetalle:
-    "Detalle de los gajos de melocotón asado brillantes sobre los picos de merengue.",
-  cta: "Ver la carta",
-} as const;
+  titulo: "Tartas por encargo",
+  entradas: [
+    {
+      servicio: SERVICIOS.carta,
+      archivo: "tarta_cumple_kika_2026.jpeg",
+      alt: "Pavlova coronada de gajos de melocotón asado, vista desde arriba sobre una base dorada.",
+      enfoque: "50% 46%",
+      leyenda: "Temporada · precio cerrado",
+    },
+    {
+      servicio: SERVICIOS.personalizadas,
+      archivo: "tarta-boda-nati.jpeg",
+      alt: "Tarta de boda de varios pisos cubierta de volantes blancos de azúcar.",
+      enfoque: "50% 55%",
+      leyenda: "A medida · bodas, cumpleaños",
+    },
+  ],
+};
 
 // --- Catálogo ---------------------------------------------------------------
 

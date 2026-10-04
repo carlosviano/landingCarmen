@@ -1,53 +1,40 @@
 ---
-// Sección "eventos" de la portada: escaparate de dos montajes distintos, cada
-// uno con su propio remate, y un único enlace a /eventos, que es donde está
-// la lista completa.
+// Sección "eventos" de la portada: solo montajes. Antetítulo, titular y
+// entradilla, y debajo UNA foto de mesa a todo el ancho con un único enlace, a
+// /eventos, que es donde está la lista completa. Qué foto sale se decide en
+// `ESCAPARATE_EVENTOS` (src/config/site.ts).
 //
-// El NAV "Eventos" va directo a /eventos, no a esta ancla —igual que
-// "Catálogo" va directo a /catalogo y no a #catalogo—: por eso el id=eventos
-// de esta sección no lo usa ningún enlace todavía. Se deja puesto igual que
-// el #catalogo de Catalogo.astro, para el día en que algo de la propia
-// portada (el Hero, por ejemplo) quiera bajar aquí en vez de navegar fuera.
+// Las tartas no van aquí: tienen su díptico justo encima (Catalogo.astro). El
+// escaparate anterior mezclaba las dos cosas —un botón de tartas
+// personalizadas sobre una mesa dulce y uno de eventos sobre una pavlova— y
+// quien llegaba no sabía qué era cada cosa.
 //
-// A diferencia de Catalogo.astro —la variante PURISTA, sin titular ni
-// entradilla visibles, porque ahí sólo hay UNA tarta que enseñar dos veces—
-// aquí SÍ hay titular y entradilla: son dos historias distintas y hace falta
-// el texto para situarlas antes de las fotos.
+// El id de la sección sale de `SERVICIOS.eventos.ancla`: es el destino del
+// enlace "Eventos" del hero. El del menú, en cambio, va directo a /eventos.
 //
-// A partir de lg la sección entera cabe en una pantalla: mismo criterio que
-// SobreMi.astro ("para que la sección quepa en una pantalla de portátil"),
-// aplicado con `lg:h-screen` en vez de una altura en rem porque aquí no hay
-// una sola foto que mande la altura, sino texto + dos fotos en paralelo.
-// `lg:flex lg:flex-col lg:justify-center` centra ese contenido dentro de la
-// pantalla: el respiro de arriba y abajo no es un padding fijo, es lo que
-// sobra de los 100vh una vez descontado el contenido, así que crece solo en
-// pantallas más altas en vez de dejar un hueco fijo en las bajas. El `py-10`
-// del contenido es el mínimo de ese respiro aunque el contenido llegue a
-// ocupar la pantalla entera. Las fotos pasan a `lg:aspect-[3/2]` (más bajas
-// que el `md:aspect-[5/4]` de tablet) para que el conjunto quepa con margen
-// en los ~800px útiles de un portátil de 13"; si algún día el texto crece
-// mucho, la sección se sale de la pantalla en vez de recortarse —mismo trato
-// que SobreMi, no hay overflow-hidden escondiendo el problema.
+// La foto va a todo el ancho y cambia de proporción con la pantalla: 4:5 en
+// móvil (como el resto de fotos sueltas de la web), 2:1 en tablet y 3:1 en
+// escritorio. El 3:1 es lo que hace que la sección entera quepa en los ~800px
+// útiles de un portátil de 13": unos 410px de foto más el texto. Si algún día
+// el texto crece mucho, la sección se sale de la pantalla en vez de
+// recortarse —mismo trato que SobreMi, no hay overflow-hidden escondiendo el
+// problema.
+//
+// Ojo: NO va centrada en vertical en una pantalla entera. El texto empieza
+// arriba, a un `lg:pt-12` fijo, para que lo que hay encima (el díptico) y esto
+// se lean seguidos y no con un hueco que crece con la pantalla.
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
-import { ESCAPARATE_EVENTOS, EVENTOS } from "@/config/site";
+import { ESCAPARATE_EVENTOS, EVENTOS, SERVICIOS } from "@/config/site";
 import { fotoDe } from "@/lib/fotos";
 
-// Los nombres se resuelven aquí y no en el componente: `fotoDe` revienta el
-// build si no existen (ver src/lib/fotos.ts), y los dos son obligatorios en
-// `EscaparateEventos`.
-const primero = fotoDe(ESCAPARATE_EVENTOS.primero.archivo)!;
-const segundo = fotoDe(ESCAPARATE_EVENTOS.segundo.archivo)!;
-
-const ANCHOS = [420, 640, 860, 1080];
-const SIZES = "(min-width: 768px) 50vw, 100vw";
+// `fotoDe` revienta el build si el nombre no existe (ver src/lib/fotos.ts), y
+// `archivo` es obligatorio, así que el `!` es seguro.
+const foto = fotoDe(ESCAPARATE_EVENTOS.archivo)!;
 ---
 
-<section
-  id="eventos"
-  class="scroll-mt-20 lg:flex lg:h-screen lg:flex-col lg:justify-center"
->
-  <div class="mx-auto w-full max-w-7xl px-6 py-16 md:py-20 lg:py-10">
+<section id={SERVICIOS.eventos.ancla} class="scroll-mt-20">
+  <div class="mx-auto w-full max-w-7xl px-6 py-16 md:py-20 lg:pt-12 lg:pb-10">
     <p class="antetitulo text-rust">
       {EVENTOS.etiqueta}
     </p>
@@ -62,55 +49,35 @@ const SIZES = "(min-width: 768px) 50vw, 100vw";
       {EVENTOS.entradilla}
     </p>
 
-    <div class="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:mt-8">
-      <div>
-        <div
-          class="relative aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-md shadow-black/5 ring-1 ring-taupe/40 md:aspect-[5/4] lg:aspect-[3/2]"
+    <div class="mt-12 lg:mt-8">
+      <a
+        href={SERVICIOS.eventos.ruta}
+        class="group relative block aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-md shadow-black/5 ring-1 ring-taupe/40 md:aspect-[2/1] lg:aspect-[3/1]"
+      >
+        <Image
+          src={foto}
+          alt={ESCAPARATE_EVENTOS.alt}
+          widths={[420, 640, 860, 1080, 1280]}
+          sizes="(min-width: 1280px) 1232px, calc(100vw - 3rem)"
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
+          style={`object-position:${ESCAPARATE_EVENTOS.enfoque}`}
+        />
+        <span
+          class="absolute bottom-6 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-rust px-6 py-3 accion text-xs whitespace-nowrap text-linen shadow-lg shadow-black/25 transition-colors group-hover:bg-black"
         >
-          <Image
-            src={primero}
-            alt={ESCAPARATE_EVENTOS.primero.alt}
-            widths={ANCHOS}
-            sizes={SIZES}
-            loading="lazy"
-            decoding="async"
-            class="h-full w-full object-cover object-[50%_62%]"
+          {ESCAPARATE_EVENTOS.cta}
+          <Icon
+            name="lucide:arrow-right"
+            class="size-3.5 shrink-0"
+            aria-hidden="true"
           />
-        </div>
-        <p class="mt-4 dato text-[11px] text-black/50">
-          {ESCAPARATE_EVENTOS.primero.pie}
-        </p>
-      </div>
-
-      <div>
-        <a
-          href="/eventos"
-          class="group relative block aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-md shadow-black/5 ring-1 ring-taupe/40 md:aspect-[5/4] lg:aspect-[3/2]"
-        >
-          <Image
-            src={segundo}
-            alt={ESCAPARATE_EVENTOS.segundo.alt}
-            widths={ANCHOS}
-            sizes={SIZES}
-            loading="lazy"
-            decoding="async"
-            class="h-full w-full object-cover object-[50%_55%] transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
-          />
-          <span
-            class="absolute bottom-6 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-rust px-6 py-3 accion text-xs whitespace-nowrap text-linen shadow-lg shadow-black/25 transition-colors group-hover:bg-black"
-          >
-            {ESCAPARATE_EVENTOS.cta}
-            <Icon
-              name="lucide:arrow-right"
-              class="size-3.5 shrink-0"
-              aria-hidden="true"
-            />
-          </span>
-        </a>
-        <p class="mt-4 dato text-[11px] text-black/50">
-          {ESCAPARATE_EVENTOS.segundo.pie}
-        </p>
-      </div>
+        </span>
+      </a>
+      <p class="mt-4 dato text-[11px] text-black/50">
+        {ESCAPARATE_EVENTOS.pie}
+      </p>
     </div>
   </div>
 </section>

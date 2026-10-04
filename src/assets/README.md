@@ -87,42 +87,37 @@ material de verdad.
 
 ---
 
-# El díptico de la portada
+# Los escaparates de la portada
 
-`tarta_cumple_kika_2026.jpeg` + `tarta_cumple_kika_2026_detalle.jpeg`
+Dos secciones de la portada enseñan fotos sueltas elegidas a mano, no sacadas
+de ninguna lista. Las dos se deciden en `src/config/site.ts` y las resuelve
+`fotoDe()`, así que una errata en el nombre revienta el build.
 
-La sección de catálogo de la portada es un díptico a sangre: **la misma tarta
-dos veces**, entera a la izquierda y de muy cerca a la derecha. Quién sale se
-decide en `ESCAPARATE`, dentro de `src/config/site.ts`; el componente es
-`src/sections/Catalogo.astro`.
+**El díptico de tartas** (`ESCAPARATE`, `src/sections/Catalogo.astro`). Dos
+mitades a sangre, una por forma de encargar: la carta
+(`tarta_cumple_kika_2026.jpeg`) y las personalizadas (`tarta-boda-nati.jpeg`).
+Cada mitad se recorta con `object-cover` a un hueco casi cuadrado en escritorio
+y apaisado en móvil, así que el motivo tiene que aguantar un recorte por arriba
+y por abajo. Si no cae en el centro, se corrige con `enfoque` (un
+`object-position`), no recortando el archivo.
 
-El recurso vive de que sean **la misma toma**. El plano entero dice qué es y el
-detalle dice cómo está hecha; con dos tartas distintas no funciona, se lee como
-dos fotos puestas juntas. Así que al sustituirlas:
+Al cambiarlas: el botón va centrado sobre la foto, con un velo oscuro detrás.
+Funciona mejor una foto con el motivo centrado y algo de fondo alrededor que
+un primer plano que llene el cuadro, porque el botón taparía justo lo que se
+quiere enseñar.
 
-1. Se elige la mejor foto de producto que haya. Es lo primero que ve quien
-   entra.
-2. **El detalle se recorta DE esa misma foto**, no se busca otra. El que hay
-   salió así, con `sips`:
+Pendiente: la pavlova no está en la carta. En cuanto haya una foto **con
+fondo** de una tarta de la carta, va en la mitad de la carta (de Limón y
+merengue solo hay el recorte sin fondo, que no aguanta un `object-cover`).
 
-   ```
-   sips tarta_cumple_kika_2026.jpeg -c 1000 800 --cropOffset 200 175 --out /tmp/_det.jpeg
-   sips /tmp/_det.jpeg -s format jpeg -s formatOptions 88 --out tarta_cumple_kika_2026_detalle.jpeg
-   ```
+**La mesa de eventos** (`ESCAPARATE_EVENTOS`, `src/sections/Eventos.astro`).
+Una foto a todo el ancho que en escritorio se recorta a 3:1. Ahora es
+`mesa_cumple_nati.jpeg`, que es vertical, así que de ella solo se ve una
+franja. Lo ideal es una foto **horizontal** de una mesa entera. Ojo: no puede
+ser la misma que la del Hero, que va justo encima.
 
-   `-c` es alto y ancho; `--cropOffset` es arriba e izquierda. Los cuatro
-   números salen de dónde está el motivo en la foto original y hay que
-   recalcularlos para cada una.
-3. Se recorta **generoso**: el detalle se sirve hasta 1200 px de ancho y Astro
-   no reescala hacia arriba. Con menos de 800 px de recorte se verá blando en
-   pantallas densas.
-
-Estas dos sí pasan por el `<Image>` de Astro (viven en `src/assets/`, no son
-URLs remotas), así que el build les saca sus webp y sus tamaños.
-
-El detalle se usa **dos veces**: aquí y en la banda de cierre de `/catalogo`.
-Es a propósito — repetir la foto es lo que hace que las dos pantallas se
-reconozcan como parte de lo mismo.
+Todas pasan por el `<Image>` de Astro (viven en `src/assets/`, no son URLs
+remotas), así que el build les saca sus webp y sus tamaños.
 
 ---
 
