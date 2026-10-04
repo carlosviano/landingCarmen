@@ -9,8 +9,16 @@
 //
 // Todas las fichas van en blanco, también la primera: la versión con fondo
 // rust y ondas se quitó a petición de la clienta.
+//
+// "Ver más" despliega bajo la tarjeta una cinta con más fotos del montaje
+// (`Montaje.galeria`), en vez de una página de detalle por evento. El botón
+// va en sand, como el CTA de la cabecera, mientras invita a abrir; abierta,
+// pasa a borde rust para que no compita con el "Quiero algo parecido" del
+// final de la cinta. Sin JS la cinta sale abierta y el botón no aparece.
 import { Image } from "astro:assets";
-import type { Montaje } from "@/config/site";
+import { Icon } from "astro-icon/components";
+import { EVENTOS, type Montaje } from "@/config/site";
+import { fotoDe } from "@/lib/fotos";
 
 interface Props {
   montaje: Montaje;
@@ -31,25 +39,91 @@ const {
 
 const ANCHOS = [420, 640, 900, 1080];
 const SIZES = "(min-width: 768px) 50vw, 100vw";
+
+const C = EVENTOS.cinta;
+
+// Todas las tarjetas miden lo mismo (ver el comentario del <article>), así
+// que el texto tiene un tope: con él cabe en la altura fija en cualquier
+// ancho. Pasarse para el build, como pasarse de piezas.
+const MAX_TITULO = 40;
+const MAX_DESCRIPCION = 280;
+for (const [campo, texto, max] of [
+  ["el título", montaje.titulo, MAX_TITULO],
+  ["la descripción", montaje.descripcion, MAX_DESCRIPCION],
+] as const) {
+  if (texto.length > max) {
+    throw new Error(
+      `"${montaje.titulo}": ${campo} tiene ${texto.length} caracteres; el máximo es ${max}.`,
+    );
+  }
+}
+
+// En escritorio la cinta es una fila fija de cuatro, sin carrusel: más de
+// cuatro no caben y se perderían sin avisar, así que se para el build.
+const MAX_PIEZAS = 4;
+if ((montaje.galeria?.length ?? 0) > MAX_PIEZAS) {
+  throw new Error(
+    `"${montaje.titulo}" tiene ${montaje.galeria!.length} piezas en la galería; el máximo es ${MAX_PIEZAS}.`,
+  );
+}
+
+// `fotoDe` revienta el build si el archivo no existe, y en una pieza `foto`
+// el nombre es obligatorio: el `!` es seguro.
+const piezas = (montaje.galeria ?? []).map((pieza) =>
+  pieza.tipo === "foto" ? { ...pieza, src: fotoDe(pieza.archivo)! } : pieza,
+);
+
+// Lo que suele traer cada montaje es la cinta: "4 fotos · 1 vídeo".
+const nFotos = piezas.filter((p) => p.tipo === "foto").length;
+const nVideos = piezas.length - nFotos;
+const resumen = [
+  nFotos && `${nFotos} ${nFotos === 1 ? "foto" : "fotos"}`,
+  nVideos && `${nVideos} ${nVideos === 1 ? "vídeo" : "vídeos"}`,
+]
+  .filter(Boolean)
+  .join(" · ");
+
+// El id enlaza el botón con su cinta (aria-controls). Sale del título, que es
+// único en la lista.
+const idCinta = `cinta-${montaje.titulo
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "")}`;
+
+// En móvil y tablet la cinta es un carrusel que se desliza con el dedo:
+// todas las piezas a la misma altura, las fotos en 3:4 y los vídeos en 9:16
+// (lo normal en un vídeo de móvil), cada una con su ancho. En escritorio es
+// una rejilla de cuatro columnas y todas van en 3:4 para cuadrar la fila.
+const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
 ---
 
 {
-  /* La foto va en `aspect-*`, no en `min-h-*`: como la propia foto va con
-    `h-full w-full` (no `absolute`), un min-height sólo pone un suelo y dentro
-    de un grid la fila termina creciendo hasta la relación de aspecto NATURAL
-    de la imagen (retrato, ~3/4) en vez de quedarse en el mínimo — así es como
-    una tarjeta llegaba a ocupar casi toda la pantalla. `aspect-*` sí fija un
-    alto real independiente del contenido, igual que en TarjetaTarta/Galeria. */
+  /* Desde md todas las tarjetas miden lo mismo, tenga el texto que tenga: la
+    fila de arriba (foto + texto) va a una altura fija, `md:grid-rows-[…]`.
+    Es la que pide el peor caso que dejan los topes de arriba (título de 40
+    caracteres y descripción de 280), medido en el ancho más apretado de
+    cada tramo: 532px a 768 y 481px a 1024, más un poco de holgura. Si se
+    cambian los topes o la tipografía, hay que volver a medir. Los
+    `line-clamp` del texto son sólo red: con los topes no deberían actuar.
+    El título cabe en 3 líneas en tablet y en 2 en escritorio; su `pb-1` es
+    para que el recorte del clamp no se coma los descendentes (g, p).
+
+    La foto va en `absolute inset-0` y llena siempre su mitad: así su tamaño
+    natural (retrato, ~3/4) no empuja la fila. En móvil las tarjetas van
+    apiladas y no se igualan: la foto va en 4:3 y el texto crece hacia abajo. */
 }
 <article
+  data-montaje
   class:list={[
-    "grid overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/10 ring-1 ring-taupe/60 md:grid-cols-2",
+    "grid overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/10 ring-1 ring-taupe/60 md:grid-cols-2 md:grid-rows-[34rem_auto] lg:grid-rows-[31rem_auto]",
     className,
   ]}
 >
   <div
     class:list={[
-      "relative aspect-[4/3] overflow-hidden bg-taupe/15 md:aspect-[6/5] lg:aspect-[3/2]",
+      "relative aspect-[4/3] overflow-hidden bg-taupe/15 md:aspect-auto",
       !fotoIzquierda && "md:order-2",
     ]}
   >
@@ -61,32 +135,189 @@ const SIZES = "(min-width: 768px) 50vw, 100vw";
       loading="lazy"
       decoding="async"
       style={montaje.enfoque ? `object-position:${montaje.enfoque}` : undefined}
-      class="h-full w-full object-cover object-center"
+      class="absolute inset-0 h-full w-full object-cover object-center"
     />
   </div>
 
   <div
     class:list={[
-      "relative flex flex-col justify-center p-8 sm:p-10 lg:p-14",
+      "relative flex flex-col justify-center p-8 sm:p-10 md:overflow-hidden lg:p-14",
       !fotoIzquierda && "md:order-1",
     ]}
   >
     <div class="relative">
       <p class="antetitulo text-rust">{montaje.tipoEvento}</p>
       <h3
-        class="mt-3 titulo text-3xl leading-[1.1] text-balance text-black lg:text-4xl"
+        class="mt-3 titulo text-3xl leading-[1.1] text-balance text-black md:line-clamp-3 md:pb-1 lg:line-clamp-2 lg:text-4xl"
       >
         {montaje.titulo}
       </h3>
-      <p class="mt-5 text-sm leading-relaxed text-black/70">
+      <p class="mt-5 text-sm leading-relaxed text-black/70 md:line-clamp-[13] lg:line-clamp-[9]">
         {montaje.descripcion}
       </p>
+      {
+        /* Mes y lugar a los lados en móvil, con el botón debajo a todo el
+          ancho. En escritorio, mes y lugar juntos a la izquierda y el botón
+          a la derecha, centrados en la misma línea. */
+      }
       <div
-        class="mt-8 flex items-baseline justify-between gap-6 border-t border-taupe/45 pt-6 dato text-[11px] text-black/50"
+        class:list={[
+          "mt-8 border-t border-taupe/45 pt-6",
+          piezas.length > 0 &&
+            "flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between",
+        ]}
       >
-        <span class="tabular-nums">{montaje.mes}</span>
-        <span>{montaje.lugar}</span>
+        <div
+          class:list={[
+            "flex items-baseline justify-between gap-6 dato text-[11px] text-black/50",
+            piezas.length > 0 && "lg:justify-start lg:gap-3",
+          ]}
+        >
+          <span class="tabular-nums">{montaje.mes}</span>
+          {piezas.length > 0 && (
+            <span class="hidden lg:inline" aria-hidden="true">·</span>
+          )}
+          <span>{montaje.lugar}</span>
+        </div>
+      {
+        piezas.length > 0 && (
+          <button
+            type="button"
+            data-ver-mas
+            aria-expanded="false"
+            aria-controls={idCinta}
+            class="group inline-flex min-h-12 cursor-pointer w-full shrink-0 items-center justify-center gap-3 rounded-full border border-sand bg-sand px-7 accion text-xs text-rust transition-colors hover:border-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] hover:bg-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] aria-expanded:border-rust aria-expanded:bg-transparent aria-expanded:hover:bg-rust aria-expanded:hover:text-linen sm:w-auto sm:self-start lg:self-auto noscript:hidden"
+          >
+            <span class="group-aria-expanded:hidden">{C.verMas}</span>
+            <span class="hidden group-aria-expanded:inline">{C.verMenos}</span>
+            <span class="rounded-full bg-rust px-2 py-0.5 text-[11px] tracking-normal text-linen tabular-nums group-aria-expanded:hidden">
+              {piezas.length}
+            </span>
+          </button>
+        )
+      }
       </div>
     </div>
   </div>
+
+  {
+    /* La cinta. Se abre animando la fila del grid de 0fr a 1fr (con el
+      contenido en overflow-hidden), que es lo que deja animar hasta "lo que
+      mida" sin medir nada en JS. Cerrada lleva `inert`, que la saca del
+      tabulador y de los lectores de pantalla; eso lo pone el script, así
+      que sin JS no hay `inert` y `noscript:` la deja abierta. */
+  }
+  {
+    piezas.length > 0 && (
+      <div
+        id={idCinta}
+        data-cinta
+        role="region"
+        aria-label={`${C.etiqueta}: ${montaje.titulo}`}
+        class="grid grid-rows-[0fr] motion-safe:transition-[grid-template-rows] motion-safe:duration-500 motion-safe:ease-out data-abierta:grid-rows-[1fr] md:order-3 md:col-span-2 noscript:grid-rows-[1fr]"
+      >
+        <div class="min-h-0 overflow-hidden">
+          <div class="border-t border-taupe/45 pt-8 pb-8 lg:pt-10 lg:pb-12">
+            <div class="px-8 sm:px-10 lg:px-14">
+              <p class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <span class="leyenda text-rust">{C.etiqueta}</span>
+                <span class="dato text-[11px] text-black/55">{resumen}</span>
+              </p>
+            </div>
+
+            <div
+              data-tira
+              tabindex="0"
+              aria-label={`Fotos de ${montaje.titulo}`}
+              class="mt-6 snap-x snap-mandatory scroll-px-8 overflow-x-auto overscroll-x-contain [scrollbar-width:none] motion-safe:scroll-smooth sm:scroll-px-10 lg:overflow-visible lg:snap-none [&::-webkit-scrollbar]:hidden"
+            >
+              <ul class="flex w-max gap-3 px-8 sm:gap-4 sm:px-10 lg:grid lg:w-auto lg:grid-cols-4 lg:gap-6 lg:px-14">
+                {piezas.map((pieza) => (
+                  <li class="shrink-0 snap-start lg:min-w-0">
+                    <figure>
+                      {pieza.tipo === "foto" ? (
+                        <div class:list={[ALTO_PIEZA, "aspect-[3/4] overflow-hidden rounded-2xl bg-taupe/15"]}>
+                          <Image
+                            src={pieza.src}
+                            alt={pieza.alt}
+                            widths={[300, 450, 600, 800]}
+                            sizes="(min-width: 1024px) 288px, 240px"
+                            loading="lazy"
+                            decoding="async"
+                            style={pieza.enfoque ? `object-position:${pieza.enfoque}` : undefined}
+                            class="h-full w-full object-cover object-center"
+                          />
+                        </div>
+                      ) : (
+                        <div
+                          role="img"
+                          aria-label={`${C.videoPendiente}${pieza.pie ? `: ${pieza.pie}` : ""}`}
+                          class:list={[ALTO_PIEZA, "grid aspect-[9/16] place-items-center content-center gap-3 rounded-2xl bg-taupe/25"]}
+                        >
+                          <span class="grid size-14 place-items-center rounded-full bg-white/70 text-taupe">
+                            <Icon name="lucide:play" class="ml-0.5 size-6" aria-hidden="true" />
+                          </span>
+                          <span class="leyenda text-black/55">{C.videoPendiente}</span>
+                        </div>
+                      )}
+                      {pieza.pie && (
+                        <figcaption class="mt-3 max-w-60 dato text-[11px] text-black/60 lg:max-w-none">
+                          {pieza.pie}
+                        </figcaption>
+                      )}
+                    </figure>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="mt-8 flex flex-col-reverse items-center gap-5 border-t border-taupe/30 px-8 pt-6 sm:flex-row sm:justify-between sm:px-10 lg:px-14">
+              <button
+                type="button"
+                data-cerrar
+                class="min-h-11 cursor-pointer border-b border-taupe/70 accion text-xs text-black transition-colors hover:border-black noscript:hidden"
+              >
+                {C.cerrar}
+              </button>
+              <a
+                href="#solicitud"
+                class="w-full rounded-full bg-rust px-7 py-4 text-center accion text-xs text-linen transition-colors hover:bg-rust-hondo sm:w-auto"
+              >
+                {C.cta}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 </article>
+
+<script>
+  for (const tarjeta of document.querySelectorAll<HTMLElement>(
+    "[data-montaje]",
+  )) {
+    const boton = tarjeta.querySelector<HTMLButtonElement>("[data-ver-mas]");
+    const cinta = tarjeta.querySelector<HTMLElement>("[data-cinta]");
+    if (!boton || !cinta) continue;
+
+    const poner = (abierta: boolean) => {
+      boton.setAttribute("aria-expanded", String(abierta));
+      cinta.toggleAttribute("data-abierta", abierta);
+      cinta.inert = !abierta;
+    };
+
+    poner(false);
+
+    boton.addEventListener("click", () =>
+      poner(boton.getAttribute("aria-expanded") !== "true"),
+    );
+
+    // "Cerrar" está al final de la cinta: al plegarla, el foco vuelve al
+    // botón de la tarjeta, que también la trae de vuelta a la vista.
+    cinta.querySelector("[data-cerrar]")?.addEventListener("click", () => {
+      poner(false);
+      boton.focus();
+    });
+  }
+</script>

@@ -309,7 +309,31 @@ export interface Montaje {
    * (centro) basta.
    */
   enfoque?: string;
+  /**
+   * Lo que sale en la cinta de "Ver más" bajo la tarjeta, en este orden. Sin
+   * galería (o vacía) la tarjeta no lleva el botón. Cuatro como máximo: en
+   * escritorio es una fila fija de cuatro y con más el build se para.
+   */
+  galeria?: PiezaMontaje[];
 }
+
+/**
+ * Una pieza de la cinta de un montaje. Los vídeos todavía no existen: una
+ * pieza `video` se pinta como hueco gris con el icono de play, para ver la
+ * cinta con su mezcla final. Cuando haya vídeos de verdad, aquí irá su archivo.
+ */
+export type PiezaMontaje =
+  | {
+      tipo: "foto";
+      /** Nombre del archivo en `src/assets/images/`. */
+      archivo: string;
+      alt: string;
+      /** Pie corto bajo la foto. */
+      pie?: string;
+      /** Como `Montaje.enfoque`: el punto de la foto que no se recorta. */
+      enfoque?: string;
+    }
+  | { tipo: "video"; pie?: string };
 
 export interface Eventos {
   // Portada: sección "eventos" de la home.
@@ -332,6 +356,18 @@ export interface Eventos {
   tituloMontajes: string;
   /** Enlace de cierre de la lista, hacia el perfil de Instagram. */
   masMontajes: string;
+  /** Los textos de la cinta "Ver más" bajo cada tarjeta (`Montaje.galeria`). */
+  cinta: {
+    verMas: string;
+    verMenos: string;
+    /** Leyenda sobre la cinta abierta. */
+    etiqueta: string;
+    /** Cierre de la cinta: baja al formulario, como el botón de la cabecera. */
+    cta: string;
+    cerrar: string;
+    /** Rótulo del hueco gris mientras no haya vídeos de verdad. */
+    videoPendiente: string;
+  };
   montajes: Montaje[];
 }
 
@@ -357,6 +393,14 @@ export const EVENTOS: Eventos = {
   etiquetaMontajes: "Montajes ya servidos",
   tituloMontajes: "Cada celebración, una mesa distinta",
   masMontajes: "Hay más proyectos en Instagram",
+  cinta: {
+    verMas: "Ver más",
+    verMenos: "Ver menos",
+    etiqueta: "Más del montaje",
+    cta: "Quiero algo parecido",
+    cerrar: "Cerrar",
+    videoPendiente: "Vídeo pendiente",
+  },
   montajes: [
     {
       tipoEvento: "Cumpleaños",
@@ -368,6 +412,31 @@ export const EVENTOS: Eventos = {
       mes: "[MES 2026]",
       lugar: "Málaga",
       enfoque: "50% 62%",
+      // TODO: confirmar con la clienta qué fotos son de este montaje: las del
+      // obrador están puestas para ver la cinta llena.
+      galeria: [
+        {
+          tipo: "foto",
+          archivo: "mesa_cumple_nati.jpeg",
+          alt: "Detalle de la mesa dulce: bocados entre musgo y ramas de eucalipto.",
+          pie: "La mesa, de punta a punta",
+          enfoque: "15% 30%",
+        },
+        {
+          tipo: "foto",
+          archivo: "trabajando.jpeg",
+          alt: "En blanco y negro, piezas pequeñas rematadas a mano sobre la encimera del obrador.",
+          pie: "La víspera, en el obrador",
+          enfoque: "50% 40%",
+        },
+        { tipo: "video", pie: "El montaje" },
+        {
+          tipo: "foto",
+          archivo: "trabajando2.jpeg",
+          alt: "Una mano sostiene un bocado verde mientras la otra lo remata con la manga pastelera.",
+          pie: "Bocado a bocado",
+        },
+      ],
     },
     {
       tipoEvento: "Cumpleaños",
@@ -379,6 +448,22 @@ export const EVENTOS: Eventos = {
       mes: "[MES 2026]",
       lugar: "Málaga",
       enfoque: "50% 55%",
+      galeria: [
+        {
+          tipo: "foto",
+          archivo: "tarta_cumple_kika_2026_detalle.jpeg",
+          alt: "Detalle de los gajos de melocotón colocados sobre la nata.",
+          pie: "Gajo a gajo",
+        },
+        { tipo: "video", pie: "Cerrando la corona" },
+        {
+          tipo: "foto",
+          archivo: "tarta_cumple_kika_2026.jpeg",
+          alt: "La pavlova terminada sobre su bandeja dorada.",
+          pie: "Lista para salir",
+          enfoque: "50% 90%",
+        },
+      ],
     },
   ],
 };
