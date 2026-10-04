@@ -9,8 +9,8 @@
 // personalizadas sobre una mesa dulce y uno de eventos sobre una pavlova— y
 // quien llegaba no sabía qué era cada cosa.
 //
-// El id de la sección sale de `SERVICIOS.eventos.ancla`: es el destino del
-// enlace "Eventos" del hero. El del menú, en cambio, va directo a /eventos.
+// El id de la sección sale de `SERVICIOS.eventos.ancla`, para quien enlace
+// a #eventos. El menú y el botón del hero, en cambio, van directos a /eventos.
 //
 // La foto va a todo el ancho y cambia de proporción con la pantalla: 4:5 en
 // móvil (como el resto de fotos sueltas de la web), 2:1 en tablet y 3:1 en
@@ -24,7 +24,6 @@
 // arriba, a un `lg:pt-12` fijo, para que lo que hay encima (el díptico) y esto
 // se lean seguidos y no con un hueco que crece con la pantalla.
 import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
 import { ESCAPARATE_EVENTOS, EVENTOS, SERVICIOS } from "@/config/site";
 import { fotoDe } from "@/lib/fotos";
 
@@ -65,14 +64,9 @@ const foto = fotoDe(ESCAPARATE_EVENTOS.archivo)!;
           style={`object-position:${ESCAPARATE_EVENTOS.enfoque}`}
         />
         <span
-          class="absolute bottom-6 left-1/2 inline-flex -translate-x-1/2 items-center gap-2 rounded-full bg-rust px-6 py-3 accion text-xs whitespace-nowrap text-linen shadow-lg shadow-black/25 transition-colors group-hover:bg-black"
+          class="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-rust px-6 py-3 text-center accion text-xs whitespace-nowrap text-linen shadow-lg shadow-black/25 transition-colors group-hover:bg-rust-hondo"
         >
           {ESCAPARATE_EVENTOS.cta}
-          <Icon
-            name="lucide:arrow-right"
-            class="size-3.5 shrink-0"
-            aria-hidden="true"
-          />
         </span>
       </a>
       <p class="mt-4 dato text-[11px] text-black/50">

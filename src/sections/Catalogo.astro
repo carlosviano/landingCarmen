@@ -15,11 +15,10 @@
 // las tartas ni deja comparar; para eso están /catalogo y la página de
 // personalizadas. Esto es una puerta a cada una.
 //
-// Cada mitad es el destino de un enlace del hero (#carta y #personalizadas,
-// sacados de `SERVICIOS`). Por eso el `scroll-mt-20` va en las mitades y no
+// Cada mitad tiene su ancla (#carta y #personalizadas, sacadas de
+// `SERVICIOS`), aunque los botones del hero ya van a las páginas. Por eso el `scroll-mt-20` va en las mitades y no
 // en la sección: la cabecera es sticky y sin él taparía la parte de arriba.
 import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
 import { ESCAPARATE } from "@/config/site";
 import { fotoDe } from "@/lib/fotos";
 
@@ -81,14 +80,9 @@ const VELO =
             <p class="leyenda text-linen">{leyenda}</p>
             <a
               href={servicio.ruta}
-              class="inline-flex items-center gap-3 rounded-full border-[1.5px] border-linen/90 bg-rust/70 px-8 py-4 accion text-xs text-linen backdrop-blur-[2px] transition-colors duration-300 hover:bg-rust sm:px-10"
+              class="rounded-full border-[1.5px] border-linen/90 bg-rust/70 px-8 py-4 text-center accion text-xs text-linen backdrop-blur-[2px] transition-colors duration-300 hover:bg-rust sm:px-10"
             >
               {servicio.nombre}
-              <Icon
-                name="lucide:arrow-right"
-                class="size-3.5"
-                aria-hidden="true"
-              />
             </a>
           </div>
         </div>

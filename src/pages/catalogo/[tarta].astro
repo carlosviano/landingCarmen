@@ -28,7 +28,6 @@ import Footer from "@/sections/Footer.astro";
 import TarjetaTarta from "@/components/catalogo/TarjetaTarta.astro";
 import Pedido from "@/components/catalogo/Pedido.astro";
 import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
 import { CATALOGO, type Tarta } from "@/config/site";
 import { fotoDe } from "@/lib/fotos";
 import { estaAnotada } from "@/lib/pedido";
@@ -103,9 +102,8 @@ const foto = anotada ? null : fotoDe(tarta.archivo);
         <div class="pt-8 bajo:pt-5">
           <a
             href="/catalogo"
-            class="inline-flex items-center gap-2 rounded-full border border-black/40 px-5 py-2.5 accion text-[11px] text-rust transition-colors duration-200 hover:border-rust hover:bg-rust hover:text-linen"
+            class="inline-block rounded-full border border-black/40 px-5 py-2.5 text-center accion text-[11px] text-rust transition-colors duration-200 hover:border-rust hover:bg-rust hover:text-linen"
           >
-            <Icon name="lucide:arrow-left" class="size-3.5" aria-hidden="true" />
             Volver a la carta
           </a>
         </div>
