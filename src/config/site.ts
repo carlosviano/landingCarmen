@@ -472,6 +472,10 @@ export const SOLICITUD_EVENTO = {
   // Fotos de inspiración. Cuatro como mucho y de hasta 8 MB cada una: una
   // foto de iPhone pesa 2–5 MB, y más de cuatro ya no inspiran, dispersan.
   fotos: { maximo: 4, megasMaximo: 8 },
+  // Justo encima del botón: que nadie lea "enviar" como "reservar", y menos
+  // quien escribe para un evento de un día para otro.
+  aviso:
+    "Esta solicitud es una consulta, no una reserva. Revisaremos tu petición y te confirmaremos la fecha y los detalles según nuestra disponibilidad, por lo que no podemos garantizar eventos con muy poca antelación.",
   boton: "Enviar solicitud",
   // Adónde se manda el formulario (POST multipart, con las fotos dentro).
   // TODO: conectar. Mientras sea null el formulario valida pero no envía, y
