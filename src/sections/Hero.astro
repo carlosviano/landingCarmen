@@ -26,20 +26,29 @@
 // la ventana. Por eso la costura cae a hueso sin ningún calc(): a 1024, a 1440
 // y a 1920.
 //
-// Altura: en lg el hero ocupa la pantalla entera menos la cabecera, para que no
-// asome la sección siguiente. Quien pone esa altura ya no es la foto, sino el
-// BLOQUE; la foto se estira contra él con inset-y-0:
+// Altura: en lg el hero —banda más franja de credenciales— llena la pantalla
+// justa, de la cabecera al borde de abajo. Antes dejaba asomar 8rem de la
+// sección siguiente para que se supiera que la página seguía; ahora eso lo
+// dicen los enlaces a los servicios, que bajan a esas secciones.
 //
-//   cabecera 4.25rem + bloque + franja 5rem = 100svh
+// Quien pone la altura es la SECCIÓN, con un solo sumando:
 //
-// de donde sale el lg:min-h-[calc(100svh_-_9.25rem)] del bloque. Los dos
-// sumandos son literales y hay que mantenerlos a mano: 4.25rem es la barra en
-// escritorio (py-4, o sea 2rem, más los 36px de los botones de redes, que son
-// la pieza más alta) y 5rem es el lg:h-20 de la franja de abajo. Si cambia
-// cualquiera de los dos, cambia el 9.25rem.
+//   cabecera 3.5625rem + sección = 100svh
 //
-// Es min-h y no h: si algún día el texto creciera más que la pantalla, el
-// bloque crece con él en vez de recortarlo, y la foto crece con él.
+// de donde sale su lg:min-h-[calc(100svh_-_3.5625rem)]. Dentro, la sección es
+// una columna flex: la franja mide lo suyo (lg:h-20) y la banda se queda con el
+// resto (lg:flex-1). Así la franja no entra en la cuenta y se puede cambiar
+// sin tocar el calc(). La foto se estira contra la banda con inset-y-0.
+//
+// El 3.5625rem es literal y hay que mantenerlo a mano: es el alto de la barra
+// de Header.astro, que lo marca la línea de la marca (py-4, o sea 2rem, más
+// una línea de text-xl leading-tight, 1.5625rem). Son 57px, medidos. Si la
+// barra cambia de alto, este número cambia con ella: si se queda corto, el
+// hero se pasa de la pantalla; si sobra, asoma una tira de la sección de
+// debajo.
+//
+// Es min-h y no h: si el texto crece más que la pantalla (pasa a 1280×720),
+// la sección crece con él en vez de recortarlo, y la foto crece con ella.
 //
 // Ojo con la tentación de darle a la foto lg:h-full en vez del absolute: contra
 // un min-h, una altura en porcentaje es indeterminada, el navegador la resuelve
@@ -56,10 +65,29 @@
 // lg. Apilado, eso da el orden que se quiere en un móvil: primero la promesa y
 // el botón, la foto después. Al revés, el titular quedaría bajo el pliegue.
 //
-// Ojo con la foto: trabajando2.jpeg está TAMBIÉN en el carrusel de GALERIA, así
-// que ahora mismo se ve dos veces en la misma página. En cuanto haya material
-// de verdad, esa foto debería salir de una de las dos (ver la nota de GALERIA
-// en config/site.ts, que ya arrastra el mismo problema con sobre-mi.jpg).
+// La foto es pintando-tarta-rosa-hero.png: obrador, pintando a pincel el
+// glaseado de una tarta. Es APAISADA (1536×1024), con la tarta abajo a la
+// izquierda y la cara arriba a la derecha, y object-cover recorta por los
+// lados, cerca de un tercio, porque el hueco es casi cuadrado (en móvil, y en
+// lg desde que el hero llena la pantalla).
+//
+// Va pegada a la derecha (object-right) en todos los tamaños, y lo que se
+// pierde es el lado izquierdo de la tarta, a propósito. En móvil es lo que
+// hace que entre el bordado "Estimada Carmela" de la chaquetilla, que está en
+// el último sexto de la foto: es la marca dentro de la imagen y pesa más que
+// la tarta entera. En lg, además, el degradado rust vela el 30% izquierdo de
+// la foto (ver su nota, abajo), así que pegada a la derecha lo que queda bajo
+// el velo es tarta, que parece salir del rojo, y la cara, el pincel y el
+// bordado quedan limpios.
+//
+// Ojo: la mesa dulce (mesa_cumple_nati.jpeg) no puede volver aquí. Es la única
+// foto de evento que hay y la sección de Eventos la necesita justo debajo. Al
+// cambiar esta foto, que no sea ninguna de las de ESCAPARATE ni
+// ESCAPARATE_EVENTOS.
+//
+// Los enlaces a los tres servicios (SERVICIOS) no son botones: son anclas a
+// sus secciones de la propia portada, así que no sacan a nadie de ella (ver
+// la nota junto a ellos).
 //
 // El patrón de ondas es el de SobreMi.astro con ids propios: los dos svg
 // conviven en la misma página y un id repetido hace que el segundo `use` apunte
@@ -67,15 +95,14 @@
 // y se apaga con el degradado, para que la imagen parezca salir de detrás del
 // patrón (el detalle, en la nota del svg).
 import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
-import fotoObrador from "@/assets/images/trabajando2.jpeg";
-import { HERO } from "@/config/site";
+import fotoHero from "@/assets/images/pintando-tarta-rosa-hero.png";
+import { HERO, SERVICIOS } from "@/config/site";
 ---
 
-<section class="relative">
-  <div
-    class="relative bg-rust lg:flex lg:min-h-[calc(100svh_-_9.25rem)] lg:items-center"
-  >
+<section
+  class="relative lg:flex lg:min-h-[calc(100svh_-_3.5625rem)] lg:flex-col"
+>
+  <div class="relative bg-rust lg:flex lg:flex-1 lg:items-center">
     {
       /* Las ondas pasan POR ENCIMA de la foto a partir de lg (lg:z-10) y se
         apagan con una máscara justo donde el degradado deja de velar la imagen.
@@ -151,61 +178,43 @@ import { HERO } from "@/config/site";
         </p>
 
         {
-          /* La píldora de "Cómo llegar" (Contacto) invertida y una talla más:
-            sobre rust el relleno tiene que ser claro, y px-8 py-4 en vez de
-            px-6 py-3 deja el alto por encima de 44px. El hover a negro es el
-            mismo de los demás botones del sitio.
+          /* Sin botones ni flecha de "baja", a propósito: el Hero no saca a
+            nadie de la portada. Quien llega tiene que bajar y ver el trabajo
+            antes de pedir; los CTA están al final de cada sección, y quien ya
+            viene decidido tiene los servicios en la barra.
 
-            El relleno se queda en SAND aunque el texto de la banda ya no: es
-            lo que hace que el botón destaque, porque pasa a ser lo único sand
-            de la sección y se separa por tono, no por claridad. Pasarlo a
-            linen sería lo peor de los dos mundos: linen sobre rust es el color
-            del texto, así que el botón se leería como un hueco recortado en la
-            banda y encima quedaría a 1,14 del titular. */
+            Lo que sí hay son los tres servicios, para que se entienda sin
+            hacer scroll qué se puede encargar. Son también lo que dice que la
+            página sigue, ahora que el hero llena la pantalla (ver la nota del
+            alto, arriba). Son anclas a sus secciones de la portada, no a sus
+            páginas: bajan, no sacan. Van con el enlace
+            subrayado de las bandas rust (el mismo de la banda final de
+            /eventos), que se lee como navegación y no compite con el titular
+            como lo haría una píldora. */
         }
-        <div
-          class="mt-8 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-6"
-        >
-          <a
-            href={HERO.accion.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex w-full items-center justify-center gap-2 rounded-full bg-sand px-8 py-4 accion text-xs text-rust shadow-lg shadow-black/25 transition-colors hover:bg-black hover:text-white sm:w-auto"
-          >
-            <Icon
-              name="simple-icons:whatsapp"
-              class="size-4 shrink-0"
-              aria-hidden="true"
-            />
-            {HERO.accion.label}
-          </a>
-
+        <ul class="mt-7 flex flex-wrap gap-x-7 gap-y-3">
           {
-            /* Subrayado fijo y no el animado de la barra: aquel aparece al
-              pasar por encima, y aquí el enlace tiene que verse como enlace
-              desde el primer momento, que es la única alternativa al botón. */
+            Object.values(SERVICIOS).map(({ nombre, ancla }) => (
+              <li>
+                <a
+                  href={`#${ancla}`}
+                  class="border-b border-linen/35 pb-1 accion text-xs text-linen/80 transition-colors hover:border-linen/60 hover:text-white"
+                >
+                  {nombre}
+                </a>
+              </li>
+            ))
           }
-          <a
-            href={HERO.secundario.href}
-            class="flex items-center gap-2 border-b border-linen/35 pb-1 accion text-xs text-linen/80 transition-colors hover:border-linen/60 hover:text-white"
-          >
-            {HERO.secundario.label}
-            <Icon
-              name="lucide:arrow-right"
-              class="size-4 shrink-0"
-              aria-hidden="true"
-            />
-          </a>
-        </div>
+        </ul>
 
-        <p class="mt-5 text-xs text-linen/60">{HERO.nota}</p>
+        <p class="mt-6 text-xs text-linen/60">{HERO.nota}</p>
       </div>
     </div>
 
     {
       /* Apilada, la foto manda su propio alto (26rem, y 32rem a partir de sm);
-        en lg se despega y se estira contra el bloque con inset-y-0, así que su
-        alto lo pone el calc() del bloque y no ella.
+        en lg se despega y se estira contra la banda con inset-y-0, así que su
+        alto lo pone el calc() de la sección y no ella.
 
         object-cover recorta por arriba y por abajo, y en lg el hueco es casi
         cuadrado, así que el motivo tiene que aguantar ese encuadre.
@@ -220,12 +229,12 @@ import { HERO } from "@/config/site";
       class="relative h-[26rem] overflow-hidden sm:h-[32rem] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-1/2"
     >
       <Image
-        src={fotoObrador}
+        src={fotoHero}
         alt={HERO.fotoAlt}
-        widths={[420, 640, 900, 1066]}
+        widths={[420, 640, 900, 1200]}
         sizes="(min-width: 1024px) 50vw, 100vw"
         loading="eager"
-        class="h-full w-full object-cover object-center"
+        class="h-full w-full object-cover object-right"
       />
 
       {
@@ -262,9 +271,9 @@ import { HERO } from "@/config/site";
 
   {
     /* La franja que cierra el hero. Va sobre el linen de la página (no lleva
-      fondo propio) y es lo que hace legible el corte de la banda. Su lg:h-20 es
-      uno de los dos sumandos del calc() del bloque de arriba: si cambia, hay
-      que cambiar el 9.25rem.
+      fondo propio) y es lo que hace legible el corte de la banda. Su lg:h-20
+      se puede cambiar sin más: la banda de arriba es flex-1 y se queda con lo
+      que la franja deje (ver la nota del alto, arriba).
 
       Los nombres van centrados en la pantalla y no alineados a la izquierda:
       alineados, los cuatro se apelotonaban en la primera mitad y dejaban vacía
@@ -298,3 +307,4 @@ import { HERO } from "@/config/site";
     </ul>
   </div>
 </section>
+
