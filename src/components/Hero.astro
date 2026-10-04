@@ -1,0 +1,104 @@
+---
+// El MARCO de todo hero de la web: la portada (sections/Hero.astro) y /eventos
+// lo usan, y cualquier página nueva que abra con un hero tiene que usarlo
+// también. Fija las proporciones y deja el diseño a cada página.
+//
+// Son dos piezas, una encima de otra:
+//
+//   1. La BANDA (slot por defecto): lo de arriba. En la portada, rust con el
+//      texto a la izquierda y la foto en la mitad derecha; en /eventos, la
+//      foto a sangre con el texto encima.
+//   2. La FRANJA (slot "franja"): la tira de abajo que cierra la banda. En la
+//      portada, las credenciales sobre linen; en /eventos, los tres pasos del
+//      encargo sobre rust con ondas.
+//
+// Qué pone el marco y no se toca desde fuera:
+//
+//   - el alto: en TODOS los tamaños, móvil incluido, banda + franja llenan la
+//     pantalla justa bajo la cabecera (ver abajo). La web es mobile first: en
+//     un iPhone se tienen que ver las dos piezas enteras y nada de la sección
+//     siguiente, igual que en escritorio.
+//   - el alto de la franja (lg:h-20; py-6 por debajo de lg, más el hueco de
+//     la barra de gestos del móvil, ver abajo).
+//   - la retícula del contenido de la franja (max-w-7xl, px-6, centrado).
+//
+// Qué pone cada página: el fondo y la colocación de cada pieza
+// (`claseBanda`, `claseFranja`) y lo que va dentro. Lo que el fondo de la
+// franja tenga que pintar a todo el ancho (unas ondas) va en el slot
+// "fondo-franja", FUERA de la retícula: dentro quedaría cortado a 80rem.
+//
+// La banda es `relative` y por eso lo posicionado de dentro (ondas, una foto
+// en absolute) se mide contra ella. Es una COLUMNA flex en todos los tamaños
+// (quien la quiera en fila en lg le pone lg:flex-row), para que su contenido
+// pueda repartirse el alto que le deja la franja: en la portada la foto
+// apilada se queda con lo que sobre (flex-1), en /eventos el texto se va
+// abajo (mt-auto). Su contenido no va en la retícula: la foto
+// de la portada sale de ella hasta el borde de la pantalla, así que cada
+// página pone su propio `max-w-7xl mx-auto px-6` al texto.
+//
+// Altura: quien la pone es la SECCIÓN, con un solo sumando:
+//
+//   cabecera + sección = 100svh
+//
+// de donde sale su min-h-[calc(100svh_-_<cabecera>)]. Dentro, la sección es
+// una columna flex: la franja mide lo suyo y la banda se queda con el resto
+// (flex-1). Así la franja no entra en la cuenta y se puede cambiar sin tocar
+// el calc().
+//
+// svh y no vh: en el móvil, vh es el alto con las barras del navegador
+// escondidas, así que con ellas a la vista (que es como se llega) el hero se
+// pasaba de la pantalla. svh es el alto con las barras puestas.
+//
+// Los altos de la cabecera son literales y hay que mantenerlos a mano: son los
+// de la barra de Header.astro, medidos. En móvil, 4.5rem (72px: py-4 más el
+// botón del menú, de 2.5rem); desde md, 3.5625rem (57px: py-4 más una línea de
+// text-xl leading-tight de la marca). Si la barra cambia de alto, estos
+// números cambian con ella: si se quedan cortos, el hero se pasa de la
+// pantalla; si sobran, asoma una tira de la sección de debajo.
+//
+// La franja es lo que toca el borde de abajo en la primera pantalla, y con
+// viewport-fit=cover (Layout.astro) la barra de gestos de Android se pinta
+// encima, transparente. Por eso su padding de abajo suma
+// env(safe-area-inset-bottom): el color de la franja llega hasta el borde,
+// por debajo de la barra, y el texto queda por encima de ella. Donde no hay
+// barra (escritorio, o un navegador que no la cubra) el env() vale 0 y la
+// franja queda en su py-6.
+//
+// Es min-h y no h: si el contenido crece más que la pantalla (pasa a
+// 1280×720), la sección crece con él en vez de recortarlo.
+//
+// Ojo con la tentación de dar alturas en porcentaje dentro de la banda
+// (h-full): contra un min-h, una altura en porcentaje es indeterminada y el
+// navegador la resuelve como "auto". Para estirar algo contra la banda, o
+// absolute + inset-y-0, o flex.
+//
+// Los guiones bajos del calc() tampoco son adorno: en un valor arbitrario de
+// Tailwind no caben espacios, y un calc() sin espacios alrededor del signo es
+// inválido, así que el navegador se come la declaración y la sección se queda
+// corta sin avisar de nada.
+interface Props {
+  /** Fondo y colocación de la banda (bg-rust, lg:flex-row...). */
+  claseBanda?: string;
+  /** Fondo de la franja (bg-rust...). Sin ella, el linen de la página. */
+  claseFranja?: string;
+}
+
+const { claseBanda, claseFranja } = Astro.props;
+---
+
+<section
+  class="relative flex min-h-[calc(100svh_-_4.5rem)] flex-col md:min-h-[calc(100svh_-_3.5625rem)]"
+>
+  <div class:list={["relative flex flex-1 flex-col", claseBanda]}>
+    <slot />
+  </div>
+
+  <div class:list={["relative overflow-hidden", claseFranja]}>
+    <slot name="fondo-franja" />
+    <div
+      class="relative mx-auto flex w-full max-w-7xl items-center justify-center px-6 pt-6 pb-[calc(1.5rem_+_env(safe-area-inset-bottom))] lg:h-20 lg:py-0"
+    >
+      <slot name="franja" />
+    </div>
+  </div>
+</section>

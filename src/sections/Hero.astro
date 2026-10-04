@@ -31,35 +31,18 @@
 // sección siguiente para que se supiera que la página seguía; ahora eso lo
 // dicen los enlaces a los servicios, que bajan a esas secciones.
 //
-// Quien pone la altura es la SECCIÓN, con un solo sumando:
-//
-//   cabecera 3.5625rem + sección = 100svh
-//
-// de donde sale su lg:min-h-[calc(100svh_-_3.5625rem)]. Dentro, la sección es
-// una columna flex: la franja mide lo suyo (lg:h-20) y la banda se queda con el
-// resto (lg:flex-1). Así la franja no entra en la cuenta y se puede cambiar
-// sin tocar el calc(). La foto se estira contra la banda con inset-y-0.
-//
-// El 3.5625rem es literal y hay que mantenerlo a mano: es el alto de la barra
-// de Header.astro, que lo marca la línea de la marca (py-4, o sea 2rem, más
-// una línea de text-xl leading-tight, 1.5625rem). Son 57px, medidos. Si la
-// barra cambia de alto, este número cambia con ella: si se queda corto, el
-// hero se pasa de la pantalla; si sobra, asoma una tira de la sección de
-// debajo.
-//
-// Es min-h y no h: si el texto crece más que la pantalla (pasa a 1280×720),
-// la sección crece con él en vez de recortarlo, y la foto crece con ella.
+// El alto, el de la franja y su retícula los pone el marco común
+// (components/Hero.astro), igual que en todos los heros de la web: aquí solo va
+// lo que es de la portada. En lg la banda es una fila flex con items-center,
+// así que el texto se centra en vertical y la foto se estira contra ella con
+// inset-y-0. Por debajo de lg es una columna: el texto mide lo suyo y la foto
+// se queda con el resto del alto (flex-1), sea cual sea el móvil.
 //
 // Ojo con la tentación de darle a la foto lg:h-full en vez del absolute: contra
 // un min-h, una altura en porcentaje es indeterminada, el navegador la resuelve
 // como "auto" y la imagen se va a su tamaño natural (925px con esta foto), que
 // revienta la pantalla y descoloca el texto. Por lo mismo, el centrado vertical
 // lo hace el bloque con flex + items-center y no un hijo con h-full.
-//
-// Los guiones bajos del calc() tampoco son adorno: en un valor arbitrario de
-// Tailwind no caben espacios, y un calc() sin espacios alrededor del signo es
-// inválido, así que el navegador se come la declaración y la sección se queda
-// corta sin avisar de nada.
 //
 // La foto va DESPUÉS del texto en el DOM y solo se hace absolute a partir de
 // lg. Apilado, eso da el orden que se quiere en un móvil: primero la promesa y
@@ -95,185 +78,189 @@
 // y se apaga con el degradado, para que la imagen parezca salir de detrás del
 // patrón (el detalle, en la nota del svg).
 import { Image } from "astro:assets";
+import Hero from "@/components/Hero.astro";
 import fotoHero from "@/assets/images/pintando-tarta-rosa-hero.png";
 import { HERO, SERVICIOS } from "@/config/site";
 ---
 
-<section
-  class="relative lg:flex lg:min-h-[calc(100svh_-_3.5625rem)] lg:flex-col"
->
-  <div class="relative bg-rust lg:flex lg:flex-1 lg:items-center">
-    {
-      /* Las ondas pasan POR ENCIMA de la foto a partir de lg (lg:z-10) y se
-        apagan con una máscara justo donde el degradado deja de velar la imagen.
-        Así el patrón cruza la costura y la foto parece meterse detrás de él;
-        debajo de la foto sin más, las rayas morían de golpe contra el canto y
-        el corte se leía peor que la línea dura que venía a arreglar.
+<Hero claseBanda="bg-rust lg:flex-row lg:items-center">
+  {
+    /* Las ondas pasan POR ENCIMA de la foto a partir de lg (lg:z-10) y se
+      apagan con una máscara justo donde el degradado deja de velar la imagen.
+      Así el patrón cruza la costura y la foto parece meterse detrás de él;
+      debajo de la foto sin más, las rayas morían de golpe contra el canto y
+      el corte se leía peor que la línea dura que venía a arreglar.
 
-        Las dos cifras de la máscara no son libres, salen de la geometría del
-        bloque: la foto empieza en el 50% (lg:w-1/2) y su degradado se acaba a
-        los 30% de SU ancho, o sea en el 65% del bloque. VAN EN PAREJA con el
-        to-30% del degradado: si se alarga uno sin el otro, o aparecen ondas
-        sobre la foto limpia (máscara más larga) o vuelve el corte seco (más
-        corta).
+      Las dos cifras de la máscara no son libres, salen de la geometría del
+      bloque: la foto empieza en el 50% (lg:w-1/2) y su degradado se acaba a
+      los 30% de SU ancho, o sea en el 65% del bloque. VAN EN PAREJA con el
+      to-30% del degradado: si se alarga uno sin el otro, o aparecen ondas
+      sobre la foto limpia (máscara más larga) o vuelve el corte seco (más
+      corta).
 
-        El z-10 es solo de lg, y por eso el texto lleva lg:z-20: sin él las
-        ondas pasarían también por encima del titular y lo velarían. Por debajo
-        de lg no hay z-index ninguno y manda el orden del DOM, que deja la foto
-        encima —que es lo que se quiere apilado, donde no hay costura que
-        disimular y el patrón sobre la imagen es solo suciedad.
+      El z-10 es solo de lg, y por eso el texto lleva lg:z-20: sin él las
+      ondas pasarían también por encima del titular y lo velarían. Por debajo
+      de lg no hay z-index ninguno y manda el orden del DOM, que deja la foto
+      encima —que es lo que se quiere apilado, donde no hay costura que
+      disimular y el patrón sobre la imagen es solo suciedad.
 
-        Los guiones bajos del mask-image son la sintaxis de valor arbitrario de
-        Tailwind: ahí no caben espacios y llegan al navegador como tales. */
-    }
-    <svg
-      class="pointer-events-none absolute inset-0 h-full w-full text-linen/12 lg:z-10 lg:[mask-image:linear-gradient(to_right,black_50%,transparent_65%)]"
-      aria-hidden="true"
-    >
-      <defs>
-        <path
-          id="onda-suave-hero"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"></path>
-        <path
-          id="onda-honda-hero"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1"
-          d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"
-        ></path>
-        <pattern
-          id="ondas-hero"
-          width="240"
-          height="132"
-          patternUnits="userSpaceOnUse"
-        >
-          <use href="#onda-suave-hero" transform="translate(0 18)"></use>
-          <use href="#onda-honda-hero" transform="translate(80 54)"></use>
-          <use href="#onda-suave-hero" transform="translate(170 90)"></use>
-          <use href="#onda-honda-hero" transform="translate(45 118)"></use>
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#ondas-hero)"></rect>
-    </svg>
+      Los guiones bajos del mask-image son la sintaxis de valor arbitrario de
+      Tailwind: ahí no caben espacios y llegan al navegador como tales. */
+  }
+  <svg
+    class="pointer-events-none absolute inset-0 h-full w-full text-linen/12 lg:z-10 lg:[mask-image:linear-gradient(to_right,black_50%,transparent_65%)]"
+    aria-hidden="true"
+  >
+    <defs>
+      <path
+        id="onda-suave-hero"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"></path>
+      <path
+        id="onda-honda-hero"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1"
+        d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"
+      ></path>
+      <pattern
+        id="ondas-hero"
+        width="240"
+        height="132"
+        patternUnits="userSpaceOnUse"
+      >
+        <use href="#onda-suave-hero" transform="translate(0 18)"></use>
+        <use href="#onda-honda-hero" transform="translate(80 54)"></use>
+        <use href="#onda-suave-hero" transform="translate(170 90)"></use>
+        <use href="#onda-honda-hero" transform="translate(45 118)"></use>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#ondas-hero)"></rect>
+  </svg>
 
-    <div class="relative mx-auto w-full max-w-7xl px-6 lg:z-20">
-      <div class="w-full py-14 md:py-16 lg:w-1/2 lg:py-0 lg:pr-12">
-        <p class="antetitulo text-linen">
-          {HERO.antetitulo}
-        </p>
+  <div class="relative mx-auto w-full max-w-7xl px-6 lg:z-20">
+    <div class="w-full py-14 md:py-16 lg:w-1/2 lg:py-0 lg:pr-12">
+      <p class="antetitulo text-linen">
+        {HERO.antetitulo}
+      </p>
 
-        <h1
-          class="mt-5 titular text-4xl leading-[1.05] text-balance text-linen sm:text-5xl lg:text-6xl xl:text-7xl"
-        >
-          {HERO.titular}
-        </h1>
+      <h1
+        class="mt-5 titular text-4xl leading-[1.05] text-balance text-linen sm:text-5xl lg:text-6xl xl:text-7xl"
+      >
+        {HERO.titular}
+      </h1>
 
-        <p
-          class="mt-6 max-w-[30rem] text-base leading-relaxed text-linen/80 sm:text-lg"
-        >
-          {HERO.entradilla}
-        </p>
-
-        {
-          /* Sin botones ni flecha de "baja", a propósito: el Hero no saca a
-            nadie de la portada. Quien llega tiene que bajar y ver el trabajo
-            antes de pedir; los CTA están al final de cada sección, y quien ya
-            viene decidido tiene los servicios en la barra.
-
-            Lo que sí hay son los tres servicios, para que se entienda sin
-            hacer scroll qué se puede encargar. Son también lo que dice que la
-            página sigue, ahora que el hero llena la pantalla (ver la nota del
-            alto, arriba). Son anclas a sus secciones de la portada, no a sus
-            páginas: bajan, no sacan. Van con el enlace
-            subrayado de las bandas rust (el mismo de la banda final de
-            /eventos), que se lee como navegación y no compite con el titular
-            como lo haría una píldora. */
-        }
-        <ul class="mt-7 flex flex-wrap gap-x-7 gap-y-3">
-          {
-            Object.values(SERVICIOS).map(({ nombre, ancla }) => (
-              <li>
-                <a
-                  href={`#${ancla}`}
-                  class="border-b border-linen/35 pb-1 accion text-xs text-linen/80 transition-colors hover:border-linen/60 hover:text-white"
-                >
-                  {nombre}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-
-        <p class="mt-6 text-xs text-linen/60">{HERO.nota}</p>
-      </div>
-    </div>
-
-    {
-      /* Apilada, la foto manda su propio alto (26rem, y 32rem a partir de sm);
-        en lg se despega y se estira contra la banda con inset-y-0, así que su
-        alto lo pone el calc() de la sección y no ella.
-
-        object-cover recorta por arriba y por abajo, y en lg el hueco es casi
-        cuadrado, así que el motivo tiene que aguantar ese encuadre.
-
-        El `relative` no es decorativo y no se puede quitar: el svg de las ondas
-        está posicionado y la foto, apilada, no lo estaría, así que las ondas se
-        pintarían POR ENCIMA de la imagen (ir después en el DOM no basta, eso
-        solo decide entre hermanos posicionados). En lg no se nota porque manda
-        el lg:absolute; el estropicio se ve solo por debajo de lg. */
-    }
-    <div
-      class="relative h-[26rem] overflow-hidden sm:h-[32rem] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-1/2"
-    >
-      <Image
-        src={fotoHero}
-        alt={HERO.fotoAlt}
-        widths={[420, 640, 900, 1200]}
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        loading="eager"
-        class="h-full w-full object-cover object-right"
-      />
+      <p
+        class="mt-6 max-w-[30rem] text-base leading-relaxed text-linen/80 sm:text-lg"
+      >
+        {HERO.entradilla}
+      </p>
 
       {
-        /* Degradado corto sobre el canto izquierdo de la foto. Sin él, la
-          imagen entra a hueso contra la banda: una línea vertical dura de
-          arriba abajo que la deja como un recorte pegado encima en vez de
-          como parte del hero. Va del rust del bloque a transparente en el 30%
-          del ancho, así que el canto lo pone el color de la banda y el motivo
-          se recupera antes del tercio.
+        /* Sin botones ni flecha de "baja", a propósito: el Hero no saca a
+          nadie de la portada. Quien llega tiene que bajar y ver el trabajo
+          antes de pedir; los CTA están al final de cada sección, y quien ya
+          viene decidido tiene los servicios en la barra.
 
-          El color es rust y no linen: lo que toca la foto por la izquierda es
-          la banda; el linen solo está por debajo, en la franja de
-          credenciales. Un degradado en linen aquí sería una veladura clara
-          sobre el rojo y se vería como suciedad.
-
-          Va DENTRO del contenedor de la foto, no encima del bloque: así se
-          estira con ella y no hay que repetir el lg:w-1/2 ni el inset-y-0.
-
-          Solo a partir de lg: apilado, el canto izquierdo de la foto es el
-          borde de la pantalla y no hay nada con lo que fundirse.
-
-          Para graduarlo, dos mandos: el to-30% mueve hasta dónde llega, y
-          cambiar from-rust por from-rust/70 hace que ni el borde llegue a
-          taparse del todo. Ojo con el primero: la máscara de las ondas está
-          cuadrada con él (ver la nota del svg, arriba). */
+          Lo que sí hay son los tres servicios, para que se entienda sin
+          hacer scroll qué se puede encargar. Son también lo que dice que la
+          página sigue, ahora que el hero llena la pantalla (ver la nota del
+          alto, arriba). Son anclas a sus secciones de la portada, no a sus
+          páginas: bajan, no sacan. Van con el enlace
+          subrayado de las bandas rust (el mismo de la banda final de
+          /eventos), que se lee como navegación y no compite con el titular
+          como lo haría una píldora. */
       }
-      <div
-        class="pointer-events-none absolute inset-0 hidden bg-linear-to-r from-rust to-transparent to-30% lg:block"
-        aria-hidden="true"
-      >
-      </div>
+      <ul class="mt-7 flex flex-wrap gap-x-7 gap-y-3">
+        {
+          Object.values(SERVICIOS).map(({ nombre, ancla }) => (
+            <li>
+              <a
+                href={`#${ancla}`}
+                class="border-b border-linen/35 pb-1 accion text-xs text-linen/80 transition-colors hover:border-linen/60 hover:text-white"
+              >
+                {nombre}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="mt-6 text-xs text-linen/60">{HERO.nota}</p>
+    </div>
+  </div>
+
+  {
+    /* Apilada, la foto se queda con el alto que dejan el texto y la franja
+      (flex-1), para que el hero llene la pantalla del móvil sin pasarse; el
+      min-h-48 es el suelo para que no se quede en una tira en un móvil bajo
+      (ahí la sección crece, porque es min-h). En lg se despega y se estira
+      contra la banda con inset-y-0. En los dos casos su alto lo pone el
+      calc() de la sección y no ella.
+
+      La imagen va en absolute contra este contenedor y no con h-full: el alto
+      del contenedor sale del flex contra un min-h, y un porcentaje contra eso
+      el navegador lo resuelve como "auto" (ver arriba): la foto se iría a su
+      tamaño natural.
+
+      object-cover recorta por arriba y por abajo, y en lg el hueco es casi
+      cuadrado, así que el motivo tiene que aguantar ese encuadre.
+
+      El `relative` no es decorativo y no se puede quitar: el svg de las ondas
+      está posicionado y la foto, apilada, no lo estaría, así que las ondas se
+      pintarían POR ENCIMA de la imagen (ir después en el DOM no basta, eso
+      solo decide entre hermanos posicionados). En lg no se nota porque manda
+      el lg:absolute; el estropicio se ve solo por debajo de lg. */
+  }
+  <div
+    class="relative min-h-48 flex-1 overflow-hidden lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2"
+  >
+    <Image
+      src={fotoHero}
+      alt={HERO.fotoAlt}
+      widths={[420, 640, 900, 1200]}
+      sizes="(min-width: 1024px) 50vw, 100vw"
+      loading="eager"
+      class="absolute inset-0 h-full w-full object-cover object-right"
+    />
+
+    {
+      /* Degradado corto sobre el canto izquierdo de la foto. Sin él, la
+        imagen entra a hueso contra la banda: una línea vertical dura de
+        arriba abajo que la deja como un recorte pegado encima en vez de
+        como parte del hero. Va del rust del bloque a transparente en el 30%
+        del ancho, así que el canto lo pone el color de la banda y el motivo
+        se recupera antes del tercio.
+
+        El color es rust y no linen: lo que toca la foto por la izquierda es
+        la banda; el linen solo está por debajo, en la franja de
+        credenciales. Un degradado en linen aquí sería una veladura clara
+        sobre el rojo y se vería como suciedad.
+
+        Va DENTRO del contenedor de la foto, no encima del bloque: así se
+        estira con ella y no hay que repetir el lg:w-1/2 ni el inset-y-0.
+
+        Solo a partir de lg: apilado, el canto izquierdo de la foto es el
+        borde de la pantalla y no hay nada con lo que fundirse.
+
+        Para graduarlo, dos mandos: el to-30% mueve hasta dónde llega, y
+        cambiar from-rust por from-rust/70 hace que ni el borde llegue a
+        taparse del todo. Ojo con el primero: la máscara de las ondas está
+        cuadrada con él (ver la nota del svg, arriba). */
+    }
+    <div
+      class="pointer-events-none absolute inset-0 hidden bg-linear-to-r from-rust to-transparent to-30% lg:block"
+      aria-hidden="true"
+    >
     </div>
   </div>
 
   {
     /* La franja que cierra el hero. Va sobre el linen de la página (no lleva
-      fondo propio) y es lo que hace legible el corte de la banda. Su lg:h-20
-      se puede cambiar sin más: la banda de arriba es flex-1 y se queda con lo
-      que la franja deje (ver la nota del alto, arriba).
+      fondo propio) y es lo que hace legible el corte de la banda. El alto
+      y la retícula los pone el marco.
 
       Los nombres van centrados en la pantalla y no alineados a la izquierda:
       alineados, los cuatro se apelotonaban en la primera mitad y dejaban vacía
@@ -287,24 +274,23 @@ import { HERO, SERVICIOS } from "@/config/site";
       ellos los nombres se quedaban pegados, así que el hueco sube a gap-x-6 y
       vuelve a 5 en lg, donde el punto ya mete aire por su cuenta. */
   }
-  <div class="relative">
-    <ul
-      class="mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6 py-6 lg:gap-x-5 dato text-[11px] text-black/50 lg:h-20 lg:py-0"
-    >
-      {
-        HERO.credenciales.map((casa, indice) => (
-          <li class="flex items-center gap-5">
-            {indice > 0 && (
-              <span
-                class="hidden size-1 shrink-0 rounded-full bg-taupe lg:block"
-                aria-hidden="true"
-              />
-            )}
-            {casa}
-          </li>
-        ))
-      }
-    </ul>
-  </div>
-</section>
+  <ul
+    slot="franja"
+    class="flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-2 dato text-[11px] text-black/50 lg:gap-x-5"
+  >
+    {
+      HERO.credenciales.map((casa, indice) => (
+        <li class="flex items-center gap-5">
+          {indice > 0 && (
+            <span
+              class="hidden size-1 shrink-0 rounded-full bg-taupe lg:block"
+              aria-hidden="true"
+            />
+          )}
+          {casa}
+        </li>
+      ))
+    }
+  </ul>
+</Hero>
 
