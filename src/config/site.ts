@@ -319,15 +319,18 @@ export interface Eventos {
   etiquetaPagina: string;
   tituloPagina: string;
   entradillaPagina: string;
+  /** Foto a sangre de la cabecera de /eventos. Nombre en `src/assets/images/`. */
+  fotoCabecera: string;
+  altCabecera: string;
+  /** El botón de la cabecera de /eventos: baja al formulario. */
+  ctaCabecera: string;
+  /** Los tres pasos de la franja rust bajo la cabecera de /eventos. */
+  pasos: { titulo: string; detalle: string }[];
+  /** Antetítulo y titular encima de las tarjetas de /eventos. */
+  etiquetaMontajes: string;
+  tituloMontajes: string;
   /** Enlace de cierre de la lista, hacia el perfil de Instagram. */
   masMontajes: string;
-  // Banda final de /eventos, antes del pie.
-  ctaEtiqueta: string;
-  ctaTitulo: string;
-  ctaTexto: string;
-  /** El botón de la banda final: WhatsApp suelto, porque un evento no cabe en
-   * el mensaje estructurado de una tarta del catálogo. */
-  ctaAccion: { label: string; href: string };
   montajes: Montaje[];
 }
 
@@ -339,13 +342,20 @@ export const EVENTOS: Eventos = {
   etiquetaPagina: "Eventos · Málaga",
   tituloPagina: "Para el día concreto que celebras",
   entradillaPagina:
-    "Mesas dulces, tartas y postres por encargo. Estos son algunos de los montajes ya servidos: qué se hizo, para qué celebración y cómo se resolvió.",
-  masMontajes: "Hay más montajes en Instagram",
-  ctaEtiqueta: "¿Tienes fecha?",
-  ctaTitulo: "Cuéntame qué celebras",
-  ctaTexto:
-    "Escríbeme con la fecha, el sitio y cuántos sois. Con eso te digo qué se puede montar y en qué plazo.",
-  ctaAccion: { label: "Encargar por WhatsApp", href: WHATSAPP_URL },
+    "Tartas de boda, mesas dulces y postres emplatados por encargo, montados en el sitio y a su hora.",
+  // TODO: confirmar que se puede publicar: se le ve la cara a la novia.
+  fotoCabecera: "tarta-boda-nati-con-nati.jpeg",
+  altCabecera:
+    "En blanco y negro, una novia se ríe inclinada junto a su tarta de boda, cubierta de pétalos blancos.",
+  ctaCabecera: "Pedir presupuesto",
+  pasos: [
+    { titulo: "Me cuentas", detalle: "Fecha, sitio, invitados y la idea." },
+    { titulo: "Te propongo", detalle: "Piezas, sabores y presupuesto." },
+    { titulo: "Lo monto", detalle: "El mismo día, en el sitio y a su hora." },
+  ],
+  etiquetaMontajes: "Montajes ya servidos",
+  tituloMontajes: "Cada celebración, una mesa distinta",
+  masMontajes: "Hay más proyectos en Instagram",
   montajes: [
     {
       tipoEvento: "Cumpleaños",
@@ -368,27 +378,6 @@ export const EVENTOS: Eventos = {
       mes: "[MES 2026]",
       lugar: "Málaga",
       enfoque: "50% 55%",
-    },
-    {
-      tipoEvento: "[TIPO DE EVENTO]",
-      titulo: "Pavlova de fresas de temporada",
-      descripcion:
-        "La misma base de merengue, esta vez con fresas partidas a mano y un bosque de nata alrededor. La corona no es solo decoración: sujeta la fruta por fuera y hace que la tarta llegue entera hasta la última ración.",
-      archivo: "tarta_cumple_kika_2026_detalle.jpeg",
-      alt: "Vista desde arriba de una tarta de merengue rizado cubierta de fresas partidas.",
-      mes: "[MES 2026]",
-      lugar: "Málaga",
-    },
-    {
-      tipoEvento: "[TIPO DE EVENTO]",
-      titulo: "Postre emplatado, pieza a pieza",
-      descripcion:
-        "Para una mesa sentada el postre se termina en el sitio y a su hora: bizcocho, crema y el crujiente encima justo antes de salir. Es el trabajo que se aprende en cocina de estrella y el que no se ve en la foto del final.",
-      archivo: "trabajando.jpeg",
-      alt: "En blanco y negro, colocando con pinzas la decoración sobre dos bocados de chocolate.",
-      mes: "[MES 2026]",
-      lugar: "Málaga",
-      enfoque: "50% 25%",
     },
   ],
 };
@@ -435,6 +424,69 @@ export const ESCAPARATE_EVENTOS: EscaparateEventos = {
   pie: "Mesa dulce sobre musgo y eucalipto · cumpleaños",
   cta: "Ver todos los eventos",
 };
+
+// --- Solicitud de evento ----------------------------------------------------
+
+// El formulario del final de /eventos. Sustituye al WhatsApp suelto de antes:
+// un evento necesita fecha, sitio e invitados para poder presupuestarse, y
+// por WhatsApp llegaban a trozos. WhatsApp se queda como vía secundaria, con
+// el mensaje ya empezado (ver `mensajeEvento` en src/lib/solicitud.ts).
+//
+// Las opciones de los desplegables y los chips se pintan tal cual, en este
+// orden: cambiar una es cambiarla aquí.
+export const SOLICITUD_EVENTO = {
+  etiqueta: "¿Tienes fecha?",
+  titulo: "Cuéntame qué celebras",
+  texto:
+    "Con estos datos te digo qué se puede montar, en qué plazo y con qué presupuesto. Cuanto más concretes, más afinada sale la propuesta.",
+  // TODO: plazo real de respuesta. Entre corchetes para que no se publique
+  // sin querer, mismo criterio que los precios.
+  pasos: [
+    {
+      titulo: "Me envías la solicitud.",
+      detalle: "Fecha, sitio, invitados y lo que tienes en la cabeza.",
+    },
+    {
+      titulo: "Te respondo en [PLAZO].",
+      detalle: "Con una propuesta y un presupuesto orientativo.",
+    },
+    {
+      titulo: "Cerramos el montaje.",
+      detalle: "Ajustamos sabores, piezas y la hora de montaje.",
+    },
+  ],
+  tipos: [
+    "Boda",
+    "Cumpleaños",
+    "Comunión o bautizo",
+    "Empresa",
+    "Otra celebración",
+  ] as const,
+  // Cinco tramos: cada uno cambia el tipo de montaje (una tarta, una mesa
+  // dulce, varias mesas), que es para lo que sirve el dato. El número exacto
+  // se cierra después, hablando.
+  // TODO: confirmar con Carmen el techo que puede asumir.
+  invitados: ["Menos de 25", "25 – 50", "50 – 100", "100 – 200", "Más de 200"] as const,
+  placeholderInteres:
+    "Cuéntame qué tienes en mente: qué te gustaría servir, el estilo de la celebración, colores, alergias… cualquier detalle que te importe.",
+  // Fotos de inspiración. Cuatro como mucho y de hasta 8 MB cada una: una
+  // foto de iPhone pesa 2–5 MB, y más de cuatro ya no inspiran, dispersan.
+  fotos: { maximo: 4, megasMaximo: 8 },
+  boton: "Enviar solicitud",
+  // Adónde se manda el formulario (POST multipart, con las fotos dentro).
+  // TODO: conectar. Mientras sea null el formulario valida pero no envía, y
+  // lo dice en pantalla: así nadie cree haber mandado algo que no ha llegado.
+  envio: null as string | null,
+  whatsapp: {
+    antes: "¿Prefieres hablar?",
+    enlace: "Escríbeme por WhatsApp",
+  },
+  nota: "Todo por encargo · con dos días laborables de antelación",
+};
+
+/** WhatsApp con un mensaje ya escrito. Lo usa el formulario de eventos. */
+export const whatsappCon = (texto: string) =>
+  `${WHATSAPP_URL}?text=${encodeURIComponent(texto)}`;
 
 // --- Escaparate de portada --------------------------------------------------
 

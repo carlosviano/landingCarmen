@@ -1,0 +1,426 @@
+---
+// El formulario de solicitud del final de /eventos.
+//
+// Dos columnas desde lg: a la izquierda la banda rust con las ondas (qué pasa
+// después de enviar), a la derecha el formulario en blanco. Apilado, la banda
+// va primero: es lo que explica para qué sirve todo lo de debajo.
+//
+// Los controles son los de la ficha de tarta (formulario/estilos.ts, el
+// mismo Calendario), para que los dos formularios de la web parezcan uno. Los
+// invitados van en un Desplegable con el panel del calendario, no en un
+// <select>, cuyo panel nativo no se puede vestir.
+//
+// Validación: `novalidate` y el esquema de zod de src/lib/solicitud.ts. Cada
+// error sale debajo de su campo, y se enseña en dos momentos: al salir de un
+// campo que ya tiene algo escrito (un email mal puesto se ve en el acto, sin
+// esperar a enviar) y, al enviar, todos. Desde que un campo enseña su error
+// se revalida con cada cambio, para que el aviso se vaya en cuanto se
+// arregla. Sin JS el formulario se ve entero pero no se envía: el envío lo
+// hace el script, y sólo cuando hay adónde (`SOLICITUD_EVENTO.envio`).
+import { Icon } from "astro-icon/components";
+import Ondas from "@/components/Ondas.astro";
+import Calendario from "@/components/formulario/Calendario.astro";
+import Campo from "@/components/formulario/Campo.astro";
+import Desplegable from "@/components/formulario/Desplegable.astro";
+import {
+  AREA,
+  BOTON,
+  CAMPO,
+  ERROR,
+  OPCION_OCULTA,
+  PASTILLA,
+} from "@/components/formulario/estilos";
+import FotosInspiracion from "./FotosInspiracion.astro";
+import { SOLICITUD_EVENTO, whatsappCon } from "@/config/site";
+import { mensajeEvento } from "@/lib/solicitud";
+
+const S = SOLICITUD_EVENTO;
+---
+
+<section
+  id="solicitud"
+  class="scroll-mt-20 bg-linen py-16 md:py-24"
+  aria-labelledby="solicitud-titulo"
+>
+  <div
+    class="mx-auto grid w-full max-w-7xl gap-8 px-6 lg:grid-cols-[5fr_7fr] lg:items-start lg:gap-14"
+  >
+    <div
+      class="relative overflow-hidden rounded-3xl bg-rust p-8 text-linen shadow-xl shadow-black/20 sm:p-10 lg:sticky lg:top-28 lg:p-12"
+    >
+      <Ondas id="solicitud" class="text-linen/12" />
+
+      <div class="relative">
+        <p class="antetitulo text-sand">{S.etiqueta}</p>
+        <h2
+          id="solicitud-titulo"
+          class="mt-4 titulo text-4xl leading-[1.08] text-balance sm:text-5xl"
+        >
+          {S.titulo}
+        </h2>
+        <p class="mt-5 text-base leading-relaxed text-linen/80">{S.texto}</p>
+
+        <ol class="mt-9 flex flex-col gap-6">
+          {
+            S.pasos.map((paso, i) => (
+              <li class="flex gap-5">
+                <span class="titulo text-3xl leading-none text-sand">{i + 1}</span>
+                <span>
+                  <b class="font-semibold text-linen">{paso.titulo}</b>
+                  <span class="mt-1 block text-sm text-linen/75">{paso.detalle}</span>
+                </span>
+              </li>
+            ))
+          }
+        </ol>
+
+        <p class="mt-10 text-xs text-linen/60">{S.nota}</p>
+      </div>
+    </div>
+
+    <form
+      data-solicitud
+      method="post"
+      enctype="multipart/form-data"
+      novalidate
+      class="grid gap-x-5 gap-y-6 rounded-3xl bg-white p-6 shadow-xl shadow-black/10 ring-1 ring-taupe/40 sm:grid-cols-2 sm:p-10 lg:p-12"
+    >
+      <Campo nombre="tipo" etiqueta="Tipo de evento" obligatorio grupo class="sm:col-span-2">
+        <div class="flex flex-wrap gap-2">
+          {
+            S.tipos.map((tipo) => (
+              <label class="relative cursor-pointer">
+                <input type="radio" name="tipo" value={tipo} class={OPCION_OCULTA} />
+                <span class={`${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`}>
+                  {tipo}
+                </span>
+              </label>
+            ))
+          }
+        </div>
+      </Campo>
+
+      {
+        /* `relative` aquí y no en la fila: el panel del calendario se abre
+          con el ancho de este campo (en móvil, la fila entera). */
+      }
+      <Campo nombre="fecha" etiqueta="Fecha" obligatorio class="relative">
+        <Calendario
+          id="solicitud-fecha"
+          nombre="fecha"
+          etiquetaId="fecha-etiqueta"
+          titulo="Elegir la fecha del evento"
+          clasePanel="inset-x-0 sm:right-auto sm:w-80"
+        />
+      </Campo>
+
+      <Campo nombre="invitados" etiqueta="Invitados" obligatorio>
+        <Desplegable
+          id="solicitud-invitados"
+          nombre="invitados"
+          etiquetaId="invitados-etiqueta"
+          opciones={S.invitados}
+          placeholder="Elige un rango"
+        />
+      </Campo>
+
+      <Campo nombre="lugar" etiqueta="Lugar" para="solicitud-lugar" class="sm:col-span-2">
+        <input
+          id="solicitud-lugar"
+          type="text"
+          name="lugar"
+          placeholder="Ciudad, restaurante, casa…"
+          class={CAMPO}
+        />
+      </Campo>
+
+      <Campo
+        nombre="interes"
+        etiqueta="Qué te interesa"
+        para="solicitud-interes"
+        obligatorio
+        class="sm:col-span-2"
+      >
+        <textarea
+          id="solicitud-interes"
+          name="interes"
+          rows="5"
+          placeholder={S.placeholderInteres}
+          class={AREA}></textarea>
+      </Campo>
+
+      <Campo nombre="fotos" etiqueta="Inspiración" class="sm:col-span-2">
+        <FotosInspiracion nombre="fotos" etiquetaId="fotos-etiqueta" />
+      </Campo>
+
+      <Campo
+        nombre="enlace"
+        etiqueta="Enlace de inspiración"
+        para="solicitud-enlace"
+        class="sm:col-span-2"
+      >
+        <input
+          id="solicitud-enlace"
+          type="url"
+          name="enlace"
+          inputmode="url"
+          placeholder="Un tablero de Pinterest, un post de Instagram…"
+          class={CAMPO}
+        />
+      </Campo>
+
+      <div class="border-t border-taupe/45 sm:col-span-2"></div>
+
+      <Campo nombre="nombre" etiqueta="Nombre" para="solicitud-nombre" obligatorio>
+        <input
+          id="solicitud-nombre"
+          type="text"
+          name="nombre"
+          autocomplete="name"
+          placeholder="Tu nombre"
+          class={CAMPO}
+        />
+      </Campo>
+
+      <Campo nombre="telefono" etiqueta="Teléfono" para="solicitud-telefono" obligatorio>
+        <input
+          id="solicitud-telefono"
+          type="tel"
+          name="telefono"
+          autocomplete="tel"
+          placeholder="+34 600 000 000"
+          class={CAMPO}
+        />
+      </Campo>
+
+      <Campo
+        nombre="email"
+        etiqueta="Email"
+        para="solicitud-email"
+        obligatorio
+        class="sm:col-span-2"
+      >
+        <input
+          id="solicitud-email"
+          type="email"
+          name="email"
+          autocomplete="email"
+          placeholder="tu@correo.com"
+          class={CAMPO}
+        />
+      </Campo>
+
+      {
+        /* La "primera capa" que pide el RGPD: quién, para qué, con qué base
+          y dónde ejercer los derechos, justo donde se dan los datos. El resto
+          va en /privacidad. La casilla sale sin marcar: el consentimiento
+          tiene que ser un gesto de quien escribe. Lleva los `data-` de Campo
+          a mano porque su texto va al lado y no encima. */
+      }
+      <div data-campo="privacidad" class="flex flex-col gap-3 sm:col-span-2">
+        <label class="flex items-start gap-3 text-sm leading-relaxed text-black/75">
+          <input
+            type="checkbox"
+            name="privacidad"
+            class="mt-1 size-4.5 shrink-0 accent-rust"
+          />
+          <span>
+            He leído la <a
+              href="/privacidad"
+              class="text-rust underline underline-offset-2 hover:text-black"
+              >política de privacidad</a
+            > y acepto que se usen estos datos para responder a mi solicitud.
+          </span>
+        </label>
+        <p id="privacidad-error" data-error hidden class={ERROR}></p>
+        <p class="text-xs leading-relaxed text-black/60">
+          Responsable: [NOMBRE O RAZÓN SOCIAL]. Finalidad: responder a tu
+          solicitud y prepararte un presupuesto. Base: tu consentimiento. No se
+          ceden a terceros salvo obligación legal. Puedes acceder, rectificar o
+          suprimir tus datos escribiendo a [EMAIL DE CONTACTO].
+        </p>
+      </div>
+
+      <p
+        data-estado
+        role="status"
+        class="text-sm font-medium text-rust empty:hidden sm:col-span-2"
+      >
+      </p>
+
+      <div
+        class="flex flex-col items-start gap-6 border-t border-taupe/45 pt-6 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <button type="submit" class={BOTON}>
+          {S.boton}
+          <Icon name="lucide:arrow-right" class="size-4 shrink-0" aria-hidden="true" />
+        </button>
+
+        {
+          /* La vía secundaria, con el mismo enlace subrayado que "Hay más
+            montajes en Instagram": no compite con el botón. La pregunta va
+            en su propia línea en móvil y al lado en escritorio. */
+        }
+        <div class="flex flex-col gap-2 sm:items-end">
+          <span class="text-sm text-black/60">{S.whatsapp.antes}</span>
+          <a
+            data-whatsapp
+            href={whatsappCon(mensajeEvento())}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 self-start border-b border-taupe/40 pb-1 accion text-xs whitespace-nowrap text-black transition-colors hover:border-black sm:self-auto"
+          >
+            <Icon name="simple-icons:whatsapp" class="size-4 shrink-0" aria-hidden="true" />
+            {S.whatsapp.enlace}
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { SOLICITUD_EVENTO, whatsappCon } from "@/config/site";
+  import { montarCalendario } from "@/lib/calendario";
+  import { montarDesplegable } from "@/lib/desplegable";
+  import {
+    mensajeEvento,
+    primeraFechaEvento,
+    validarSolicitud,
+    type ErroresSolicitud,
+  } from "@/lib/solicitud";
+
+  const MENSAJES = {
+    sinConectar:
+      "El envío del formulario todavía no está conectado. Mientras tanto, escríbeme por WhatsApp.",
+    enviando: "Enviando…",
+    enviado: "Recibido. Te escribo en cuanto lo lea para contarte qué se puede montar.",
+    fallo: "No se ha podido enviar. Vuelve a probar en un momento o escríbeme por WhatsApp.",
+  };
+
+  // Lo que se marca como inválido de cada campo: el control que se ve. No el
+  // <input> oculto del calendario o del desplegable (se marca su botón), ni el
+  // de las fotos (su zona ya es la etiqueta).
+  const CONTROLES =
+    "input:not([type=hidden]):not([type=file]), textarea, [data-calendario-boton], [data-desplegable-boton]";
+
+  /** Escribe el error de cada campo bajo él y marca sus controles. */
+  function pintarErrores(form: HTMLFormElement, errores: ErroresSolicitud) {
+    for (const campo of form.querySelectorAll<HTMLElement>("[data-campo]")) {
+      const mensaje = errores[campo.dataset.campo as keyof ErroresSolicitud];
+      const hueco = campo.querySelector<HTMLElement>("[data-error]")!;
+      hueco.textContent = mensaje ?? "";
+      hueco.hidden = !mensaje;
+
+      for (const control of campo.querySelectorAll<HTMLElement>(CONTROLES)) {
+        if (mensaje) {
+          control.setAttribute("aria-invalid", "true");
+          control.setAttribute("aria-errormessage", hueco.id);
+        } else {
+          control.removeAttribute("aria-invalid");
+          control.removeAttribute("aria-errormessage");
+        }
+      }
+    }
+  }
+
+  /** Sólo los errores de `campos`. */
+  function soloDe(errores: ErroresSolicitud, campos: ReadonlySet<string>): ErroresSolicitud {
+    return Object.fromEntries(
+      Object.entries(errores).filter(([campo]) => campos.has(campo)),
+    );
+  }
+
+  /** Lleva el foco al primer campo que falla, que es también lo que lo enseña. */
+  function enfocarPrimerError(form: HTMLFormElement) {
+    form.querySelector<HTMLElement>("[aria-invalid]")?.focus();
+  }
+
+  function montarSolicitud(form: HTMLFormElement) {
+    const estado = form.querySelector<HTMLElement>("[data-estado]")!;
+    const boton = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
+    const whatsapp = form.querySelector<HTMLAnchorElement>("[data-whatsapp]")!;
+
+    montarCalendario(form, { primera: primeraFechaEvento });
+    form.querySelectorAll<HTMLElement>("[data-desplegable]").forEach(montarDesplegable);
+
+    // Qué errores se enseñan. Hasta el primer intento de envío, sólo los de
+    // los campos `tocados`: los que se han dejado con algo escrito. Nadie
+    // quiere ver "obligatorio" en un campo al que todavía no ha llegado.
+    let intentado = false;
+    const tocados = new Set<string>();
+
+    const revisar = () => {
+      const resultado = validarSolicitud(new FormData(form));
+      const errores = resultado.ok ? {} : resultado.errores;
+      pintarErrores(form, intentado ? errores : soloDe(errores, tocados));
+      return resultado;
+    };
+
+    const texto = (nombre: string) => {
+      const valor = new FormData(form).get(nombre);
+      return typeof valor === "string" ? valor : undefined;
+    };
+
+    const alCambiar = () => {
+      whatsapp.href = whatsappCon(
+        mensajeEvento({
+          tipo: texto("tipo"),
+          fecha: texto("fecha"),
+          invitados: texto("invitados"),
+          lugar: texto("lugar"),
+        }),
+      );
+      revisar();
+    };
+    form.addEventListener("input", alCambiar);
+    form.addEventListener("change", alCambiar);
+
+    // Al salir de un campo de texto con algo escrito, su error se ve ya.
+    form.addEventListener("focusout", (evento) => {
+      const control = evento.target;
+      if (!(control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement)) return;
+      const campo = control.closest<HTMLElement>("[data-campo]")?.dataset.campo;
+      if (!campo || !control.value.trim()) return;
+      tocados.add(campo);
+      revisar();
+    });
+
+    const enviar = async (datos: FormData, destino: string) => {
+      boton.disabled = true;
+      estado.textContent = MENSAJES.enviando;
+      try {
+        const respuesta = await fetch(destino, { method: "POST", body: datos });
+        if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+        form.reset();
+        intentado = false;
+        tocados.clear();
+        estado.textContent = MENSAJES.enviado;
+      } catch {
+        estado.textContent = MENSAJES.fallo;
+      } finally {
+        boton.disabled = false;
+      }
+    };
+
+    form.addEventListener("submit", (evento) => {
+      evento.preventDefault();
+      intentado = true;
+
+      const resultado = revisar();
+      if (!resultado.ok) {
+        estado.textContent = "";
+        enfocarPrimerError(form);
+        return;
+      }
+
+      if (!SOLICITUD_EVENTO.envio) {
+        estado.textContent = MENSAJES.sinConectar;
+        return;
+      }
+      void enviar(new FormData(form), SOLICITUD_EVENTO.envio);
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>("[data-solicitud]").forEach(montarSolicitud);
+</script>

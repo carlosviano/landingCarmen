@@ -7,11 +7,9 @@
 // zigzag que mantener: la foto va siempre primero y `fotoIzquierda` no toca
 // nada por debajo de md (ver el `md:order-*` de abajo).
 //
-// La primera tarjeta de la lista va `destacado`: fondo rust con las ondas del
-// resto del sitio, para que la lista no sean cuatro fichas blancas seguidas
-// (mismo recurso que Hero y SobreMi, aquí a tamaño de tarjeta).
+// Todas las fichas van en blanco, también la primera: la versión con fondo
+// rust y ondas se quitó a petición de la clienta.
 import { Image } from "astro:assets";
-import Ondas from "@/components/Ondas.astro";
 import type { Montaje } from "@/config/site";
 
 interface Props {
@@ -20,23 +18,14 @@ interface Props {
    * tiene foto (ver la nota de `Montaje.archivo`), así que no hace falta el
    * marco de "foto pendiente". */
   foto: ImageMetadata;
-  destacado?: boolean;
   fotoIzquierda?: boolean;
-  /**
-   * Único en la página: se lo pasa `Ondas` a sus ids internos. Sólo importa
-   * cuando `destacado`, pero se acepta siempre para no condicionar el prop a
-   * otro prop.
-   */
-  id?: string;
   class?: string;
 }
 
 const {
   montaje,
   foto,
-  destacado = false,
   fotoIzquierda = true,
-  id = "evento",
   class: className,
 } = Astro.props;
 
@@ -54,10 +43,7 @@ const SIZES = "(min-width: 768px) 50vw, 100vw";
 }
 <article
   class:list={[
-    "grid overflow-hidden rounded-3xl md:grid-cols-2",
-    destacado
-      ? "bg-rust shadow-xl shadow-black/20"
-      : "bg-white shadow-lg shadow-black/10 ring-1 ring-taupe/60",
+    "grid overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/10 ring-1 ring-taupe/60 md:grid-cols-2",
     className,
   ]}
 >
@@ -85,40 +71,18 @@ const SIZES = "(min-width: 768px) 50vw, 100vw";
       !fotoIzquierda && "md:order-1",
     ]}
   >
-    {destacado && <Ondas id={id} class="text-linen/12" />}
-
     <div class="relative">
-      <p
-        class:list={[
-          "antetitulo",
-          destacado ? "text-sand" : "text-rust",
-        ]}
-      >
-        {montaje.tipoEvento}
-      </p>
+      <p class="antetitulo text-rust">{montaje.tipoEvento}</p>
       <h3
-        class:list={[
-          "mt-3 titulo text-3xl leading-[1.1] text-balance lg:text-4xl",
-          destacado ? "text-linen" : "text-black",
-        ]}
+        class="mt-3 titulo text-3xl leading-[1.1] text-balance text-black lg:text-4xl"
       >
         {montaje.titulo}
       </h3>
-      <p
-        class:list={[
-          "mt-5 text-sm leading-relaxed",
-          destacado ? "text-linen/80" : "text-black/70",
-        ]}
-      >
+      <p class="mt-5 text-sm leading-relaxed text-black/70">
         {montaje.descripcion}
       </p>
       <div
-        class:list={[
-          "mt-8 flex items-baseline justify-between gap-6 border-t pt-6 dato text-[11px]",
-          destacado
-            ? "border-linen/15 text-linen/60"
-            : "border-taupe/45 text-black/50",
-        ]}
+        class="mt-8 flex items-baseline justify-between gap-6 border-t border-taupe/45 pt-6 dato text-[11px] text-black/50"
       >
         <span class="tabular-nums">{montaje.mes}</span>
         <span>{montaje.lugar}</span>
