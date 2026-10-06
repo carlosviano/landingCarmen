@@ -1,0 +1,264 @@
+---
+// La ficha de un diseño: un panel que entra por la derecha al pulsar su
+// tarjeta en /personalizadas, con el nombre, un carrusel de fotos para verlo
+// de cerca, lo que cuenta el diseño y "La quiero", que lleva al formulario con
+// él marcado (ver src/lib/elegirDiseno.ts).
+//
+// Es un <dialog> nativo, como la bienvenida: showModal() ya trae el foco
+// atrapado, el Escape y el resto de la página inerte. Uno por diseño, con su
+// contenido hecho en el build; la tarjeta lo encuentra por el slug
+// (`data-diseno`), desde el script de la página.
+// Sin JS no se abre nunca y la tarjeta sigue siendo el enlace al formulario.
+//
+// El carrusel es una fila con scroll-snap: se pasa con el dedo en móvil y con
+// los puntos de debajo en cualquier sitio. Con más de una foto, cada una
+// ocupa el 84% y la siguiente asoma por la derecha hasta el borde del panel:
+// es lo que dice que hay más, porque los puntos solos no se entendían. Pulsar
+// la que asoma también la trae. Las fotos van en lazy y no cargan
+// hasta que se abre la ficha (un <dialog> cerrado no se pinta).
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import { ESPECIALES, type DisenoEspecial } from "@/config/site";
+import { fotoDe } from "@/lib/fotos";
+
+interface Props {
+  diseno: DisenoEspecial;
+}
+
+const { diseno } = Astro.props;
+const F = ESPECIALES.ficha;
+
+// La de la tarjeta primero: es la que se acaba de pulsar.
+const fotos = [
+  ...(diseno.archivo ? [{ archivo: diseno.archivo, alt: diseno.alt, enfoque: diseno.enfoque }] : []),
+  ...diseno.galeria,
+].map((foto) => ({ ...foto, src: fotoDe(foto.archivo)! }));
+
+const id = `ficha-${diseno.slug}`;
+const varias = fotos.length > 1;
+---
+
+<dialog
+  id={id}
+  data-ficha
+  data-diseno={diseno.slug}
+  aria-labelledby={`${id}-titulo`}
+  class="ficha m-0 ml-auto h-dvh max-h-none w-full max-w-none bg-linen p-0 text-black shadow-2xl shadow-black/35 backdrop:bg-[rgb(28_16_10/0.45)] sm:max-w-md lg:max-w-lg"
+>
+  <div class="flex min-h-full flex-col px-6 pt-5 pb-7 sm:px-8 sm:pt-6 sm:pb-8">
+    <button
+      type="button"
+      data-cerrar
+      aria-label={F.cerrar}
+      class="flex size-11 shrink-0 cursor-pointer items-center justify-center self-end rounded-full border border-taupe/70 text-black/70 transition-colors hover:border-black hover:text-black"
+    >
+      <Icon name="lucide:x" class="size-4.5" aria-hidden="true" />
+    </button>
+
+    <h2 id={`${id}-titulo`} class="mt-3 titulo text-4xl leading-[1.08] text-balance text-rust">
+      {diseno.nombre}
+    </h2>
+
+    <div class="mt-6">
+      {
+        fotos.length ? (
+          <ul
+            data-carrusel
+            tabindex={varias ? 0 : undefined}
+            aria-label={`Fotos de ${diseno.nombre}`}
+            class:list={[
+              "flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] motion-safe:scroll-smooth [&::-webkit-scrollbar]:hidden",
+              // Con varias, la fila sale hasta los bordes del panel (el
+              // margen negativo deshace su padding) para que la siguiente
+              // asome entera hasta el canto; el padding y el scroll-px
+              // dejan la foto actual alineada con el resto del texto.
+              varias
+                ? "-mx-6 gap-3 px-6 scroll-px-6 sm:-mx-8 sm:px-8 sm:scroll-px-8"
+                : "rounded-3xl bg-taupe/15",
+            ]}
+          >
+            {fotos.map((foto, i) => (
+              <li
+                data-foto
+                class:list={[
+                  "aspect-square shrink-0 snap-start",
+                  varias
+                    ? "w-[84%] cursor-pointer overflow-hidden rounded-3xl bg-taupe/15"
+                    : "w-full",
+                ]}"
+                aria-label={varias ? `${F.foto} ${i + 1} de ${fotos.length}` : undefined}
+              >
+                <Image
+                  src={foto.src}
+                  alt={foto.alt}
+                  widths={[440, 640, 960]}
+                  sizes="(min-width: 1024px) 24rem, (min-width: 640px) 20rem, 84vw"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                  style={foto.enfoque && `object-position: ${foto.enfoque}`}
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          /* Mismo "foto pendiente" que la tarjeta. */
+          <div class="grid aspect-square w-full place-items-center rounded-3xl bg-taupe/15">
+            <span class="leyenda text-rust/70">Foto pendiente</span>
+          </div>
+        )
+      }
+
+      {
+        /* Los puntos: el de la foto que se ve, alargado y en rust. Cada uno
+          es un botón con su hueco de 24px aunque el punto se vea de 6. */
+        varias && (
+          <div class="mt-3 flex justify-center">
+            {fotos.map((_, i) => (
+              <button
+                type="button"
+                data-punto={i}
+                aria-label={`${F.foto} ${i + 1} de ${fotos.length}`}
+                aria-current={i === 0 ? "true" : undefined}
+                data-activo={i === 0 ? "" : undefined}
+                class="group/punto flex h-6 cursor-pointer items-center px-1"
+              >
+                <span class="block h-1.5 w-1.5 rounded-full bg-taupe/70 transition-all group-data-activo/punto:w-6 group-data-activo/punto:bg-rust" />
+              </button>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    {
+      /* La fila de datos de la tarjeta, para no perderla al abrir. */
+    }
+    <div
+      class="mt-6 flex items-baseline justify-between gap-3 border-t border-taupe/50 pt-2.5"
+    >
+      <span class="text-xs text-black/60">{diseno.ocasiones}</span>
+      <span class="text-sm font-medium whitespace-nowrap text-rust">{ESPECIALES.precio}</span>
+    </div>
+
+    <p class="mt-5 mb-10 text-[0.9375rem] leading-relaxed text-black/75">{diseno.descripcion}</p>
+
+    {
+      /* Abajo del todo (mt-auto): es la salida del panel. Mismo botón que el
+        "Entendido" de la bienvenida, a todo el ancho. */
+    }
+    <button
+      type="button"
+      data-quiero
+      class="mt-auto h-12 w-full shrink-0 cursor-pointer rounded-full bg-rust px-7 accion text-xs text-linen transition-colors hover:bg-rust-hondo sm:mt-auto"
+    >
+      {F.boton}
+    </button>
+  </div>
+</dialog>
+
+<style>
+  /* Entra por la derecha y sale por donde ha entrado. `display` y `overlay`
+     con allow-discrete para que la salida se vea antes de que el <dialog>
+     desaparezca; donde no se entiende, se abre y se cierra en seco. */
+  .ficha {
+    translate: 100% 0;
+    transition:
+      translate 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+      display 0.35s allow-discrete,
+      overlay 0.35s allow-discrete;
+  }
+  .ficha[open] {
+    translate: 0 0;
+  }
+  .ficha::backdrop {
+    opacity: 0;
+    transition:
+      opacity 0.35s,
+      display 0.35s allow-discrete,
+      overlay 0.35s allow-discrete;
+  }
+  .ficha[open]::backdrop {
+    opacity: 1;
+  }
+  @starting-style {
+    .ficha[open] {
+      translate: 100% 0;
+    }
+    .ficha[open]::backdrop {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ficha,
+    .ficha::backdrop {
+      transition: none;
+    }
+  }
+</style>
+
+<style is:global>
+  /* Como la bienvenida: que la rueda no mueva la página de detrás. */
+  html:has(dialog[data-ficha][open]) {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  import { elegirDiseno } from "@/lib/elegirDiseno";
+
+  document.querySelectorAll<HTMLDialogElement>("dialog[data-ficha]").forEach((ficha) => {
+    ficha.querySelector("[data-cerrar]")?.addEventListener("click", () => ficha.close());
+
+    // Un clic en el velo llega al propio <dialog>: el contenido lo cubre
+    // entero, así que si el destino es el dialog es que se ha pulsado fuera.
+    ficha.addEventListener("click", (evento) => {
+      if (evento.target === ficha) ficha.close();
+    });
+
+    ficha.querySelector("[data-quiero]")?.addEventListener("click", () => {
+      ficha.close();
+      elegirDiseno(ficha.dataset.diseno!);
+    });
+
+    const carrusel = ficha.querySelector<HTMLElement>("[data-carrusel]");
+    const puntos = [...ficha.querySelectorAll<HTMLButtonElement>("[data-punto]")];
+    if (!carrusel || !puntos.length) return;
+    const fotos = [...carrusel.querySelectorAll<HTMLElement>("[data-foto]")];
+
+    // Cuánto falta para que `foto` quede donde se alinea (tras el padding).
+    const distancia = (foto: HTMLElement) =>
+      foto.getBoundingClientRect().left -
+      carrusel.getBoundingClientRect().left -
+      parseFloat(getComputedStyle(carrusel).paddingLeft);
+
+    const irA = (i: number) => carrusel.scrollBy({ left: distancia(fotos[i]) });
+
+    // La foto actual: la más cerca de su sitio. Las fotos ya no miden lo
+    // que la fila, así que no vale dividir el scroll entre el ancho.
+    const actual = () => {
+      const lejos = fotos.map((foto) => Math.abs(distancia(foto)));
+      return lejos.indexOf(Math.min(...lejos));
+    };
+
+    // El punto encendido sigue al scroll, venga del dedo o de los puntos.
+    carrusel.addEventListener(
+      "scroll",
+      () => {
+        const ahora = actual();
+        puntos.forEach((punto, i) => {
+          const encendido = i === ahora;
+          punto.toggleAttribute("data-activo", encendido);
+          if (encendido) punto.setAttribute("aria-current", "true");
+          else punto.removeAttribute("aria-current");
+        });
+      },
+      { passive: true },
+    );
+
+    puntos.forEach((punto, i) => punto.addEventListener("click", () => irA(i)));
+
+    // Pulsar la foto que asoma la trae (en escritorio no hay dedo).
+    fotos.forEach((foto, i) => foto.addEventListener("click", () => irA(i)));
+  });
+</script>
