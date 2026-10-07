@@ -11,7 +11,7 @@
  * página.
  *
  * Los dos son opcionales. Si a un solo componente le falta el `punto`, la
- * ficha entera sale sin líneas (ver `estaAnotada` en src/lib/pedido.ts): una
+ * ficha entera sale sin líneas (ver `estaAnotada` en src/lib/tartas.ts): una
  * ficha medio anotada parece rota.
  */
 export interface ComponenteTarta {

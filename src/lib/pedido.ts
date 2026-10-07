@@ -6,7 +6,6 @@
 // tiene JS), y el script del cliente, para rehacerlos al cambiar el
 // formulario. Escritas dos veces, el mensaje del build y el del navegador
 // acabarían diciendo cosas distintas.
-import type { Tarta } from "@/config/catalogo";
 import { PEDIDO, PRECIOS_PROVISIONALES } from "@/config/pedido";
 
 /** Lunes a viernes. Es lo único que se entrega: fines de semana, no. */
@@ -111,15 +110,4 @@ export function mensajePedido(nombre: string, detalle: DetallePedido = {}): stri
   const para = personas ? ` para ${personas} personas` : "";
   const cuando = fecha ? `, para el ${fechaLarga(fecha)}` : "";
   return `Hola Carmen, quería pedir ${cuantas} «${nombre}»${para}${cuando}.`;
-}
-
-/**
- * Si la ficha puede pintar las líneas: hace falta el recorte Y un punto en
- * TODOS los componentes. Si falta cualquiera, sale la ficha sin líneas.
- */
-export function estaAnotada(tarta: Tarta): boolean {
-  return (
-    tarta.recorte !== undefined &&
-    tarta.componentes.every((componente) => componente.punto !== undefined)
-  );
 }

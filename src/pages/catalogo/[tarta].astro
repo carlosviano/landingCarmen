@@ -29,8 +29,7 @@ import TarjetaTarta from "@/components/catalogo/TarjetaTarta.astro";
 import Pedido from "@/components/catalogo/Pedido.astro";
 import { Image } from "astro:assets";
 import { CATALOGO, type Tarta } from "@/config/catalogo";
-import { fotoDe } from "@/lib/fotos";
-import { estaAnotada } from "@/lib/pedido";
+import { conFotos, estaAnotada, otrasTartas } from "@/lib/tartas";
 
 export function getStaticPaths() {
   return CATALOGO.tartas.map((tarta, i) => ({
@@ -45,30 +44,17 @@ interface Props {
 }
 
 const { tarta, indice } = Astro.props;
-const total = CATALOGO.tartas.length;
 
-// Las otras, empezando por la que va detrás de esta: se mantiene el orden de
-// la carta, sólo rota. Así la tira no empieza siempre por la primera tarta y
-// la de al lado queda a mano, que es la que más se compara.
-const otras = Array.from({ length: total - 1 }, (_, k) => {
-  const otra = CATALOGO.tartas[(indice + 1 + k) % total]!;
-  return {
-    tarta: otra,
-    foto: fotoDe(otra.archivo),
-    recorte: otra.recorte ? fotoDe(otra.recorte) : null,
-  };
-});
+const otras = otrasTartas(CATALOGO.tartas, indice).map(conFotos);
 
-// Con líneas sólo si hay recorte Y todos los componentes tienen punto. Si
-// falta algo, la ficha sale sin líneas: medio anotada parecería rota.
 const anotada = estaAnotada(tarta);
-const recorte = anotada ? fotoDe(tarta.recorte!) : null;
+const fotos = conFotos(tarta);
+// Con líneas, el recorte; sin ellas, la foto con fondo (`null` = pendiente).
+const recorte = anotada ? fotos.recorte : null;
+const foto = anotada ? null : fotos.foto;
 // La altura del primer punto: en móvil el "Qué lleva" se cuelga justo encima
 // de la primera etiqueta y no en lo alto del lienzo (ver `.que-lleva`).
 const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.y)) : 0;
-
-// La foto con fondo, para cuando no hay recorte anotado. `null` = pendiente.
-const foto = anotada ? null : fotoDe(tarta.archivo);
 ---
 
 <Layout titulo={tarta.nombre} descripcion={tarta.descripcion}>
