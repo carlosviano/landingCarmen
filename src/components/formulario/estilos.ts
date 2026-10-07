@@ -28,7 +28,8 @@ export const AREA = `${MARCO} block min-h-36 w-full resize-y rounded-3xl px-4 py
  * el foco son suyos y el aspecto lo pone `PASTILLA` (que va justo después,
  * por los `peer-*`).
  */
-export const OPCION_OCULTA = "peer absolute inset-0 m-0 cursor-pointer opacity-0";
+export const OPCION_OCULTA =
+  "peer absolute inset-0 m-0 cursor-pointer opacity-0";
 
 /** El aspecto de una opción elegible: los tamaños de la tarta, el tipo de evento. */
 export const PASTILLA =

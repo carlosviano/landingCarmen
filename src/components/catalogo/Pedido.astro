@@ -58,9 +58,7 @@ const conSelector = tarta.tamanos.length > 1;
       son suyos; el aspecto lo pone la pastilla (`peer-checked:`). */
     conSelector && (
       <fieldset class="min-w-0">
-        <legend class={`mb-2.5 bajo:mb-2 ${ETIQUETA}`}>
-          Tamaño
-        </legend>
+        <legend class={`mb-2.5 bajo:mb-2 ${ETIQUETA}`}>Tamaño</legend>
         <div
           class="grid gap-2"
           style={`grid-template-columns: repeat(${tarta.tamanos.length}, minmax(0, 1fr))`}
@@ -76,7 +74,9 @@ const conSelector = tarta.tamanos.length > 1;
                 checked={i === 0}
                 class={OPCION_OCULTA}
               />
-              <span class={`${PASTILLA} flex flex-col items-center px-1 py-2 bajo:py-1.5 peer-checked:[&>b]:text-linen`}>
+              <span
+                class={`${PASTILLA} flex flex-col items-center px-1 py-2 bajo:py-1.5 peer-checked:[&>b]:text-linen`}
+              >
                 <b class="titulo text-[1.2rem] leading-tight bajo:text-[1.05rem] text-black">
                   {tamano.personas}
                 </b>
@@ -89,10 +89,8 @@ const conSelector = tarta.tamanos.length > 1;
     )
   }
 
-  {
-    /* `relative`: el calendario se abre debajo de esta fila y con su ancho
-      entero, no con el de la columna de la fecha, que en móvil es estrecha. */
-  }
+  {/* `relative`: el calendario se abre debajo de esta fila y con su ancho
+      entero, no con el de la columna de la fecha, que en móvil es estrecha. */}
   <div class="relative grid grid-cols-[auto_minmax(0,1fr)] gap-3.5">
     <div class="flex flex-col gap-2">
       <label for="pedido-cantidad" class={ETIQUETA}>
@@ -147,18 +145,14 @@ const conSelector = tarta.tamanos.length > 1;
 
   <dl class="border-y border-taupe/45">
     <div class="flex items-baseline justify-between gap-6 py-2.5">
-      <dt class="dato text-[10px] text-black/60">
-        Conservación
-      </dt>
+      <dt class="dato text-[10px] text-black/60">Conservación</dt>
       <dd class="text-right text-sm text-black/80">{tarta.conservacion}</dd>
     </div>
   </dl>
 
-  {
-    /* El precio va AQUÍ, al lado del botón, y no arriba con el nombre: depende
+  {/* El precio va AQUÍ, al lado del botón, y no arriba con el nombre: depende
       del tamaño y de la cantidad, así que es un total, y un total se lee
-      donde se decide. `aria-live` para que se anuncie al cambiar. */
-  }
+      donde se decide. `aria-live` para que se anuncie al cambiar. */}
   <div class="mt-1 flex items-center justify-between gap-4 bajo:mt-0">
     <p class="flex flex-col leading-none">
       <span class="dato text-[10px] text-black/60">Total</span>
@@ -171,10 +165,8 @@ const conSelector = tarta.tamanos.length > 1;
       </span>
     </p>
 
-    {
-      /* El texto sale de `PEDIDO.etiqueta` y nombra WhatsApp a propósito: un
-        botón que te saca de la página tiene que decir a dónde te lleva. */
-    }
+    {/* El texto sale de `PEDIDO.etiqueta` y nombra WhatsApp a propósito: un
+        botón que te saca de la página tiene que decir a dónde te lleva. */}
     <a
       data-cta
       href={PEDIDO.enlace(mensajePedido(tarta.nombre))}
@@ -182,17 +174,19 @@ const conSelector = tarta.tamanos.length > 1;
       rel="noopener noreferrer"
       class={`${BOTON} flex-1 sm:flex-none`}
     >
-      <Icon name="simple-icons:whatsapp" class="size-4 shrink-0" aria-hidden="true" />
+      <Icon
+        name="simple-icons:whatsapp"
+        class="size-4 shrink-0"
+        aria-hidden="true"
+      />
       {PEDIDO.etiqueta}
     </a>
   </div>
 
   <p data-error role="alert" hidden class="text-sm font-medium text-rust"></p>
 
-  {
-    /* Qué pasa al pulsar, como texto visible y no en un `aria-label`: la duda
-      de "¿se envía ya?" la tiene todo el mundo. */
-  }
+  {/* Qué pasa al pulsar, como texto visible y no en un `aria-label`: la duda
+      de "¿se envía ya?" la tiene todo el mundo. */}
   <p class="max-w-[42ch] text-xs leading-relaxed text-black/60">
     Se abre WhatsApp con el pedido ya escrito: tamaño, cantidad y fecha. No se
     envía nada hasta que lo envíes tú.
@@ -211,21 +205,27 @@ const conSelector = tarta.tamanos.length > 1;
     problemaFecha,
   } from "@/lib/pedido";
 
-  for (const form of document.querySelectorAll<HTMLFormElement>("[data-pedido]")) {
+  for (const form of document.querySelectorAll<HTMLFormElement>(
+    "[data-pedido]",
+  )) {
     const nombre = form.dataset.nombre ?? "";
     const cantidad = form.querySelector<HTMLInputElement>("[data-cantidad]");
-    const fecha = form.querySelector<HTMLInputElement>("[data-calendario-valor]");
-    const botonFecha = form.querySelector<HTMLButtonElement>("[data-calendario-boton]");
+    const fecha = form.querySelector<HTMLInputElement>(
+      "[data-calendario-valor]",
+    );
+    const botonFecha = form.querySelector<HTMLButtonElement>(
+      "[data-calendario-boton]",
+    );
     const total = form.querySelector<HTMLElement>("[data-total]");
     const cta = form.querySelector<HTMLAnchorElement>("[data-cta]");
     const error = form.querySelector<HTMLElement>("[data-error]");
-    if (
-      !cantidad || !fecha || !botonFecha || !total || !cta || !error
-    ) continue;
+    if (!cantidad || !fecha || !botonFecha || !total || !cta || !error)
+      continue;
 
     // El tamaño marcado; sin selector (un solo tamaño), el del propio <form>.
     const tamano = () =>
-      form.querySelector<HTMLInputElement>('input[name="tamano"]:checked') ?? form;
+      form.querySelector<HTMLInputElement>('input[name="tamano"]:checked') ??
+      form;
     const unidades = () => Math.max(1, Math.round(Number(cantidad.value) || 1));
 
     const avisar = (problema: string | null) => {
@@ -247,9 +247,13 @@ const conSelector = tarta.tamanos.length > 1;
       );
     };
 
-    for (const boton of form.querySelectorAll<HTMLButtonElement>("[data-paso]")) {
+    for (const boton of form.querySelectorAll<HTMLButtonElement>(
+      "[data-paso]",
+    )) {
       boton.addEventListener("click", () => {
-        cantidad.value = String(Math.max(1, unidades() + Number(boton.dataset.paso)));
+        cantidad.value = String(
+          Math.max(1, unidades() + Number(boton.dataset.paso)),
+        );
         actualizar();
       });
     }

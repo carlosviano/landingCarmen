@@ -21,7 +21,6 @@ export function modoProximamente(): boolean {
   if (forzado === "0") return false;
 
   return (
-    PROXIMAMENTE.enProduccion &&
-    process.env.CF_PAGES_BRANCH === RAMA_PRODUCCION
+    PROXIMAMENTE.enProduccion && process.env.CF_PAGES_BRANCH === RAMA_PRODUCCION
   );
 }

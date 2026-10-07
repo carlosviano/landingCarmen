@@ -9,7 +9,9 @@
 
 /** Marca `slug` en el campo "Diseño" y baja al formulario. */
 export function elegirDiseno(slug: string): void {
-  const form = document.querySelector<HTMLFormElement>('[data-solicitud="especial"]');
+  const form = document.querySelector<HTMLFormElement>(
+    '[data-solicitud="especial"]',
+  );
   const radio = form?.querySelector<HTMLInputElement>(
     `input[name="diseno"][value="${CSS.escape(slug)}"]`,
   );
@@ -33,9 +35,18 @@ export function elegirDiseno(slug: string): void {
  * Engancha `alPulsar` al clic de un enlace, salvo que se abra aparte
  * (cmd/ctrl/shift o botón central): ahí el enlace sigue siendo un enlace.
  */
-export function alPulsarEnlace(enlace: HTMLAnchorElement, alPulsar: () => void): void {
+export function alPulsarEnlace(
+  enlace: HTMLAnchorElement,
+  alPulsar: () => void,
+): void {
   enlace.addEventListener("click", (evento) => {
-    if (evento.button !== 0 || evento.metaKey || evento.ctrlKey || evento.shiftKey || evento.altKey) {
+    if (
+      evento.button !== 0 ||
+      evento.metaKey ||
+      evento.ctrlKey ||
+      evento.shiftKey ||
+      evento.altKey
+    ) {
       return;
     }
     evento.preventDefault();

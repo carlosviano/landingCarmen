@@ -55,16 +55,20 @@ const panelId = `${id}-calendario`;
   <span
     data-calendario-texto
     data-vacio
-    class="truncate data-vacio:text-black/60">Elige día</span
+    class="truncate data-vacio:text-black/60"
   >
-  <Icon name="lucide:calendar" class="size-4 shrink-0 text-rust" aria-hidden="true" />
+    Elige día
+  </span>
+  <Icon
+    name="lucide:calendar"
+    class="size-4 shrink-0 text-rust"
+    aria-hidden="true"
+  />
 </button>
 <input type="hidden" name={nombre} data-calendario-valor />
 
-{
-  /* Lo rellena el script: el título del mes y la cuadrícula de días. Empieza
-    en lunes, como se lee un calendario aquí. */
-}
+{/* Lo rellena el script: el título del mes y la cuadrícula de días. Empieza
+    en lunes, como se lee un calendario aquí. */}
 <div
   id={panelId}
   data-calendario
@@ -74,16 +78,25 @@ const panelId = `${id}-calendario`;
   class={`${PANEL} p-4 ${clasePanel}`}
 >
   <div class="mb-3 flex items-center justify-between">
-    <button type="button" data-mes="-1" aria-label="Mes anterior" class={`${BOTON_ICONO} size-9`}>
+    <button
+      type="button"
+      data-mes="-1"
+      aria-label="Mes anterior"
+      class={`${BOTON_ICONO} size-9`}
+    >
       <Icon name="lucide:chevron-left" class="size-4" aria-hidden="true" />
     </button>
     <p
       data-mes-titulo
       aria-live="polite"
       class="titulo text-lg text-black first-letter:uppercase"
+    ></p>
+    <button
+      type="button"
+      data-mes="1"
+      aria-label="Mes siguiente"
+      class={`${BOTON_ICONO} size-9`}
     >
-    </p>
-    <button type="button" data-mes="1" aria-label="Mes siguiente" class={`${BOTON_ICONO} size-9`}>
       <Icon name="lucide:chevron-right" class="size-4" aria-hidden="true" />
     </button>
   </div>

@@ -43,23 +43,21 @@ const margenTira = `max(0.75rem, (100% - 80rem) / 2 + 1.5rem - ${ADELANTO})`;
         class="flex gap-4 py-3 sm:gap-6"
         style={`padding-inline:${margenTira}`}
       >
-        {
-          fotos.map((foto) => (
-            <li class="w-[78%] shrink-0 snap-start sm:w-[20rem] lg:w-[23rem]">
-              <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25">
-                <Image
-                  src={foto.src}
-                  alt={foto.alt}
-                  widths={[400, 600, 800, 1000]}
-                  sizes="(min-width: 1024px) 23rem, (min-width: 640px) 20rem, 78vw"
-                  loading="lazy"
-                  decoding="async"
-                  class="h-full w-full object-cover object-center"
-                />
-              </div>
-            </li>
-          ))
-        }
+        {fotos.map((foto) => (
+          <li class="w-[78%] shrink-0 snap-start sm:w-[20rem] lg:w-[23rem]">
+            <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25">
+              <Image
+                src={foto.src}
+                alt={foto.alt}
+                widths={[400, 600, 800, 1000]}
+                sizes="(min-width: 1024px) 23rem, (min-width: 640px) 20rem, 78vw"
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover object-center"
+              />
+            </div>
+          </li>
+        ))}
       </ul>
     </div>
 

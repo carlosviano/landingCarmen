@@ -51,42 +51,40 @@ const VELO =
     sangre. Apiladas en móvil, la carta va primero: es el encargo más
     directo, con precio y tamaño cerrados. */}
   <div class="grid grid-cols-1 md:grid-cols-2">
-    {
-      entradas.map(({ servicio, foto, alt, enfoque, leyenda }) => (
+    {entradas.map(({ servicio, foto, alt, enfoque, leyenda }) => (
+      <div
+        id={servicio.ancla}
+        class="relative h-72 scroll-mt-20 overflow-hidden bg-taupe sm:h-80 md:h-[34rem] lg:h-[43.75rem]"
+      >
+        <Image
+          src={foto}
+          alt={alt}
+          widths={ANCHOS}
+          sizes={SIZES}
+          loading="lazy"
+          decoding="async"
+          class="h-full w-full object-cover"
+          style={`object-position:${enfoque}`}
+        />
+
         <div
-          id={servicio.ancla}
-          class="relative h-72 scroll-mt-20 overflow-hidden bg-taupe sm:h-80 md:h-[34rem] lg:h-[43.75rem]"
-        >
-          <Image
-            src={foto}
-            alt={alt}
-            widths={ANCHOS}
-            sizes={SIZES}
-            loading="lazy"
-            decoding="async"
-            class="h-full w-full object-cover"
-            style={`object-position:${enfoque}`}
-          />
+          aria-hidden="true"
+          class="absolute inset-0"
+          style={`background:${VELO}`}
+        />
 
-          <div
-            aria-hidden="true"
-            class="absolute inset-0"
-            style={`background:${VELO}`}
-          />
-
-          {/* `py-4` con `text-xs` deja el botón en unos 48px de alto, por
+        {/* `py-4` con `text-xs` deja el botón en unos 48px de alto, por
             encima del mínimo de 44 para el pulgar. */}
-          <div class="absolute inset-0 flex flex-col items-center justify-center gap-4">
-            <p class="leyenda text-linen">{leyenda}</p>
-            <a
-              href={servicio.ruta}
-              class="rounded-full border-[1.5px] border-linen/90 bg-rust/70 px-8 py-4 text-center accion text-xs text-linen backdrop-blur-[2px] transition-colors duration-300 hover:bg-rust sm:px-10"
-            >
-              {servicio.nombre}
-            </a>
-          </div>
+        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4">
+          <p class="leyenda text-linen">{leyenda}</p>
+          <a
+            href={servicio.ruta}
+            class="rounded-full border-[1.5px] border-linen/90 bg-rust/70 px-8 py-4 text-center accion text-xs text-linen backdrop-blur-[2px] transition-colors duration-300 hover:bg-rust sm:px-10"
+          >
+            {servicio.nombre}
+          </a>
         </div>
-      ))
-    }
+      </div>
+    ))}
   </div>
 </section>

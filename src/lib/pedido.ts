@@ -69,7 +69,10 @@ export function fechaCorta(iso: string): string {
  * que no valen, pero la regla vive aquí: es lo que para el pedido si la fecha
  * falta o se ha quedado vieja (la ficha abierta desde ayer).
  */
-export function problemaFecha(iso: string, hoy: Date = new Date()): string | null {
+export function problemaFecha(
+  iso: string,
+  hoy: Date = new Date(),
+): string | null {
   if (!iso) return "Elige una fecha de entrega para poder pedirla.";
   const minima = aISO(fechaMinima(hoy));
   if (iso < minima) {
@@ -102,9 +105,13 @@ export interface DetallePedido {
  * el detalle, dice tamaño, cantidad y fecha. La cantidad es orientativa: la
  * confirma Carmen hablando con el cliente, así que no tiene máximo.
  */
-export function mensajePedido(nombre: string, detalle: DetallePedido = {}): string {
+export function mensajePedido(
+  nombre: string,
+  detalle: DetallePedido = {},
+): string {
   const { personas, cantidad = 1, fecha } = detalle;
-  if (!personas && !fecha) return `Hola Carmen, quería pedir la tarta «${nombre}».`;
+  if (!personas && !fecha)
+    return `Hola Carmen, quería pedir la tarta «${nombre}».`;
 
   const cuantas = cantidad === 1 ? "una tarta" : `${cantidad} tartas`;
   const para = personas ? ` para ${personas} personas` : "";

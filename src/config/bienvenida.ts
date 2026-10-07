@@ -57,7 +57,8 @@ export const BIENVENIDA = {
     {
       icono: "lucide:calendar",
       titulo: `${PEDIDO.antelacion[0].toUpperCase()}${PEDIDO.antelacion.slice(1)} de antelación`,
-      detalle: "Todo se hace por encargo. Un pedido del viernes sale el martes.",
+      detalle:
+        "Todo se hace por encargo. Un pedido del viernes sale el martes.",
     },
     {
       icono: "lucide:map-pin",

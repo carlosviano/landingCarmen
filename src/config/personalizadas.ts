@@ -58,8 +58,14 @@ export const ESPECIALES = {
   ctaCabecera: "Pedir presupuesto",
   pasos: [
     { titulo: "Me cuentas", detalle: "La ocasión, la fecha y cuántos seréis." },
-    { titulo: "Te propongo", detalle: "Un diseño, sus sabores y el presupuesto." },
-    { titulo: "La recoges", detalle: "En el obrador, lista para tu celebración." },
+    {
+      titulo: "Te propongo",
+      detalle: "Un diseño, sus sabores y el presupuesto.",
+    },
+    {
+      titulo: "La recoges",
+      detalle: "En el obrador, lista para tu celebración.",
+    },
   ],
   etiquetaDisenos: "Diseños de Carmela",
   tituloDisenos: "Elige uno, o deja que te proponga",
@@ -130,7 +136,6 @@ export const ESPECIALES = {
         },
       ],
     },
-
   ] satisfies DisenoEspecial[],
   /** Los textos de cada tarjeta de diseño. */
   tarjeta: {
@@ -197,7 +202,13 @@ export const ESPECIALES = {
     ] as const,
     // TODO: confirmar los tramos con Carmen. Cada uno cambia el tamaño (y los
     // pisos) de la tarta, que es para lo que sirve el dato.
-    personas: ["Hasta 10", "10 – 20", "20 – 40", "40 – 80", "Más de 80"] as const,
+    personas: [
+      "Hasta 10",
+      "10 – 20",
+      "20 – 40",
+      "40 – 80",
+      "Más de 80",
+    ] as const,
     placeholderIdea: "Colores, un tema, a quién quieres sorprender…",
     // TODO: máximo de fotos. Mismo límite que eventos hasta que se decida;
     // entre corchetes en la ayuda para que no se publique sin querer.

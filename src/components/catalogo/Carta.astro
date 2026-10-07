@@ -32,30 +32,22 @@ const conFoto = tartas.map((tarta, i) => ({
 ---
 
 <div class={className}>
-  {
-    /* El filete de arriba es el que antes colgaba de los filtros: separa la
-      cabecera de la página de la rejilla. */
-  }
+  {/* El filete de arriba es el que antes colgaba de los filtros: separa la
+      cabecera de la página de la rejilla. */}
   <div class="border-t border-taupe/55"></div>
 
-  {
-    /* Un <div> y no una lista: cada tarjeta ya es un encabezado con su
-      enlace, que es por donde se recorre la carta con lector de pantalla. */
-  }
-  <div
-    class="mt-11 grid grid-cols-2 gap-x-4 gap-y-11 sm:gap-x-6 md:mt-13 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-7"
-  >
-    {
-      conFoto.map((entrada) => (
-        <TarjetaTarta
-          tarta={entrada.tarta}
-          foto={entrada.foto}
-          recorte={entrada.recorte}
-          numero={entrada.numero}
-          nivel={nivelTarjeta}
-          class={entrada.foto || entrada.recorte ? undefined : entrada.tono}
-        />
-      ))
-    }
+  {/* Un <div> y no una lista: cada tarjeta ya es un encabezado con su
+      enlace, que es por donde se recorre la carta con lector de pantalla. */}
+  <div class="mt-11 grid grid-cols-2 gap-x-4 gap-y-11 sm:gap-x-6 md:mt-13 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-7">
+    {conFoto.map((entrada) => (
+      <TarjetaTarta
+        tarta={entrada.tarta}
+        foto={entrada.foto}
+        recorte={entrada.recorte}
+        numero={entrada.numero}
+        nivel={nivelTarjeta}
+        class={entrada.foto || entrada.recorte ? undefined : entrada.tono}
+      />
+    ))}
   </div>
 </div>

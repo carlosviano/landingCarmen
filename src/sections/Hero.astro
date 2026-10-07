@@ -84,8 +84,7 @@ import { SERVICIOS } from "@/config/site";
 ---
 
 <Hero claseBanda="bg-rust lg:flex-row lg:items-center">
-  {
-    /* Las ondas pasan POR ENCIMA de la foto a partir de lg (lg:z-10) y se
+  {/* Las ondas pasan POR ENCIMA de la foto a partir de lg (lg:z-10) y se
       apagan con una máscara justo donde el degradado deja de velar la imagen.
       Así el patrón cruza la costura y la foto parece meterse detrás de él;
       debajo de la foto sin más, las rayas morían de golpe contra el canto y
@@ -105,8 +104,7 @@ import { SERVICIOS } from "@/config/site";
       disimular y el patrón sobre la imagen es solo suciedad.
 
       Los guiones bajos del mask-image son la sintaxis de valor arbitrario de
-      Tailwind: ahí no caben espacios y llegan al navegador como tales. */
-  }
+      Tailwind: ahí no caben espacios y llegan al navegador como tales. */}
   <svg
     class="pointer-events-none absolute inset-0 h-full w-full text-linen/12 lg:z-10 lg:[mask-image:linear-gradient(to_right,black_50%,transparent_65%)]"
     aria-hidden="true"
@@ -117,7 +115,8 @@ import { SERVICIOS } from "@/config/site";
         fill="none"
         stroke="currentColor"
         stroke-width="1"
-        d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"></path>
+        d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"
+      ></path>
       <path
         id="onda-honda-hero"
         fill="none"
@@ -142,24 +141,17 @@ import { SERVICIOS } from "@/config/site";
 
   <div class="relative mx-auto w-full max-w-7xl px-6 lg:z-20">
     <div class="w-full py-14 md:py-16 lg:w-1/2 lg:py-0 lg:pr-12">
-      <p class="antetitulo text-linen">
-        {HERO.antetitulo}
-      </p>
+      <p class="antetitulo text-linen">{HERO.antetitulo}</p>
 
-      <h1
-        class="mt-5 titular text-4xl leading-[1.05] text-balance text-linen sm:text-5xl lg:text-6xl xl:text-7xl"
-      >
+      <h1 class="mt-5 titular text-4xl leading-[1.05] text-balance text-linen sm:text-5xl lg:text-6xl xl:text-7xl">
         {HERO.titular}
       </h1>
 
-      <p
-        class="mt-6 max-w-[30rem] text-base leading-relaxed text-linen/80 sm:text-lg"
-      >
+      <p class="mt-6 max-w-[30rem] text-base leading-relaxed text-linen/80 sm:text-lg">
         {HERO.entradilla}
       </p>
 
-      {
-        /* Los tres servicios como botones, y van a sus PÁGINAS, no a sus
+      {/* Los tres servicios como botones, y van a sus PÁGINAS, no a sus
           secciones de la portada: son el camino más corto a encargar, y
           quien llega de Instagram ya decidido no tiene por qué hacer scroll
           para pedir. Quien quiera ver antes el trabajo baja igual.
@@ -172,35 +164,31 @@ import { SERVICIOS } from "@/config/site";
           En móvil, rejilla de dos: la carta a todo el ancho y las otras dos
           debajo, a medias. En fila envolvían a dos líneas sin orden.
           `py-4` con `text-xs` deja cada botón en ~48px, por encima de los
-          44 del pulgar. */
-      }
+          44 del pulgar. */}
       <p class="mt-8 leyenda text-linen/80">{HERO.encarga}</p>
       <ul class="mt-4 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
-        {
-          Object.values(SERVICIOS).map(({ nombre, ruta }, indice) => (
-            <li class:list={[indice === 0 && "col-span-2"]}>
-              <a
-                href={ruta}
-                class:list={[
-                  "block rounded-full px-7 py-4 text-center accion text-xs whitespace-nowrap transition-colors duration-300",
-                  indice === 0
-                    ? "bg-sand text-rust shadow-lg shadow-black/25 hover:bg-white"
-                    : "border-[1.5px] border-linen/70 text-linen hover:border-linen hover:bg-linen hover:text-rust",
-                ]}
-              >
-                {nombre}
-              </a>
-            </li>
-          ))
-        }
+        {Object.values(SERVICIOS).map(({ nombre, ruta }, indice) => (
+          <li class:list={[indice === 0 && "col-span-2"]}>
+            <a
+              href={ruta}
+              class:list={[
+                "block rounded-full px-7 py-4 text-center accion text-xs whitespace-nowrap transition-colors duration-300",
+                indice === 0
+                  ? "bg-sand text-rust shadow-lg shadow-black/25 hover:bg-white"
+                  : "border-[1.5px] border-linen/70 text-linen hover:border-linen hover:bg-linen hover:text-rust",
+              ]}
+            >
+              {nombre}
+            </a>
+          </li>
+        ))}
       </ul>
 
       <p class="mt-6 text-xs text-linen/60">{HERO.nota}</p>
     </div>
   </div>
 
-  {
-    /* Apilada, la foto se queda con el alto que dejan el texto y la franja
+  {/* Apilada, la foto se queda con el alto que dejan el texto y la franja
       (flex-1), para que el hero llene la pantalla del móvil sin pasarse; el
       min-h-48 es el suelo para que no se quede en una tira en un móvil bajo
       (ahí la sección crece, porque es min-h). En lg se despega y se estira
@@ -219,11 +207,8 @@ import { SERVICIOS } from "@/config/site";
       está posicionado y la foto, apilada, no lo estaría, así que las ondas se
       pintarían POR ENCIMA de la imagen (ir después en el DOM no basta, eso
       solo decide entre hermanos posicionados). En lg no se nota porque manda
-      el lg:absolute; el estropicio se ve solo por debajo de lg. */
-  }
-  <div
-    class="relative min-h-48 flex-1 overflow-hidden lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2"
-  >
+      el lg:absolute; el estropicio se ve solo por debajo de lg. */}
+  <div class="relative min-h-48 flex-1 overflow-hidden lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
     <Image
       src={fotoHero}
       alt={HERO.fotoAlt}
@@ -233,8 +218,7 @@ import { SERVICIOS } from "@/config/site";
       class="absolute inset-0 h-full w-full object-cover object-right"
     />
 
-    {
-      /* Degradado corto sobre el canto izquierdo de la foto. Sin él, la
+    {/* Degradado corto sobre el canto izquierdo de la foto. Sin él, la
         imagen entra a hueso contra la banda: una línea vertical dura de
         arriba abajo que la deja como un recorte pegado encima en vez de
         como parte del hero. Va del rust del bloque a transparente en el 30%
@@ -255,17 +239,14 @@ import { SERVICIOS } from "@/config/site";
         Para graduarlo, dos mandos: el to-30% mueve hasta dónde llega, y
         cambiar from-rust por from-rust/70 hace que ni el borde llegue a
         taparse del todo. Ojo con el primero: la máscara de las ondas está
-        cuadrada con él (ver la nota del svg, arriba). */
-    }
+        cuadrada con él (ver la nota del svg, arriba). */}
     <div
       class="pointer-events-none absolute inset-0 hidden bg-linear-to-r from-rust to-transparent to-30% lg:block"
       aria-hidden="true"
-    >
-    </div>
+    ></div>
   </div>
 
-  {
-    /* La franja que cierra el hero. Va sobre el linen de la página (no lleva
+  {/* La franja que cierra el hero. Va sobre el linen de la página (no lleva
       fondo propio) y es lo que hace legible el corte de la banda. El alto
       y la retícula los pone el marco.
 
@@ -279,25 +260,21 @@ import { SERVICIOS } from "@/config/site";
       a dos líneas y, centrada, la segunda abría con un punto suelto que se leía
       como una viñeta. En lg caben los cuatro en una fila y sí separan. Sin
       ellos los nombres se quedaban pegados, así que el hueco sube a gap-x-6 y
-      vuelve a 5 en lg, donde el punto ya mete aire por su cuenta. */
-  }
+      vuelve a 5 en lg, donde el punto ya mete aire por su cuenta. */}
   <ul
     slot="franja"
     class="flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-2 dato text-[11px] text-black/50 lg:gap-x-5"
   >
-    {
-      HERO.credenciales.map((casa, indice) => (
-        <li class="flex items-center gap-5">
-          {indice > 0 && (
-            <span
-              class="hidden size-1 shrink-0 rounded-full bg-taupe lg:block"
-              aria-hidden="true"
-            />
-          )}
-          {casa}
-        </li>
-      ))
-    }
+    {HERO.credenciales.map((casa, indice) => (
+      <li class="flex items-center gap-5">
+        {indice > 0 && (
+          <span
+            class="hidden size-1 shrink-0 rounded-full bg-taupe lg:block"
+            aria-hidden="true"
+          />
+        )}
+        {casa}
+      </li>
+    ))}
   </ul>
 </Hero>
-

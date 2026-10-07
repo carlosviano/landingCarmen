@@ -17,7 +17,9 @@ import { montarDesplegable } from "@/lib/desplegable";
 import type { ErroresSolicitud } from "@/lib/solicitud";
 
 export interface OpcionesSolicitud {
-  validar: (datos: FormData) => { ok: true } | { ok: false; errores: ErroresSolicitud };
+  validar: (
+    datos: FormData,
+  ) => { ok: true } | { ok: false; errores: ErroresSolicitud };
   /** El texto del WhatsApp con lo rellenado. `texto(name)` lee un campo. */
   mensaje: (texto: (nombre: string) => string | undefined) => string;
   /** Los días que deja elegir el calendario, como en `montarCalendario`. */
@@ -32,7 +34,8 @@ const MENSAJES = {
   sinConectar:
     "El envío del formulario todavía no está conectado. Mientras tanto, escríbeme por WhatsApp.",
   enviando: "Enviando…",
-  fallo: "No se ha podido enviar. Vuelve a probar en un momento o escríbeme por WhatsApp.",
+  fallo:
+    "No se ha podido enviar. Vuelve a probar en un momento o escríbeme por WhatsApp.",
 };
 
 // Lo que se marca como inválido de cada campo: el control que se ve. No el
@@ -62,7 +65,10 @@ function pintarErrores(form: HTMLFormElement, errores: ErroresSolicitud) {
 }
 
 /** Sólo los errores de `campos`. */
-function soloDe(errores: ErroresSolicitud, campos: ReadonlySet<string>): ErroresSolicitud {
+function soloDe(
+  errores: ErroresSolicitud,
+  campos: ReadonlySet<string>,
+): ErroresSolicitud {
   return Object.fromEntries(
     Object.entries(errores).filter(([campo]) => campos.has(campo)),
   );
@@ -73,13 +79,18 @@ function enfocarPrimerError(form: HTMLFormElement) {
   form.querySelector<HTMLElement>("[aria-invalid]")?.focus();
 }
 
-export function montarSolicitud(form: HTMLFormElement, opciones: OpcionesSolicitud): void {
+export function montarSolicitud(
+  form: HTMLFormElement,
+  opciones: OpcionesSolicitud,
+): void {
   const estado = form.querySelector<HTMLElement>("[data-estado]")!;
   const boton = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
   const whatsapp = form.querySelector<HTMLAnchorElement>("[data-whatsapp]")!;
 
   montarCalendario(form, opciones.calendario);
-  form.querySelectorAll<HTMLElement>("[data-desplegable]").forEach(montarDesplegable);
+  form
+    .querySelectorAll<HTMLElement>("[data-desplegable]")
+    .forEach(montarDesplegable);
 
   // Qué errores se enseñan. Hasta el primer intento de envío, sólo los de
   // los campos `tocados`: los que se han dejado con algo escrito. Nadie
@@ -109,7 +120,11 @@ export function montarSolicitud(form: HTMLFormElement, opciones: OpcionesSolicit
   // Al salir de un campo de texto con algo escrito, su error se ve ya.
   form.addEventListener("focusout", (evento) => {
     const control = evento.target;
-    if (!(control instanceof HTMLInputElement || control instanceof HTMLTextAreaElement)) return;
+    if (!(
+      control instanceof HTMLInputElement ||
+      control instanceof HTMLTextAreaElement
+    ))
+      return;
     const campo = control.closest<HTMLElement>("[data-campo]")?.dataset.campo;
     if (!campo || !control.value.trim()) return;
     tocados.add(campo);

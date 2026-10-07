@@ -25,25 +25,26 @@ interface Props {
 const { otras } = Astro.props;
 ---
 
-{
-  otras.length > 0 && (
-    <nav aria-labelledby="otras-tartas" class="mx-auto w-full max-w-7xl px-6 py-13 md:py-16">
-      <h2 id="otras-tartas" class="leyenda text-black/60">
-        Otras tartas
-      </h2>
-      <ul class="mt-6 flex snap-x gap-4 overflow-x-auto py-2.5">
-        {otras.map((entrada) => (
-          <li class="w-36 shrink-0 snap-start sm:w-40 lg:w-auto lg:max-w-60 lg:min-w-48 lg:flex-1">
-            <TarjetaTarta
-              tarta={entrada.tarta}
-              foto={entrada.foto}
-              recorte={entrada.recorte}
-              nivel={3}
-              compacta
-            />
-          </li>
-        ))}
-      </ul>
-    </nav>
-  )
-}
+{otras.length > 0 && (
+  <nav
+    aria-labelledby="otras-tartas"
+    class="mx-auto w-full max-w-7xl px-6 py-13 md:py-16"
+  >
+    <h2 id="otras-tartas" class="leyenda text-black/60">
+      Otras tartas
+    </h2>
+    <ul class="mt-6 flex snap-x gap-4 overflow-x-auto py-2.5">
+      {otras.map((entrada) => (
+        <li class="w-36 shrink-0 snap-start sm:w-40 lg:w-auto lg:max-w-60 lg:min-w-48 lg:flex-1">
+          <TarjetaTarta
+            tarta={entrada.tarta}
+            foto={entrada.foto}
+            recorte={entrada.recorte}
+            nivel={3}
+            compacta
+          />
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}

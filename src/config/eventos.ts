@@ -226,7 +226,13 @@ export const SOLICITUD_EVENTO = {
   // dulce, varias mesas), que es para lo que sirve el dato. El número exacto
   // se cierra después, hablando.
   // TODO: confirmar con Carmen el techo que puede asumir.
-  invitados: ["Menos de 25", "25 – 50", "50 – 100", "100 – 200", "Más de 200"] as const,
+  invitados: [
+    "Menos de 25",
+    "25 – 50",
+    "50 – 100",
+    "100 – 200",
+    "Más de 200",
+  ] as const,
   placeholderInteres:
     "Cuéntame qué tienes en mente: qué te gustaría servir, el estilo de la celebración, colores, alergias… cualquier detalle que te importe.",
   // Fotos de inspiración. Cuatro como mucho y de hasta 8 MB cada una: una

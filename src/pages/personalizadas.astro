@@ -37,7 +37,9 @@ const fotoCabecera = fotoDe(E.fotoCabecera)!;
 const disenos = E.disenos.map((diseno) => ({
   diseno,
   fotos: [
-    ...(diseno.archivo ? [{ archivo: diseno.archivo, alt: diseno.alt, enfoque: diseno.enfoque }] : []),
+    ...(diseno.archivo
+      ? [{ archivo: diseno.archivo, alt: diseno.alt, enfoque: diseno.enfoque }]
+      : []),
     ...diseno.galeria,
   ].map((foto) => ({ ...foto, src: fotoDe(foto.archivo)! })),
 }));
@@ -54,12 +56,10 @@ const proponerAncha = E.disenos.length % 2 === 0;
   <Header />
 
   <main>
-    {
-      /* El hero de /eventos, con sus mismas piezas: foto a sangre bajo un
+    {/* El hero de /eventos, con sus mismas piezas: foto a sangre bajo un
         velo que oscurece la parte baja, "Inicio" arriba, el texto abajo
         (mt-auto) y la franja rust con los pasos. Las proporciones son las
-        del marco común (components/Hero.astro). */
-    }
+        del marco común (components/Hero.astro). */}
     <Hero claseBanda="isolate overflow-hidden bg-black" claseFranja="bg-rust">
       <Image
         src={fotoCabecera}
@@ -74,22 +74,23 @@ const proponerAncha = E.disenos.length % 2 === 0;
       <div
         class="absolute inset-0 -z-10 bg-linear-to-b from-black/15 via-black/35 to-black/85"
         aria-hidden="true"
-      >
-      </div>
+      ></div>
 
       <div class="mx-auto flex w-full max-w-7xl flex-1 flex-col px-6 pt-10 pb-12 md:pb-14">
         <a
           href="/"
           class="mb-16 inline-flex items-center gap-2 self-start border-b border-linen/40 pb-1 accion text-xs text-linen/85 transition-colors hover:border-linen/70 hover:text-white"
         >
-          <Icon name="lucide:arrow-left" class="size-4 shrink-0" aria-hidden="true" />
+          <Icon
+            name="lucide:arrow-left"
+            class="size-4 shrink-0"
+            aria-hidden="true"
+          />
           Inicio
         </a>
 
         <p class="mt-auto antetitulo text-sand">{E.etiquetaPagina}</p>
-        <h1
-          class="mt-5 max-w-3xl titular text-4xl leading-[1.05] text-balance text-white sm:text-5xl lg:text-[4.5rem]"
-        >
+        <h1 class="mt-5 max-w-3xl titular text-4xl leading-[1.05] text-balance text-white sm:text-5xl lg:text-[4.5rem]">
           {E.tituloPagina}
         </h1>
 
@@ -108,17 +109,19 @@ const proponerAncha = E.disenos.length % 2 === 0;
 
       <Ondas slot="fondo-franja" id="especiales-pasos" class="text-linen/12" />
       <ol slot="franja" class="grid w-full gap-5 md:grid-cols-3 md:gap-8">
-        {
-          E.pasos.map((paso, i) => (
-            <li class="flex items-center gap-5">
-              <span class="w-6 shrink-0 text-center titulo text-4xl leading-none text-sand">{i + 1}</span>
-              <span>
-                <span class="block antetitulo text-linen">{paso.titulo}</span>
-                <span class="mt-1.5 block text-sm text-linen/80">{paso.detalle}</span>
+        {E.pasos.map((paso, i) => (
+          <li class="flex items-center gap-5">
+            <span class="w-6 shrink-0 text-center titulo text-4xl leading-none text-sand">
+              {i + 1}
+            </span>
+            <span>
+              <span class="block antetitulo text-linen">{paso.titulo}</span>
+              <span class="mt-1.5 block text-sm text-linen/80">
+                {paso.detalle}
               </span>
-            </li>
-          ))
-        }
+            </span>
+          </li>
+        ))}
       </ol>
     </Hero>
 
@@ -130,37 +133,31 @@ const proponerAncha = E.disenos.length % 2 === 0;
         </h2>
       </div>
 
-      {
-        /* Una columna hasta lg (en móvil la tarjeta sigue siendo horizontal,
-          con la foto estrecha) y dos desde lg. */
-      }
+      {/* Una columna hasta lg (en móvil la tarjeta sigue siendo horizontal,
+          con la foto estrecha) y dos desde lg. */}
       <div class="mx-auto mt-8 grid w-full max-w-7xl gap-4 px-6 md:mt-11 lg:grid-cols-2 lg:gap-7">
-        {
-          disenos.map(({ diseno, fotos }) => (
-            <TarjetaEscaparate
-              id={diseno.slug}
-              titulo={diseno.nombre}
-              etiqueta={diseno.ocasiones}
-              descripcion={diseno.descripcion}
-              fotos={fotos}
-              precio={E.precio}
-              textoFoto={E.tarjeta.foto}
-              accion={{
-                texto: E.tarjeta.pedir,
-                href: conDiseno(diseno.slug),
-                "data-elige": diseno.slug,
-              }}
-            />
-          ))
-        }
+        {disenos.map(({ diseno, fotos }) => (
+          <TarjetaEscaparate
+            id={diseno.slug}
+            titulo={diseno.nombre}
+            etiqueta={diseno.ocasiones}
+            descripcion={diseno.descripcion}
+            fotos={fotos}
+            precio={E.precio}
+            textoFoto={E.tarjeta.foto}
+            accion={{
+              texto: E.tarjeta.pedir,
+              href: conDiseno(diseno.slug),
+              "data-elige": diseno.slug,
+            }}
+          />
+        ))}
 
-        {
-          /* La salida para quien no sabe cuál: del tamaño de las otras, en
+        {/* La salida para quien no sabe cuál: del tamaño de las otras, en
             rust y con las ondas de la franja. Baja al formulario con "Que me
             proponga Carmela" marcado. El botón es de mentira (un span): la
             tarjeta entera ya es el enlace. A todo el ancho (`proponerAncha`)
-            es una banda: el texto a la izquierda y el botón a la derecha. */
-        }
+            es una banda: el texto a la izquierda y el botón a la derecha. */}
         <a
           href={conDiseno(E.proponer.slug)}
           data-elige={E.proponer.slug}
@@ -174,7 +171,8 @@ const proponerAncha = E.disenos.length % 2 === 0;
           <span
             class:list={[
               "flex flex-col items-start",
-              proponerAncha && "lg:flex-row lg:items-end lg:justify-between lg:gap-12",
+              proponerAncha &&
+                "lg:flex-row lg:items-end lg:justify-between lg:gap-12",
             ]}
           >
             <span class="max-w-md titulo text-[1.75rem] leading-[1.1] text-balance sm:text-4xl">
@@ -192,17 +190,19 @@ const proponerAncha = E.disenos.length % 2 === 0;
         </a>
       </div>
 
-      {
-        /* La frontera con Eventos, con el estilo de "Hay más proyectos en
-          Instagram": no compite con las tarjetas. */
-      }
+      {/* La frontera con Eventos, con el estilo de "Hay más proyectos en
+          Instagram": no compite con las tarjetas. */}
       <div class="mt-12 flex justify-center px-6 md:mt-14">
         <a
           href={SERVICIOS.eventos.ruta}
           class="inline-flex max-w-xs items-center gap-2 border-b border-taupe/40 pb-1 text-center accion text-xs leading-relaxed text-black transition-colors hover:border-black sm:max-w-none"
         >
           {E.aEventos}
-          <Icon name="lucide:arrow-right" class="size-4 shrink-0" aria-hidden="true" />
+          <Icon
+            name="lucide:arrow-right"
+            class="size-4 shrink-0"
+            aria-hidden="true"
+          />
         </a>
       </div>
     </section>
@@ -218,7 +218,9 @@ const proponerAncha = E.disenos.length % 2 === 0;
 
   // "Pedir esta tarta" y la tarjeta de "que me proponga" bajan al formulario
   // sin recargar (ver elegirDiseno).
-  document.querySelectorAll<HTMLAnchorElement>("a[data-elige]").forEach((tarjeta) => {
-    alPulsarEnlace(tarjeta, () => elegirDiseno(tarjeta.dataset.elige!));
-  });
+  document
+    .querySelectorAll<HTMLAnchorElement>("a[data-elige]")
+    .forEach((tarjeta) => {
+      alPulsarEnlace(tarjeta, () => elegirDiseno(tarjeta.dataset.elige!));
+    });
 </script>

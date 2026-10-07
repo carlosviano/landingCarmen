@@ -39,24 +39,22 @@ const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
     />
   </div>
 
-  <h2 class="que-lleva leyenda text-rust">
-    Qué lleva
-  </h2>
+  <h2 class="que-lleva leyenda text-rust">Qué lleva</h2>
   <ul class="etiquetas">
-    {
-      tarta.componentes.map((componente) => (
-        <li
-          class:list={{ dentro: componente.dentro }}
-          style={`--x:${componente.punto!.x};--y:${componente.punto!.y}`}
-        >
-          <span class="etiqueta">
-            <span class="font-medium text-black">{componente.etiqueta}</span>
-            <span class="detalle text-black/65">{componente.descripcionCorta}</span>
+    {tarta.componentes.map((componente) => (
+      <li
+        class:list={{ dentro: componente.dentro }}
+        style={`--x:${componente.punto!.x};--y:${componente.punto!.y}`}
+      >
+        <span class="etiqueta">
+          <span class="font-medium text-black">{componente.etiqueta}</span>
+          <span class="detalle text-black/65">
+            {componente.descripcionCorta}
           </span>
-          <span class="linea" aria-hidden="true" />
-        </li>
-      ))
-    }
+        </span>
+        <span class="linea" aria-hidden="true" />
+      </li>
+    ))}
   </ul>
 </figure>
 
@@ -178,7 +176,8 @@ const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
     height: 8px;
     border-radius: 50%;
     background: var(--color-rust);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-linen) 90%, transparent);
+    box-shadow: 0 0 0 2px
+      color-mix(in srgb, var(--color-linen) 90%, transparent);
     transform: translateY(-50%);
   }
 

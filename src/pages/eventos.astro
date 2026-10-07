@@ -48,8 +48,7 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
   <Header />
 
   <main>
-    {
-      /* Cabecera a sangre: la foto ocupa la banda entera y el texto va abajo,
+    {/* Cabecera a sangre: la foto ocupa la banda entera y el texto va abajo,
         sobre un velo que oscurece sólo la parte baja. La de antes era una
         franja rust lisa con el titular, y a la clienta le faltaba algo: aquí
         lo que falta lo pone la foto, que es lo que se viene a ver.
@@ -61,12 +60,8 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
         El bloque de texto se estira contra la banda (flex-1) y el antetítulo
         se va abajo con mt-auto: así "Inicio" queda arriba y el titular abajo
         midan lo que midan banda y pantalla. El mb-16 de "Inicio" es el hueco
-        mínimo entre los dos si la pantalla es baja. */
-    }
-    <Hero
-      claseBanda="isolate overflow-hidden bg-black"
-      claseFranja="bg-rust"
-    >
+        mínimo entre los dos si la pantalla es baja. */}
+    <Hero claseBanda="isolate overflow-hidden bg-black" claseFranja="bg-rust">
       <Image
         src={fotoCabecera}
         alt={EVENTOS.altCabecera}
@@ -79,12 +74,9 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
       <div
         class="absolute inset-0 -z-10 bg-linear-to-b from-black/15 via-black/35 to-black/85"
         aria-hidden="true"
-      >
-      </div>
+      ></div>
 
-      <div
-        class="mx-auto flex w-full max-w-7xl flex-1 flex-col px-6 pt-10 pb-12 md:pb-14"
-      >
+      <div class="mx-auto flex w-full max-w-7xl flex-1 flex-col px-6 pt-10 pb-12 md:pb-14">
         <a
           href="/"
           class="mb-16 inline-flex items-center gap-2 self-start border-b border-linen/40 pb-1 accion text-xs text-linen/85 transition-colors hover:border-linen/70 hover:text-white"
@@ -97,18 +89,12 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
           Inicio
         </a>
 
-        <p class="mt-auto antetitulo text-sand">
-          {EVENTOS.etiquetaPagina}
-        </p>
-        <h1
-          class="mt-5 max-w-3xl titular text-4xl leading-[1.05] text-balance text-white sm:text-5xl lg:text-[4.5rem]"
-        >
+        <p class="mt-auto antetitulo text-sand">{EVENTOS.etiquetaPagina}</p>
+        <h1 class="mt-5 max-w-3xl titular text-4xl leading-[1.05] text-balance text-white sm:text-5xl lg:text-[4.5rem]">
           {EVENTOS.tituloPagina}
         </h1>
 
-        <div
-          class="mt-7 flex flex-col gap-7 md:flex-row md:items-center md:justify-between"
-        >
+        <div class="mt-7 flex flex-col gap-7 md:flex-row md:items-center md:justify-between">
           <p class="max-w-[33rem] text-base leading-relaxed text-white/85 sm:text-lg">
             {EVENTOS.entradillaPagina}
           </p>
@@ -123,44 +109,38 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
 
       <Ondas slot="fondo-franja" id="eventos-pasos" class="text-linen/12" />
       <ol slot="franja" class="grid w-full gap-5 md:grid-cols-3 md:gap-8">
-        {
-          EVENTOS.pasos.map((paso, i) => (
-            <li class="flex items-center gap-5">
-              <span class="w-6 shrink-0 text-center titulo text-4xl leading-none text-sand">{i + 1}</span>
-              <span>
-                <span class="block antetitulo text-linen">{paso.titulo}</span>
-                <span class="mt-1.5 block text-sm text-linen/80">
-                  {paso.detalle}
-                </span>
+        {EVENTOS.pasos.map((paso, i) => (
+          <li class="flex items-center gap-5">
+            <span class="w-6 shrink-0 text-center titulo text-4xl leading-none text-sand">
+              {i + 1}
+            </span>
+            <span>
+              <span class="block antetitulo text-linen">{paso.titulo}</span>
+              <span class="mt-1.5 block text-sm text-linen/80">
+                {paso.detalle}
               </span>
-            </li>
-          ))
-        }
+            </span>
+          </li>
+        ))}
       </ol>
     </Hero>
 
     <section class="pt-12 pb-2 md:pt-16 md:pb-4">
       <div class="mx-auto w-full max-w-7xl px-6">
         <p class="antetitulo text-rust">{EVENTOS.etiquetaMontajes}</p>
-        <h2
-          class="mt-4 titulo text-4xl leading-[1.08] text-balance sm:text-5xl"
-        >
+        <h2 class="mt-4 titulo text-4xl leading-[1.08] text-balance sm:text-5xl">
           {EVENTOS.tituloMontajes}
         </h2>
       </div>
 
-      <div
-        class="mx-auto mt-10 flex w-full max-w-7xl flex-col gap-10 px-6 md:mt-12 lg:gap-14"
-      >
-        {
-          conFoto.map(({ montaje, foto, fotoIzquierda }) => (
-            <TarjetaEvento
-              montaje={montaje}
-              foto={foto}
-              fotoIzquierda={fotoIzquierda}
-            />
-          ))
-        }
+      <div class="mx-auto mt-10 flex w-full max-w-7xl flex-col gap-10 px-6 md:mt-12 lg:gap-14">
+        {conFoto.map(({ montaje, foto, fotoIzquierda }) => (
+          <TarjetaEvento
+            montaje={montaje}
+            foto={foto}
+            fotoIzquierda={fotoIzquierda}
+          />
+        ))}
       </div>
 
       <div class="mt-14 flex justify-center px-6">

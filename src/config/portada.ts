@@ -119,7 +119,7 @@ export const GALERIA: Galeria = {
     {
       archivo: "mesa_cumple_nati.jpeg",
       alt: "Tarta redonda de cumpleaños estilo Paulova",
-    }
+    },
   ],
 };
 

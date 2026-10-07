@@ -47,29 +47,54 @@ export function primeraFechaEspecial(hoy: Date = new Date()): string {
 export const esquemaFotoDe = (megasMaximo: number) =>
   z
     .file()
-    .refine((archivo) => archivo.type.startsWith("image/"), "Sólo se pueden añadir imágenes.")
-    .max(megasMaximo * BYTES_POR_MEGA, `Cada foto puede pesar ${megasMaximo} MB como mucho.`);
+    .refine(
+      (archivo) => archivo.type.startsWith("image/"),
+      "Sólo se pueden añadir imágenes.",
+    )
+    .max(
+      megasMaximo * BYTES_POR_MEGA,
+      `Cada foto puede pesar ${megasMaximo} MB como mucho.`,
+    );
 
 /** La de eventos. */
 export const esquemaFoto = esquemaFotoDe(SOLICITUD_EVENTO.fotos.megasMaximo);
 
-const fotosHasta = ({ maximo, megasMaximo }: { maximo: number; megasMaximo: number }) =>
-  z.array(esquemaFotoDe(megasMaximo)).max(maximo, `Caben ${maximo} fotos como mucho.`);
+const fotosHasta = ({
+  maximo,
+  megasMaximo,
+}: {
+  maximo: number;
+  megasMaximo: number;
+}) =>
+  z
+    .array(esquemaFotoDe(megasMaximo))
+    .max(maximo, `Caben ${maximo} fotos como mucho.`);
 
 // Lo que cierra los dos formularios: quién escribe y el consentimiento.
 const contacto = {
-  nombre: z.string().trim().min(1, OBLIGATORIO).max(80, "80 caracteres como mucho."),
+  nombre: z
+    .string()
+    .trim()
+    .min(1, OBLIGATORIO)
+    .max(80, "80 caracteres como mucho."),
   telefono: z
     .string()
     .trim()
     .min(1, OBLIGATORIO)
     .refine(
-      (telefono) => /^\+?[\d\s().-]+$/.test(telefono) && telefono.replace(/\D/g, "").length >= 9,
+      (telefono) =>
+        /^\+?[\d\s().-]+$/.test(telefono) &&
+        telefono.replace(/\D/g, "").length >= 9,
       "Escribe un teléfono válido, con al menos 9 cifras.",
     ),
-  email: z.string().trim().min(1, OBLIGATORIO).pipe(z.email("Este email no parece válido.")),
+  email: z
+    .string()
+    .trim()
+    .min(1, OBLIGATORIO)
+    .pipe(z.email("Este email no parece válido.")),
   privacidad: z.literal("on", {
-    error: "Para enviar la solicitud tienes que aceptar la política de privacidad.",
+    error:
+      "Para enviar la solicitud tienes que aceptar la política de privacidad.",
   }),
 };
 
@@ -82,9 +107,17 @@ export const esquemaSolicitud = z.object({
   tipo: z.enum(SOLICITUD_EVENTO.tipos, { error: "Elige qué vas a celebrar." }),
   fecha: z.iso
     .date({ error: "Elige la fecha del evento." })
-    .refine((iso) => iso >= primeraFechaEvento(), "Elige una fecha a partir de mañana."),
-  invitados: z.enum(SOLICITUD_EVENTO.invitados, { error: "Elige cuántos invitados seréis, más o menos." }),
-  lugar: z.string().trim().max(120, "Con el nombre del sitio basta: 120 caracteres como mucho."),
+    .refine(
+      (iso) => iso >= primeraFechaEvento(),
+      "Elige una fecha a partir de mañana.",
+    ),
+  invitados: z.enum(SOLICITUD_EVENTO.invitados, {
+    error: "Elige cuántos invitados seréis, más o menos.",
+  }),
+  lugar: z
+    .string()
+    .trim()
+    .max(120, "Con el nombre del sitio basta: 120 caracteres como mucho."),
   interes: z
     .string()
     .trim()
@@ -93,7 +126,10 @@ export const esquemaSolicitud = z.object({
   fotos: fotosHasta(SOLICITUD_EVENTO.fotos),
   enlace: z.union([
     z.literal(""),
-    z.url({ protocol: /^https?$/, error: "Pega el enlace entero, empezando por https://" }),
+    z.url({
+      protocol: /^https?$/,
+      error: "Pega el enlace entero, empezando por https://",
+    }),
   ]),
   ...contacto,
 });
@@ -109,14 +145,30 @@ export const esquemaEspecial = z.object({
   // Obligatorio: quien no sabe cuál tiene "Que me proponga Carmela".
   diseno: z
     .string({ error: "Elige un diseño, o que te proponga uno." })
-    .refine((valor) => OPCIONES_DISENO.some((opcion) => opcion.valor === valor), "Elige uno de la lista."),
-  ocasion: z.enum(ESPECIALES.solicitud.ocasiones, { error: "Elige qué vas a celebrar." }),
+    .refine(
+      (valor) => OPCIONES_DISENO.some((opcion) => opcion.valor === valor),
+      "Elige uno de la lista.",
+    ),
+  ocasion: z.enum(ESPECIALES.solicitud.ocasiones, {
+    error: "Elige qué vas a celebrar.",
+  }),
   fecha: z.iso
     .date({ error: "Elige el día de recogida." })
-    .refine((iso) => iso >= primeraFechaEspecial(), "Elige un día a partir del primero que deja el calendario.")
-    .refine((iso) => esLaborable(new Date(`${iso}T12:00`)), "Se recoge de lunes a viernes."),
-  personas: z.enum(ESPECIALES.solicitud.personas, { error: "Elige cuántas personas seréis, más o menos." }),
-  idea: z.string().trim().max(2000, "Es demasiado largo: 2000 caracteres como mucho."),
+    .refine(
+      (iso) => iso >= primeraFechaEspecial(),
+      "Elige un día a partir del primero que deja el calendario.",
+    )
+    .refine(
+      (iso) => esLaborable(new Date(`${iso}T12:00`)),
+      "Se recoge de lunes a viernes.",
+    ),
+  personas: z.enum(ESPECIALES.solicitud.personas, {
+    error: "Elige cuántas personas seréis, más o menos.",
+  }),
+  idea: z
+    .string()
+    .trim()
+    .max(2000, "Es demasiado largo: 2000 caracteres como mucho."),
   fotos: fotosHasta(ESPECIALES.solicitud.fotos),
   ...contacto,
 });
@@ -127,14 +179,15 @@ export type SolicitudEspecial = z.infer<typeof esquemaEspecial>;
 export type ErroresSolicitud = Partial<Record<string, string>>;
 
 export type ResultadoSolicitud<T = Solicitud> =
-  | { ok: true; solicitud: T }
-  | { ok: false; errores: ErroresSolicitud };
+  { ok: true; solicitud: T } | { ok: false; errores: ErroresSolicitud };
 
 /** Valida una solicitud de evento. */
-export const validarSolicitud = (datos: FormData) => validarCon(esquemaSolicitud, datos);
+export const validarSolicitud = (datos: FormData) =>
+  validarCon(esquemaSolicitud, datos);
 
 /** Valida una solicitud de tarta especial. */
-export const validarEspecial = (datos: FormData) => validarCon(esquemaEspecial, datos);
+export const validarEspecial = (datos: FormData) =>
+  validarCon(esquemaEspecial, datos);
 
 /**
  * Valida lo que trae un formulario contra su esquema. Las claves que faltan
@@ -147,9 +200,13 @@ function validarCon<E extends z.ZodObject>(
 ): ResultadoSolicitud<z.infer<E>> {
   const campos = Object.keys(esquema.shape);
   const resultado = esquema.safeParse({
-    ...Object.fromEntries(campos.map((campo) => [campo, datos.get(campo) ?? undefined])),
+    ...Object.fromEntries(
+      campos.map((campo) => [campo, datos.get(campo) ?? undefined]),
+    ),
     // Un <input type="file"> sin nada elegido manda igual un archivo vacío.
-    fotos: datos.getAll("fotos").filter((foto) => foto instanceof File && foto.size > 0),
+    fotos: datos
+      .getAll("fotos")
+      .filter((foto) => foto instanceof File && foto.size > 0),
   });
   if (resultado.success) return { ok: true, solicitud: resultado.data };
 
@@ -184,7 +241,8 @@ export function mensajeEvento(datos: DatosEvento = {}): string {
 
   if (datos.tipo) partes.push(conArticulo(datos.tipo));
   if (datos.fecha) partes.push(`el ${fechaLarga(datos.fecha)}`);
-  if (datos.invitados) partes.push(`para ${datos.invitados.toLowerCase()} invitados`);
+  if (datos.invitados)
+    partes.push(`para ${datos.invitados.toLowerCase()} invitados`);
   if (datos.lugar?.trim()) partes.push(`en ${datos.lugar.trim()}`);
 
   return partes.length ? `${saludo}: ${partes.join(", ")}.` : `${saludo}.`;
@@ -209,13 +267,15 @@ export function mensajeEspecial(datos: DatosEspecial = {}): string {
   const saludo = "Hola, te escribo desde la web por una tarta especial";
   const partes: string[] = [];
 
-  if (datos.diseno === ESPECIALES.proponer.slug) partes.push("que me propongas un diseño");
+  if (datos.diseno === ESPECIALES.proponer.slug)
+    partes.push("que me propongas un diseño");
   else {
     const diseno = ESPECIALES.disenos.find((d) => d.slug === datos.diseno);
     if (diseno) partes.push(diseno.nombre);
   }
   if (datos.ocasion) partes.push(`para ${conArticulo(datos.ocasion)}`);
-  if (datos.personas) partes.push(`de ${datos.personas.toLowerCase()} personas`);
+  if (datos.personas)
+    partes.push(`de ${datos.personas.toLowerCase()} personas`);
   if (datos.fecha) partes.push(`a recoger el ${fechaLarga(datos.fecha)}`);
 
   return partes.length ? `${saludo}: ${partes.join(", ")}.` : `${saludo}.`;

@@ -36,9 +36,16 @@ const PANEL_ID = "menu-movil";
   aria-expanded="false"
   class="flex size-10 items-center justify-center rounded-md border border-sand/25 transition-colors hover:bg-sand/10 md:hidden"
 >
-  <span class="sr-only" data-menu-label>Abrir menú</span>
+  <span class="sr-only" data-menu-label>
+    Abrir menú
+  </span>
   <Icon name="lucide:menu" class="size-5" aria-hidden="true" data-icon-open />
-  <Icon name="lucide:x" class="hidden size-5" aria-hidden="true" data-icon-close />
+  <Icon
+    name="lucide:x"
+    class="hidden size-5"
+    aria-hidden="true"
+    data-icon-close
+  />
 </button>
 
 <div
@@ -63,7 +70,8 @@ const PANEL_ID = "menu-movil";
 </div>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const toggle =
+    document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const panel = document.getElementById("menu-movil");
 
   if (toggle && panel) {
@@ -79,14 +87,16 @@ const PANEL_ID = "menu-movil";
       iconoAbrir?.classList.toggle("hidden", abierto);
       iconoCerrar?.classList.toggle("hidden", !abierto);
       toggle.setAttribute("aria-expanded", String(abierto));
-      if (etiqueta) etiqueta.textContent = abierto ? "Cerrar menú" : "Abrir menú";
+      if (etiqueta)
+        etiqueta.textContent = abierto ? "Cerrar menú" : "Abrir menú";
     };
 
     toggle.addEventListener("click", () => mostrar(!estaAbierto()));
 
     // Al pulsar un enlace navegamos a la sección: el panel ya estorba.
     panel.addEventListener("click", (evento) => {
-      if ((evento.target as HTMLElement).closest("a[href^='#']")) mostrar(false);
+      if ((evento.target as HTMLElement).closest("a[href^='#']"))
+        mostrar(false);
     });
 
     // Si la pantalla crece hasta md con el panel abierto (girar una tableta),

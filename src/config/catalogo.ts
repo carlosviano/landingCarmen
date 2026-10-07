@@ -331,7 +331,8 @@ export const CATALOGO: Catalogo = {
           punto: { x: 19, y: 72 },
         },
       ],
-      descripcion: "Masa de profiterol rellena de praliné, con mousse de avellana.",
+      descripcion:
+        "Masa de profiterol rellena de praliné, con mousse de avellana.",
     },
   ],
 };

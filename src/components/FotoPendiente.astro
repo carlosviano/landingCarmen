@@ -14,5 +14,7 @@ const { class: className } = Astro.props;
 ---
 
 <div class:list={["grid place-items-center", className]}>
-  <span class="leyenda text-rust/70"><slot>Foto pendiente</slot></span>
+  <span class="leyenda text-rust/70">
+    <slot>Foto pendiente</slot>
+  </span>
 </div>
