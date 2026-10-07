@@ -854,12 +854,12 @@ export const ESCAPARATE: Escaparate = {
  *
  * En la ficha, cada componente puede llevar una línea que sale de su etiqueta
  * y llega a su sitio en la foto recortada (`Tarta.recorte`). Lo que dice
- * ADÓNDE llega son `punto`, `franja` y `dentro`, y son datos de cada tarta, no
+ * ADÓNDE llega son `punto` y `dentro`, y son datos de cada tarta, no
  * código: la ficha es una sola plantilla y pinta las líneas donde digan estos
  * números. Una tarta montada de otra manera lleva otros números, no otra
  * página.
  *
- * Los tres son opcionales. Si a un solo componente le falta el `punto`, la
+ * Los dos son opcionales. Si a un solo componente le falta el `punto`, la
  * ficha entera sale sin líneas (ver `estaAnotada` en src/lib/pedido.ts): una
  * ficha medio anotada parece rota.
  */
@@ -871,16 +871,14 @@ export interface ComponenteTarta {
    * arriba abajo. En porcentaje y no en píxeles para que siga apuntando al
    * mismo sitio a cualquier tamaño.
    *
-   * En móvil sólo se ve la mitad izquierda de la tarta (sangra por la
-   * derecha), así que x tiene que quedar por debajo de ~40.
+   * Tres reglas para que todas las fichas se lean igual:
+   *  - En móvil sólo se ve el 45 % izquierdo del lienzo (la tarta sangra por
+   *    la derecha), así que x tiene que quedar por debajo de ~40.
+   *  - Cada etiqueta va a la altura de su punto, así que entre dos puntos
+   *    tiene que haber al menos ~14 de y o las etiquetas se pisan en móvil.
+   *  - El punto cae SOBRE lo que nombra, nunca en el aire ni en el borde.
    */
   punto?: { x: number; y: number };
-  /**
-   * De qué altura a qué altura va la capa, en % del alto del recorte. Pinta
-   * la llave de móvil. Sólo tiene sentido en capas: una ralladura o una
-   * decoración van sin franja, sólo con punto.
-   */
-  franja?: [desde: number, hasta: number];
   /**
    * Está dentro y no se ve en la foto (una crema bajo el merengue). La línea
    * sale discontinua y el punto hueco, para no prometer algo que no se ve.
@@ -901,15 +899,6 @@ export interface TamanoTarta {
 }
 
 /**
- * Las familias de la carta. Son las que se pintan como chips de filtro en la
- * rejilla, en este orden, así que añadir una aquí la añade al filtro sola.
- * Una familia sin tartas no se pinta.
- */
-export const CATEGORIAS = ["Clásicas", "Intensas", "Frescas"] as const;
-
-export type CategoriaTarta = (typeof CATEGORIAS)[number];
-
-/**
  * Una tarta de la carta.
  *
  * Tuvo un `saborDestacado` ("Cacao amargo", "Fresón de temporada") que hacía
@@ -928,8 +917,6 @@ export interface Tarta {
    */
   id: string;
   nombre: string;
-  /** Familia a la que pertenece. Es por lo que filtran los chips de la carta. */
-  categoria: CategoriaTarta;
   /**
    * Foto CON fondo, para la tarjeta de la carta: nombre del archivo en
    * `src/assets/images/`, o `null` si todavía no hay.
@@ -944,8 +931,11 @@ export interface Tarta {
    * las líneas de `componentes`. Va aparte de `archivo` porque son dos fotos
    * distintas: esta no aguanta un `object-cover`, se lo comería.
    *
-   * Recortada PEGADA a la tarta, sin margen transparente: los porcentajes de
-   * `punto` y `franja` son del archivo entero, y el margen los descuadraría.
+   * Todas en el MISMO LIENZO: 1200×1040, con la tarta a todo el ancho y
+   * centrada en alto. Así todas salen del mismo tamaño y en la misma caja, en
+   * la ficha y en la tarjeta, y un `punto` en % significa lo mismo en todas.
+   * Se sacan de la foto sin fondo recortándola pegada a la tarta, escalándola
+   * a 1200 de ancho y centrándola en el lienzo (ver src/assets/README.md).
    */
   recorte?: string;
   /** Describe la tarta, sin nombres ni pronombres, como el resto del sitio. */
@@ -972,15 +962,14 @@ export interface Catalogo {
   tituloPagina: string;
   /** Entradilla de /catalogo. */
   entradilla: string;
-  /** Chip que no filtra nada y viene activo. Va primero, delante de CATEGORIAS. */
-  filtroTodas: string;
   tartas: Tarta[];
 }
 
-// TODO: precios reales. Mientras esto siga en true, todos los precios de la
-// web salen entre corchetes ("[28 €]"), para que se vea que son de relleno y
-// no se publiquen sin querer. Cuando estén todos, a false.
-export const PRECIOS_PROVISIONALES = true;
+// En true, todos los precios de la web salen entre corchetes ("[28 €]"), para
+// que se vea que son de relleno y no se publiquen sin querer. Desde octubre de
+// 2026 son los de la clienta, así que va en false; vuelve a true si alguna
+// tarta entra con un precio inventado.
+export const PRECIOS_PROVISIONALES = false;
 
 // Todo lo del CTA de pedido en un solo sitio: el destino puede acabar siendo
 // un formulario, un carrito o el WhatsApp de ahora, y cambiarlo tiene que ser
@@ -1023,65 +1012,221 @@ export const PEDIDO = {
 // las resuelve `fotoDe()` (src/lib/fotos.ts), que revienta el build si el
 // nombre no existe. Ver src/assets/README.md para cómo se hacen.
 //
-// Ahora mismo la carta tiene UNA tarta: la única de la que hay recorte sin
-// fondo. Las otras siete (con sus textos inventados) se quitaron a la espera
-// de fotos; están en el historial de git, en el commit anterior a este cambio.
-// Las fichas se irán añadiendo según lleguen los recortes.
+// Ahora mismo la carta tiene SEIS tartas: las que tienen recorte sin fondo.
+// Las siete de la maqueta original (con sus textos inventados) se quitaron a
+// la espera de fotos; están en el historial de git. Las fichas se irán
+// añadiendo según lleguen los recortes.
 export const CATALOGO: Catalogo = {
   etiqueta: "Nuestra carta",
   titulo: "Tartas de temporada",
   tituloPagina: "La carta",
   entradilla:
     "Todas por encargo. El tamaño, la conservación y la antelación de cada una están en su ficha.",
-  filtroTodas: "Todas",
   tartas: [
     {
+      // El id se queda con el nombre antiguo porque esta ficha ya está
+      // publicada: cambiarlo rompería los enlaces compartidos.
       id: "limon-y-merengue",
-      nombre: "Limón y merengue",
-      categoria: "Frescas",
+      nombre: "Tartaleta de limón",
       // TODO: foto con fondo para la tarjeta. Mientras no haya, la tarjeta
       // pinta el recorte sobre el fondo.
       archivo: null,
-      // Recortado del original (tarta-limon-sin-fondo.png, 1536×1024) a la
-      // tarta: 1400×775 desde x 80, y 150. Los puntos de abajo son de ESTE.
-      recorte: "tarta-limon-recorte.png",
+      // En el lienzo común (ver `Tarta.recorte`).
+      recorte: "limon-ficha.png",
       alt: "Tarta redonda de base de galleta gruesa, cubierta de picos de merengue con ralladura de lima.",
-      // TODO: precios reales.
       tamanos: [
-        { personas: "4–6", precio: 28 },
-        { personas: "8–10", precio: 38 },
+        { personas: "4–6", precio: 25 },
+        { personas: "8–10", precio: 42 },
       ],
       conservacion: "Nevera, 48 h",
-      // TODO: textos reales. Los de esta tarta son de relleno, escritos para
-      // la maqueta de la ficha.
       componentes: [
         {
           etiqueta: "Ralladura de lima",
-          descripcionCorta: "Rallada al servir, no antes",
-          punto: { x: 24.9, y: 15.2 },
+          descripcionCorta: "Por encima del merengue",
+          punto: { x: 22.5, y: 23 },
         },
         {
-          etiqueta: "Merengue italiano",
-          descripcionCorta: "Picos a manga, uno a uno",
-          punto: { x: 8.6, y: 38.7 },
-          franja: [22, 50.5],
+          etiqueta: "Merengue",
+          descripcionCorta: "En picos, sobre el limón",
+          punto: { x: 8, y: 45 },
         },
         {
-          etiqueta: "Crema de limón",
-          descripcionCorta: "Por dentro, bajo el merengue",
-          punto: { x: 6.4, y: 56.8 },
-          franja: [51.5, 59.5],
-          dentro: true,
-        },
-        {
-          etiqueta: "Base de sablé",
-          descripcionCorta: "Gruesa, de mantequilla y almendra",
-          punto: { x: 8.6, y: 76.1 },
-          franja: [60.5, 97],
+          etiqueta: "Tartaleta de limón",
+          descripcionCorta: "La base, rellena de limón",
+          punto: { x: 14, y: 72 },
         },
       ],
       descripcion:
-        "Ácida, con el merengue justo para calmarla. El sablé es grueso a propósito: aguanta la crema sin reblandecerse y cruje hasta el último trozo.",
+        "Tartaleta de limón cubierta de merengue y terminada con ralladura de lima.",
+    },
+    {
+      id: "tartaleta-de-chocolate",
+      nombre: "Tartaleta de chocolate negro 70,5 %",
+      // TODO: foto con fondo para la tarjeta.
+      archivo: null,
+      // En el lienzo común (ver `Tarta.recorte`).
+      recorte: "chocolate-ficha.png",
+      alt: "Tarta redonda de base de cacao, rellena de chocolate brillante hasta el borde y espolvoreada de cacao en polvo.",
+      tamanos: [
+        { personas: "4–6", precio: 27 },
+        { personas: "8–10", precio: 45 },
+      ],
+      conservacion: "Nevera, 48 h",
+      componentes: [
+        {
+          etiqueta: "Cacao espolvoreado",
+          descripcionCorta: "Por encima",
+          punto: { x: 22, y: 24 },
+        },
+        {
+          etiqueta: "Mousse de chocolate negro",
+          descripcionCorta: "La capa de arriba",
+          punto: { x: 8, y: 42 },
+        },
+        {
+          etiqueta: "Cremoso de chocolate negro",
+          descripcionCorta: "Por dentro, bajo la mousse",
+          punto: { x: 12, y: 57 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Tartaleta de chocolate negro",
+          descripcionCorta: "La base",
+          punto: { x: 12, y: 78 },
+        },
+      ],
+      descripcion:
+        "Tartaleta de chocolate negro al 70,5 % con cremoso y mousse de chocolate negro, espolvoreada de cacao.",
+    },
+    {
+      id: "pavlova-de-melocoton",
+      nombre: "Pavlova de melocotón",
+      // TODO: foto con fondo para la tarjeta. Hay una de esta tarta
+      // (tarta_cumple_kika_2026.jpeg, la del escaparate), pero con ella
+      // sería la única tarjeta con foto y las demás con recorte.
+      archivo: null,
+      // En el lienzo común (ver `Tarta.recorte`).
+      recorte: "pavlova-ficha.png",
+      alt: "Pavlova alta cubierta de picos redondos de merengue y coronada de gajos de melocotón asado, sobre una base dorada.",
+      tamanos: [
+        { personas: "4–6", precio: 25 },
+        { personas: "8–10", precio: 42 },
+      ],
+      conservacion: "Se come recién montada",
+      componentes: [
+        {
+          etiqueta: "Melocotón",
+          descripcionCorta: "Por encima",
+          punto: { x: 25, y: 25.5 },
+        },
+        {
+          etiqueta: "Crema pastelera",
+          descripcionCorta: "Con chips de chocolate",
+          punto: { x: 33, y: 45 },
+        },
+        {
+          etiqueta: "Bizcocho",
+          descripcionCorta: "Por dentro",
+          punto: { x: 16, y: 61 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Merengue seco",
+          descripcionCorta: "Por fuera",
+          punto: { x: 9, y: 78 },
+        },
+      ],
+      descripcion:
+        "Merengue seco, bizcocho y crema pastelera con chips de chocolate, coronada de melocotón.",
+    },
+    {
+      id: "tarta-de-la-abuela",
+      nombre: "Tarta de la abuela",
+      // TODO: foto con fondo para la tarjeta.
+      archivo: null,
+      // En el lienzo común (ver `Tarta.recorte`).
+      recorte: "galleta-ficha.png",
+      alt: "Galleta gigante redonda, dorada y con azúcar por encima, salpicada de pepitas de chocolate negro y con leche, sobre una base de cartón.",
+      tamanos: [
+        { personas: "4–6", precio: 27 },
+        { personas: "8–10", precio: 45 },
+      ],
+      conservacion: "Fuera de nevera, 3 días",
+      componentes: [
+        {
+          etiqueta: "Cremoso de chocolate",
+          descripcionCorta: "Por encima",
+          punto: { x: 16, y: 34 },
+        },
+        {
+          etiqueta: "Mousse de galleta",
+          descripcionCorta: "El cuerpo de la tarta",
+          punto: { x: 13, y: 62 },
+        },
+      ],
+      descripcion: "Mousse de galleta con cremoso de chocolate.",
+    },
+    {
+      id: "nueces-de-macadamia",
+      nombre: "Tarta de nueces de macadamia",
+      // TODO: foto con fondo para la tarjeta.
+      archivo: null,
+      // En el lienzo común (ver `Tarta.recorte`), sacado de
+      // tarta-nueces-macadamia-nueva.png: foto real, sustituye a la anterior.
+      recorte: "nueces-macadamia-ficha.png",
+      alt: "Tarta redonda baja de superficie abombada, con un glaseado dorado y brillante, rodeada de un aro claro y jaspeado.",
+      // Sólo se hace en el tamaño grande.
+      tamanos: [{ personas: "8–10", precio: 47 }],
+      conservacion: "Nevera, 48 h",
+      // Las nueces no se ven en la foto, así que van con el toffee y no con
+      // un punto propio: tres puntos separados caben en la tarta, cuatro se
+      // pisarían.
+      componentes: [
+        {
+          etiqueta: "Toffee",
+          descripcionCorta: "Con nueces de macadamia",
+          punto: { x: 24, y: 29 },
+        },
+        {
+          etiqueta: "Vainilla",
+          descripcionCorta: "Bajo el toffee",
+          punto: { x: 6, y: 43 },
+        },
+        {
+          etiqueta: "Borde de chocolate blanco",
+          descripcionCorta: "Por fuera",
+          punto: { x: 13, y: 65 },
+        },
+      ],
+      descripcion:
+        "Toffee, vainilla y nueces de macadamia, dentro de un borde de chocolate blanco.",
+    },
+    {
+      id: "choux-de-avellana",
+      nombre: "Choux de avellana",
+      // TODO: foto con fondo para la tarjeta.
+      archivo: null,
+      // En el lienzo común (ver `Tarta.recorte`).
+      recorte: "paris-brest-ficha.png",
+      alt: "Corona de pasta choux espolvoreada de azúcar glas, rellena de crema de avellana y decorada con avellanas caramelizadas.",
+      tamanos: [
+        { personas: "4–6", precio: 27 },
+        { personas: "8–10", precio: 45 },
+      ],
+      conservacion: "Nevera, 24 h",
+      componentes: [
+        {
+          etiqueta: "Masa de profiterol",
+          descripcionCorta: "Rellena de praliné",
+          punto: { x: 20, y: 20 },
+        },
+        {
+          etiqueta: "Mousse de avellana",
+          descripcionCorta: "Entre las dos coronas",
+          punto: { x: 19, y: 72 },
+        },
+      ],
+      descripcion: "Masa de profiterol rellena de praliné, con mousse de avellana.",
     },
   ],
 };

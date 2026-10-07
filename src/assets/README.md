@@ -174,6 +174,26 @@ Detalles que se notan en pantalla:
   también el color que se ve mientras la foto carga.
 - **la sombra la pone el CSS**, no hace falta que la foto la traiga pintada.
 
+## Los recortes de la ficha (`*-ficha.png`)
+
+La ficha anotada usa una foto SIN fondo (`recorte` de cada tarta), y las seis
+comparten **el mismo lienzo: 1200×1040, transparente, con la tarta a todo el
+ancho y centrada en alto**. Por eso todas salen del mismo tamaño y en la misma
+caja, y por eso los `punto` en % de `site.ts` se pueden comparar entre tartas.
+
+Para una tarta nueva, desde su PNG sin fondo (en ángulo como las demás):
+
+1. recortarlo pegado a la tarta (la caja de lo que no es transparente),
+2. escalarlo a 1200 de ancho,
+3. pegarlo centrado en alto en un lienzo transparente de 1200×1040.
+
+Si la tarta es más alta que el lienzo (más de 1040 una vez a 1200 de ancho),
+hay que subir el alto del lienzo de TODAS, no encoger esa: si no, vuelve a
+salir de otro tamaño. Hoy la más alta es la pavlova, con 1032.
+
+Con el lienzo hecho, los puntos se buscan sobre la foto con una rejilla en %,
+con las reglas de `ComponenteTarta.punto`.
+
 ## Sí pasan por `<Image>` de Astro
 
 Al vivir en `src/assets/` (y no ser URLs remotas), el build les saca sus `webp`
