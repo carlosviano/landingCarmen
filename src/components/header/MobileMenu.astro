@@ -9,18 +9,6 @@
 // El panel se posiciona absolute respecto al <header> (que es sticky, y por
 // tanto sirve de referencia): así se despliega por debajo de la barra ocupando
 // todo el ancho, sin ser un hijo del contenedor flex y sin desplazar la página.
-//
-// Y ocupa el resto de la pantalla: `100dvh - 100%`, donde el 100% es el alto
-// del <header> (en un absolute, el % de la altura es el de su referencia).
-// `dvh` y no `vh`: en Safari de iOS `100vh` mide la pantalla con la barra del
-// navegador escondida, y con la barra a la vista el panel se quedaría debajo.
-//
-// Mientras está abierto la página no hace scroll por detrás.
-//
-// En iOS 26 por debajo de la barra flotante de Safari se ve la página: es lo
-// normal allí y se deja así. Taparlo (fondo rust y página oculta con el menú
-// abierto) funcionaba, pero Safari se quedaba la barra teñida de rust al
-// cerrar el menú, hasta recargar.
 import { Icon } from "astro-icon/components";
 import AddressLink from "./AddressLink.astro";
 import NavLinks from "./NavLinks.astro";
@@ -36,31 +24,19 @@ const PANEL_ID = "menu-movil";
   aria-expanded="false"
   class="flex size-10 items-center justify-center rounded-md border border-sand/25 transition-colors hover:bg-sand/10 md:hidden"
 >
-  <span class="sr-only" data-menu-label>
-    Abrir menú
-  </span>
+  <span class="sr-only" data-menu-label>Abrir menú</span>
   <Icon name="lucide:menu" class="size-5" aria-hidden="true" data-icon-open />
-  <Icon
-    name="lucide:x"
-    class="hidden size-5"
-    aria-hidden="true"
-    data-icon-close
-  />
+  <Icon name="lucide:x" class="hidden size-5" aria-hidden="true" data-icon-close />
 </button>
 
 <div
   id={PANEL_ID}
-  class="absolute inset-x-0 top-full hidden h-[calc(100dvh-100%)] overflow-y-auto overscroll-contain border-t border-sand/15 bg-rust md:hidden"
+  class="absolute inset-x-0 top-full hidden border-t border-sand/15 bg-rust md:hidden"
 >
-  {/* `min-h-full` + `mt-auto`: los enlaces arriba y la dirección con las redes
-      pegadas abajo, con su separador. Si no cabe todo, se hace scroll. */}
-  <nav
-    aria-label="Navegación móvil"
-    class="flex min-h-full flex-col px-6 pt-4 pb-10"
-  >
+  <nav aria-label="Navegación móvil" class="px-6 py-4">
     <NavLinks variant="panel" />
 
-    <div class="mt-auto flex flex-col gap-4 border-t border-sand/15 pt-6">
+    <div class="mt-4 flex flex-col gap-4 border-t border-sand/15 pt-4">
       {/* En la barra la dirección se oculta por debajo de lg, así que este es
           el único sitio donde la ve quien entra desde el móvil. */}
       <AddressLink class="flex px-2" />
@@ -70,8 +46,7 @@ const PANEL_ID = "menu-movil";
 </div>
 
 <script>
-  const toggle =
-    document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const panel = document.getElementById("menu-movil");
 
   if (toggle && panel) {
@@ -83,26 +58,17 @@ const PANEL_ID = "menu-movil";
 
     const mostrar = (abierto: boolean) => {
       panel.classList.toggle("hidden", !abierto);
-      document.documentElement.classList.toggle("overflow-hidden", abierto);
       iconoAbrir?.classList.toggle("hidden", abierto);
       iconoCerrar?.classList.toggle("hidden", !abierto);
       toggle.setAttribute("aria-expanded", String(abierto));
-      if (etiqueta)
-        etiqueta.textContent = abierto ? "Cerrar menú" : "Abrir menú";
+      if (etiqueta) etiqueta.textContent = abierto ? "Cerrar menú" : "Abrir menú";
     };
 
     toggle.addEventListener("click", () => mostrar(!estaAbierto()));
 
     // Al pulsar un enlace navegamos a la sección: el panel ya estorba.
     panel.addEventListener("click", (evento) => {
-      if ((evento.target as HTMLElement).closest("a[href^='#']"))
-        mostrar(false);
-    });
-
-    // Si la pantalla crece hasta md con el panel abierto (girar una tableta),
-    // el panel desaparece por CSS pero el bloqueo del scroll no: se cierra.
-    matchMedia("(min-width: 48rem)").addEventListener("change", (consulta) => {
-      if (consulta.matches) mostrar(false);
+      if ((evento.target as HTMLElement).closest("a[href^='#']")) mostrar(false);
     });
 
     document.addEventListener("keydown", (evento) => {

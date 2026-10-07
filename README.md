@@ -172,7 +172,7 @@ PROXIMAMENTE=1 npm run dev
 ```
 
 **Abrir la web** es poner `PROXIMAMENTE.enProduccion` a `false` en
-[`src/config/proximamente.ts`](./src/config/proximamente.ts) y seguir el flujo de siempre
+[`src/config/site.ts`](./src/config/site.ts) y seguir el flujo de siempre
 (PR → staging → main). No se apaga sola el día de la fecha: el sitio es
 estático y nadie lo reconstruye a medianoche.
 

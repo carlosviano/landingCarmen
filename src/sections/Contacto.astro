@@ -50,26 +50,39 @@ const mapaAncho = await getImage({
 ---
 
 <section id="contacto" class="scroll-mt-20">
-  {/* El diseño no lleva titular visible: la tarjeta se explica sola. Pero el
-      esquema del documento no puede tener una sección muda. */}
+  {
+    /* El diseño no lleva titular visible: la tarjeta se explica sola. Pero el
+      esquema del documento no puede tener una sección muda. */
+  }
   <h2 class="sr-only">Dónde estamos</h2>
 
   <div class="mx-auto w-full max-w-7xl px-6 py-16 md:py-24">
-    {/* Blanco y no linen: es lo único de la paleta que se despega del fondo de
+    {
+      /* Blanco y no linen: es lo único de la paleta que se despega del fondo de
         página. Aun así lleva anillo y sombra, porque los claros de esta paleta
         se distinguen entre sí por debajo de 1.2 (ver global.css) y el color
-        solo no basta para leerlo como panel. */}
-    <div class="grid overflow-hidden rounded-3xl bg-white shadow-xl shadow-black/5 ring-1 ring-taupe/25 md:grid-cols-2">
-      {/* justify-center para cuando manda la altura mínima del mapa y sobra
-          sitio: sin esto el texto se quedaría pegado arriba. */}
+        solo no basta para leerlo como panel. */
+    }
+    <div
+      class="grid overflow-hidden rounded-3xl bg-white shadow-xl shadow-black/5 ring-1 ring-taupe/25 md:grid-cols-2"
+    >
+      {
+        /* justify-center para cuando manda la altura mínima del mapa y sobra
+          sitio: sin esto el texto se quedaría pegado arriba. */
+      }
       <div class="flex flex-col justify-center p-8 sm:p-10 lg:p-14">
-        <p class="antetitulo text-rust">{CONTACTO.ciudad}</p>
-        <p class="mt-3 titulo text-3xl leading-tight text-balance sm:text-4xl md:text-3xl lg:text-5xl">
+        <p class="antetitulo text-rust">
+          {CONTACTO.ciudad}
+        </p>
+        <p
+          class="mt-3 titulo text-3xl leading-tight text-balance sm:text-4xl md:text-3xl lg:text-5xl"
+        >
           {CONTACTO.titular}
         </p>
         <p class="mt-3 text-sm text-black/60">{CONTACTO.detalle}</p>
 
-        {/* El horario en tabla y no en lista corrida: el día a la izquierda,
+        {
+          /* El horario en tabla y no en lista corrida: el día a la izquierda,
             su hora pegada al margen derecho y una línea fina debajo. Así se lee
             por columnas y de un vistazo, en vez de palabra a palabra, que es lo
             que convierte el bloque en una ficha consultable.
@@ -87,19 +100,23 @@ const mapaAncho = await getImage({
             tabular-nums alinea los dígitos en columna: sin él el 1 de las 10:00
             es más estrecho que el 0 de las 09:00 y las dos filas de horas
             quedan descuadradas por medio carácter justo donde el ojo baja en
-            vertical. */}
+            vertical. */
+        }
         <dl class="mt-8">
-          {HORARIO.map((franja) => (
-            <div class="flex items-baseline justify-between gap-x-6 border-b border-taupe/40 py-3 text-sm">
-              <dt class="font-medium">{franja.dias}</dt>
-              <dd class="text-right tabular-nums text-black/60">
-                {franja.horas}
-              </dd>
-            </div>
-          ))}
+          {
+            HORARIO.map((franja) => (
+              <div class="flex items-baseline justify-between gap-x-6 border-b border-taupe/40 py-3 text-sm">
+                <dt class="font-medium">{franja.dias}</dt>
+                <dd class="text-right tabular-nums text-black/60">
+                  {franja.horas}
+                </dd>
+              </div>
+            ))
+          }
         </dl>
 
-        {/* La píldora de "Cómo llegar" del mapa, aquí sobre claro: relleno
+        {
+          /* La píldora de "Cómo llegar" del mapa, aquí sobre claro: relleno
             rust y texto linen. Sustituye al enlace de texto de antes, que con
             el horario ya en tabla se perdía entre las líneas y no se leía como
             LA acción de la sección.
@@ -110,18 +127,19 @@ const mapaAncho = await getImage({
 
             Las redes que quedan van de enlace subrayado y no de círculo de
             iconos: al lado de una píldora rellena, dos círculos de sand pesan
-            casi lo mismo que ella y la fila se queda sin jerarquía. El subrayado
-            es fijo y no solo al pasar por encima: tiene que verse como enlace
-            desde el primer momento.
+            casi lo mismo que ella y la fila se queda sin jerarquía. Es el mismo
+            secundario del hero, con el subrayado fijo por lo mismo que allí:
+            tiene que verse como enlace desde el primer momento.
 
             wa.me y no tel:, que es lo que se espera del icono: abre la
-            conversación en la app o en la web. */}
+            conversación en la app o en la web. */
+        }
         <div class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
           <a
             href={CONTACTO.whatsapp.href}
             target="_blank"
             rel="noopener noreferrer"
-            class="flex items-center gap-2 rounded-full bg-rust px-6 py-3 accion text-xs text-linen shadow-lg shadow-black/20 transition-colors hover:bg-rust-hondo"
+            class="flex items-center gap-2 rounded-full bg-rust px-6 py-3 accion text-xs text-linen shadow-lg shadow-black/20 transition-colors hover:bg-black hover:text-white"
           >
             <Icon
               name="simple-icons:whatsapp"
@@ -132,20 +150,23 @@ const mapaAncho = await getImage({
             {CONTACTO.whatsapp.visible}
           </a>
 
-          {REDES.map((red) => (
-            <a
-              href={red.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="border-b border-taupe/50 pb-1 accion text-xs transition-colors hover:border-rust hover:text-rust"
-            >
-              {red.label}
-            </a>
-          ))}
+          {
+            REDES.map((red) => (
+              <a
+                href={red.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="border-b border-taupe/50 pb-1 accion text-xs transition-colors hover:border-rust hover:text-rust"
+              >
+                {red.label}
+              </a>
+            ))
+          }
         </div>
       </div>
 
-      {/* h-72 solo cuando está apilado, porque ahí no hay hermano que le dé
+      {
+        /* h-72 solo cuando está apilado, porque ahí no hay hermano que le dé
           altura.
 
           En dos columnas es un MÍNIMO, nunca una altura fija: si algún día el
@@ -155,7 +176,8 @@ const mapaAncho = await getImage({
 
           Los 30rem de escritorio están elegidos: con la celda de 616px dan una
           proporción de 1.28, casi la 1.3 de la imagen, así que el mapa se ve
-          prácticamente sin recortar. */}
+          prácticamente sin recortar. */
+      }
       <a
         href={CONTACTO.mapa}
         target="_blank"
@@ -166,9 +188,12 @@ const mapaAncho = await getImage({
           aria-hidden="true"
           style={`--mapa-movil:url('${mapaMovil.src}');--mapa-ancho:url('${mapaAncho.src}')`}
           class="absolute inset-0 bg-[image:var(--mapa-movil)] bg-cover bg-center transition-transform duration-500 group-hover:scale-[1.03] md:bg-[image:var(--mapa-ancho)]"
-        ></div>
+        >
+        </div>
 
-        <span class="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full whitespace-nowrap bg-rust px-6 py-3 accion text-xs text-linen shadow-lg shadow-black/25 transition-colors group-hover:bg-rust-hondo">
+        <span
+          class="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full whitespace-nowrap bg-rust px-6 py-3 accion text-xs text-linen shadow-lg shadow-black/25 transition-colors group-hover:bg-black group-hover:text-white"
+        >
           <Icon
             name="lucide:navigation"
             class="size-4 shrink-0"
@@ -177,12 +202,16 @@ const mapaAncho = await getImage({
           Cómo llegar
         </span>
 
-        {/* Los datos son ODbL: el crédito es obligatorio y tiene que verse.
+        {
+          /* Los datos son ODbL: el crédito es obligatorio y tiene que verse.
             La legibilidad la da un halo blanco por text-shadow y NO un fondo:
             debajo puede caer cualquier cosa del mapa, pero una caja opaca en la
             esquina se lee como un agujero, como si la imagen no llegara al
-            borde de abajo. El halo se pega a las letras y no recorta nada. */}
-        <span class="absolute right-3 bottom-2 text-[10px] text-black/60 [text-shadow:0_0_3px_rgb(255_255_255),0_0_6px_rgb(255_255_255)]">
+            borde de abajo. El halo se pega a las letras y no recorta nada. */
+        }
+        <span
+          class="absolute right-3 bottom-2 text-[10px] text-black/60 [text-shadow:0_0_3px_rgb(255_255_255),0_0_6px_rgb(255_255_255)]"
+        >
           © OpenStreetMap
         </span>
       </a>

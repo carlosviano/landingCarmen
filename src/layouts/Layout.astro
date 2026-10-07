@@ -27,19 +27,10 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
 ---
 
 <!doctype html>
-{/* scroll-smooth para que los enlaces a anclas de la portada (el "Sobre mí"
-    y el "Contacto" de la barra) bajen deslizando en vez de saltar;
-    solo con motion-safe. */}
-<html lang="es" class="motion-safe:scroll-smooth">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
-    {/* viewport-fit=cover: la página se pinta también por debajo de la barra
-        de gestos de Android (Chrome 135+), que queda transparente sobre ella;
-        sin él Chrome la pinta en negro, que corta la web por abajo. A cambio,
-        lo que puede quedar pegado al borde de abajo reserva ese hueco con
-        env(safe-area-inset-bottom) para que la barra no tape texto: la franja
-        del hero (components/Hero.astro) y el pie (Footer.astro). */}
-    <meta name="viewport" content="width=device-width, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

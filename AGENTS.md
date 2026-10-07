@@ -51,26 +51,6 @@ más viejo que el `.nvmrc` y reventar con el error de versión de Astro.
 El montaje de Cloudflare (ramas, entornos, robots.txt por rama) está en el
 README.
 
-### Comprobar y formatear
-
-```
-npm run check         # astro check: tipos de .ts y .astro
-npm run format        # prettier --write, con los plugins de Astro y Tailwind
-npm run format:check  # lo mismo, sin escribir
-```
-
-Prettier ordena también las clases de Tailwind (lee `src/styles/global.css`
-para conocer las utilidades propias). Los `.md` quedan fuera.
-
-## Datos y código
-
-- Los textos y datos viven en `src/config/`, un archivo por página o sección
-  (`site.ts` es lo global). Sin `index.ts` que lo reexporte todo: el
-  `<script>` de Pedido importa `config/pedido.ts` y se manda al navegador.
-- Lógica pura en `src/lib/`. `lib/tartas.ts` es sólo de servidor (importa
-  imágenes); lo que necesita también el navegador va en `lib/pedido.ts`.
-- Componentes por dominio en `src/components/<dominio>/`.
-
 ## Tipografía
 
 Dos fuentes: **The Seasons** (titulares, desde Adobe Fonts por `<link>` en el
@@ -94,20 +74,6 @@ de The Seasons (la i parece acentuada) ni negrita.
 
 El detalle, la licencia de Adobe y qué pasa si se cae el kit: README,
 «Tipografía».
-
-## Hero
-
-Toda página que abra con un hero lo monta dentro de `src/components/Hero.astro`
-(portada y /eventos ya lo hacen). El componente es el MARCO, no el diseño: fija
-las proporciones —en todos los tamaños, móvil primero (referencia: iPhone 14
-Pro Max, 430×932), banda y franja llenan la pantalla bajo la cabecera; la
-franja mide `lg:h-20` (`py-6` en móvil) y su contenido va en la retícula de
-`max-w-7xl px-6`— y deja a cada página el fondo (`claseBanda`, `claseFranja`)
-y lo que va dentro: la banda por el slot por defecto, la franja por
-`slot="franja"` y lo que tenga que pintarse a todo el ancho de la franja (unas
-ondas) por `slot="fondo-franja"`. No le pongas alturas propias a un hero desde
-fuera: si las proporciones tienen que cambiar, cambian en el componente y para
-todas las páginas.
 
 ## Documentation
 

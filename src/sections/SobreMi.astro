@@ -38,8 +38,8 @@
 // es el saliente, que es un fallo mucho más benigno. Para meter más texto,
 // subir la altura de la foto.
 import { Image } from "astro:assets";
-import fotoSobreMi from "@/assets/images/carmenSentadaHaciaUnLado.jpg";
-import { SOBRE_MI } from "@/config/portada";
+import fotoSobreMi from "@/assets/images/sobre-mi.jpg";
+import { SOBRE_MI } from "@/config/site";
 ---
 
 <section id="sobre-mi" class="scroll-mt-20 py-16 md:py-20">
@@ -82,36 +82,52 @@ import { SOBRE_MI } from "@/config/portada";
 
     <div class="relative mx-auto w-full max-w-7xl px-6 py-14 lg:py-0">
       <div class="grid items-center gap-10 lg:grid-cols-12 lg:gap-0">
-        {/* lg:py-14 es la red: sin él, un texto más alto que la banda se
+        {
+          /* lg:py-14 es la red: sin él, un texto más alto que la banda se
             saldría a leerse sobre linen. Con él, la fila crece antes y lo que
-            se pierde es el saliente de la foto, que es un fallo benigno. */}
-        <div class="lg:col-start-1 lg:col-end-8 lg:row-start-1 lg:py-14 lg:pr-16">
-          {/* h2 y no p: es el titular de la sección y el destino de #sobre-mi.
+            se pierde es el saliente de la foto, que es un fallo benigno. */
+        }
+        <div
+          class="lg:col-start-1 lg:col-end-8 lg:row-start-1 lg:py-14 lg:pr-16"
+        >
+          {
+            /* h2 y no p: es el titular de la sección y el destino de #sobre-mi.
               Contacto.astro lleva uno en sr-only por lo mismo, aunque su
-              diseño no lo enseñe. */}
-          <h2 class="titulo text-5xl leading-none text-linen sm:text-6xl lg:text-7xl">
+              diseño no lo enseñe. */
+          }
+          <h2
+            class="titulo text-5xl leading-none text-linen sm:text-6xl lg:text-7xl"
+          >
             {SOBRE_MI.titulo}
           </h2>
 
-          {/* Párrafos sueltos, sin subtitular. El hueco entre ellos es más
+          {
+            /* Párrafos sueltos, sin subtitular. El hueco entre ellos es más
               corto que el que los separa del titular: así se leen como un
-              texto seguido y no como tres apartados. */}
+              texto seguido y no como tres apartados. */
+          }
           <div class="mt-8 space-y-6 lg:mt-10 lg:space-y-8">
-            {SOBRE_MI.parrafos.map((parrafo) => (
-              <p class="max-w-prose text-sm leading-relaxed text-linen/80 sm:text-base">
-                {parrafo}
-              </p>
-            ))}
+            {
+              SOBRE_MI.parrafos.map((parrafo) => (
+                <p class="max-w-prose text-sm leading-relaxed text-linen/80 sm:text-base">
+                  {parrafo}
+                </p>
+              ))
+            }
           </div>
 
-          {/* Cierra en primera persona y conviene que se lea distinta de los
+          {
+            /* Cierra en primera persona y conviene que se lea distinta de los
               párrafos: por eso va en The Seasons Light. Sin cursiva, ver
-              "Tipografía" en global.css. */}
+              "Tipografía" en global.css. */
+          }
           <p class="mt-10 titular text-xl text-linen sm:text-2xl">
             {SOBRE_MI.firma}
           </p>
         </div>
-        <div class="relative aspect-[2/3] overflow-hidden rounded-3xl shadow-xl shadow-black/20 ring-1 ring-linen/15 lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:aspect-auto lg:h-[38rem]">
+        <div
+          class="relative aspect-[2/3] overflow-hidden rounded-3xl shadow-xl shadow-black/20 ring-1 ring-linen/15 lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:aspect-auto lg:h-[38rem]"
+        >
           <Image
             src={fotoSobreMi}
             alt={SOBRE_MI.fotoAlt}
