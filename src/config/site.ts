@@ -505,7 +505,7 @@ export interface EscaparateEventos extends FotoEscaparate {
 // (1200×1600) y la portada la recorta a 3:1 en escritorio, así que de ella
 // solo se ve una franja.
 export const ESCAPARATE_EVENTOS: EscaparateEventos = {
-  archivo: "mesa_cumple_nati.jpeg",
+  archivo: "mesaEventosHome.jpg",
   alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
   enfoque: "50% 62%",
   pie: "Mesa dulce sobre musgo y eucalipto · cumpleaños",
