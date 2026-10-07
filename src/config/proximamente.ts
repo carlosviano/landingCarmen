@@ -1,5 +1,3 @@
-// La pantalla de "Próximamente".
-
 // La pantalla de "estamos preparando la tienda" que se ve en producción hasta
 // la apertura. Mientras `enProduccion` siga en true, `main` publica SOLO esta
 // pantalla, en todas las rutas; staging, las previews y el local siguen viendo
@@ -8,9 +6,16 @@
 // Abrir la web es poner `enProduccion` a false en un PR y mergearlo a main.
 // No se apaga sola el día de la fecha: el sitio es estático y nadie lo vuelve
 // a construir a medianoche.
+
+/** El h1. `destacado`, si lo hay, sale detrás y en rust. */
+interface Titular {
+  antes: string;
+  destacado?: string;
+}
+
 export const PROXIMAMENTE = {
   enProduccion: true,
-  titular: { antes: "Próximamente"},
+  titular: { antes: "Próximamente" } as Titular,
   entradilla:
     "Deseando estar en tus cumpleaños, celebraciones y eventos más especiales",
   apertura: {
