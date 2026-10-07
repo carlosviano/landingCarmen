@@ -1,15 +1,16 @@
 ---
-// El selector de fotos de inspiración de la solicitud de eventos: la zona
-// para elegirlas (o soltarlas, en escritorio) y las miniaturas con su botón
-// de quitar.
+// El selector de fotos de inspiración de los formularios de solicitud
+// (eventos y tartas especiales): la zona para elegirlas (o soltarlas, en
+// escritorio) y las miniaturas con su botón de quitar.
 //
 // El script lleva la lista elegida aparte del <input type="file">, porque un
 // <input> sustituye su selección cada vez que se abre: sin eso, elegir dos
 // fotos y luego otra más dejaría sólo la última. Tras cada cambio vuelca la
 // lista en el <input>, que es lo que viaja con el formulario.
 //
-// Cada foto se pasa por `esquemaFoto`, el mismo que valida la solicitud
-// entera: lo que aquí se rechaza es justo lo que el envío no aceptaría.
+// Cada foto se pasa por `esquemaFotoDe`, el mismo que valida la solicitud
+// entera: lo que aquí se rechaza es justo lo que el envío no aceptaría. Los
+// límites viajan al script en `data-` porque cada formulario tiene los suyos.
 import { Icon } from "astro-icon/components";
 import { SOLICITUD_EVENTO } from "@/config/site";
 
@@ -18,15 +19,19 @@ interface Props {
   nombre: string;
   /** Id de la etiqueta del campo, que es la que nombra al <input>. */
   etiquetaId: string;
+  /** Cuántas y cuánto pesan. Sin ellos, los de eventos. */
+  fotos?: { maximo: number; megasMaximo: number };
+  /** La línea de ayuda de encima. Sin ella, se escribe con `fotos`. */
+  ayuda?: string;
 }
 
-const { nombre, etiquetaId } = Astro.props;
-const { maximo, megasMaximo } = SOLICITUD_EVENTO.fotos;
+const { nombre, etiquetaId, fotos = SOLICITUD_EVENTO.fotos, ayuda } = Astro.props;
+const { maximo, megasMaximo } = fotos;
 ---
 
-<div data-fotos-inspiracion>
+<div data-fotos-inspiracion data-maximo={maximo} data-megas={megasMaximo}>
   <p id={`${nombre}-ayuda`} class="text-sm text-black/60">
-    {`Si tienes fotos de algo que te guste, súbelas: hasta ${maximo}, de ${megasMaximo} MB como mucho cada una.`}
+    {ayuda ?? `Si tienes fotos de algo que te guste, súbelas: hasta ${maximo}, de ${megasMaximo} MB como mucho cada una.`}
   </p>
 
   <label
@@ -66,12 +71,11 @@ const { maximo, megasMaximo } = SOLICITUD_EVENTO.fotos;
 </div>
 
 <script>
-  import { SOLICITUD_EVENTO } from "@/config/site";
-  import { esquemaFoto } from "@/lib/solicitud";
-
-  const { maximo } = SOLICITUD_EVENTO.fotos;
+  import { esquemaFotoDe } from "@/lib/solicitud";
 
   for (const raiz of document.querySelectorAll<HTMLElement>("[data-fotos-inspiracion]")) {
+    const maximo = Number(raiz.dataset.maximo);
+    const esquemaFoto = esquemaFotoDe(Number(raiz.dataset.megas));
     const entrada = raiz.querySelector<HTMLInputElement>("[data-entrada]")!;
     const zona = raiz.querySelector<HTMLElement>("[data-zona]")!;
     const lista = raiz.querySelector<HTMLUListElement>("[data-miniaturas]")!;
