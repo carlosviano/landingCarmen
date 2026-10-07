@@ -6,11 +6,7 @@
 // tiene JS), y el script del cliente, para rehacerlos al cambiar el
 // formulario. Escritas dos veces, el mensaje del build y el del navegador
 // acabarían diciendo cosas distintas.
-import {
-  PEDIDO,
-  PRECIOS_PROVISIONALES,
-  type Tarta,
-} from "@/config/site";
+import { PEDIDO, PRECIOS_PROVISIONALES } from "@/config/pedido";
 
 /** Lunes a viernes. Es lo único que se entrega: fines de semana, no. */
 export function esLaborable(fecha: Date): boolean {
@@ -59,11 +55,24 @@ export function fechaLarga(iso: string): string {
   });
 }
 
+/** "mié, 30 sept": la que cabe en el botón del calendario en un móvil. */
+export function fechaCorta(iso: string): string {
+  return deISO(iso).toLocaleDateString("es-ES", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
 /**
- * Por qué una fecha no vale, o `null` si vale. El calendario del navegador no
- * deja apagar sábados y domingos, así que esto es lo que los para.
+ * Por qué una fecha no vale, o `null` si vale. El calendario ya apaga los días
+ * que no valen, pero la regla vive aquí: es lo que para el pedido si la fecha
+ * falta o se ha quedado vieja (la ficha abierta desde ayer).
  */
-export function problemaFecha(iso: string, hoy: Date = new Date()): string | null {
+export function problemaFecha(
+  iso: string,
+  hoy: Date = new Date(),
+): string | null {
   if (!iso) return "Elige una fecha de entrega para poder pedirla.";
   const minima = aISO(fechaMinima(hoy));
   if (iso < minima) {
@@ -96,23 +105,16 @@ export interface DetallePedido {
  * el detalle, dice tamaño, cantidad y fecha. La cantidad es orientativa: la
  * confirma Carmen hablando con el cliente, así que no tiene máximo.
  */
-export function mensajePedido(nombre: string, detalle: DetallePedido = {}): string {
+export function mensajePedido(
+  nombre: string,
+  detalle: DetallePedido = {},
+): string {
   const { personas, cantidad = 1, fecha } = detalle;
-  if (!personas && !fecha) return `Hola Carmen, quería pedir la tarta «${nombre}».`;
+  if (!personas && !fecha)
+    return `Hola Carmen, quería pedir la tarta «${nombre}».`;
 
   const cuantas = cantidad === 1 ? "una tarta" : `${cantidad} tartas`;
   const para = personas ? ` para ${personas} personas` : "";
   const cuando = fecha ? `, para el ${fechaLarga(fecha)}` : "";
   return `Hola Carmen, quería pedir ${cuantas} «${nombre}»${para}${cuando}.`;
-}
-
-/**
- * Si la ficha puede pintar las líneas: hace falta el recorte Y un punto en
- * TODOS los componentes. Si falta cualquiera, sale la ficha sin líneas.
- */
-export function estaAnotada(tarta: Tarta): boolean {
-  return (
-    tarta.recorte !== undefined &&
-    tarta.componentes.every((componente) => componente.punto !== undefined)
-  );
 }

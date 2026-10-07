@@ -1,0 +1,92 @@
+---
+// /privacidad — la "segunda capa" de la información que pide el RGPD.
+//
+// La primera capa va pegada al formulario de eventos (quién, para qué, con
+// qué base y dónde ejercer los derechos); esta es la versión completa a la
+// que enlaza. Hace falta en cuanto la web recoge datos personales, y el
+// formulario los recoge.
+//
+// TODO: todo lo que va entre corchetes son datos de Carmen o decisiones
+// suyas (titular, NIF, plazo de conservación, proveedor que recibe el
+// formulario). Antes de publicar conviene que lo revise un asesor: esto es la
+// estructura, no un texto legal cerrado.
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/sections/Header.astro";
+import Footer from "@/sections/Footer.astro";
+import { DIRECCION } from "@/config/site";
+
+const apartados = [
+  {
+    titulo: "Quién trata tus datos",
+    texto: [
+      `Responsable: [NOMBRE O RAZÓN SOCIAL], con NIF [NIF] y domicilio en ${DIRECCION.calle}, ${DIRECCION.portal.toLowerCase()}, ${DIRECCION.cp} ${DIRECCION.ciudad}.`,
+      "Contacto: [EMAIL DE CONTACTO].",
+    ],
+  },
+  {
+    titulo: "Qué datos y para qué",
+    texto: [
+      "Los que escribes en el formulario de eventos: nombre, teléfono, email, los datos de la celebración y, si las añades, tus fotos de inspiración.",
+      "Se usan sólo para responder a tu solicitud y prepararte un presupuesto. No se usan para enviarte publicidad.",
+    ],
+  },
+  {
+    titulo: "Con qué base",
+    texto: [
+      "Tu consentimiento, que das al marcar la casilla del formulario. Puedes retirarlo cuando quieras escribiendo al email de contacto.",
+    ],
+  },
+  {
+    titulo: "Cuánto tiempo se guardan",
+    texto: [
+      "Mientras se habla del encargo y, si no sale adelante, [PLAZO DE CONSERVACIÓN]. Si se hace el encargo, el tiempo que obliguen las normas fiscales.",
+    ],
+  },
+  {
+    titulo: "Quién más los ve",
+    texto: [
+      "Nadie, salvo obligación legal. El formulario se envía a través de [PROVEEDOR DEL FORMULARIO], que sólo los guarda para hacerlos llegar.",
+    ],
+  },
+  {
+    titulo: "Tus derechos",
+    texto: [
+      "Puedes pedir acceder a tus datos, corregirlos, borrarlos, limitar su uso, oponerte a él o llevártelos, escribiendo a [EMAIL DE CONTACTO].",
+      "Si crees que no se han tratado bien, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).",
+    ],
+  },
+];
+---
+
+<Layout titulo="Política de privacidad">
+  <Header />
+
+  <main class="mx-auto w-full max-w-3xl px-6 py-14 md:py-20">
+    <p class="antetitulo text-rust">Privacidad</p>
+    <h1 class="mt-5 titular text-4xl leading-[1.05] text-balance sm:text-5xl">
+      Política de privacidad
+    </h1>
+    <p class="mt-6 text-base leading-relaxed text-black/75">
+      Qué pasa con los datos que dejas en esta web, en corto.
+    </p>
+
+    <div class="mt-12 flex flex-col divide-y divide-taupe/45 border-y border-taupe/45">
+      {apartados.map((apartado) => (
+        <section class="py-8">
+          <h2 class="titulo text-2xl">{apartado.titulo}</h2>
+          {apartado.texto.map((parrafo) => (
+            <p class="mt-3 text-base leading-relaxed text-black/75">
+              {parrafo}
+            </p>
+          ))}
+        </section>
+      ))}
+    </div>
+
+    <p class="mt-8 dato text-[11px] text-black/50">
+      Última actualización: [FECHA]
+    </p>
+  </main>
+
+  <Footer />
+</Layout>

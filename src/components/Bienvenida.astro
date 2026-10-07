@@ -21,7 +21,7 @@
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import fachada from "@/assets/images/fachada-ilustracion.jpeg";
-import { BIENVENIDA } from "@/config/site";
+import { BIENVENIDA } from "@/config/bienvenida";
 
 const VISTO = "bienvenida-vista-v1";
 ---
@@ -34,12 +34,10 @@ const VISTO = "bienvenida-vista-v1";
 >
   <div class="relative md:grid md:min-h-[600px] md:grid-cols-[10fr_13fr]">
     <div class="relative bg-white">
-      {
-        /* object-[center_40%] y no centrado: en la franja de móvil es lo que
+      {/* object-[center_40%] y no centrado: en la franja de móvil es lo que
           deja el toldo en medio en vez de la fachada vacía de arriba. En
           escritorio la columna es casi de la proporción del dibujo (2:3) y
-          apenas recorta. */
-      }
+          apenas recorta. */}
       <Image
         src={fachada}
         alt={BIENVENIDA.fotoAlt}
@@ -47,22 +45,18 @@ const VISTO = "bienvenida-vista-v1";
         sizes="(min-width: 768px) 400px, 100vw"
         class="h-[260px] w-full object-cover object-[center_40%] md:absolute md:inset-0 md:h-full"
       />
-      <p
-        class="absolute inset-x-5 bottom-5 hidden rounded bg-linen/95 px-4 py-3 text-[13px] leading-snug md:block"
-      >
-        {BIENVENIDA.pista.antes}<span class="font-semibold text-rust"
-          >{BIENVENIDA.pista.resaltado}</span
-        >{BIENVENIDA.pista.despues}
+      <p class="absolute inset-x-5 bottom-5 hidden rounded bg-linen/95 px-4 py-3 text-[13px] leading-snug md:block">
+        {BIENVENIDA.pista.antes}
+        <span class="font-semibold text-rust">
+          {BIENVENIDA.pista.resaltado}
+        </span>
+        {BIENVENIDA.pista.despues}
       </p>
     </div>
 
-    <div
-      class="flex flex-col gap-[18px] px-[22px] pt-6 pb-[22px] md:gap-7 md:py-[52px] md:pr-14 md:pl-[52px]"
-    >
+    <div class="flex flex-col gap-[18px] px-[22px] pt-6 pb-[22px] md:gap-7 md:py-[52px] md:pr-14 md:pl-[52px]">
       <div class="flex flex-col gap-2 md:gap-3">
-        <p class="antetitulo text-rust">
-          {BIENVENIDA.antetitulo}
-        </p>
+        <p class="antetitulo text-rust">{BIENVENIDA.antetitulo}</p>
         <h2
           id="bienvenida-titulo"
           class="titulo text-[26px] leading-tight md:text-4xl"
@@ -72,63 +66,55 @@ const VISTO = "bienvenida-vista-v1";
       </div>
 
       <ul class="border-t border-rust/25">
-        {
-          BIENVENIDA.puntos.map((punto) => (
-            <li class="flex gap-3 border-b border-rust/25 py-[11px] md:gap-4 md:py-4">
-              <Icon
-                name={punto.icono}
-                class="size-5 shrink-0 text-rust md:mt-px md:size-[22px]"
-                aria-hidden="true"
-              />
-              <div class="flex flex-col gap-0.5 md:gap-1">
-                <p class="text-sm font-semibold md:text-[15px]">
-                  {punto.corto ? (
-                    <>
-                      <span class="md:hidden">{punto.corto}</span>
-                      <span class="hidden md:inline">{punto.titulo}</span>
-                    </>
-                  ) : (
-                    punto.titulo
-                  )}
-                </p>
-                <p
-                  class:list={[
-                    "text-[13px] leading-snug text-black/75 md:block md:text-sm md:leading-normal",
-                    !punto.detalleEnMovil && "hidden",
-                  ]}
-                >
-                  {punto.detalle}
-                </p>
-              </div>
-            </li>
-          ))
-        }
+        {BIENVENIDA.puntos.map((punto) => (
+          <li class="flex gap-3 border-b border-rust/25 py-[11px] md:gap-4 md:py-4">
+            <Icon
+              name={punto.icono}
+              class="size-5 shrink-0 text-rust md:mt-px md:size-[22px]"
+              aria-hidden="true"
+            />
+            <div class="flex flex-col gap-0.5 md:gap-1">
+              <p class="text-sm font-semibold md:text-[15px]">
+                {punto.corto ? (
+                  <>
+                    <span class="md:hidden">{punto.corto}</span>
+                    <span class="hidden md:inline">{punto.titulo}</span>
+                  </>
+                ) : (
+                  punto.titulo
+                )}
+              </p>
+              <p
+                class:list={[
+                  "text-[13px] leading-snug text-black/75 md:block md:text-sm md:leading-normal",
+                  !punto.detalleEnMovil && "hidden",
+                ]}
+              >
+                {punto.detalle}
+              </p>
+            </div>
+          </li>
+        ))}
       </ul>
 
-      {
-        /* autofocus para que showModal() deje el foco en la acción y no en la
+      {/* autofocus para que showModal() deje el foco en la acción y no en la
           X, que va antes en el orden de lectura del diseño pero no es lo que
-          se espera que pulse nadie. */
-      }
-      {
-        /* El hover oscurece el rust en vez de aclararlo con opacidad: rust/90
+          se espera que pulse nadie. */}
+      {/* El hover oscurece el rust en vez de aclararlo con opacidad: rust/90
           sobre linen apenas se distinguía del reposo. Y cursor-pointer a mano
-          porque Tailwind 4 deja los <button> con el cursor por defecto. */
-      }
+          porque Tailwind 4 deja los <button> con el cursor por defecto. */}
       <button
         type="button"
         data-cerrar
         autofocus
-        class="h-12 w-full cursor-pointer rounded bg-rust px-7 accion text-xs text-linen transition-colors hover:bg-[color-mix(in_oklab,var(--color-rust),black_30%)] md:mt-auto md:w-auto md:self-center"
+        class="h-12 w-full cursor-pointer rounded bg-rust px-7 accion text-xs text-linen transition-colors hover:bg-rust-hondo md:mt-auto md:w-auto md:self-center"
       >
         {BIENVENIDA.boton}
       </button>
     </div>
 
-    {
-      /* En móvil lleva círculo claro porque cae encima de la ilustración; en
-        escritorio cae sobre el linen del texto y basta la X sola. */
-    }
+    {/* En móvil lleva círculo claro porque cae encima de la ilustración; en
+        escritorio cae sobre el linen del texto y basta la X sola. */}
     <button
       type="button"
       data-cerrar

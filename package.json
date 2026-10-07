@@ -10,6 +10,9 @@
     "build": "bash -c 'unset PREFIX && source \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use && astro build'",
     "build:ci": "astro build",
     "preview": "bash -c 'unset PREFIX && source \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use && astro preview'",
+    "check": "bash -c 'unset PREFIX && source \"${NVM_DIR:-$HOME/.nvm}/nvm.sh\" && nvm use && astro check'",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "astro": "astro"
   },
   "dependencies": {
@@ -18,6 +21,14 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "7.2.3",
     "astro-icon": "^1.1.5",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.1.0",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "typescript": "^6.0.3"
   }
 }

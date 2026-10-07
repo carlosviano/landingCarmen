@@ -1,0 +1,204 @@
+---
+// El formulario de solicitud del final de /eventos.
+//
+// El marco —la banda rust con los pasos, la privacidad, el aviso, el botón y
+// el WhatsApp— es el de MarcoSolicitud.astro, el mismo que el de
+// /personalizadas. Aquí van los campos de un evento y el script que lo
+// monta con su esquema (`validarSolicitud`) y su mensaje (`mensajeEvento`).
+//
+// Los controles son los de la ficha de tarta (formulario/estilos.ts, el
+// mismo Calendario), para que los formularios de la web parezcan uno. Los
+// invitados van en un Desplegable con el panel del calendario, no en un
+// <select>, cuyo panel nativo no se puede vestir.
+import Calendario from "@/components/formulario/Calendario.astro";
+import Campo from "@/components/formulario/Campo.astro";
+import Desplegable from "@/components/formulario/Desplegable.astro";
+import FotosInspiracion from "@/components/formulario/FotosInspiracion.astro";
+import MarcoSolicitud from "@/components/formulario/MarcoSolicitud.astro";
+import {
+  AREA,
+  CAMPO,
+  OPCION_OCULTA,
+  PASTILLA,
+} from "@/components/formulario/estilos";
+import { SOLICITUD_EVENTO } from "@/config/eventos";
+import { whatsappCon } from "@/config/site";
+import { mensajeEvento } from "@/lib/solicitud";
+
+const S = SOLICITUD_EVENTO;
+---
+
+<MarcoSolicitud
+  tipo="evento"
+  textos={S}
+  whatsapp={whatsappCon(mensajeEvento())}
+>
+  <Campo
+    nombre="tipo"
+    etiqueta="Tipo de evento"
+    obligatorio
+    grupo
+    class="sm:col-span-2"
+  >
+    <div class="flex flex-wrap gap-2">
+      {S.tipos.map((tipo) => (
+        <label class="relative cursor-pointer">
+          <input type="radio" name="tipo" value={tipo} class={OPCION_OCULTA} />
+          <span
+            class={`${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`}
+          >
+            {tipo}
+          </span>
+        </label>
+      ))}
+    </div>
+  </Campo>
+
+  {/* `relative` aquí y no en la fila: el panel del calendario se abre
+      con el ancho de este campo (en móvil, la fila entera). */}
+  <Campo nombre="fecha" etiqueta="Fecha" obligatorio class="relative">
+    <Calendario
+      id="solicitud-fecha"
+      nombre="fecha"
+      etiquetaId="fecha-etiqueta"
+      titulo="Elegir la fecha del evento"
+      clasePanel="inset-x-0 sm:right-auto sm:w-80"
+    />
+  </Campo>
+
+  <Campo nombre="invitados" etiqueta="Invitados" obligatorio>
+    <Desplegable
+      id="solicitud-invitados"
+      nombre="invitados"
+      etiquetaId="invitados-etiqueta"
+      opciones={S.invitados}
+      placeholder="Elige un rango"
+    />
+  </Campo>
+
+  <Campo
+    nombre="lugar"
+    etiqueta="Lugar"
+    para="solicitud-lugar"
+    class="sm:col-span-2"
+  >
+    <input
+      id="solicitud-lugar"
+      type="text"
+      name="lugar"
+      placeholder="Ciudad, restaurante, casa…"
+      class={CAMPO}
+    />
+  </Campo>
+
+  <Campo
+    nombre="interes"
+    etiqueta="Qué te interesa"
+    para="solicitud-interes"
+    obligatorio
+    class="sm:col-span-2"
+  >
+    <textarea
+      id="solicitud-interes"
+      name="interes"
+      rows="5"
+      placeholder={S.placeholderInteres}
+      class={AREA}
+    ></textarea>
+  </Campo>
+
+  <Campo nombre="fotos" etiqueta="Inspiración" class="sm:col-span-2">
+    <FotosInspiracion nombre="fotos" etiquetaId="fotos-etiqueta" />
+  </Campo>
+
+  <Campo
+    nombre="enlace"
+    etiqueta="Enlace de inspiración"
+    para="solicitud-enlace"
+    class="sm:col-span-2"
+  >
+    <input
+      id="solicitud-enlace"
+      type="url"
+      name="enlace"
+      inputmode="url"
+      placeholder="Un tablero de Pinterest, un post de Instagram…"
+      class={CAMPO}
+    />
+  </Campo>
+
+  <div class="border-t border-taupe/45 sm:col-span-2"></div>
+
+  <Campo nombre="nombre" etiqueta="Nombre" para="solicitud-nombre" obligatorio>
+    <input
+      id="solicitud-nombre"
+      type="text"
+      name="nombre"
+      autocomplete="name"
+      placeholder="Tu nombre"
+      class={CAMPO}
+    />
+  </Campo>
+
+  <Campo
+    nombre="telefono"
+    etiqueta="Teléfono"
+    para="solicitud-telefono"
+    obligatorio
+  >
+    <input
+      id="solicitud-telefono"
+      type="tel"
+      name="telefono"
+      autocomplete="tel"
+      placeholder="+34 600 000 000"
+      class={CAMPO}
+    />
+  </Campo>
+
+  <Campo
+    nombre="email"
+    etiqueta="Email"
+    para="solicitud-email"
+    obligatorio
+    class="sm:col-span-2"
+  >
+    <input
+      id="solicitud-email"
+      type="email"
+      name="email"
+      autocomplete="email"
+      placeholder="tu@correo.com"
+      class={CAMPO}
+    />
+  </Campo>
+</MarcoSolicitud>
+
+<script>
+  import { SOLICITUD_EVENTO } from "@/config/eventos";
+  import { montarSolicitud } from "@/lib/formularioSolicitud";
+  import {
+    mensajeEvento,
+    primeraFechaEvento,
+    validarSolicitud,
+  } from "@/lib/solicitud";
+
+  document
+    .querySelectorAll<HTMLFormElement>('[data-solicitud="evento"]')
+    .forEach((form) =>
+      montarSolicitud(form, {
+        validar: validarSolicitud,
+        mensaje: (texto) =>
+          mensajeEvento({
+            tipo: texto("tipo"),
+            fecha: texto("fecha"),
+            invitados: texto("invitados"),
+            lugar: texto("lugar"),
+          }),
+        calendario: { primera: primeraFechaEvento },
+        envio: SOLICITUD_EVENTO.envio,
+        enviado:
+          "Recibido. Te escribo en cuanto lo lea para contarte qué se puede montar.",
+      }),
+    );
+</script>

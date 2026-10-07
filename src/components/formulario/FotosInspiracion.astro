@@ -1,0 +1,176 @@
+---
+// El selector de fotos de inspiración de los formularios de solicitud
+// (eventos y tartas especiales): la zona para elegirlas (o soltarlas, en
+// escritorio) y las miniaturas con su botón de quitar.
+//
+// El script lleva la lista elegida aparte del <input type="file">, porque un
+// <input> sustituye su selección cada vez que se abre: sin eso, elegir dos
+// fotos y luego otra más dejaría sólo la última. Tras cada cambio vuelca la
+// lista en el <input>, que es lo que viaja con el formulario.
+//
+// Cada foto se pasa por `esquemaFotoDe`, el mismo que valida la solicitud
+// entera: lo que aquí se rechaza es justo lo que el envío no aceptaría. Los
+// límites viajan al script en `data-` porque cada formulario tiene los suyos.
+import { Icon } from "astro-icon/components";
+import { SOLICITUD_EVENTO } from "@/config/eventos";
+
+interface Props {
+  /** `name` del <input>. */
+  nombre: string;
+  /** Id de la etiqueta del campo, que es la que nombra al <input>. */
+  etiquetaId: string;
+  /** Cuántas y cuánto pesan. Sin ellos, los de eventos. */
+  fotos?: { maximo: number; megasMaximo: number };
+  /** La línea de ayuda de encima. Sin ella, se escribe con `fotos`. */
+  ayuda?: string;
+}
+
+const {
+  nombre,
+  etiquetaId,
+  fotos = SOLICITUD_EVENTO.fotos,
+  ayuda,
+} = Astro.props;
+const { maximo, megasMaximo } = fotos;
+---
+
+<div data-fotos-inspiracion data-maximo={maximo} data-megas={megasMaximo}>
+  <p id={`${nombre}-ayuda`} class="text-sm text-black/60">
+    {ayuda ??
+      `Si tienes fotos de algo que te guste, súbelas: hasta ${maximo}, de ${megasMaximo} MB como mucho cada una.`}
+  </p>
+
+  <label
+    data-zona
+    class="mt-3 flex min-h-28 cursor-pointer flex-col items-center justify-center gap-2 rounded-3xl border border-dashed border-black/40 px-6 py-6 text-center transition-colors hover:border-rust has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-rust data-arrastrando:border-rust data-arrastrando:bg-rust/5 motion-reduce:transition-none"
+  >
+    <Icon
+      name="lucide:image-plus"
+      class="size-6 text-rust"
+      aria-hidden="true"
+    />
+    <span class="accion text-[11px] text-black">Añadir fotos</span>
+    <span class="hidden text-xs text-black/60 md:block">
+      o arrástralas aquí
+    </span>
+    <input
+      type="file"
+      name={nombre}
+      accept="image/*"
+      multiple
+      data-entrada
+      aria-labelledby={etiquetaId}
+      aria-describedby={`${nombre}-ayuda`}
+      class="sr-only"
+    />
+  </label>
+
+  <ul
+    data-miniaturas
+    aria-label="Fotos añadidas"
+    class="mt-3 grid grid-cols-4 gap-2.5 empty:hidden"
+  ></ul>
+  <p data-aviso role="status" class="mt-2 text-sm text-rust empty:hidden"></p>
+
+  <template data-plantilla>
+    <li class="relative aspect-square overflow-hidden rounded-2xl bg-taupe/15 ring-1 ring-taupe/40">
+      <img alt="" class="h-full w-full object-cover" />
+      <button
+        type="button"
+        class="absolute top-1.5 right-1.5 grid size-8 place-items-center rounded-full bg-black/70 text-white transition-colors hover:bg-rust"
+      >
+        <Icon name="lucide:x" class="size-4" aria-hidden="true" />
+      </button>
+    </li>
+  </template>
+</div>
+
+<script>
+  import { esquemaFotoDe } from "@/lib/solicitud";
+
+  for (const raiz of document.querySelectorAll<HTMLElement>(
+    "[data-fotos-inspiracion]",
+  )) {
+    const maximo = Number(raiz.dataset.maximo);
+    const esquemaFoto = esquemaFotoDe(Number(raiz.dataset.megas));
+    const entrada = raiz.querySelector<HTMLInputElement>("[data-entrada]")!;
+    const zona = raiz.querySelector<HTMLElement>("[data-zona]")!;
+    const lista = raiz.querySelector<HTMLUListElement>("[data-miniaturas]")!;
+    const aviso = raiz.querySelector<HTMLElement>("[data-aviso]")!;
+    const plantilla =
+      raiz.querySelector<HTMLTemplateElement>("[data-plantilla]")!;
+
+    let elegidas: File[] = [];
+
+    const miniatura = (archivo: File) => {
+      const li = plantilla.content.firstElementChild!.cloneNode(
+        true,
+      ) as HTMLLIElement;
+      li.querySelector("img")!.src = URL.createObjectURL(archivo);
+      const quitar = li.querySelector("button")!;
+      quitar.setAttribute("aria-label", `Quitar ${archivo.name}`);
+      quitar.addEventListener("click", () => {
+        elegidas = elegidas.filter((otra) => otra !== archivo);
+        aviso.textContent = "";
+        pintar();
+      });
+      return li;
+    };
+
+    const pintar = () => {
+      const dt = new DataTransfer();
+      elegidas.forEach((archivo) => dt.items.add(archivo));
+      entrada.files = dt.files;
+
+      lista
+        .querySelectorAll("img")
+        .forEach((img) => URL.revokeObjectURL(img.src));
+      lista.replaceChildren(...elegidas.map(miniatura));
+      // Con el cupo lleno no se ofrece añadir más.
+      zona.hidden = elegidas.length >= maximo;
+      // Para que el formulario (WhatsApp, validación) sepa que algo ha cambiado.
+      entrada.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+
+    const anadir = (nuevas: File[]) => {
+      const rechazos: string[] = [];
+      for (const archivo of nuevas) {
+        if (elegidas.length >= maximo) {
+          rechazos.push(`Caben ${maximo} fotos como mucho.`);
+          break;
+        }
+        const resultado = esquemaFoto.safeParse(archivo);
+        if (resultado.success) elegidas.push(archivo);
+        else
+          rechazos.push(
+            `${archivo.name}: ${resultado.error.issues[0]!.message}`,
+          );
+      }
+      aviso.textContent = rechazos.join(" ");
+      pintar();
+    };
+
+    // Lo recién elegido viene en `files`, que sólo trae la última selección:
+    // se suma a `elegidas` y `pintar` rehace el <input> con todo.
+    entrada.addEventListener("change", () =>
+      anadir([...(entrada.files ?? [])]),
+    );
+
+    zona.addEventListener("dragover", (evento) => {
+      evento.preventDefault();
+      zona.dataset.arrastrando = "";
+    });
+    zona.addEventListener("dragleave", () => delete zona.dataset.arrastrando);
+    zona.addEventListener("drop", (evento) => {
+      evento.preventDefault();
+      delete zona.dataset.arrastrando;
+      anadir([...(evento.dataTransfer?.files ?? [])]);
+    });
+
+    entrada.form?.addEventListener("reset", () => {
+      elegidas = [];
+      aviso.textContent = "";
+      pintar();
+    });
+  }
+</script>

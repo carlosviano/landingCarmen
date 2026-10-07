@@ -8,13 +8,15 @@
 // archivo de carpeta para romper una de ellas en silencio.
 //
 // Por qué se pasa el nombre en texto y no un `import` directo: los nombres
-// viven en `src/config/site.ts`, que es contenido y no debe importar binarios.
+// viven en `src/config/`, que es contenido y no debe importar binarios.
 // El precio de eso es que una errata no la caza TypeScript, así que la caza
 // esta función: revienta el build con la lista de lo que sí hay, en vez de
 // dejar un hueco en la página.
 
+// Las extensiones, también en mayúsculas: las fotos que salen de una cámara
+// llegan como .JPG y el glob distingue mayúsculas.
 const archivos = import.meta.glob<{ default: ImageMetadata }>(
-  "../assets/images/*.{jpeg,jpg,png,webp,avif}",
+  "../assets/images/*.{jpeg,jpg,png,webp,avif,JPEG,JPG,PNG}",
   { eager: true },
 );
 
@@ -28,8 +30,8 @@ const disponibles = () =>
 /**
  * La imagen que se llama `archivo`. Revienta si no existe.
  *
- * `null` NO es un error: es "esta tarta todavía no tiene foto", que es el
- * estado de seis de las ocho. Se propaga tal cual para que quien pinta decida
+ * `null` NO es un error: es "esta tarta todavía no tiene foto", que hoy es
+ * lo normal en la carta. Se propaga tal cual para que quien pinta decida
  * qué poner en su lugar.
  */
 export function fotoDe(archivo: string | null): ImageMetadata | null {

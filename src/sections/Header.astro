@@ -2,18 +2,21 @@
 // Barra superior. Dos zonas: marca a la izquierda y navegación con redes a la
 // derecha. La dirección no cabe aquí: se ve en el panel móvil y en el pie.
 //
-// Los textos y enlaces no están aquí, sino en @/config/site.
+// Los textos y enlaces no están aquí, sino en @/config/site (los globales).
 // El menú móvil (botón + panel) está en MobileMenu.astro.
 import Brand from "@/components/header/Brand.astro";
 import MobileMenu from "@/components/header/MobileMenu.astro";
 import NavLinks from "@/components/header/NavLinks.astro";
 import SocialLinks from "@/components/header/SocialLinks.astro";
+//
+// El `before:` es una franja rust que sale por ENCIMA de la barra. En Safari
+// de iOS la barra pegada arriba puede quedar medio píxel por debajo del borde
+// al hacer scroll, y por esa rendija asomaba el contenido que pasa por detrás.
+// La franja la tapa; por encima del borde no se ve nunca.
 ---
 
-<header class="sticky top-0 z-50 bg-rust text-sand">
-  <div
-    class="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-6 py-4"
-  >
+<header class="sticky top-0 z-50 bg-rust text-sand before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-4 before:bg-rust">
+  <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-6 py-4">
     <Brand />
     <div class="hidden items-center gap-10 md:flex">
       <NavLinks />

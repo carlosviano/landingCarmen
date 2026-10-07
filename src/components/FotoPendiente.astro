@@ -1,0 +1,20 @@
+---
+// El marco de una foto que todavía no existe, y MARCADO a propósito: un
+// relleno de stock deja la página "llena" pero esconde lo que falta; esto lo
+// dice. Lo usan las tarjetas de la carta, la ficha y TarjetaEscaparate.
+//
+// Sólo pone el rótulo centrado. El tamaño y la posición los pone quien lo usa
+// (`class`), porque cada hueco se mide de una manera: por su celda, por
+// `aspect-[4/5]` o en `absolute inset-0`.
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={["grid place-items-center", className]}>
+  <span class="leyenda text-rust/70">
+    <slot>Foto pendiente</slot>
+  </span>
+</div>

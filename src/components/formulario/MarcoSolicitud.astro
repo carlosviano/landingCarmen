@@ -1,0 +1,163 @@
+---
+// El marco de los formularios de solicitud: el de /eventos
+// (eventos/SolicitudEvento.astro) y el de /personalizadas
+// (especiales/SolicitudEspecial.astro). Cada uno pone sus campos por el slot;
+// lo de alrededor es esto y es igual en los dos, para que parezcan uno.
+//
+// Dos columnas desde lg: a la izquierda la banda rust con las ondas (qué pasa
+// después de enviar), a la derecha el formulario en blanco. Apilado, la banda
+// va primero: es lo que explica para qué sirve todo lo de debajo.
+//
+// Cierra el formulario con lo que no cambia entre uno y otro: la casilla de
+// privacidad, el aviso de que es una consulta, el estado del envío, el botón
+// y el WhatsApp de segunda vía. Lo hace funcionar `montarSolicitud`
+// (src/lib/formularioSolicitud.ts), que cada formulario llama desde su script
+// con su esquema y su mensaje.
+import { Icon } from "astro-icon/components";
+import Ondas from "@/components/Ondas.astro";
+import { BOTON, ERROR } from "@/components/formulario/estilos";
+
+interface Props {
+  /** Va en `data-solicitud`: es por lo que el script de cada formulario encuentra el suyo. */
+  tipo: string;
+  textos: {
+    etiqueta: string;
+    titulo: string;
+    texto: string;
+    pasos: readonly { titulo: string; detalle: string }[];
+    nota: string;
+    aviso: string;
+    boton: string;
+    whatsapp: { antes: string; enlace: string };
+  };
+  /** El WhatsApp sin nada rellenado: el que vale sin JS. */
+  whatsapp: string;
+}
+
+const { tipo, textos: S, whatsapp } = Astro.props;
+---
+
+<section
+  id="solicitud"
+  class="scroll-mt-20 bg-linen py-16 md:py-24"
+  aria-labelledby="solicitud-titulo"
+>
+  <div class="mx-auto grid w-full max-w-7xl gap-8 px-6 lg:grid-cols-[5fr_7fr] lg:items-start lg:gap-14">
+    <div class="relative overflow-hidden rounded-3xl bg-rust p-8 text-linen shadow-xl shadow-black/20 sm:p-10 lg:sticky lg:top-28 lg:p-12">
+      <Ondas id="solicitud" class="text-linen/12" />
+
+      <div class="relative">
+        <p class="antetitulo text-sand">{S.etiqueta}</p>
+        <h2
+          id="solicitud-titulo"
+          class="mt-4 titulo text-4xl leading-[1.08] text-balance sm:text-5xl"
+        >
+          {S.titulo}
+        </h2>
+        <p class="mt-5 text-base leading-relaxed text-linen/80">{S.texto}</p>
+
+        <ol class="mt-9 flex flex-col gap-6">
+          {S.pasos.map((paso, i) => (
+            <li class="flex gap-5">
+              <span class="titulo text-3xl leading-none text-sand">
+                {i + 1}
+              </span>
+              <span>
+                <b class="font-semibold text-linen">{paso.titulo}</b>
+                <span class="mt-1 block text-sm text-linen/75">
+                  {paso.detalle}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+
+        <p class="mt-10 text-xs text-linen/60">{S.nota}</p>
+      </div>
+    </div>
+
+    <form
+      data-solicitud={tipo}
+      method="post"
+      enctype="multipart/form-data"
+      novalidate
+      class="grid gap-x-5 gap-y-6 rounded-3xl bg-white p-6 shadow-xl shadow-black/10 ring-1 ring-taupe/40 sm:grid-cols-2 sm:p-10 lg:p-12"
+    >
+      <slot />
+
+      {/* La "primera capa" que pide el RGPD: quién, para qué, con qué base
+          y dónde ejercer los derechos, justo donde se dan los datos. El resto
+          va en /privacidad. La casilla sale sin marcar: el consentimiento
+          tiene que ser un gesto de quien escribe. Lleva los `data-` de Campo
+          a mano porque su texto va al lado y no encima. */}
+      <div data-campo="privacidad" class="flex flex-col gap-3 sm:col-span-2">
+        <label class="flex items-start gap-3 text-sm leading-relaxed text-black/75">
+          <input
+            type="checkbox"
+            name="privacidad"
+            class="mt-1 size-4.5 shrink-0 accent-rust"
+          />
+          <span>
+            He leído la{" "}
+            <a
+              href="/privacidad"
+              class="text-rust underline underline-offset-2 hover:text-black"
+            >
+              política de privacidad
+            </a>{" "}
+            y acepto que se usen estos datos para responder a mi solicitud.
+          </span>
+        </label>
+        <p id="privacidad-error" data-error hidden class={ERROR}></p>
+        <p class="text-xs leading-relaxed text-black/60">
+          Responsable: [NOMBRE O RAZÓN SOCIAL]. Finalidad: responder a tu
+          solicitud y prepararte un presupuesto. Base: tu consentimiento. No se
+          ceden a terceros salvo obligación legal. Puedes acceder, rectificar o
+          suprimir tus datos escribiendo a [EMAIL DE CONTACTO].
+        </p>
+      </div>
+
+      <p class="flex items-start gap-3 rounded-2xl bg-white/70 p-4 text-sm leading-relaxed text-black/75 ring-1 ring-taupe/45 sm:col-span-2">
+        <Icon
+          name="lucide:info"
+          class="mt-0.5 size-4.5 shrink-0 text-rust"
+          aria-hidden="true"
+        />
+        {S.aviso}
+      </p>
+
+      <p
+        data-estado
+        role="status"
+        class="text-sm font-medium text-rust empty:hidden sm:col-span-2"
+      ></p>
+
+      <div class="flex flex-col items-start gap-6 border-t border-taupe/45 pt-6 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+        <button type="submit" class={BOTON}>
+          {S.boton}
+        </button>
+
+        {/* La vía secundaria, con el mismo enlace subrayado que "Hay más
+            montajes en Instagram": no compite con el botón. La pregunta va
+            en su propia línea en móvil y al lado en escritorio. */}
+        <div class="flex flex-col gap-2 sm:items-end">
+          <span class="text-sm text-black/60">{S.whatsapp.antes}</span>
+          <a
+            data-whatsapp
+            href={whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 self-start border-b border-taupe/40 pb-1 accion text-xs whitespace-nowrap text-black transition-colors hover:border-black sm:self-auto"
+          >
+            <Icon
+              name="simple-icons:whatsapp"
+              class="size-4 shrink-0"
+              aria-hidden="true"
+            />
+            {S.whatsapp.enlace}
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

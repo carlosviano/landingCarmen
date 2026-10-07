@@ -1,0 +1,109 @@
+---
+// Un campo de fecha con calendario propio: el botón que lo abre, el <input>
+// oculto que lleva el valor y el panel con el mes.
+//
+// Propio y no `<input type="date">`: el del iPhone no hace caso de `min`
+// (deja elegir mañana) y ninguno deja apagar días sueltos, como los fines de
+// semana del pedido. Aquí los días que no valen salen apagados en todos los
+// navegadores.
+//
+// Sólo es el marcado. Qué días se pueden elegir lo dice quien lo monta, con
+// `montarCalendario` (src/lib/calendario.ts).
+//
+// El panel va `absolute`: quien lo usa pone el `relative` en el contenedor
+// cuyo ancho quiere para el panel. En la ficha es la fila entera (cantidad y
+// fecha), porque en móvil la columna de la fecha sola es estrecha.
+import { Icon } from "astro-icon/components";
+import { BOTON_ICONO, CAMPO, PANEL } from "./estilos";
+
+interface Props {
+  /** Id del botón. El panel se llama `<id>-calendario`. */
+  id: string;
+  /** `name` del <input> oculto: con él viaja la fecha en el formulario. */
+  nombre: string;
+  /** Id de la etiqueta visible. Se anuncia "Fecha, mié 30 sept", no sólo la fecha. */
+  etiquetaId: string;
+  descripcionId?: string;
+  /** Lo que anuncia el lector de pantalla al abrir el panel. */
+  titulo: string;
+  /** Posición del panel respecto al contenedor `relative`. */
+  clasePanel?: string;
+}
+
+const {
+  id,
+  nombre,
+  etiquetaId,
+  descripcionId,
+  titulo,
+  clasePanel = "inset-x-0",
+} = Astro.props;
+const panelId = `${id}-calendario`;
+---
+
+<button
+  id={id}
+  type="button"
+  data-calendario-boton
+  aria-haspopup="dialog"
+  aria-expanded="false"
+  aria-controls={panelId}
+  aria-labelledby={`${etiquetaId} ${id}`}
+  aria-describedby={descripcionId}
+  class={`${CAMPO} justify-between gap-2`}
+>
+  <span
+    data-calendario-texto
+    data-vacio
+    class="truncate data-vacio:text-black/60"
+  >
+    Elige día
+  </span>
+  <Icon
+    name="lucide:calendar"
+    class="size-4 shrink-0 text-rust"
+    aria-hidden="true"
+  />
+</button>
+<input type="hidden" name={nombre} data-calendario-valor />
+
+{/* Lo rellena el script: el título del mes y la cuadrícula de días. Empieza
+    en lunes, como se lee un calendario aquí. */}
+<div
+  id={panelId}
+  data-calendario
+  role="dialog"
+  aria-label={titulo}
+  hidden
+  class={`${PANEL} p-4 ${clasePanel}`}
+>
+  <div class="mb-3 flex items-center justify-between">
+    <button
+      type="button"
+      data-mes="-1"
+      aria-label="Mes anterior"
+      class={`${BOTON_ICONO} size-9`}
+    >
+      <Icon name="lucide:chevron-left" class="size-4" aria-hidden="true" />
+    </button>
+    <p
+      data-mes-titulo
+      aria-live="polite"
+      class="titulo text-lg text-black first-letter:uppercase"
+    ></p>
+    <button
+      type="button"
+      data-mes="1"
+      aria-label="Mes siguiente"
+      class={`${BOTON_ICONO} size-9`}
+    >
+      <Icon name="lucide:chevron-right" class="size-4" aria-hidden="true" />
+    </button>
+  </div>
+  <div class="grid grid-cols-7 gap-1 text-center" aria-hidden="true">
+    {["L", "M", "X", "J", "V", "S", "D"].map((dia) => (
+      <span class="leyenda py-1 text-black/60">{dia}</span>
+    ))}
+  </div>
+  <div data-dias class="mt-1 grid grid-cols-7 gap-1"></div>
+</div>

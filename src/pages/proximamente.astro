@@ -12,7 +12,7 @@
 // una página del sitio, y cualquier enlace llevaría a la web a medias.
 import Layout from "@/layouts/Layout.astro";
 import EscenaToldo from "@/components/proximamente/EscenaToldo.astro";
-import { PROXIMAMENTE } from "@/config/site";
+import { PROXIMAMENTE } from "@/config/proximamente";
 import { modoProximamente } from "@/lib/proximamente";
 
 const { titular, entradilla, apertura, pie } = PROXIMAMENTE;
@@ -34,37 +34,21 @@ const esPortada = modoProximamente();
     {!esPortada && <meta name="robots" content="noindex" />}
   </Fragment>
 
-  <main
-    class="relative flex min-h-svh flex-col items-center px-4 pt-14 pb-16 lg:justify-center lg:px-6 lg:py-18"
-  >
-    <div
-      class="grid w-full max-w-310 grid-cols-1 items-center gap-7 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14"
-    >
-      <div
-        class="flex flex-col items-center gap-4.5 text-center lg:items-start lg:gap-5.5 lg:text-left"
-      >
-        <p class="titulo text-xl text-rust">
-          Estimada Carmela
-        </p>
-        <h1
-          class="titular text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] text-balance"
-        >
+  <main class="relative flex min-h-svh flex-col items-center px-4 pt-14 pb-16 lg:justify-center lg:px-6 lg:py-18">
+    <div class="grid w-full max-w-310 grid-cols-1 items-center gap-7 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
+      <div class="flex flex-col items-center gap-4.5 text-center lg:items-start lg:gap-5.5 lg:text-left">
+        <p class="titulo text-xl text-rust">Estimada Carmela</p>
+        <h1 class="titular text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.02] text-balance">
           {titular.antes}
-          <em class="text-rust not-italic">{titular.destacado}</em>
+          {titular.destacado && (
+            <em class="text-rust not-italic">{titular.destacado}</em>
+          )}
         </h1>
-        <p
-          class="max-w-[32em] text-[clamp(1.0625rem,1.5vw,1.1875rem)] leading-[1.55] text-pretty text-black/80"
-        >
+        <p class="max-w-[32em] text-[clamp(1.0625rem,1.5vw,1.1875rem)] leading-[1.55] text-pretty text-black/80">
           {entradilla}
         </p>
-        <p
-          class="mt-1.5 flex w-full max-w-75 flex-col items-center gap-1.5 border-t border-taupe pt-4.5 lg:w-auto lg:max-w-none lg:min-w-65 lg:items-start"
-        >
-          <span
-            class="antetitulo text-black/65"
-          >
-            {apertura.antetitulo}
-          </span>
+        <p class="mt-1.5 flex w-full max-w-75 flex-col items-center gap-1.5 border-t border-taupe pt-4.5 lg:w-auto lg:max-w-none lg:min-w-65 lg:items-start">
+          <span class="antetitulo text-black/65">{apertura.antetitulo}</span>
           <time
             class="titulo text-[clamp(1.625rem,2.6vw,2.125rem)] whitespace-nowrap text-rust"
             datetime={apertura.iso}
@@ -79,9 +63,7 @@ const esPortada = modoProximamente();
       </div>
     </div>
 
-    <p
-      class="absolute inset-x-0 bottom-6 px-6 text-center dato text-xs text-black/65"
-    >
+    <p class="absolute inset-x-0 bottom-6 px-6 text-center dato text-xs text-black/65">
       {pie}
     </p>
   </main>

@@ -1,0 +1,261 @@
+---
+// Una tarjeta de escaparate: una pieza que se enseña para elegirla, en
+// horizontal. Foto a la izquierda, y a la derecha una línea de etiqueta, el
+// título, la descripción, miniaturas de sus fotos y, abajo, el precio y el
+// botón que la pide.
+//
+// Es genérica a propósito: no sabe de tartas especiales ni de formularios.
+// Recibe lo que pinta (fotos ya resueltas, textos) y la acción como un
+// enlace con su texto; los `data-` de la acción van tal cual al <a>, para
+// que la página le cuelgue su comportamiento (ver /personalizadas). Mismo
+// blanco con filete taupe que las tarjetas de /eventos.
+//
+// Las fotos: la primera es la principal. Con más de una salen miniaturas, y
+// pulsar una la pone en el marco (todas están apiladas y se enciende la
+// elegida). Caben cuatro casillas: con más fotos, la cuarta enseña "+N" y
+// abre el lightbox, donde están todas. Pulsar la del marco las abre a pantalla completa en un lightbox
+// (components/Lightbox.astro), en la que se esté viendo y con la misma
+// acción abajo; el icono de la esquina dice que se puede. Sin JS ni
+// miniaturas ni icono: no harían nada. Sin fotos, el marco dice qué falta
+// (`sinFoto`), como el "foto pendiente" de la carta.
+//
+// La altura la manda el texto: la foto va en `absolute inset-0` y llena su
+// columna mida lo que mida la descripción, con un mínimo para que una tarjeta
+// con poco texto no quede en una tira.
+import type { HTMLAttributes } from "astro/types";
+import { Image } from "astro:assets";
+import FotoPendiente from "@/components/FotoPendiente.astro";
+import { Icon } from "astro-icon/components";
+import Lightbox from "@/components/Lightbox.astro";
+
+export interface FotoEscaparate {
+  src: ImageMetadata;
+  /** Describe lo que se ve, como el resto del sitio. */
+  alt: string;
+  /** El punto de la foto que no se recorta (`object-position`). */
+  enfoque?: string;
+}
+
+interface Props {
+  titulo: string;
+  /** La línea sobre el título: "Cumpleaños · aniversarios". */
+  etiqueta?: string;
+  descripcion?: string;
+  /** La primera es la principal. Vacía: el marco dice `sinFoto`. */
+  fotos: FotoEscaparate[];
+  /** El dato junto al botón: "a presupuesto", "desde 30 €". */
+  precio?: string;
+  /** El botón de abajo. Lo que no sea `texto` va tal cual al <a>. */
+  accion?: { texto: string; href: string } & Omit<
+    HTMLAttributes<"a">,
+    "href" | "class"
+  >;
+  /** Para el lector de pantalla en las miniaturas: "Foto 2 de 3". */
+  textoFoto?: string;
+  sinFoto?: string;
+  /** Único en la página: de él sale el id del lightbox. Por defecto, el título. */
+  id?: string;
+}
+
+const {
+  titulo,
+  etiqueta,
+  descripcion,
+  fotos,
+  precio,
+  accion,
+  textoFoto = "Foto",
+  sinFoto = "Foto pendiente",
+  id = titulo,
+} = Astro.props;
+
+const { texto: textoAccion, ...enlaceAccion } = accion ?? { texto: "" };
+const varias = fotos.length > 1;
+
+// Cuatro casillas en una fila, también en móvil. Si no caben todas, las tres
+// primeras son miniaturas y la cuarta es la puerta al resto.
+const CASILLAS = 4;
+const miniaturas =
+  fotos.length > CASILLAS ? fotos.slice(0, CASILLAS - 1) : fotos;
+const restantes = fotos.length - miniaturas.length;
+const CASILLA =
+  "block size-10 cursor-pointer overflow-hidden rounded-lg bg-taupe/15 lg:size-13 lg:rounded-xl";
+
+const idLightbox = `lightbox-${id
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-|-$/g, "")}`;
+---
+
+<article
+  data-escaparate
+  class="grid grid-cols-[8.5rem_minmax(0,1fr)] overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/5 ring-1 ring-taupe/60 sm:grid-cols-[12.5rem_minmax(0,1fr)] lg:min-h-80 lg:grid-cols-[15.5rem_minmax(0,1fr)]"
+>
+  <div class="relative min-h-52 bg-taupe/15">
+    {fotos.length ? (
+      <button
+        type="button"
+        data-abre-lightbox={idLightbox}
+        data-marco
+        data-foto="0"
+        aria-haspopup="dialog"
+        aria-label={`Ver en grande las fotos de ${titulo}`}
+        class="group absolute inset-0 cursor-zoom-in overflow-hidden"
+      >
+        {fotos.map((foto, i) => (
+          <Image
+            src={foto.src}
+            alt={foto.alt}
+            widths={[280, 400, 560]}
+            sizes="(min-width: 1024px) 15.5rem, (min-width: 640px) 12.5rem, 8.5rem"
+            loading="lazy"
+            decoding="async"
+            data-foto={i}
+            data-activa={i === 0 ? "" : undefined}
+            class="absolute inset-0 h-full w-full object-cover opacity-0 transition-[opacity,scale] duration-300 group-hover:scale-[1.03] data-activa:opacity-100 motion-reduce:transition-none"
+            style={foto.enfoque && `object-position: ${foto.enfoque}`}
+          />
+        ))}
+        {/* Que se ve que se puede ampliar: en móvil no hay hover que lo diga. */}
+        <span
+          class="absolute right-2.5 bottom-2.5 grid size-8 place-items-center rounded-full bg-linen/90 text-black shadow-md shadow-black/15 transition-colors group-hover:bg-white noscript:hidden lg:right-3.5 lg:bottom-3.5 lg:size-9"
+          aria-hidden="true"
+        >
+          <Icon name="lucide:maximize-2" class="size-3.5 lg:size-4" />
+        </span>
+      </button>
+    ) : (
+      <FotoPendiente class="absolute inset-0 p-3 text-center">
+        {sinFoto}
+      </FotoPendiente>
+    )}
+  </div>
+
+  <div class="flex flex-col p-4.5 sm:p-7 lg:px-8">
+    {etiqueta && <p class="leyenda text-rust">{etiqueta}</p>}
+    <h3 class="mt-2 titulo text-2xl leading-[1.1] text-balance sm:text-[1.75rem] lg:mt-2.5 lg:text-[2rem]">
+      {titulo}
+    </h3>
+    {descripcion && (
+      <p class="mt-2 text-[0.8125rem] leading-relaxed text-black/70 sm:text-sm">
+        {descripcion}
+      </p>
+    )}
+
+    {varias && (
+      <ul
+        class="mt-4 flex gap-2 noscript:hidden"
+        aria-label={`Fotos de ${titulo}`}
+      >
+        {miniaturas.map((foto, i) => (
+          <li>
+            <button
+              type="button"
+              data-miniatura={i}
+              aria-label={`${textoFoto} ${i + 1} de ${fotos.length}`}
+              aria-pressed={i === 0 ? "true" : "false"}
+              class:list={[
+                CASILLA,
+                "opacity-70 ring-rust ring-offset-2 ring-offset-white transition hover:opacity-100 aria-pressed:opacity-100 aria-pressed:ring-2",
+              ]}
+            >
+              <Image
+                src={foto.src}
+                alt=""
+                widths={[80, 120]}
+                sizes="52px"
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover"
+                style={foto.enfoque && `object-position: ${foto.enfoque}`}
+              />
+            </button>
+          </li>
+        ))}
+        {restantes > 0 && (
+          <li>
+            <button
+              type="button"
+              data-abre-lightbox={idLightbox}
+              data-foto={miniaturas.length}
+              aria-haspopup="dialog"
+              aria-label={`Ver las ${fotos.length} fotos de ${titulo}`}
+              class:list={[CASILLA, "group relative"]}
+            >
+              <Image
+                src={fotos[miniaturas.length].src}
+                alt=""
+                widths={[80, 120]}
+                sizes="52px"
+                loading="lazy"
+                decoding="async"
+                class="h-full w-full object-cover"
+              />
+              <span class="absolute inset-0 grid place-items-center bg-[rgb(28_16_10/0.6)] text-xs font-medium text-linen tabular-nums transition-colors group-hover:bg-[rgb(28_16_10/0.75)] lg:text-sm">
+                +{restantes}
+              </span>
+            </button>
+          </li>
+        )}
+      </ul>
+    )}
+
+    {
+      /* Abajo del todo (mt-auto). En móvil el botón va a todo el ancho bajo
+        el precio; desde sm, los dos en una línea. */
+      (precio || accion) && (
+        <div class="mt-auto flex flex-col gap-3 pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          {precio && (
+            <span class="dato text-[11px] text-black/55">{precio}</span>
+          )}
+          {accion && (
+            <a
+              {...enlaceAccion}
+              class="inline-flex min-h-11 items-center justify-center rounded-full bg-rust px-5.5 text-center accion text-[10px] text-linen transition-colors hover:bg-rust-hondo sm:ml-auto sm:text-[11px]"
+            >
+              {textoAccion}
+            </a>
+          )}
+        </div>
+      )
+    }
+  </div>
+</article>
+
+{fotos.length > 0 && (
+  <Lightbox
+    id={idLightbox}
+    titulo={titulo}
+    fotos={fotos}
+    accion={accion}
+    textoFoto={textoFoto}
+  />
+)}
+
+<script>
+  // Pulsar una miniatura enciende su foto en el marco y la marca a ella. El
+  // botón del marco se apunta cuál es, para abrir el lightbox en esa.
+  for (const tarjeta of document.querySelectorAll<HTMLElement>(
+    "[data-escaparate]",
+  )) {
+    const marco = tarjeta.querySelector<HTMLElement>("[data-marco]");
+    const fotos = [...tarjeta.querySelectorAll<HTMLElement>("img[data-foto]")];
+    const miniaturas = [
+      ...tarjeta.querySelectorAll<HTMLButtonElement>("[data-miniatura]"),
+    ];
+
+    miniaturas.forEach((miniatura, i) =>
+      miniatura.addEventListener("click", () => {
+        fotos.forEach((foto, j) =>
+          foto.toggleAttribute("data-activa", i === j),
+        );
+        miniaturas.forEach((otra, j) =>
+          otra.setAttribute("aria-pressed", String(i === j)),
+        );
+        if (marco) marco.dataset.foto = String(i);
+      }),
+    );
+  }
+</script>

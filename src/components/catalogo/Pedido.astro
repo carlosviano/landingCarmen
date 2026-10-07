@@ -13,10 +13,22 @@
 // `href` y el total cada vez que cambia el formulario, y parar el pedido si
 // la fecha no vale.
 //
-// La fecha mínima también la pone el script, y no el build: un `min` fijado al
-// compilar se quedaría viejo al día siguiente de publicar.
+// La fecha va en el calendario compartido (formulario/Calendario.astro), con
+// los días que no son laborables o no llegan a la antelación apagados.
+//
+// Los controles visten las clases de formulario/estilos.ts, las mismas que la
+// solicitud de eventos: los dos formularios tienen que parecer uno.
 import { Icon } from "astro-icon/components";
-import { PEDIDO, type Tarta } from "@/config/site";
+import Calendario from "@/components/formulario/Calendario.astro";
+import {
+  BOTON,
+  BOTON_ICONO,
+  ETIQUETA,
+  OPCION_OCULTA,
+  PASTILLA,
+} from "@/components/formulario/estilos";
+import type { Tarta } from "@/config/catalogo";
+import { PEDIDO } from "@/config/pedido";
 import { mensajePedido, precioVisible } from "@/lib/pedido";
 
 interface Props {
@@ -46,9 +58,7 @@ const conSelector = tarta.tamanos.length > 1;
       son suyos; el aspecto lo pone la pastilla (`peer-checked:`). */
     conSelector && (
       <fieldset class="min-w-0">
-        <legend class="mb-2.5 bajo:mb-2 leyenda text-rust">
-          Tamaño
-        </legend>
+        <legend class={`mb-2.5 bajo:mb-2 ${ETIQUETA}`}>Tamaño</legend>
         <div
           class="grid gap-2"
           style={`grid-template-columns: repeat(${tarta.tamanos.length}, minmax(0, 1fr))`}
@@ -62,9 +72,11 @@ const conSelector = tarta.tamanos.length > 1;
                 data-personas={tamano.personas}
                 data-precio={tamano.precio}
                 checked={i === 0}
-                class="peer absolute inset-0 m-0 cursor-pointer opacity-0"
+                class={OPCION_OCULTA}
               />
-              <span class="flex flex-col items-center rounded-2xl border border-black/40 px-1 py-2 text-[11px] bajo:py-1.5 tracking-[0.06em] text-black/70 transition-colors duration-200 peer-checked:border-rust peer-checked:bg-rust peer-checked:text-linen/90 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-rust hover:border-rust motion-reduce:transition-none peer-checked:[&>b]:text-linen">
+              <span
+                class={`${PASTILLA} flex flex-col items-center px-1 py-2 bajo:py-1.5 peer-checked:[&>b]:text-linen`}
+              >
                 <b class="titulo text-[1.2rem] leading-tight bajo:text-[1.05rem] text-black">
                   {tamano.personas}
                 </b>
@@ -77,12 +89,11 @@ const conSelector = tarta.tamanos.length > 1;
     )
   }
 
-  <div class="grid grid-cols-[auto_minmax(0,1fr)] gap-3.5">
+  {/* `relative`: el calendario se abre debajo de esta fila y con su ancho
+      entero, no con el de la columna de la fecha, que en móvil es estrecha. */}
+  <div class="relative grid grid-cols-[auto_minmax(0,1fr)] gap-3.5">
     <div class="flex flex-col gap-2">
-      <label
-        for="pedido-cantidad"
-        class="leyenda text-rust"
-      >
+      <label for="pedido-cantidad" class={ETIQUETA}>
         Cantidad
       </label>
       <div class="flex h-11 items-center bajo:h-10 rounded-full border border-black/40">
@@ -90,7 +101,7 @@ const conSelector = tarta.tamanos.length > 1;
           type="button"
           data-paso="-1"
           aria-label="Quitar una"
-          class="grid h-full w-10 place-items-center rounded-full text-rust hover:bg-rust/8"
+          class={`${BOTON_ICONO} h-full w-10`}
         >
           <Icon name="lucide:minus" class="size-4" aria-hidden="true" />
         </button>
@@ -107,7 +118,7 @@ const conSelector = tarta.tamanos.length > 1;
           type="button"
           data-paso="1"
           aria-label="Añadir una"
-          class="grid h-full w-10 place-items-center rounded-full text-rust hover:bg-rust/8"
+          class={`${BOTON_ICONO} h-full w-10`}
         >
           <Icon name="lucide:plus" class="size-4" aria-hidden="true" />
         </button>
@@ -115,19 +126,15 @@ const conSelector = tarta.tamanos.length > 1;
     </div>
 
     <div class="flex min-w-0 flex-col gap-2">
-      <label
-        for="pedido-fecha"
-        class="leyenda text-rust"
-      >
+      <span id="pedido-fecha-etiqueta" class={ETIQUETA}>
         Fecha de entrega
-      </label>
-      <input
+      </span>
+      <Calendario
         id="pedido-fecha"
-        data-fecha
-        type="date"
-        required
-        aria-describedby="pedido-fecha-nota"
-        class="h-11 w-full min-w-0 bajo:h-10 rounded-full border border-black/40 bg-transparent px-4 accent-rust hover:border-rust aria-invalid:border-2 aria-invalid:border-rust"
+        nombre="fecha"
+        etiquetaId="pedido-fecha-etiqueta"
+        descripcionId="pedido-fecha-nota"
+        titulo="Elegir fecha de entrega"
       />
     </div>
   </div>
@@ -138,18 +145,14 @@ const conSelector = tarta.tamanos.length > 1;
 
   <dl class="border-y border-taupe/45">
     <div class="flex items-baseline justify-between gap-6 py-2.5">
-      <dt class="dato text-[10px] text-black/60">
-        Conservación
-      </dt>
+      <dt class="dato text-[10px] text-black/60">Conservación</dt>
       <dd class="text-right text-sm text-black/80">{tarta.conservacion}</dd>
     </div>
   </dl>
 
-  {
-    /* El precio va AQUÍ, al lado del botón, y no arriba con el nombre: depende
+  {/* El precio va AQUÍ, al lado del botón, y no arriba con el nombre: depende
       del tamaño y de la cantidad, así que es un total, y un total se lee
-      donde se decide. `aria-live` para que se anuncie al cambiar. */
-  }
+      donde se decide. `aria-live` para que se anuncie al cambiar. */}
   <div class="mt-1 flex items-center justify-between gap-4 bajo:mt-0">
     <p class="flex flex-col leading-none">
       <span class="dato text-[10px] text-black/60">Total</span>
@@ -162,28 +165,28 @@ const conSelector = tarta.tamanos.length > 1;
       </span>
     </p>
 
-    {
-      /* El texto sale de `PEDIDO.etiqueta` y nombra WhatsApp a propósito: un
-        botón que te saca de la página tiene que decir a dónde te lleva. */
-    }
+    {/* El texto sale de `PEDIDO.etiqueta` y nombra WhatsApp a propósito: un
+        botón que te saca de la página tiene que decir a dónde te lleva. */}
     <a
       data-cta
       href={PEDIDO.enlace(mensajePedido(tarta.nombre))}
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex flex-1 items-center justify-center gap-2.5 rounded-full bg-rust px-4 py-4 accion text-[11px] whitespace-nowrap text-linen shadow-lg shadow-black/25 transition-colors duration-300 hover:bg-black hover:text-white sm:flex-none sm:px-6 sm:text-xs sm:tracking-[0.16em]"
+      class={`${BOTON} flex-1 sm:flex-none`}
     >
-      <Icon name="simple-icons:whatsapp" class="size-4 shrink-0" aria-hidden="true" />
+      <Icon
+        name="simple-icons:whatsapp"
+        class="size-4 shrink-0"
+        aria-hidden="true"
+      />
       {PEDIDO.etiqueta}
     </a>
   </div>
 
   <p data-error role="alert" hidden class="text-sm font-medium text-rust"></p>
 
-  {
-    /* Qué pasa al pulsar, como texto visible y no en un `aria-label`: la duda
-      de "¿se envía ya?" la tiene todo el mundo. */
-  }
+  {/* Qué pasa al pulsar, como texto visible y no en un `aria-label`: la duda
+      de "¿se envía ya?" la tiene todo el mundo. */}
   <p class="max-w-[42ch] text-xs leading-relaxed text-black/60">
     Se abre WhatsApp con el pedido ya escrito: tamaño, cantidad y fecha. No se
     envía nada hasta que lo envíes tú.
@@ -191,36 +194,45 @@ const conSelector = tarta.tamanos.length > 1;
 </form>
 
 <script>
-  import { PEDIDO } from "@/config/site";
+  import { PEDIDO } from "@/config/pedido";
+  import { montarCalendario } from "@/lib/calendario";
   import {
     aISO,
+    esLaborable,
     fechaMinima,
     mensajePedido,
     precioVisible,
     problemaFecha,
   } from "@/lib/pedido";
 
-  for (const form of document.querySelectorAll<HTMLFormElement>("[data-pedido]")) {
+  for (const form of document.querySelectorAll<HTMLFormElement>(
+    "[data-pedido]",
+  )) {
     const nombre = form.dataset.nombre ?? "";
     const cantidad = form.querySelector<HTMLInputElement>("[data-cantidad]");
-    const fecha = form.querySelector<HTMLInputElement>("[data-fecha]");
+    const fecha = form.querySelector<HTMLInputElement>(
+      "[data-calendario-valor]",
+    );
+    const botonFecha = form.querySelector<HTMLButtonElement>(
+      "[data-calendario-boton]",
+    );
     const total = form.querySelector<HTMLElement>("[data-total]");
     const cta = form.querySelector<HTMLAnchorElement>("[data-cta]");
     const error = form.querySelector<HTMLElement>("[data-error]");
-    if (!cantidad || !fecha || !total || !cta || !error) continue;
-
-    fecha.min = aISO(fechaMinima());
+    if (!cantidad || !fecha || !botonFecha || !total || !cta || !error)
+      continue;
 
     // El tamaño marcado; sin selector (un solo tamaño), el del propio <form>.
     const tamano = () =>
-      form.querySelector<HTMLInputElement>('input[name="tamano"]:checked') ?? form;
+      form.querySelector<HTMLInputElement>('input[name="tamano"]:checked') ??
+      form;
     const unidades = () => Math.max(1, Math.round(Number(cantidad.value) || 1));
 
     const avisar = (problema: string | null) => {
       error.hidden = problema === null;
       error.textContent = problema ?? "";
-      if (problema) fecha.setAttribute("aria-invalid", "true");
-      else fecha.removeAttribute("aria-invalid");
+      if (problema) botonFecha.setAttribute("aria-invalid", "true");
+      else botonFecha.removeAttribute("aria-invalid");
     };
 
     const actualizar = () => {
@@ -235,9 +247,13 @@ const conSelector = tarta.tamanos.length > 1;
       );
     };
 
-    for (const boton of form.querySelectorAll<HTMLButtonElement>("[data-paso]")) {
+    for (const boton of form.querySelectorAll<HTMLButtonElement>(
+      "[data-paso]",
+    )) {
       boton.addEventListener("click", () => {
-        cantidad.value = String(Math.max(1, unidades() + Number(boton.dataset.paso)));
+        cantidad.value = String(
+          Math.max(1, unidades() + Number(boton.dataset.paso)),
+        );
         actualizar();
       });
     }
@@ -248,23 +264,25 @@ const conSelector = tarta.tamanos.length > 1;
       cantidad.value = String(unidades());
     });
 
-    // Un sábado o una fecha demasiado pronto se avisan al elegirlos, no al
-    // pulsar el botón: así se corrige antes de llegar a él.
-    fecha.addEventListener("change", () => {
-      avisar(fecha.value ? problemaFecha(fecha.value) : null);
+    const calendario = montarCalendario(form, {
+      primera: () => aISO(fechaMinima()),
+      elegible: esLaborable,
+      alElegir: () => avisar(null),
     });
 
     form.addEventListener("input", actualizar);
     form.addEventListener("change", actualizar);
 
-    // Sin fecha válida no se abre WhatsApp: se explica por qué y se lleva el
-    // foco al campo.
+    // Sin fecha válida no se abre WhatsApp: se explica por qué y se abre el
+    // calendario para elegir otra.
     cta.addEventListener("click", (evento) => {
       const problema = problemaFecha(fecha.value);
       if (problema) {
         evento.preventDefault();
+        // Que este clic no llegue al "clic fuera" que cierra el calendario.
+        evento.stopPropagation();
         avisar(problema);
-        fecha.focus();
+        calendario.abrir();
       }
     });
 

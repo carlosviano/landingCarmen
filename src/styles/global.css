@@ -42,17 +42,29 @@
      los titulares del mismo color que el boton, y el boton deja de
      destacar: es la unica masa clara de la banda y compite con un titular
      de 72px. Con el texto en linen (8.5) sand senala la accion.
+
+  4. Hover de los botones, sin negro: cada boton se mueve dentro de su color.
+       rust relleno ... rust-hondo (oscurece)
+       sand relleno ... white (aclara; sigue siendo la masa clara de la banda)
+       con borde ...... se rellena del color del borde
 */
 @theme {
   --color-linen: #edf0da;
   --color-sand: #f0dfad;
   --color-taupe: #a89b8c;
   --color-rust: #7c2513;
+  /* El hover de los botones rust: el mismo rojo un 30% más hondo. Antes
+     pasaban a negro, que sobre una foto en blanco y negro (la cabecera de
+     /eventos) apagaba el botón en vez de encenderlo y lo sacaba de la paleta.
+     Oscurecer dentro del mismo color se lee como "esto responde" en
+     cualquier fondo: linen, sand, rust o foto. text-linen encima sube de 8.5
+     a ~12. */
+  --color-rust-hondo: color-mix(in oklab, var(--color-rust), black 30%);
 }
 
 /* `bajo:` — escritorio de poca altura (portátiles de 768–900 px). La ficha de
-   tarta usa esta variante para apretar el espacio vertical y que la tarta y la
-   banda "Cómo se hace" quepan juntas en una pantalla. Por debajo de ~720 px de
+   tarta usa esta variante para apretar el espacio vertical y que la tarta y el
+   pedido quepan en una pantalla. Por debajo de ~720 px de
    alto ya no se intenta: encoger más obligaría a letra pequeña, y es mejor
    bajar un poco. */
 @custom-variant bajo (@media (min-width: 64rem) and (max-height: 56.25rem));

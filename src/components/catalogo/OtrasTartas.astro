@@ -1,0 +1,50 @@
+---
+// La tira "Otras tartas" del final de la ficha: es cómo se pasa de una tarta a
+// otra sin volver a la carta.
+//
+// Tira horizontal: en escritorio caben todas de una vez; en móvil se arrastra,
+// con `snap-x` para que pare encajada en una tarjeta. El `py-2.5` evita que
+// `overflow-x-auto` recorte la elevación del hover.
+//
+// En móvil, ancho fijo (9rem): se ven dos tarjetas y asoma la tercera, que es
+// lo que dice que se puede deslizar. En escritorio las tarjetas se reparten la
+// fila (`flex-1`): a 160 px fijos, cinco dejaban un tercio de la fila vacío y
+// la tira parecía incompleta. Con dos topes: `min-w-48` para que con muchas
+// tartas no se encojan (la tira vuelve a deslizarse) y `max-w-60` para que con
+// pocas no salgan enormes.
+//
+// Sin otras tartas no se pinta: una sección con su titular y nada debajo se
+// leería como un fallo.
+import type { TartaConFotos } from "@/lib/tartas";
+import TarjetaTarta from "./TarjetaTarta.astro";
+
+interface Props {
+  otras: TartaConFotos[];
+}
+
+const { otras } = Astro.props;
+---
+
+{otras.length > 0 && (
+  <nav
+    aria-labelledby="otras-tartas"
+    class="mx-auto w-full max-w-7xl px-6 py-13 md:py-16"
+  >
+    <h2 id="otras-tartas" class="leyenda text-black/60">
+      Otras tartas
+    </h2>
+    <ul class="mt-6 flex snap-x gap-4 overflow-x-auto py-2.5">
+      {otras.map((entrada) => (
+        <li class="w-36 shrink-0 snap-start sm:w-40 lg:w-auto lg:max-w-60 lg:min-w-48 lg:flex-1">
+          <TarjetaTarta
+            tarta={entrada.tarta}
+            foto={entrada.foto}
+            recorte={entrada.recorte}
+            nivel={3}
+            compacta
+          />
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
