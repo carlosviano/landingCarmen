@@ -8,7 +8,8 @@
 // esquema: escrito dos veces, el navegador y el servidor acabarían aceptando
 // cosas distintas.
 import { z } from "zod";
-import { ESPECIALES, SOLICITUD_EVENTO } from "@/config/site";
+import { SOLICITUD_EVENTO } from "@/config/eventos";
+import { ESPECIALES } from "@/config/personalizadas";
 import { aISO, esLaborable, fechaLarga } from "@/lib/pedido";
 
 const OBLIGATORIO = "Este campo es obligatorio.";

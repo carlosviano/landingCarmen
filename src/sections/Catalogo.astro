@@ -2,7 +2,7 @@
 // Sección de tartas de la portada: el escaparate. Un díptico a sangre con las
 // dos formas de encargar una tarta —la carta a un lado, las personalizadas al
 // otro—, cada mitad con su foto y su único botón. Qué sale en cada mitad se
-// decide en `ESCAPARATE` (src/config/site.ts).
+// decide en `ESCAPARATE` (src/config/portada.ts).
 //
 // Es la variante PURISTA del diseño: sin titular visible ni entradilla. Cada
 // mitad lleva lo justo para elegir: una leyenda que dice en qué se distingue
@@ -19,10 +19,10 @@
 // `SERVICIOS`), aunque los botones del hero ya van a las páginas. Por eso el `scroll-mt-20` va en las mitades y no
 // en la sección: la cabecera es sticky y sin él taparía la parte de arriba.
 import { Image } from "astro:assets";
-import { ESCAPARATE } from "@/config/site";
+import { ESCAPARATE } from "@/config/portada";
 import { fotoDe } from "@/lib/fotos";
 
-// Las fotos se nombran en site.ts y las resuelve `fotoDe`, que revienta el
+// Las fotos se nombran en config/portada.ts y las resuelve `fotoDe`, que revienta el
 // build si el nombre no existe (ver src/lib/fotos.ts). El `!` es seguro:
 // `fotoDe` sólo devuelve null si se le pasa null, y `archivo` es obligatorio.
 const entradas = ESCAPARATE.entradas.map((entrada) => ({

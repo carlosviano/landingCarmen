@@ -57,7 +57,7 @@ pedir más de lo que hay no da nitidez extra).
 
 # Las fotos del carrusel
 
-Quién entra y en qué orden se decide en `GALERIA`, dentro de `src/config/site.ts`; el
+Quién entra y en qué orden se decide en `GALERIA`, dentro de `src/config/portada.ts`; el
 componente es `src/sections/Galeria.astro`.
 
 **Para añadir una: dejar el archivo aquí y poner su línea en `GALERIA`.** No
@@ -90,7 +90,7 @@ material de verdad.
 # Los escaparates de la portada
 
 Dos secciones de la portada enseñan fotos sueltas elegidas a mano, no sacadas
-de ninguna lista. Las dos se deciden en `src/config/site.ts` y las resuelve
+de ninguna lista. Las dos se deciden en `src/config/portada.ts` y las resuelve
 `fotoDe()`, así que una errata en el nombre revienta el build.
 
 **El díptico de tartas** (`ESCAPARATE`, `src/sections/Catalogo.astro`). Dos
@@ -123,7 +123,7 @@ remotas), así que el build les saca sus webp y sus tamaños.
 
 # Las imágenes del catálogo
 
-Quién es cada una se decide en `CATALOGO`, dentro de `src/config/site.ts`, con
+Quién es cada una se decide en `CATALOGO`, dentro de `src/config/catalogo.ts`, con
 el campo `archivo`. Las resuelve `fotoDe()` (`src/lib/fotos.ts`), que **revienta
 el build** con la lista de lo que sí hay si el nombre no existe — así una
 errata se ve en el momento y no como un hueco en la página.
@@ -179,7 +179,7 @@ Detalles que se notan en pantalla:
 La ficha anotada usa una foto SIN fondo (`recorte` de cada tarta), y las seis
 comparten **el mismo lienzo: 1200×1040, transparente, con la tarta a todo el
 ancho y centrada en alto**. Por eso todas salen del mismo tamaño y en la misma
-caja, y por eso los `punto` en % de `site.ts` se pueden comparar entre tartas.
+caja, y por eso los `punto` en % de `catalogo.ts` se pueden comparar entre tartas.
 
 Para una tarta nueva, desde su PNG sin fondo (en ángulo como las demás):
 

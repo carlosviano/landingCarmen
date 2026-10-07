@@ -27,7 +27,8 @@ import {
   OPCION_OCULTA,
   PASTILLA,
 } from "@/components/formulario/estilos";
-import { PEDIDO, type Tarta } from "@/config/site";
+import type { Tarta } from "@/config/catalogo";
+import { PEDIDO } from "@/config/pedido";
 import { mensajePedido, precioVisible } from "@/lib/pedido";
 
 interface Props {
@@ -199,7 +200,7 @@ const conSelector = tarta.tamanos.length > 1;
 </form>
 
 <script>
-  import { PEDIDO } from "@/config/site";
+  import { PEDIDO } from "@/config/pedido";
   import { montarCalendario } from "@/lib/calendario";
   import {
     aISO,

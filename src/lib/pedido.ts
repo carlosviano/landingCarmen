@@ -6,11 +6,8 @@
 // tiene JS), y el script del cliente, para rehacerlos al cambiar el
 // formulario. Escritas dos veces, el mensaje del build y el del navegador
 // acabarían diciendo cosas distintas.
-import {
-  PEDIDO,
-  PRECIOS_PROVISIONALES,
-  type Tarta,
-} from "@/config/site";
+import type { Tarta } from "@/config/catalogo";
+import { PEDIDO, PRECIOS_PROVISIONALES } from "@/config/pedido";
 
 /** Lunes a viernes. Es lo único que se entrega: fines de semana, no. */
 export function esLaborable(fecha: Date): boolean {

@@ -21,7 +21,8 @@ import {
   OPCION_OCULTA,
   PASTILLA,
 } from "@/components/formulario/estilos";
-import { SOLICITUD_EVENTO, whatsappCon } from "@/config/site";
+import { SOLICITUD_EVENTO } from "@/config/eventos";
+import { whatsappCon } from "@/config/site";
 import { mensajeEvento } from "@/lib/solicitud";
 
 const S = SOLICITUD_EVENTO;
@@ -155,7 +156,7 @@ const S = SOLICITUD_EVENTO;
 </MarcoSolicitud>
 
 <script>
-  import { SOLICITUD_EVENTO } from "@/config/site";
+  import { SOLICITUD_EVENTO } from "@/config/eventos";
   import { montarSolicitud } from "@/lib/formularioSolicitud";
   import { mensajeEvento, primeraFechaEvento, validarSolicitud } from "@/lib/solicitud";
 

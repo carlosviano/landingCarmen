@@ -2,7 +2,7 @@
 // Sección "eventos" de la portada: solo montajes. Antetítulo, titular y
 // entradilla, y debajo UNA foto de mesa a todo el ancho con un único enlace, a
 // /eventos, que es donde está la lista completa. Qué foto sale se decide en
-// `ESCAPARATE_EVENTOS` (src/config/site.ts).
+// `ESCAPARATE_EVENTOS` (src/config/portada.ts).
 //
 // Las tartas no van aquí: tienen su díptico justo encima (Catalogo.astro). El
 // escaparate anterior mezclaba las dos cosas —un botón de tartas
@@ -24,7 +24,9 @@
 // arriba, a un `lg:pt-12` fijo, para que lo que hay encima (el díptico) y esto
 // se lean seguidos y no con un hueco que crece con la pantalla.
 import { Image } from "astro:assets";
-import { ESCAPARATE_EVENTOS, EVENTOS, SERVICIOS } from "@/config/site";
+import { EVENTOS } from "@/config/eventos";
+import { ESCAPARATE_EVENTOS } from "@/config/portada";
+import { SERVICIOS } from "@/config/site";
 import { fotoDe } from "@/lib/fotos";
 
 // `fotoDe` revienta el build si el nombre no existe (ver src/lib/fotos.ts), y

@@ -2,12 +2,12 @@
 // /catalogo/<id> — la ficha de una tarta.
 //
 // Ruta estática: se genera una página por tarta a partir de CATALOGO, así que
-// añadir una tarta en src/config/site.ts crea su ficha sola. Cada una tiene su
+// añadir una tarta en src/config/catalogo.ts crea su ficha sola. Cada una tiene su
 // URL, y eso es el punto: se comparte por WhatsApp, se guarda en marcadores y
 // la indexa un buscador. Un panel o un modal no dan ninguna de las tres.
 //
 // UNA SOLA PLANTILLA PARA TODAS. Lo que cambia de una tarta a otra —la foto,
-// adónde apunta cada línea, qué capas tiene— son datos de `site.ts`, no
+// adónde apunta cada línea, qué capas tiene— son datos de `catalogo.ts`, no
 // código. Una tarta montada de otra manera lleva otros números, no otra
 // página.
 //
@@ -28,7 +28,7 @@ import Footer from "@/sections/Footer.astro";
 import TarjetaTarta from "@/components/catalogo/TarjetaTarta.astro";
 import Pedido from "@/components/catalogo/Pedido.astro";
 import { Image } from "astro:assets";
-import { CATALOGO, type Tarta } from "@/config/site";
+import { CATALOGO, type Tarta } from "@/config/catalogo";
 import { fotoDe } from "@/lib/fotos";
 import { estaAnotada } from "@/lib/pedido";
 

@@ -8,7 +8,7 @@
 // archivo de carpeta para romper una de ellas en silencio.
 //
 // Por qué se pasa el nombre en texto y no un `import` directo: los nombres
-// viven en `src/config/site.ts`, que es contenido y no debe importar binarios.
+// viven en `src/config/`, que es contenido y no debe importar binarios.
 // El precio de eso es que una errata no la caza TypeScript, así que la caza
 // esta función: revienta el build con la lista de lo que sí hay, en vez de
 // dejar un hueco en la página.

@@ -1,4 +1,4 @@
-import { PROXIMAMENTE } from "@/config/site";
+import { PROXIMAMENTE } from "@/config/proximamente";
 
 // Decide si este build publica la pantalla de "próximamente" en lugar de la
 // web. Lo mismo que el robots.txt (src/pages/robots.txt.ts): Cloudflare Pages

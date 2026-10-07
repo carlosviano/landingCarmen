@@ -17,7 +17,8 @@ import Desplegable from "@/components/formulario/Desplegable.astro";
 import FotosInspiracion from "@/components/formulario/FotosInspiracion.astro";
 import MarcoSolicitud from "@/components/formulario/MarcoSolicitud.astro";
 import { AREA, CAMPO, OPCION_OCULTA, PASTILLA } from "@/components/formulario/estilos";
-import { ESPECIALES, whatsappCon } from "@/config/site";
+import { ESPECIALES } from "@/config/personalizadas";
+import { whatsappCon } from "@/config/site";
 import { mensajeEspecial, OPCIONES_DISENO } from "@/lib/solicitud";
 
 const S = ESPECIALES.solicitud;
@@ -130,7 +131,7 @@ const PILDORA = `${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`;
 </MarcoSolicitud>
 
 <script>
-  import { ESPECIALES } from "@/config/site";
+  import { ESPECIALES } from "@/config/personalizadas";
   import { esLaborable } from "@/lib/pedido";
   import { montarSolicitud } from "@/lib/formularioSolicitud";
   import { mensajeEspecial, primeraFechaEspecial, validarEspecial } from "@/lib/solicitud";
