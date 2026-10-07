@@ -23,6 +23,13 @@
 // La TARJETA ENTERA es el enlace, así que el objetivo de toque es todo el
 // bloque y no una línea de texto. Por eso dentro no hay ningún otro elemento
 // interactivo.
+//
+// EL PRECIO, A LA MISMA ALTURA EN TODA LA FILA. El nombre sale siempre entero,
+// sin puntos suspensivos, así que unas tarjetas tienen una línea de título y
+// otras dos o tres. Para que eso no descuadre los precios, la tarjeta llena el
+// alto de su fila (`h-full`; la celda de la rejilla y el <li> de la tira ya se
+// estiran solos) y el filete con el precio se va al fondo con `mt-auto`. El
+// hueco que sobra queda entre el nombre y el filete, nunca debajo.
 import { Image } from "astro:assets";
 import type { Tarta } from "@/config/site";
 import { precioVisible } from "@/lib/pedido";
@@ -75,19 +82,20 @@ const {
 const Titular = nivel === 2 ? "h2" : "h3";
 
 // En la rejilla la tarjeta ocupa media pantalla en móvil y un cuarto de los
-// 1280 del contenedor en escritorio; en la tira de la ficha, 9rem.
-const ANCHOS = compacta ? [160, 320] : [200, 320, 440, 640];
+// 1280 del contenedor en escritorio; en la tira de la ficha, 9rem en móvil y
+// hasta 15rem en escritorio (ver la tira en [tarta].astro).
+const ANCHOS = compacta ? [160, 320, 480] : [200, 320, 440, 640];
 
 // La franja de abajo: para cuántos y desde cuánto. Los tamaños van de menor a
 // mayor, así que el primero es el más barato.
 const personas = `${tarta.tamanos.map((tamano) => tamano.personas).join(" · ")} personas`;
 const desde = `${tarta.tamanos.length > 1 ? "desde " : ""}${precioVisible(tarta.tamanos[0].precio)}`;
 const SIZES = compacta
-  ? "10rem"
+  ? "(min-width: 1024px) 15rem, 10rem"
   : "(min-width: 1024px) 19rem, (min-width: 768px) 26vw, 45vw";
 ---
 
-<a href={`/catalogo/${tarta.id}`} class:list={["group block", className]}>
+<a href={`/catalogo/${tarta.id}`} class:list={["group flex h-full flex-col", className]}>
   {
     /* El marco es el de la galería del sitio —aspect-[4/5] y rounded-3xl—
       pero sin su anillo ni su sombra: aquí la foto va sola sobre el fondo, no
@@ -140,7 +148,9 @@ const SIZES = compacta
   <div
     class:list={[
       "flex items-baseline gap-2.5",
-      compacta ? "mt-3" : "mt-4.5",
+      /* El hueco mínimo hasta el filete va aquí, como padding: el margen del
+         filete es `mt-auto` y se come cualquier otro. */
+      compacta ? "mt-3 pb-2.5" : "mt-4.5 pb-3.5",
     ]}
   >
     {
@@ -156,7 +166,7 @@ const SIZES = compacta
     <Titular
       class:list={[
         "titulo leading-snug transition-colors group-hover:text-rust",
-        compacta ? "text-sm" : "text-xl",
+        compacta ? "text-sm lg:text-base" : "text-xl",
       ]}
     >
       {tarta.nombre}
@@ -167,13 +177,13 @@ const SIZES = compacta
     /* Filete con los tamaños y el precio a los dos extremos. Es el recurso de
       una carta de restaurante y alinea los precios de cada hilera. */
     !compacta ? (
-      <div class="mt-3.5 flex items-baseline justify-between gap-3 border-t border-taupe/50 pt-2.5">
+      <div class="mt-auto flex items-baseline justify-between gap-3 border-t border-taupe/50 pt-2.5">
         <span class="text-xs text-black/60">{personas}</span>
         <span class="text-sm font-medium whitespace-nowrap text-rust">{desde}</span>
       </div>
     ) : (
-      <div class="mt-2.5 border-t border-taupe/50 pt-2">
-        <span class="text-xs font-medium text-rust">{desde}</span>
+      <div class="mt-auto border-t border-taupe/50 pt-2">
+        <span class="text-xs font-medium text-rust lg:text-sm">{desde}</span>
       </div>
     )
   }
