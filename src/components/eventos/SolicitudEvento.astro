@@ -21,32 +21,41 @@ import {
   OPCION_OCULTA,
   PASTILLA,
 } from "@/components/formulario/estilos";
-import { SOLICITUD_EVENTO, whatsappCon } from "@/config/site";
+import { SOLICITUD_EVENTO } from "@/config/eventos";
+import { whatsappCon } from "@/config/site";
 import { mensajeEvento } from "@/lib/solicitud";
 
 const S = SOLICITUD_EVENTO;
 ---
 
-<MarcoSolicitud tipo="evento" textos={S} whatsapp={whatsappCon(mensajeEvento())}>
-  <Campo nombre="tipo" etiqueta="Tipo de evento" obligatorio grupo class="sm:col-span-2">
+<MarcoSolicitud
+  tipo="evento"
+  textos={S}
+  whatsapp={whatsappCon(mensajeEvento())}
+>
+  <Campo
+    nombre="tipo"
+    etiqueta="Tipo de evento"
+    obligatorio
+    grupo
+    class="sm:col-span-2"
+  >
     <div class="flex flex-wrap gap-2">
-      {
-        S.tipos.map((tipo) => (
-          <label class="relative cursor-pointer">
-            <input type="radio" name="tipo" value={tipo} class={OPCION_OCULTA} />
-            <span class={`${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`}>
-              {tipo}
-            </span>
-          </label>
-        ))
-      }
+      {S.tipos.map((tipo) => (
+        <label class="relative cursor-pointer">
+          <input type="radio" name="tipo" value={tipo} class={OPCION_OCULTA} />
+          <span
+            class={`${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`}
+          >
+            {tipo}
+          </span>
+        </label>
+      ))}
     </div>
   </Campo>
 
-  {
-    /* `relative` aquí y no en la fila: el panel del calendario se abre
-      con el ancho de este campo (en móvil, la fila entera). */
-  }
+  {/* `relative` aquí y no en la fila: el panel del calendario se abre
+      con el ancho de este campo (en móvil, la fila entera). */}
   <Campo nombre="fecha" etiqueta="Fecha" obligatorio class="relative">
     <Calendario
       id="solicitud-fecha"
@@ -67,7 +76,12 @@ const S = SOLICITUD_EVENTO;
     />
   </Campo>
 
-  <Campo nombre="lugar" etiqueta="Lugar" para="solicitud-lugar" class="sm:col-span-2">
+  <Campo
+    nombre="lugar"
+    etiqueta="Lugar"
+    para="solicitud-lugar"
+    class="sm:col-span-2"
+  >
     <input
       id="solicitud-lugar"
       type="text"
@@ -89,7 +103,8 @@ const S = SOLICITUD_EVENTO;
       name="interes"
       rows="5"
       placeholder={S.placeholderInteres}
-      class={AREA}></textarea>
+      class={AREA}
+    ></textarea>
   </Campo>
 
   <Campo nombre="fotos" etiqueta="Inspiración" class="sm:col-span-2">
@@ -125,7 +140,12 @@ const S = SOLICITUD_EVENTO;
     />
   </Campo>
 
-  <Campo nombre="telefono" etiqueta="Teléfono" para="solicitud-telefono" obligatorio>
+  <Campo
+    nombre="telefono"
+    etiqueta="Teléfono"
+    para="solicitud-telefono"
+    obligatorio
+  >
     <input
       id="solicitud-telefono"
       type="tel"
@@ -155,23 +175,30 @@ const S = SOLICITUD_EVENTO;
 </MarcoSolicitud>
 
 <script>
-  import { SOLICITUD_EVENTO } from "@/config/site";
+  import { SOLICITUD_EVENTO } from "@/config/eventos";
   import { montarSolicitud } from "@/lib/formularioSolicitud";
-  import { mensajeEvento, primeraFechaEvento, validarSolicitud } from "@/lib/solicitud";
+  import {
+    mensajeEvento,
+    primeraFechaEvento,
+    validarSolicitud,
+  } from "@/lib/solicitud";
 
-  document.querySelectorAll<HTMLFormElement>('[data-solicitud="evento"]').forEach((form) =>
-    montarSolicitud(form, {
-      validar: validarSolicitud,
-      mensaje: (texto) =>
-        mensajeEvento({
-          tipo: texto("tipo"),
-          fecha: texto("fecha"),
-          invitados: texto("invitados"),
-          lugar: texto("lugar"),
-        }),
-      calendario: { primera: primeraFechaEvento },
-      envio: SOLICITUD_EVENTO.envio,
-      enviado: "Recibido. Te escribo en cuanto lo lea para contarte qué se puede montar.",
-    }),
-  );
+  document
+    .querySelectorAll<HTMLFormElement>('[data-solicitud="evento"]')
+    .forEach((form) =>
+      montarSolicitud(form, {
+        validar: validarSolicitud,
+        mensaje: (texto) =>
+          mensajeEvento({
+            tipo: texto("tipo"),
+            fecha: texto("fecha"),
+            invitados: texto("invitados"),
+            lugar: texto("lugar"),
+          }),
+        calendario: { primera: primeraFechaEvento },
+        envio: SOLICITUD_EVENTO.envio,
+        enviado:
+          "Recibido. Te escribo en cuanto lo lea para contarte qué se puede montar.",
+      }),
+    );
 </script>

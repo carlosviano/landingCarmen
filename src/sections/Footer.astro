@@ -23,12 +23,8 @@ const DESDE = 2026;
   {/* El padding de abajo suma el hueco de la barra de gestos del móvil, que
     con viewport-fit=cover (ver Layout.astro) se pinta encima del pie al
     final del scroll. */}
-  <div
-    class="mx-auto w-full max-w-7xl px-6 pt-12 pb-[calc(3rem_+_env(safe-area-inset-bottom))] md:pt-16 md:pb-[calc(4rem_+_env(safe-area-inset-bottom))]"
-  >
-    <div
-      class="flex flex-col items-center gap-10 text-center md:flex-row md:items-start md:justify-between md:gap-8 md:text-left"
-    >
+  <div class="mx-auto w-full max-w-7xl px-6 pt-12 pb-[calc(3rem_+_env(safe-area-inset-bottom))] md:pt-16 md:pb-[calc(4rem_+_env(safe-area-inset-bottom))]">
+    <div class="flex flex-col items-center gap-10 text-center md:flex-row md:items-start md:justify-between md:gap-8 md:text-left">
       <div class="flex flex-col items-center gap-4 md:items-start">
         <Brand />
 
@@ -38,9 +34,7 @@ const DESDE = 2026;
               una línea de dirección en decirlo. Ahora que el pie entero va en
               sand, lo que lo separa del bloque es el cuerpo y el tracking, no
               el color. */}
-          <p class="antetitulo text-sand">
-            {SITE.encuentranos}
-          </p>
+          <p class="antetitulo text-sand">{SITE.encuentranos}</p>
           <AddressLink variant="bloque" class="flex" />
         </div>
       </div>
@@ -51,11 +45,12 @@ const DESDE = 2026;
       </div>
     </div>
 
-    <p
-      class="mt-10 border-t border-sand/15 pt-6 text-center dato text-xs text-sand/80 md:mt-14"
-    >
+    <p class="mt-10 border-t border-sand/15 pt-6 text-center dato text-xs text-sand/80 md:mt-14">
       {SITE.nombre} · trabajando desde {DESDE} ·
-      <a href="/privacidad" class="underline-offset-2 hover:text-linen hover:underline">
+      <a
+        href="/privacidad"
+        class="underline-offset-2 hover:text-linen hover:underline"
+      >
         Privacidad
       </a>
     </p>

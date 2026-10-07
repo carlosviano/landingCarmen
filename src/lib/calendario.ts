@@ -50,9 +50,13 @@ export function montarCalendario(
   raiz: ParentNode,
   { primera, elegible = () => true, alElegir }: OpcionesCalendario,
 ): Calendario {
-  const boton = raiz.querySelector<HTMLButtonElement>("[data-calendario-boton]")!;
+  const boton = raiz.querySelector<HTMLButtonElement>(
+    "[data-calendario-boton]",
+  )!;
   const texto = raiz.querySelector<HTMLElement>("[data-calendario-texto]")!;
-  const valor = raiz.querySelector<HTMLInputElement>("[data-calendario-valor]")!;
+  const valor = raiz.querySelector<HTMLInputElement>(
+    "[data-calendario-valor]",
+  )!;
   const panel = raiz.querySelector<HTMLElement>("[data-calendario]")!;
   const titulo = panel.querySelector<HTMLElement>("[data-mes-titulo]")!;
   const dias = panel.querySelector<HTMLElement>("[data-dias]")!;
@@ -91,7 +95,11 @@ export function montarCalendario(
       dia.disabled = !vale(fecha);
       dia.setAttribute(
         "aria-label",
-        fecha.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" }),
+        fecha.toLocaleDateString("es-ES", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        }),
       );
       if (iso === valor.value) dia.setAttribute("aria-pressed", "true");
       dia.className = DIA;
@@ -129,15 +137,23 @@ export function montarCalendario(
     texto.dataset.vacio = "";
   });
 
-  for (const flecha of panel.querySelectorAll<HTMLButtonElement>("[data-mes]")) {
+  for (const flecha of panel.querySelectorAll<HTMLButtonElement>(
+    "[data-mes]",
+  )) {
     flecha.addEventListener("click", () => {
-      mes = new Date(mes.getFullYear(), mes.getMonth() + Number(flecha.dataset.mes), 1);
+      mes = new Date(
+        mes.getFullYear(),
+        mes.getMonth() + Number(flecha.dataset.mes),
+        1,
+      );
       pintar();
     });
   }
 
   dias.addEventListener("click", (evento) => {
-    const dia = (evento.target as HTMLElement).closest<HTMLButtonElement>("button[data-iso]");
+    const dia = (evento.target as HTMLElement).closest<HTMLButtonElement>(
+      "button[data-iso]",
+    );
     if (!dia || dia.disabled) return;
     elegir(dia.dataset.iso!);
     cerrar(true);
@@ -147,13 +163,17 @@ export function montarCalendario(
   // Saltando a los días que se pueden elegir del mes que se ve.
   dias.addEventListener("keydown", (evento) => {
     const paso = PASOS[evento.key];
-    const actual = (evento.target as HTMLElement).closest<HTMLButtonElement>("button[data-iso]");
+    const actual = (evento.target as HTMLElement).closest<HTMLButtonElement>(
+      "button[data-iso]",
+    );
     if (!paso || !actual) return;
     evento.preventDefault();
     const fecha = deISO(actual.dataset.iso!);
     for (let i = 0; i < 31; i++) {
       fecha.setDate(fecha.getDate() + paso);
-      const destino = dias.querySelector<HTMLButtonElement>(`button[data-iso="${aISO(fecha)}"]`);
+      const destino = dias.querySelector<HTMLButtonElement>(
+        `button[data-iso="${aISO(fecha)}"]`,
+      );
       if (!destino) return;
       if (!destino.disabled) return destino.focus();
     }

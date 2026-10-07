@@ -12,7 +12,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/sections/Header.astro";
 import Footer from "@/sections/Footer.astro";
 import Carta from "@/components/catalogo/Carta.astro";
-import { CATALOGO } from "@/config/site";
+import { CATALOGO } from "@/config/catalogo";
 ---
 
 <Layout titulo={CATALOGO.tituloPagina} descripcion={CATALOGO.entradilla}>
@@ -21,28 +21,16 @@ import { CATALOGO } from "@/config/site";
   <main>
     <div class="mx-auto w-full max-w-7xl px-6 pt-14 pb-15 md:pt-20 lg:pb-17">
       {/* Cabecera centrada: antetítulo en mayúsculas y titular en serif. */}
-      <p
-        class="text-center antetitulo text-rust"
-      >
-        {CATALOGO.etiqueta}
-      </p>
-      <h1
-        class="mt-3.5 text-center titular text-4xl leading-tight sm:text-5xl lg:text-[3.25rem]"
-      >
+      <p class="text-center antetitulo text-rust">{CATALOGO.etiqueta}</p>
+      <h1 class="mt-3.5 text-center titular text-4xl leading-tight sm:text-5xl lg:text-[3.25rem]">
         {CATALOGO.tituloPagina}
       </h1>
-      <p
-        class="mx-auto mt-4.5 max-w-[54ch] text-center leading-relaxed text-black/62"
-      >
+      <p class="mx-auto mt-4.5 max-w-[54ch] text-center leading-relaxed text-black/62">
         {CATALOGO.entradilla}
       </p>
 
       {/* Las tarjetas cuelgan del h1 de esta página, así que su nombre es un h2. */}
-      <Carta
-        tartas={CATALOGO.tartas}
-        nivelTarjeta={2}
-        class="mt-11 md:mt-12"
-      />
+      <Carta tartas={CATALOGO.tartas} nivelTarjeta={2} class="mt-11 md:mt-12" />
     </div>
   </main>
 

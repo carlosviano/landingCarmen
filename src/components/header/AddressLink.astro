@@ -45,24 +45,24 @@ const estilo = ESTILOS[variant];
     className,
   ]}
 >
-  {
-    estilo.icono && (
-      <Icon name="lucide:map-pin" class="size-4 shrink-0 text-sand" aria-hidden="true" />
-    )
-  }
-  {
-    variant === "linea" ? (
-      <span>{SITE.direccion}</span>
-    ) : (
-      <span>
-        {/* La jerarquía la da el grosor y no el color: con un color propio por
+  {estilo.icono && (
+    <Icon
+      name="lucide:map-pin"
+      class="size-4 shrink-0 text-sand"
+      aria-hidden="true"
+    />
+  )}
+  {variant === "linea" ? (
+    <span>{SITE.direccion}</span>
+  ) : (
+    <span>
+      {/* La jerarquía la da el grosor y no el color: con un color propio por
             línea, el hover del enlace no se vería. */}
-        <span class="block font-medium">{DIRECCION.calle}</span>
-        <span class="block">{DIRECCION.portal}</span>
-        <span class="block">
-          {DIRECCION.cp} {DIRECCION.ciudad}
-        </span>
+      <span class="block font-medium">{DIRECCION.calle}</span>
+      <span class="block">{DIRECCION.portal}</span>
+      <span class="block">
+        {DIRECCION.cp} {DIRECCION.ciudad}
       </span>
-    )
-  }
+    </span>
+  )}
 </a>

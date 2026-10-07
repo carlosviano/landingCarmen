@@ -16,46 +16,77 @@ import Campo from "@/components/formulario/Campo.astro";
 import Desplegable from "@/components/formulario/Desplegable.astro";
 import FotosInspiracion from "@/components/formulario/FotosInspiracion.astro";
 import MarcoSolicitud from "@/components/formulario/MarcoSolicitud.astro";
-import { AREA, CAMPO, OPCION_OCULTA, PASTILLA } from "@/components/formulario/estilos";
-import { ESPECIALES, whatsappCon } from "@/config/site";
+import {
+  AREA,
+  CAMPO,
+  OPCION_OCULTA,
+  PASTILLA,
+} from "@/components/formulario/estilos";
+import { ESPECIALES } from "@/config/personalizadas";
+import { whatsappCon } from "@/config/site";
 import { mensajeEspecial, OPCIONES_DISENO } from "@/lib/solicitud";
 
 const S = ESPECIALES.solicitud;
 const PILDORA = `${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`;
 ---
 
-<MarcoSolicitud tipo="especial" textos={S} whatsapp={whatsappCon(mensajeEspecial())}>
-  <Campo nombre="diseno" etiqueta="Diseño" obligatorio grupo class="sm:col-span-2">
+<MarcoSolicitud
+  tipo="especial"
+  textos={S}
+  whatsapp={whatsappCon(mensajeEspecial())}
+>
+  <Campo
+    nombre="diseno"
+    etiqueta="Diseño"
+    obligatorio
+    grupo
+    class="sm:col-span-2"
+  >
     <div class="flex flex-wrap gap-2">
-      {
-        OPCIONES_DISENO.map((opcion) => (
-          <label class="relative cursor-pointer">
-            <input type="radio" name="diseno" value={opcion.valor} class={OPCION_OCULTA} />
-            <span class={PILDORA}>{opcion.nombre}</span>
-          </label>
-        ))
-      }
+      {OPCIONES_DISENO.map((opcion) => (
+        <label class="relative cursor-pointer">
+          <input
+            type="radio"
+            name="diseno"
+            value={opcion.valor}
+            class={OPCION_OCULTA}
+          />
+          <span class={PILDORA}>{opcion.nombre}</span>
+        </label>
+      ))}
     </div>
   </Campo>
 
-  <Campo nombre="ocasion" etiqueta="Ocasión" obligatorio grupo class="sm:col-span-2">
+  <Campo
+    nombre="ocasion"
+    etiqueta="Ocasión"
+    obligatorio
+    grupo
+    class="sm:col-span-2"
+  >
     <div class="flex flex-wrap gap-2">
-      {
-        S.ocasiones.map((ocasion) => (
-          <label class="relative cursor-pointer">
-            <input type="radio" name="ocasion" value={ocasion} class={OPCION_OCULTA} />
-            <span class={PILDORA}>{ocasion}</span>
-          </label>
-        ))
-      }
+      {S.ocasiones.map((ocasion) => (
+        <label class="relative cursor-pointer">
+          <input
+            type="radio"
+            name="ocasion"
+            value={ocasion}
+            class={OPCION_OCULTA}
+          />
+          <span class={PILDORA}>{ocasion}</span>
+        </label>
+      ))}
     </div>
   </Campo>
 
-  {
-    /* `relative` aquí y no en la fila: el panel del calendario se abre
-      con el ancho de este campo (en móvil, la fila entera). */
-  }
-  <Campo nombre="fecha" etiqueta="Fecha de recogida" obligatorio class="relative">
+  {/* `relative` aquí y no en la fila: el panel del calendario se abre
+      con el ancho de este campo (en móvil, la fila entera). */}
+  <Campo
+    nombre="fecha"
+    etiqueta="Fecha de recogida"
+    obligatorio
+    class="relative"
+  >
     <Calendario
       id="solicitud-fecha"
       nombre="fecha"
@@ -75,13 +106,19 @@ const PILDORA = `${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`;
     />
   </Campo>
 
-  <Campo nombre="idea" etiqueta="Tu idea" para="solicitud-idea" class="sm:col-span-2">
+  <Campo
+    nombre="idea"
+    etiqueta="Tu idea"
+    para="solicitud-idea"
+    class="sm:col-span-2"
+  >
     <textarea
       id="solicitud-idea"
       name="idea"
       rows="4"
       placeholder={S.placeholderIdea}
-      class={AREA}></textarea>
+      class={AREA}
+    ></textarea>
   </Campo>
 
   <Campo nombre="fotos" etiqueta="Inspiración" class="sm:col-span-2">
@@ -106,7 +143,12 @@ const PILDORA = `${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`;
     />
   </Campo>
 
-  <Campo nombre="telefono" etiqueta="Teléfono" para="solicitud-telefono" obligatorio>
+  <Campo
+    nombre="telefono"
+    etiqueta="Teléfono"
+    para="solicitud-telefono"
+    obligatorio
+  >
     <input
       id="solicitud-telefono"
       type="tel"
@@ -117,7 +159,13 @@ const PILDORA = `${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`;
     />
   </Campo>
 
-  <Campo nombre="email" etiqueta="Email" para="solicitud-email" obligatorio class="sm:col-span-2">
+  <Campo
+    nombre="email"
+    etiqueta="Email"
+    para="solicitud-email"
+    obligatorio
+    class="sm:col-span-2"
+  >
     <input
       id="solicitud-email"
       type="email"
@@ -130,39 +178,46 @@ const PILDORA = `${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`;
 </MarcoSolicitud>
 
 <script>
-  import { ESPECIALES } from "@/config/site";
+  import { ESPECIALES } from "@/config/personalizadas";
   import { esLaborable } from "@/lib/pedido";
   import { montarSolicitud } from "@/lib/formularioSolicitud";
-  import { mensajeEspecial, primeraFechaEspecial, validarEspecial } from "@/lib/solicitud";
+  import {
+    mensajeEspecial,
+    primeraFechaEspecial,
+    validarEspecial,
+  } from "@/lib/solicitud";
 
-  document.querySelectorAll<HTMLFormElement>('[data-solicitud="especial"]').forEach((form) => {
-    // El diseño que trae el enlace de la tarjeta. Antes de montar, para que
-    // el WhatsApp salga ya con él. Un slug que no esté en la lista no marca
-    // nada: el selector no encuentra su radio.
-    const diseno = new URLSearchParams(location.search).get("diseno");
-    if (diseno) {
-      const radio = form.querySelector<HTMLInputElement>(
-        `input[name="diseno"][value="${CSS.escape(diseno)}"]`,
-      );
-      if (radio) radio.checked = true;
-    }
+  document
+    .querySelectorAll<HTMLFormElement>('[data-solicitud="especial"]')
+    .forEach((form) => {
+      // El diseño que trae el enlace de la tarjeta. Antes de montar, para que
+      // el WhatsApp salga ya con él. Un slug que no esté en la lista no marca
+      // nada: el selector no encuentra su radio.
+      const diseno = new URLSearchParams(location.search).get("diseno");
+      if (diseno) {
+        const radio = form.querySelector<HTMLInputElement>(
+          `input[name="diseno"][value="${CSS.escape(diseno)}"]`,
+        );
+        if (radio) radio.checked = true;
+      }
 
-    montarSolicitud(form, {
-      validar: validarEspecial,
-      mensaje: (texto) =>
-        mensajeEspecial({
-          diseno: texto("diseno"),
-          ocasion: texto("ocasion"),
-          personas: texto("personas"),
-          fecha: texto("fecha"),
-        }),
-      calendario: { primera: primeraFechaEspecial, elegible: esLaborable },
-      envio: ESPECIALES.solicitud.envio,
-      enviado: "Recibido. Te escribo en cuanto lo lea con una propuesta para tu tarta.",
+      montarSolicitud(form, {
+        validar: validarEspecial,
+        mensaje: (texto) =>
+          mensajeEspecial({
+            diseno: texto("diseno"),
+            ocasion: texto("ocasion"),
+            personas: texto("personas"),
+            fecha: texto("fecha"),
+          }),
+        calendario: { primera: primeraFechaEspecial, elegible: esLaborable },
+        envio: ESPECIALES.solicitud.envio,
+        enviado:
+          "Recibido. Te escribo en cuanto lo lea con una propuesta para tu tarta.",
+      });
+
+      // `montarSolicitud` rehace el WhatsApp con cada cambio; el diseño marcado
+      // aquí no ha disparado ninguno.
+      form.dispatchEvent(new Event("change"));
     });
-
-    // `montarSolicitud` rehace el WhatsApp con cada cambio; el diseño marcado
-    // aquí no ha disparado ninguno.
-    form.dispatchEvent(new Event("change"));
-  });
 </script>

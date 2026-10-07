@@ -1,21 +1,53 @@
-// Utilidades de la carta que no son maquetación.
+// Lo que se calcula a partir de las tartas de la carta: sus fotos ya
+// resueltas, qué otras se enseñan al final de una ficha y si esa ficha va
+// anotada.
 //
-// Aquí vivían también `slugCategoria` y `PARAM_FAMILIA`, del filtro por
-// familias de /catalogo. Se fueron con el filtro (ver Carta.astro).
+// Sólo para el servidor: tira de `fotoDe`, que importa las imágenes. Lo que
+// también necesita el navegador (precios, fechas, el mensaje del pedido) está
+// en lib/pedido.ts.
+import type { Tarta } from "@/config/catalogo";
+import { fotoDe } from "@/lib/fotos";
+
+/** Una tarta con sus dos fotos ya resueltas (`null` = no hay). */
+export interface TartaConFotos {
+  tarta: Tarta;
+  /** La foto con fondo, la de la tarjeta. */
+  foto: ImageMetadata | null;
+  /** El recorte sin fondo, el de la ficha anotada. */
+  recorte: ImageMetadata | null;
+}
 
 /**
- * La primera frase de un párrafo, para la media línea de la tarjeta.
- *
- * Se corta por el punto y se DEVUELVE con él: en la tarjeta se lee como una
- * frase acabada y no como un texto truncado. Si no hay punto —o la frase es
- * más larga que la tarjeta— devuelve el texto tal cual y del recorte se
- * encarga el CSS (`line-clamp-2`), que sabe cuántas líneas caben de verdad.
- *
- * No intenta ser un tokenizador: el punto de "8 p.m." lo partiría mal. Con
- * ocho descripciones escritas a mano no compensa; si algún día el texto lo
- * pone otra persona, esto se convierte en un campo aparte en `site.ts`.
+ * Resuelve las fotos de una tarta. Se hace en quien pinta la lista y no en la
+ * tarjeta: así `fotoDe` (un `import.meta.glob`, relativo al archivo que lo
+ * escribe) vive en un solo sitio.
  */
-export function primeraFrase(texto: string): string {
-  const corte = texto.indexOf(". ");
-  return corte === -1 ? texto : texto.slice(0, corte + 1);
+export function conFotos(tarta: Tarta): TartaConFotos {
+  return {
+    tarta,
+    foto: fotoDe(tarta.archivo),
+    recorte: tarta.recorte ? fotoDe(tarta.recorte) : null,
+  };
+}
+
+/**
+ * Las demás tartas, empezando por la que va detrás de la de `indice`: se
+ * mantiene el orden de la carta, sólo rota. Así la tira de la ficha no empieza
+ * siempre por la primera tarta y la de al lado queda a mano, que es la que más
+ * se compara.
+ */
+export function otrasTartas(tartas: Tarta[], indice: number): Tarta[] {
+  return [...tartas.slice(indice + 1), ...tartas.slice(0, indice)];
+}
+
+/**
+ * Si la ficha puede pintar las líneas: hace falta el recorte Y un punto en
+ * TODOS los componentes. Si falta cualquiera, sale la ficha sin líneas: medio
+ * anotada parecería rota.
+ */
+export function estaAnotada(tarta: Tarta): boolean {
+  return (
+    tarta.recorte !== undefined &&
+    tarta.componentes.every((componente) => componente.punto !== undefined)
+  );
 }

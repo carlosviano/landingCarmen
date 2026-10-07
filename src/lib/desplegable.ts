@@ -15,24 +15,35 @@ const SALTOS: Record<string, (actual: number, total: number) => number> = {
 
 /** Monta el desplegable cuyo contenedor (`[data-desplegable]`) es `raiz`. */
 export function montarDesplegable(raiz: HTMLElement): void {
-  const boton = raiz.querySelector<HTMLButtonElement>("[data-desplegable-boton]")!;
+  const boton = raiz.querySelector<HTMLButtonElement>(
+    "[data-desplegable-boton]",
+  )!;
   const texto = raiz.querySelector<HTMLElement>("[data-desplegable-texto]")!;
-  const valor = raiz.querySelector<HTMLInputElement>("[data-desplegable-valor]")!;
+  const valor = raiz.querySelector<HTMLInputElement>(
+    "[data-desplegable-valor]",
+  )!;
   const lista = raiz.querySelector<HTMLElement>("[data-desplegable-lista]")!;
-  const opciones = [...lista.querySelectorAll<HTMLButtonElement>("[role=option]")];
+  const opciones = [
+    ...lista.querySelectorAll<HTMLButtonElement>("[role=option]"),
+  ];
 
   const textoInicial = texto.textContent ?? "";
 
   const { cerrar } = montarPanel(boton, lista, {
     alAbrir: () => {
-      const elegida = opciones.find((o) => o.getAttribute("aria-selected") === "true");
+      const elegida = opciones.find(
+        (o) => o.getAttribute("aria-selected") === "true",
+      );
       (elegida ?? opciones[0])?.focus();
     },
   });
 
   const marcar = (elegida: string) => {
     for (const opcion of opciones) {
-      opcion.setAttribute("aria-selected", String(opcion.dataset.valor === elegida));
+      opcion.setAttribute(
+        "aria-selected",
+        String(opcion.dataset.valor === elegida),
+      );
     }
   };
 
@@ -53,7 +64,9 @@ export function montarDesplegable(raiz: HTMLElement): void {
     const saltar = SALTOS[evento.key];
     if (!saltar) return;
     evento.preventDefault();
-    const actual = opciones.indexOf(document.activeElement as HTMLButtonElement);
+    const actual = opciones.indexOf(
+      document.activeElement as HTMLButtonElement,
+    );
     opciones[saltar(actual, opciones.length)]?.focus();
   });
 

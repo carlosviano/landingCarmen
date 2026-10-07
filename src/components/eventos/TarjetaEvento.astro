@@ -17,7 +17,7 @@
 // final de la cinta. Sin JS la cinta sale abierta y el botón no aparece.
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
-import { EVENTOS, type Montaje } from "@/config/site";
+import { EVENTOS, type Montaje } from "@/config/eventos";
 import { fotoDe } from "@/lib/fotos";
 
 interface Props {
@@ -30,12 +30,7 @@ interface Props {
   class?: string;
 }
 
-const {
-  montaje,
-  foto,
-  fotoIzquierda = true,
-  class: className,
-} = Astro.props;
+const { montaje, foto, fotoIzquierda = true, class: className } = Astro.props;
 
 const ANCHOS = [420, 640, 900, 1080];
 const SIZES = "(min-width: 768px) 50vw, 100vw";
@@ -99,8 +94,7 @@ const idCinta = `cinta-${montaje.titulo
 const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
 ---
 
-{
-  /* Desde md todas las tarjetas miden lo mismo, tenga el texto que tenga: la
+{/* Desde md todas las tarjetas miden lo mismo, tenga el texto que tenga: la
     fila de arriba (foto + texto) va a una altura fija, `md:grid-rows-[…]`.
     Es la que pide el peor caso que dejan los topes de arriba (título de 40
     caracteres y descripción de 280), medido en el ancho más apretado de
@@ -112,8 +106,7 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
 
     La foto va en `absolute inset-0` y llena siempre su mitad: así su tamaño
     natural (retrato, ~3/4) no empuja la fila. En móvil las tarjetas van
-    apiladas y no se igualan: la foto va en 4:3 y el texto crece hacia abajo. */
-}
+    apiladas y no se igualan: la foto va en 4:3 y el texto crece hacia abajo. */}
 <article
   data-montaje
   class:list={[
@@ -147,19 +140,15 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
   >
     <div class="relative">
       <p class="antetitulo text-rust">{montaje.tipoEvento}</p>
-      <h3
-        class="mt-3 titulo text-3xl leading-[1.1] text-balance text-black md:line-clamp-3 md:pb-1 lg:line-clamp-2 lg:text-4xl"
-      >
+      <h3 class="mt-3 titulo text-3xl leading-[1.1] text-balance text-black md:line-clamp-3 md:pb-1 lg:line-clamp-2 lg:text-4xl">
         {montaje.titulo}
       </h3>
       <p class="mt-5 text-sm leading-relaxed text-black/70 md:line-clamp-[13] lg:line-clamp-[9]">
         {montaje.descripcion}
       </p>
-      {
-        /* Mes y lugar a los lados en móvil, con el botón debajo a todo el
+      {/* Mes y lugar a los lados en móvil, con el botón debajo a todo el
           ancho. En escritorio, mes y lugar juntos a la izquierda y el botón
-          a la derecha, centrados en la misma línea. */
-      }
+          a la derecha, centrados en la misma línea. */}
       <div
         class:list={[
           "mt-8 border-t border-taupe/45 pt-6",
@@ -175,12 +164,13 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
         >
           <span class="tabular-nums">{montaje.mes}</span>
           {piezas.length > 0 && (
-            <span class="hidden lg:inline" aria-hidden="true">·</span>
+            <span class="hidden lg:inline" aria-hidden="true">
+              ·
+            </span>
           )}
           <span>{montaje.lugar}</span>
         </div>
-      {
-        piezas.length > 0 && (
+        {piezas.length > 0 && (
           <button
             type="button"
             data-ver-mas
@@ -194,103 +184,116 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
               {piezas.length}
             </span>
           </button>
-        )
-      }
+        )}
       </div>
     </div>
   </div>
 
-  {
-    /* La cinta. Se abre animando la fila del grid de 0fr a 1fr (con el
+  {/* La cinta. Se abre animando la fila del grid de 0fr a 1fr (con el
       contenido en overflow-hidden), que es lo que deja animar hasta "lo que
       mida" sin medir nada en JS. Cerrada lleva `inert`, que la saca del
       tabulador y de los lectores de pantalla; eso lo pone el script, así
-      que sin JS no hay `inert` y `noscript:` la deja abierta. */
-  }
-  {
-    piezas.length > 0 && (
-      <div
-        id={idCinta}
-        data-cinta
-        role="region"
-        aria-label={`${C.etiqueta}: ${montaje.titulo}`}
-        class="grid grid-rows-[0fr] motion-safe:transition-[grid-template-rows] motion-safe:duration-500 motion-safe:ease-out data-abierta:grid-rows-[1fr] md:order-3 md:col-span-2 noscript:grid-rows-[1fr]"
-      >
-        <div class="min-h-0 overflow-hidden">
-          <div class="border-t border-taupe/45 pt-8 pb-8 lg:pt-10 lg:pb-12">
-            <div class="px-8 sm:px-10 lg:px-14">
-              <p class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                <span class="leyenda text-rust">{C.etiqueta}</span>
-                <span class="dato text-[11px] text-black/55">{resumen}</span>
-              </p>
-            </div>
+      que sin JS no hay `inert` y `noscript:` la deja abierta. */}
+  {piezas.length > 0 && (
+    <div
+      id={idCinta}
+      data-cinta
+      role="region"
+      aria-label={`${C.etiqueta}: ${montaje.titulo}`}
+      class="grid grid-rows-[0fr] motion-safe:transition-[grid-template-rows] motion-safe:duration-500 motion-safe:ease-out data-abierta:grid-rows-[1fr] md:order-3 md:col-span-2 noscript:grid-rows-[1fr]"
+    >
+      <div class="min-h-0 overflow-hidden">
+        <div class="border-t border-taupe/45 pt-8 pb-8 lg:pt-10 lg:pb-12">
+          <div class="px-8 sm:px-10 lg:px-14">
+            <p class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+              <span class="leyenda text-rust">{C.etiqueta}</span>
+              <span class="dato text-[11px] text-black/55">{resumen}</span>
+            </p>
+          </div>
 
-            <div
-              data-tira
-              tabindex="0"
-              aria-label={`Fotos de ${montaje.titulo}`}
-              class="mt-6 snap-x snap-mandatory scroll-px-8 overflow-x-auto overscroll-x-contain [scrollbar-width:none] motion-safe:scroll-smooth sm:scroll-px-10 lg:overflow-visible lg:snap-none [&::-webkit-scrollbar]:hidden"
-            >
-              <ul class="flex w-max gap-3 px-8 sm:gap-4 sm:px-10 lg:grid lg:w-auto lg:grid-cols-4 lg:gap-6 lg:px-14">
-                {piezas.map((pieza) => (
-                  <li class="shrink-0 snap-start lg:min-w-0">
-                    <figure>
-                      {pieza.tipo === "foto" ? (
-                        <div class:list={[ALTO_PIEZA, "aspect-[3/4] overflow-hidden rounded-2xl bg-taupe/15"]}>
-                          <Image
-                            src={pieza.src}
-                            alt={pieza.alt}
-                            widths={[300, 450, 600, 800]}
-                            sizes="(min-width: 1024px) 288px, 240px"
-                            loading="lazy"
-                            decoding="async"
-                            style={pieza.enfoque ? `object-position:${pieza.enfoque}` : undefined}
-                            class="h-full w-full object-cover object-center"
+          <div
+            data-tira
+            tabindex="0"
+            aria-label={`Fotos de ${montaje.titulo}`}
+            class="mt-6 snap-x snap-mandatory scroll-px-8 overflow-x-auto overscroll-x-contain [scrollbar-width:none] motion-safe:scroll-smooth sm:scroll-px-10 lg:overflow-visible lg:snap-none [&::-webkit-scrollbar]:hidden"
+          >
+            <ul class="flex w-max gap-3 px-8 sm:gap-4 sm:px-10 lg:grid lg:w-auto lg:grid-cols-4 lg:gap-6 lg:px-14">
+              {piezas.map((pieza) => (
+                <li class="shrink-0 snap-start lg:min-w-0">
+                  <figure>
+                    {pieza.tipo === "foto" ? (
+                      <div
+                        class:list={[
+                          ALTO_PIEZA,
+                          "aspect-[3/4] overflow-hidden rounded-2xl bg-taupe/15",
+                        ]}
+                      >
+                        <Image
+                          src={pieza.src}
+                          alt={pieza.alt}
+                          widths={[300, 450, 600, 800]}
+                          sizes="(min-width: 1024px) 288px, 240px"
+                          loading="lazy"
+                          decoding="async"
+                          style={
+                            pieza.enfoque
+                              ? `object-position:${pieza.enfoque}`
+                              : undefined
+                          }
+                          class="h-full w-full object-cover object-center"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        role="img"
+                        aria-label={`${C.videoPendiente}${pieza.pie ? `: ${pieza.pie}` : ""}`}
+                        class:list={[
+                          ALTO_PIEZA,
+                          "grid aspect-[9/16] place-items-center content-center gap-3 rounded-2xl bg-taupe/25",
+                        ]}
+                      >
+                        <span class="grid size-14 place-items-center rounded-full bg-white/70 text-taupe">
+                          <Icon
+                            name="lucide:play"
+                            class="ml-0.5 size-6"
+                            aria-hidden="true"
                           />
-                        </div>
-                      ) : (
-                        <div
-                          role="img"
-                          aria-label={`${C.videoPendiente}${pieza.pie ? `: ${pieza.pie}` : ""}`}
-                          class:list={[ALTO_PIEZA, "grid aspect-[9/16] place-items-center content-center gap-3 rounded-2xl bg-taupe/25"]}
-                        >
-                          <span class="grid size-14 place-items-center rounded-full bg-white/70 text-taupe">
-                            <Icon name="lucide:play" class="ml-0.5 size-6" aria-hidden="true" />
-                          </span>
-                          <span class="leyenda text-black/55">{C.videoPendiente}</span>
-                        </div>
-                      )}
-                      {pieza.pie && (
-                        <figcaption class="mt-3 max-w-60 dato text-[11px] text-black/60 lg:max-w-none">
-                          {pieza.pie}
-                        </figcaption>
-                      )}
-                    </figure>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                        </span>
+                        <span class="leyenda text-black/55">
+                          {C.videoPendiente}
+                        </span>
+                      </div>
+                    )}
+                    {pieza.pie && (
+                      <figcaption class="mt-3 max-w-60 dato text-[11px] text-black/60 lg:max-w-none">
+                        {pieza.pie}
+                      </figcaption>
+                    )}
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-            <div class="mt-8 flex flex-col-reverse items-center gap-5 border-t border-taupe/30 px-8 pt-6 sm:flex-row sm:justify-between sm:px-10 lg:px-14">
-              <button
-                type="button"
-                data-cerrar
-                class="min-h-11 cursor-pointer border-b border-taupe/70 accion text-xs text-black transition-colors hover:border-black noscript:hidden"
-              >
-                {C.cerrar}
-              </button>
-              <a
-                href="#solicitud"
-                class="w-full rounded-full bg-rust px-7 py-4 text-center accion text-xs text-linen transition-colors hover:bg-rust-hondo sm:w-auto"
-              >
-                {C.cta}
-              </a>
-            </div>
+          <div class="mt-8 flex flex-col-reverse items-center gap-5 border-t border-taupe/30 px-8 pt-6 sm:flex-row sm:justify-between sm:px-10 lg:px-14">
+            <button
+              type="button"
+              data-cerrar
+              class="min-h-11 cursor-pointer border-b border-taupe/70 accion text-xs text-black transition-colors hover:border-black noscript:hidden"
+            >
+              {C.cerrar}
+            </button>
+            <a
+              href="#solicitud"
+              class="w-full rounded-full bg-rust px-7 py-4 text-center accion text-xs text-linen transition-colors hover:bg-rust-hondo sm:w-auto"
+            >
+              {C.cta}
+            </a>
           </div>
         </div>
       </div>
-    )
-  }
+    </div>
+  )}
 </article>
 
 <script>

@@ -1,0 +1,21 @@
+---
+// La vuelta atrás de una página de detalle ("Volver a la carta").
+//
+// En móvil, discreto: texto subrayado sin la píldora, para que no compita con
+// el titular. El texto se queda —una flecha sola no dice adónde vuelve— y el
+// `py-3.5` mantiene el objetivo de toque en ~44 px aunque no se vea el borde.
+// Desde `sm`, con forma de botón: es la salida de la pantalla y tiene que
+// verse desde el primer pantallazo.
+interface Props {
+  href: string;
+}
+
+const { href } = Astro.props;
+---
+
+<a
+  href={href}
+  class="inline-block py-3.5 accion text-[11px] text-rust underline decoration-rust/30 underline-offset-4 transition-colors duration-200 hover:decoration-rust sm:rounded-full sm:border sm:border-black/40 sm:px-5 sm:py-2.5 sm:text-center sm:no-underline sm:hover:border-rust sm:hover:bg-rust sm:hover:text-linen"
+>
+  <slot />
+</a>

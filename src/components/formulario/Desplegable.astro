@@ -39,7 +39,11 @@ const listaId = `${id}-opciones`;
     aria-labelledby={`${etiquetaId} ${id}`}
     class={`${CAMPO} group justify-between gap-2`}
   >
-    <span data-desplegable-texto data-vacio class="truncate data-vacio:text-black/60">
+    <span
+      data-desplegable-texto
+      data-vacio
+      class="truncate data-vacio:text-black/60"
+    >
       {placeholder}
     </span>
     <Icon
@@ -58,25 +62,23 @@ const listaId = `${id}-opciones`;
     data-desplegable-lista
     class={`${PANEL} inset-x-0 flex flex-col gap-1 p-2`}
   >
-    {
-      opciones.map((opcion) => (
-        <li role="none">
-          <button
-            type="button"
-            role="option"
-            aria-selected="false"
-            data-valor={opcion}
-            class={OPCION_LISTA}
-          >
-            {opcion}
-            <Icon
-              name="lucide:check"
-              class="size-4 shrink-0 opacity-0 group-aria-selected:opacity-100"
-              aria-hidden="true"
-            />
-          </button>
-        </li>
-      ))
-    }
+    {opciones.map((opcion) => (
+      <li role="none">
+        <button
+          type="button"
+          role="option"
+          aria-selected="false"
+          data-valor={opcion}
+          class={OPCION_LISTA}
+        >
+          {opcion}
+          <Icon
+            name="lucide:check"
+            class="size-4 shrink-0 opacity-0 group-aria-selected:opacity-100"
+            aria-hidden="true"
+          />
+        </button>
+      </li>
+    ))}
   </ul>
 </div>
