@@ -105,10 +105,8 @@ export interface Tarta {
 }
 
 export interface Catalogo {
-  /** Antetítulo en mayúsculas, encima del titular. Lo comparten las dos vistas. */
+  /** Antetítulo en mayúsculas de /catalogo, encima del titular. */
   etiqueta: string;
-  /** Titular de la sección de portada. */
-  titulo: string;
   /** Titular de /catalogo. */
   tituloPagina: string;
   /** Entradilla de /catalogo. */
@@ -126,7 +124,6 @@ export interface Catalogo {
 // añadiendo según lleguen los recortes.
 export const CATALOGO: Catalogo = {
   etiqueta: "Nuestra carta",
-  titulo: "Tartas de temporada",
   tituloPagina: "La carta",
   entradilla:
     "Todas por encargo. El tamaño, la conservación y la antelación de cada una están en su ficha.",

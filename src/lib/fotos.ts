@@ -30,8 +30,8 @@ const disponibles = () =>
 /**
  * La imagen que se llama `archivo`. Revienta si no existe.
  *
- * `null` NO es un error: es "esta tarta todavía no tiene foto", que es el
- * estado de seis de las ocho. Se propaga tal cual para que quien pinta decida
+ * `null` NO es un error: es "esta tarta todavía no tiene foto", que hoy es
+ * lo normal en la carta. Se propaga tal cual para que quien pinta decida
  * qué poner en su lugar.
  */
 export function fotoDe(archivo: string | null): ImageMetadata | null {

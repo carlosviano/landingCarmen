@@ -245,7 +245,6 @@ export const SOLICITUD_EVENTO = {
     antes: "¿Prefieres hablar?",
     enlace: "Escríbeme por WhatsApp",
   },
-  // La leyenda sobre los botones: dice que se pide desde ahí.
-  encarga: "Haz tu encargo",
+  // Bajo los pasos del marco (MarcoSolicitud).
   nota: "Todo por encargo · con dos días laborables de antelación",
 };
