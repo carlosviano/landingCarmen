@@ -2,8 +2,8 @@
 // /catalogo/<id> — la ficha de una tarta.
 //
 // Ruta estática: se genera una página por tarta a partir de CATALOGO, así que
-// añadir una tarta en src/config/catalogo.ts crea su ficha sola. Cada una tiene su
-// URL, y eso es el punto: se comparte por WhatsApp, se guarda en marcadores y
+// añadir una tarta en src/config/catalogo.ts crea su ficha sola. Cada una
+// tiene su URL, y eso es el punto: se comparte por WhatsApp, se guarda en marcadores y
 // la indexa un buscador. Un panel o un modal no dan ninguna de las tres.
 //
 // UNA SOLA PLANTILLA PARA TODAS. Lo que cambia de una tarta a otra —la foto,
@@ -15,17 +15,21 @@
 //
 //   1. La tarta y el pedido. Con recorte anotado (ver `estaAnotada`), la
 //      tarta va en el centro con las etiquetas de "qué lleva" a la izquierda y
-//      una línea de cada una a su capa; el pedido, a la derecha. Sin recorte,
-//      foto normal (o "foto pendiente") y la lista sin líneas. En escritorio
-//      llena una pantalla.
-//   2. La tira con las otras tartas, que es cómo se pasa de una a otra. Si no
-//      hay otras, no se pinta.
+//      una línea de cada una a su capa (FichaAnotada); el pedido, a la
+//      derecha (Pedido). Sin recorte, foto normal (o FotoPendiente) y la lista
+//      sin líneas (ListaComponentes). En escritorio llena una pantalla.
+//   2. La tira con las otras tartas (OtrasTartas), que es cómo se pasa de una
+//      a otra.
 //
 // Un solo CTA en toda la página, el de WhatsApp del pedido.
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/sections/Header.astro";
 import Footer from "@/sections/Footer.astro";
-import TarjetaTarta from "@/components/catalogo/TarjetaTarta.astro";
+import BotonVolver from "@/components/BotonVolver.astro";
+import FotoPendiente from "@/components/FotoPendiente.astro";
+import FichaAnotada from "@/components/catalogo/FichaAnotada.astro";
+import ListaComponentes from "@/components/catalogo/ListaComponentes.astro";
+import OtrasTartas from "@/components/catalogo/OtrasTartas.astro";
 import Pedido from "@/components/catalogo/Pedido.astro";
 import { Image } from "astro:assets";
 import { CATALOGO, type Tarta } from "@/config/catalogo";
@@ -52,9 +56,6 @@ const fotos = conFotos(tarta);
 // Con líneas, el recorte; sin ellas, la foto con fondo (`null` = pendiente).
 const recorte = anotada ? fotos.recorte : null;
 const foto = anotada ? null : fotos.foto;
-// La altura del primer punto: en móvil el "Qué lleva" se cuelga justo encima
-// de la primera etiqueta y no en lo alto del lienzo (ver `.que-lleva`).
-const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.y)) : 0;
 ---
 
 <Layout titulo={tarta.nombre} descripcion={tarta.descripcion}>
@@ -84,24 +85,8 @@ const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.
     }
     <div class="lg:flex lg:min-h-[calc(100svh-4.25rem)] lg:flex-col">
       <div class="mx-auto w-full max-w-7xl px-6">
-        {
-          /* Vuelta a la carta, y con forma de botón: es la salida de esta
-            pantalla y tiene que verse desde el primer pantallazo. */
-        }
-        {
-          /* En móvil, más discreto: texto subrayado sin la píldora, para que
-            no compita con el nombre de la tarta. El texto se queda —una
-            flecha sola no dice adónde vuelve— y el `py-3.5` mantiene el
-            objetivo de toque en ~44 px aunque no se vea el borde. Desde `sm`,
-            la píldora de siempre. */
-        }
         <div class="pt-3 sm:pt-8 bajo:pt-5">
-          <a
-            href="/catalogo"
-            class="inline-block py-3.5 accion text-[11px] text-rust underline decoration-rust/30 underline-offset-4 transition-colors duration-200 hover:decoration-rust sm:rounded-full sm:border sm:border-black/40 sm:px-5 sm:py-2.5 sm:text-center sm:no-underline sm:hover:border-rust sm:hover:bg-rust sm:hover:text-linen"
-          >
-            Volver a la carta
-          </a>
+          <BotonVolver href="/catalogo">Volver a la carta</BotonVolver>
         </div>
       </div>
 
@@ -122,46 +107,7 @@ const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.
             <div class="ficha-foto">
               {
                 anotada ? (
-                  /* La lista "qué lleva" es una <ul> de verdad, después de la
-                    imagen, con su h2. Lo que la coloca junto a la tarta es CSS
-                    (abajo): cada <li> se estira desde la columna de la
-                    izquierda hasta su punto, en % del recorte. Las líneas son
-                    decorativas y van con aria-hidden. */
-                  <figure class="anotada" style={`--y0:${primerPunto}`}>
-                    <div class="lienzo" style={`--ar: ${recorte!.width} / ${recorte!.height}`}>
-                      <Image
-                        src={recorte!}
-                        alt={tarta.alt}
-                        widths={[560, 840, 1120, 1400]}
-                        sizes="(min-width: 64rem) 42rem, (min-width: 48rem) 100vw, 140vw"
-                        loading="eager"
-                        fetchpriority="high"
-                        decoding="async"
-                      />
-                    </div>
-
-                    <h2 class="que-lleva leyenda text-rust">
-                      Qué lleva
-                    </h2>
-                    <ul class="etiquetas">
-                      {tarta.componentes.map((componente) => (
-                        <li
-                          class:list={{ dentro: componente.dentro }}
-                          style={`--x:${componente.punto!.x};--y:${componente.punto!.y}`}
-                        >
-                          <span class="etiqueta">
-                            <span class="font-medium text-black">
-                              {componente.etiqueta}
-                            </span>
-                            <span class="detalle text-black/65">
-                              {componente.descripcionCorta}
-                            </span>
-                          </span>
-                          <span class="linea" aria-hidden="true" />
-                        </li>
-                      ))}
-                    </ul>
-                  </figure>
+                  <FichaAnotada tarta={tarta} recorte={recorte!} />
                 ) : (
                   <div class="mx-auto w-full max-w-[26rem] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25 lg:max-w-[27rem]">
                     {foto ? (
@@ -175,11 +121,7 @@ const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.
                         class="aspect-[4/5] h-full w-full object-cover object-center"
                       />
                     ) : (
-                      <div class="grid aspect-[4/5] w-full place-items-center">
-                        <span class="leyenda text-rust/70">
-                          Foto pendiente
-                        </span>
-                      </div>
+                      <FotoPendiente class="aspect-[4/5] w-full" />
                     )}
                   </div>
                 )
@@ -190,24 +132,7 @@ const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.
               {
                 /* Sin recorte anotado, "qué lleva" vuelve a su sitio de
                   siempre: una lista con viñetas en esta columna. */
-                !anotada && (
-                  <div>
-                    <h2 class="leyenda text-rust">
-                      Qué lleva
-                    </h2>
-                    <ul class="mt-3.5 list-disc space-y-2 pl-5 marker:text-rust">
-                      {tarta.componentes.map((componente) => (
-                        <li class="leading-snug">
-                          <span class="font-medium">{componente.etiqueta}</span>
-                          <span class="text-sm text-black/65">
-                            {" — "}
-                            {componente.descripcionCorta}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )
+                !anotada && <ListaComponentes componentes={tarta.componentes} />
               }
 
               <Pedido tarta={tarta} />
@@ -217,49 +142,7 @@ const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.
       </div>
     </div>
 
-    {
-      /* --- Otras tartas ---
-
-        Tira horizontal: en escritorio caben todas de una vez; en móvil se
-        arrastra, con `snap-x` para que pare encajada en una tarjeta. El
-        `py-2.5` evita que `overflow-x-auto` recorte la elevación del hover.
-
-        En móvil, ancho fijo (9rem): se ven dos tarjetas y asoma la tercera,
-        que es lo que dice que se puede deslizar. En escritorio las tarjetas
-        se reparten la fila (`flex-1`): a 160 px fijos, cinco dejaban un
-        tercio de la fila vacío y la tira parecía incompleta. Con dos topes:
-        `min-w-48` para que con muchas tartas no se encojan (la tira vuelve a
-        deslizarse) y `max-w-60` para que con pocas no salgan enormes.
-
-        Con una sola tarta en la carta no hay otras que enseñar, y una
-        sección con su titular y nada debajo se leería como un fallo. */
-      otras.length > 0 && (
-        <nav
-          aria-labelledby="otras-tartas"
-          class="mx-auto w-full max-w-7xl px-6 py-13 md:py-16"
-        >
-          <h2
-            id="otras-tartas"
-            class="leyenda text-black/60"
-          >
-            Otras tartas
-          </h2>
-          <ul class="mt-6 flex snap-x gap-4 overflow-x-auto py-2.5">
-            {otras.map((entrada) => (
-              <li class="w-36 shrink-0 snap-start sm:w-40 lg:w-auto lg:max-w-60 lg:min-w-48 lg:flex-1">
-                <TarjetaTarta
-                  tarta={entrada.tarta}
-                  foto={entrada.foto}
-                  recorte={entrada.recorte}
-                  nivel={3}
-                  compacta
-                />
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )
-    }
+    <OtrasTartas otras={otras} />
   </main>
 
   <Footer />
@@ -267,34 +150,15 @@ const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.
 
 <style>
   /*
-    La geometría de la ficha anotada. Va en CSS y no en utilidades porque es
-    aritmética con variables (`--x`, `--y`, `--lab`) que en clases de Tailwind
-    sería ilegible.
+    La rejilla de la ficha. Lo de dentro de la tarta anotada (etiquetas,
+    líneas, zoom en móvil) es de FichaAnotada.
 
-    Todo se mide en % del lienzo, que tiene la proporción del recorte. Por eso
-    las líneas apuntan al mismo sitio a cualquier tamaño: el <li> va de la
-    columna de etiquetas (`left: -var(--lab)`) hasta su punto (`right:
-    100% - x%`), a la altura `y%`, y la línea rellena lo que sobra.
-
-    DOS COMPOSICIONES, UN SOLO MARCADO:
-      - móvil y tableta: la tarta se pinta más ancha que la pantalla
-        (`--zoom`) y sangra por la derecha. Se ve la mitad izquierda, que es
-        donde apuntan las líneas, y a su izquierda queda sitio para las
-        etiquetas.
+      - móvil y tableta: el nombre, la tarta y el pedido, apilados.
       - escritorio (lg): tres columnas —etiquetas, tarta, texto y pedido— con
-        el nombre centrado encima de la tarta.
-
-    Hubo también unas llaves en móvil que marcaban de qué alto a qué alto iba
-    cada capa. Se quitaron: en una tarta baja se solapaban y en una alta
-    envolvían la tarta entera, y con la línea y el punto ya se sabe qué es
-    cada cosa.
-
-    Todas las fotos comparten lienzo (ver `Tarta.recorte`), así que todas las
-    tartas salen del mismo ancho y en la misma caja, y `--zoom` deja ver lo
-    mismo de cada una.
+        el nombre centrado encima de la tarta. La primera es la columna de
+        etiquetas de FichaAnotada: su `--lab` cuenta con estos 190 px + 3rem.
   */
 
-  /* --- móvil: el nombre, la tarta y el pedido, apilados --- */
   .ficha {
     display: flex;
     flex-direction: column;
@@ -311,131 +175,6 @@ const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.
     margin-top: 1rem;
   }
 
-  .anotada {
-    --lab: 140px;
-    /* Con 2.2 se ve el 45 % izquierdo del lienzo: ahí tienen que caer los
-       puntos (ver `ComponenteTarta.punto`). */
-    --zoom: 2.2;
-    position: relative;
-    margin-left: var(--lab);
-    /* Del hueco que queda a la derecha de las etiquetas hasta el borde de la
-       pantalla (el 1.5rem es el `px-6` del contenedor), multiplicado. */
-    width: calc((100% - var(--lab) + 1.5rem) * var(--zoom));
-  }
-
-  .lienzo {
-    position: relative;
-    aspect-ratio: var(--ar);
-  }
-
-  .lienzo :global(img) {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Encima de la primera etiqueta, no en lo alto del lienzo: entre el borde
-     del lienzo y el primer punto hay casi un cuarto de foto, y con el título
-     arriba del todo quedaba un hueco grande entre él y la lista. El 3.25rem
-     es media etiqueta de tres líneas más un respiro. */
-  .que-lleva {
-    position: absolute;
-    top: calc(var(--y0) * 1% - 3.25rem);
-    left: calc(-1 * var(--lab));
-  }
-
-  .etiquetas {
-    position: absolute;
-    inset: 0;
-  }
-
-  .etiquetas li {
-    position: absolute;
-    top: calc(var(--y) * 1%);
-    left: calc(-1 * var(--lab));
-    right: calc(100% - var(--x) * 1%);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transform: translateY(-50%);
-  }
-
-  .etiqueta {
-    display: flex;
-    flex: none;
-    flex-direction: column;
-    gap: 1px;
-    width: calc(var(--lab) - 14px);
-    font-size: 13px;
-    line-height: 1.25;
-    text-align: right;
-  }
-
-  .detalle {
-    font-size: 11px;
-    line-height: 1.3;
-  }
-
-  .dentro .detalle {
-    font-style: italic;
-  }
-
-  /* La línea: taupe no, que en el merengue blanco no se ve; rust al 60 %. Es
-     decorativa, así que no le aplica el mínimo de contraste de texto. */
-  .linea {
-    position: relative;
-    flex: 1;
-    height: 1px;
-    background: color-mix(in srgb, var(--color-rust) 60%, transparent);
-  }
-
-  /* El punto, con un halo linen para que no se pierda sobre el sablé. */
-  .linea::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: -4px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-rust);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-linen) 90%, transparent);
-    transform: translateY(-50%);
-  }
-
-  /* Lo que está dentro y no se ve: línea discontinua y punto hueco. */
-  .dentro .linea {
-    background: repeating-linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-rust) 60%, transparent) 0 4px,
-      transparent 4px 7px
-    );
-  }
-
-  .dentro .linea::after {
-    right: -5px;
-    width: 10px;
-    height: 10px;
-    border: 1.5px solid var(--color-rust);
-    background: var(--color-linen);
-  }
-
-  /* --- tableta: la tarta crece menos, que a 800 px ya sobra sitio --- */
-  @media (min-width: 40rem) {
-    .anotada {
-      --lab: 180px;
-      --zoom: 1.6;
-    }
-  }
-
-  @media (min-width: 48rem) {
-    .anotada {
-      --zoom: 1.25;
-    }
-  }
-
-  /* --- escritorio: la propuesta A --- */
   @media (min-width: 64rem) {
     .ficha {
       display: grid;
@@ -481,31 +220,6 @@ const primerPunto = anotada ? Math.min(...tarta.componentes.map((c) => c.punto!.
       .ficha {
         grid-template-columns: 190px minmax(0, 1fr) 380px;
       }
-    }
-
-    .anotada {
-      /* 190 de columna + 48 de hueco: las etiquetas empiezan en el borde
-         izquierdo del contenedor. */
-      --lab: 238px;
-      margin: 0;
-      width: auto;
-    }
-
-    .que-lleva {
-      top: 0;
-    }
-
-    .etiquetas li {
-      gap: 14px;
-    }
-
-    .etiqueta {
-      width: 176px;
-      font-size: 14px;
-    }
-
-    .detalle {
-      font-size: 12px;
     }
   }
 </style>

@@ -31,6 +31,7 @@
 // estiran solos) y el filete con el precio se va al fondo con `mt-auto`. El
 // hueco que sobra queda entre el nombre y el filete, nunca debajo.
 import { Image } from "astro:assets";
+import FotoPendiente from "@/components/FotoPendiente.astro";
 import type { Tarta } from "@/config/catalogo";
 import { precioVisible } from "@/lib/pedido";
 
@@ -127,15 +128,9 @@ const SIZES = compacta
           class="h-full w-full object-contain object-center p-3 transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
         />
       ) : (
-        /* Marco de foto pendiente, y MARCADO a propósito. Antes aquí había una
-          foto de banco: quedaba lleno, pero no dejaba juzgar el diseño ni
-          decía qué falta. Esto sí. El tono alterno lo pone la rejilla, para
-          que seis huecos no se lean como seis errores iguales. */
-        <div class="grid h-full w-full place-items-center">
-          <span class="leyenda text-rust/70">
-            Foto pendiente
-          </span>
-        </div>
+        /* El tono alterno del marco lo pone la rejilla, para que seis huecos
+          no se lean como seis errores iguales. */
+        <FotoPendiente class="h-full w-full" />
       )
     }
   </div>

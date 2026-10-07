@@ -24,6 +24,7 @@
 // con poco texto no quede en una tira.
 import type { HTMLAttributes } from "astro/types";
 import { Image } from "astro:assets";
+import FotoPendiente from "@/components/FotoPendiente.astro";
 import { Icon } from "astro-icon/components";
 import Lightbox from "@/components/Lightbox.astro";
 
@@ -123,9 +124,7 @@ const idLightbox = `lightbox-${id
           </span>
         </button>
       ) : (
-        <div class="absolute inset-0 grid place-items-center p-3 text-center">
-          <span class="leyenda text-rust/70">{sinFoto}</span>
-        </div>
+        <FotoPendiente class="absolute inset-0 p-3 text-center">{sinFoto}</FotoPendiente>
       )
     }
   </div>

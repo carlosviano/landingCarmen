@@ -1,0 +1,244 @@
+---
+// La tarta de la ficha con su "qué lleva" colgado: el recorte sin fondo y,
+// a su izquierda, una etiqueta por componente con una línea hasta su sitio en
+// la foto.
+//
+// La lista es una <ul> de verdad, después de la imagen y con su h2. Lo que la
+// coloca junto a la tarta es CSS (abajo): cada <li> se estira desde la
+// columna de etiquetas hasta su punto, en % del recorte. Las líneas son
+// decorativas y van con aria-hidden.
+//
+// Sólo se monta si la tarta está anotada (`estaAnotada`): todos los
+// componentes con `punto`.
+import { Image } from "astro:assets";
+import type { Tarta } from "@/config/catalogo";
+
+interface Props {
+  tarta: Tarta;
+  /** El recorte ya resuelto (`conFotos`). */
+  recorte: ImageMetadata;
+}
+
+const { tarta, recorte } = Astro.props;
+
+// La altura del primer punto: en móvil el "Qué lleva" se cuelga justo encima
+// de la primera etiqueta y no en lo alto del lienzo (ver `.que-lleva`).
+const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
+---
+
+<figure class="anotada" style={`--y0:${primerPunto}`}>
+  <div class="lienzo" style={`--ar: ${recorte.width} / ${recorte.height}`}>
+    <Image
+      src={recorte}
+      alt={tarta.alt}
+      widths={[560, 840, 1120, 1400]}
+      sizes="(min-width: 64rem) 42rem, (min-width: 48rem) 100vw, 140vw"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+    />
+  </div>
+
+  <h2 class="que-lleva leyenda text-rust">
+    Qué lleva
+  </h2>
+  <ul class="etiquetas">
+    {
+      tarta.componentes.map((componente) => (
+        <li
+          class:list={{ dentro: componente.dentro }}
+          style={`--x:${componente.punto!.x};--y:${componente.punto!.y}`}
+        >
+          <span class="etiqueta">
+            <span class="font-medium text-black">{componente.etiqueta}</span>
+            <span class="detalle text-black/65">{componente.descripcionCorta}</span>
+          </span>
+          <span class="linea" aria-hidden="true" />
+        </li>
+      ))
+    }
+  </ul>
+</figure>
+
+<style>
+  /*
+    La geometría de la ficha anotada. Va en CSS y no en utilidades porque es
+    aritmética con variables (`--x`, `--y`, `--lab`) que en clases de Tailwind
+    sería ilegible.
+
+    Todo se mide en % del lienzo, que tiene la proporción del recorte. Por eso
+    las líneas apuntan al mismo sitio a cualquier tamaño: el <li> va de la
+    columna de etiquetas (`left: -var(--lab)`) hasta su punto (`right:
+    100% - x%`), a la altura `y%`, y la línea rellena lo que sobra.
+
+    DOS COMPOSICIONES, UN SOLO MARCADO:
+      - móvil y tableta: la tarta se pinta más ancha que la pantalla
+        (`--zoom`) y sangra por la derecha. Se ve la mitad izquierda, que es
+        donde apuntan las líneas, y a su izquierda queda sitio para las
+        etiquetas.
+      - escritorio (lg): la columna de etiquetas es la primera de la rejilla
+        de la ficha ([tarta].astro), y la tarta ocupa la de en medio.
+
+    Hubo también unas llaves en móvil que marcaban de qué alto a qué alto iba
+    cada capa. Se quitaron: en una tarta baja se solapaban y en una alta
+    envolvían la tarta entera, y con la línea y el punto ya se sabe qué es
+    cada cosa.
+
+    Todas las fotos comparten lienzo (ver `Tarta.recorte`), así que todas las
+    tartas salen del mismo ancho y en la misma caja, y `--zoom` deja ver lo
+    mismo de cada una.
+  */
+
+  .anotada {
+    --lab: 140px;
+    /* Con 2.2 se ve el 45 % izquierdo del lienzo: ahí tienen que caer los
+       puntos (ver `ComponenteTarta.punto`). */
+    --zoom: 2.2;
+    position: relative;
+    margin-left: var(--lab);
+    /* Del hueco que queda a la derecha de las etiquetas hasta el borde de la
+       pantalla (el 1.5rem es el `px-6` del contenedor), multiplicado. */
+    width: calc((100% - var(--lab) + 1.5rem) * var(--zoom));
+  }
+
+  .lienzo {
+    position: relative;
+    aspect-ratio: var(--ar);
+  }
+
+  .lienzo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Encima de la primera etiqueta, no en lo alto del lienzo: entre el borde
+     del lienzo y el primer punto hay casi un cuarto de foto, y con el título
+     arriba del todo quedaba un hueco grande entre él y la lista. El 3.25rem
+     es media etiqueta de tres líneas más un respiro. */
+  .que-lleva {
+    position: absolute;
+    top: calc(var(--y0) * 1% - 3.25rem);
+    left: calc(-1 * var(--lab));
+  }
+
+  .etiquetas {
+    position: absolute;
+    inset: 0;
+  }
+
+  .etiquetas li {
+    position: absolute;
+    top: calc(var(--y) * 1%);
+    left: calc(-1 * var(--lab));
+    right: calc(100% - var(--x) * 1%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transform: translateY(-50%);
+  }
+
+  .etiqueta {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 1px;
+    width: calc(var(--lab) - 14px);
+    font-size: 13px;
+    line-height: 1.25;
+    text-align: right;
+  }
+
+  .detalle {
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .dentro .detalle {
+    font-style: italic;
+  }
+
+  /* La línea: taupe no, que en el merengue blanco no se ve; rust al 60 %. Es
+     decorativa, así que no le aplica el mínimo de contraste de texto. */
+  .linea {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background: color-mix(in srgb, var(--color-rust) 60%, transparent);
+  }
+
+  /* El punto, con un halo linen para que no se pierda sobre el sablé. */
+  .linea::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-rust);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-linen) 90%, transparent);
+    transform: translateY(-50%);
+  }
+
+  /* Lo que está dentro y no se ve: línea discontinua y punto hueco. */
+  .dentro .linea {
+    background: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-rust) 60%, transparent) 0 4px,
+      transparent 4px 7px
+    );
+  }
+
+  .dentro .linea::after {
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    border: 1.5px solid var(--color-rust);
+    background: var(--color-linen);
+  }
+
+  /* --- tableta: la tarta crece menos, que a 800 px ya sobra sitio --- */
+  @media (min-width: 40rem) {
+    .anotada {
+      --lab: 180px;
+      --zoom: 1.6;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .anotada {
+      --zoom: 1.25;
+    }
+  }
+
+  /* --- escritorio --- */
+  @media (min-width: 64rem) {
+    .anotada {
+      /* 190 de columna + 48 de hueco de la rejilla de la ficha
+         ([tarta].astro): las etiquetas empiezan en el borde izquierdo del
+         contenedor. Si cambia la rejilla, cambia esto. */
+      --lab: 238px;
+      margin: 0;
+      width: auto;
+    }
+
+    .que-lleva {
+      top: 0;
+    }
+
+    .etiquetas li {
+      gap: 14px;
+    }
+
+    .etiqueta {
+      width: 176px;
+      font-size: 14px;
+    }
+
+    .detalle {
+      font-size: 12px;
+    }
+  }
+</style>
