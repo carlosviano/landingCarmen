@@ -13,8 +13,10 @@
 // esta función: revienta el build con la lista de lo que sí hay, en vez de
 // dejar un hueco en la página.
 
+// Las extensiones, también en mayúsculas: las fotos que salen de una cámara
+// llegan como .JPG y el glob distingue mayúsculas.
 const archivos = import.meta.glob<{ default: ImageMetadata }>(
-  "../assets/images/*.{jpeg,jpg,png,webp,avif}",
+  "../assets/images/*.{jpeg,jpg,png,webp,avif,JPEG,JPG,PNG}",
   { eager: true },
 );
 

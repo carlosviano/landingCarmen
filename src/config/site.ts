@@ -606,11 +606,12 @@ export interface DisenoEspecial {
   alt: string;
   /** Como `Montaje.enfoque`: el punto de la foto que no se recorta. */
   enfoque?: string;
-  /** Lo que cuenta la ficha que se abre al pulsar la tarjeta. Un párrafo. */
+  /** Lo que cuenta la tarjeta bajo el nombre: cómo es y qué se adapta. Dos o tres líneas. */
   descripcion: string;
   /**
-   * Las fotos de la ficha DESPUÉS de la de la tarjeta, que es siempre la
-   * primera del carrusel. Mismo formato que `archivo`; vacía si no hay más.
+   * Más fotos del diseño, para dar referencias: salen en miniatura en la
+   * tarjeta, DESPUÉS de la de `archivo`, y al pulsarlas se ven en grande.
+   * Mismo formato que `archivo`; vacía si no hay más.
    */
   galeria: { archivo: string; alt: string }[];
 }
@@ -641,12 +642,6 @@ export const ESPECIALES = {
   ],
   etiquetaDisenos: "Diseños de Carmela",
   tituloDisenos: "Elige uno, o deja que te proponga",
-  // La frase va partida para poder enlazar "la carta" sin meter HTML aquí.
-  textoDisenos: {
-    antes: "Cada diseño se adapta en tamaño, colores y sabores. Los sabores salen de ",
-    enlace: "la carta",
-    despues: ".",
-  },
   /** La columna derecha de cada tarjeta: no hay precio cerrado. */
   precio: "a presupuesto",
   // TODO: fotos nuevas de cada diseño. Las de ahora son las que ya había
@@ -664,8 +659,24 @@ export const ESPECIALES = {
         "[Descripción del diseño: cómo es, qué lleva por fuera, para cuántas personas sale y qué se puede cambiar.]",
       galeria: [
         {
-          archivo: "trabajando.jpeg",
-          alt: "Manos decorando a pincel una pieza de pastelería, en blanco y negro.",
+          archivo: "tartaRosa1.JPG",
+          alt: "Glaseado rojo vertido con un biberón sobre la tarta rosa, en una rejilla del obrador.",
+        },
+        {
+          archivo: "tartaRosa2.JPG",
+          alt: "El glaseado rojo de la tarta rosa se extiende a pincel y cae por los bordes.",
+        },
+        {
+          archivo: "tartaRosa3.JPG",
+          alt: "La tarta cubierta de glaseado rojo en espiral, sobre la rejilla.",
+        },
+        {
+          archivo: "tartaRosa4.JPG",
+          alt: "La tarta terminada, de glaseado rojo en espiral, sobre una base dorada.",
+        },
+        {
+          archivo: "tartaRosa5.JPG",
+          alt: "La tarta terminada vista desde arriba, sobre una base dorada.",
         },
       ],
     },
@@ -681,28 +692,30 @@ export const ESPECIALES = {
         "[Descripción del diseño: cómo es, qué lleva por fuera, para cuántas personas sale y qué se puede cambiar.]",
       galeria: [
         {
+          archivo: "tartaPapelAzucar3.jpeg",
+          alt: "La tarta de dos pisos en el obrador, con volantes blancos de papel de azúcar alrededor del piso de abajo.",
+        },
+        {
+          archivo: "tartaPapelAzucar1.jpeg",
+          alt: "Detalle de los volantes de papel de azúcar, curvados y translúcidos, junto al piso de arriba.",
+        },
+        {
+          archivo: "tartaPapelAzucar2.jpeg",
+          alt: "Primer plano de las láminas de papel de azúcar, finas y onduladas.",
+        },
+        {
           archivo: "tarta-boda-nati-con-nati.jpeg",
           alt: "La novia junto a la tarta de volantes blancos, en blanco y negro.",
         },
       ],
     },
-    // TODO: tercer diseño. De relleno para ver la rejilla con su mezcla final.
-    {
-      slug: "diseno-3",
-      nombre: "[Diseño 3]",
-      ocasiones: "[Ocasiones]",
-      archivo: null,
-      alt: "",
-      descripcion: "[Descripción del diseño.]",
-      galeria: [],
-    },
+
   ] satisfies DisenoEspecial[],
-  /** La ficha lateral que abre cada tarjeta de diseño. */
-  ficha: {
-    /** Lleva al formulario con el diseño marcado. */
-    boton: "La quiero",
-    cerrar: "Cerrar",
-    /** Para el lector de pantalla: "Foto 2 de 3". */
+  /** Los textos de cada tarjeta de diseño. */
+  tarjeta: {
+    /** El botón: lleva al formulario con el diseño marcado. */
+    pedir: "Pedir esta tarta",
+    /** Para el lector de pantalla en las miniaturas: "Foto 2 de 3". */
     foto: "Foto",
   },
   /**

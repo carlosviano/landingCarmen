@@ -8,18 +8,18 @@
 // allí "Lo monto" en el sitio. Y el enlace bajo la rejilla lo dice en voz
 // alta para quien dude.
 //
-// En vez de historias en zigzag, una rejilla de diseños con el marco de la
-// carta: no se viene a leer qué se hizo, se viene a elegir qué pedir. Cada
-// tarjeta abre la ficha de su diseño (components/especiales/FichaDiseno),
-// con más fotos y "La quiero", que baja al formulario con él marcado. Sin JS
-// la tarjeta enlaza directamente al formulario (?diseno=<slug>#solicitud).
+// En vez de historias en zigzag, un escaparate de diseños: no se viene a leer
+// qué se hizo, se viene a elegir qué pedir. Cada diseño es una tarjeta
+// horizontal (components/TarjetaEscaparate) con todo a la vista: para qué
+// ocasiones, qué es, sus fotos en miniatura y "Pedir esta tarta", que baja al
+// formulario con él marcado. Sin JS ese botón es un enlace normal
+// (?diseno=<slug>#solicitud).
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/sections/Header.astro";
 import Footer from "@/sections/Footer.astro";
 import Ondas from "@/components/Ondas.astro";
 import Hero from "@/components/Hero.astro";
-import TarjetaDiseno from "@/components/especiales/TarjetaDiseno.astro";
-import FichaDiseno from "@/components/especiales/FichaDiseno.astro";
+import TarjetaEscaparate from "@/components/TarjetaEscaparate.astro";
 import SolicitudEspecial from "@/components/especiales/SolicitudEspecial.astro";
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
@@ -31,13 +31,22 @@ const E = ESPECIALES;
 // Como en /eventos: si el nombre no existe, `fotoDe` revienta el build.
 const fotoCabecera = fotoDe(E.fotoCabecera)!;
 
-const disenos = E.disenos.map((diseno, i) => ({
+// Las fotos de cada diseño, ya resueltas: la de la tarjeta primero y detrás
+// las de `galeria`.
+const disenos = E.disenos.map((diseno) => ({
   diseno,
-  numero: i + 1,
-  foto: fotoDe(diseno.archivo),
+  fotos: [
+    ...(diseno.archivo ? [{ archivo: diseno.archivo, alt: diseno.alt, enfoque: diseno.enfoque }] : []),
+    ...diseno.galeria,
+  ].map((foto) => ({ ...foto, src: fotoDe(foto.archivo)! })),
 }));
 
 const conDiseno = (slug: string) => `?diseno=${slug}#solicitud`;
+
+// Con un número par de diseños, la tarjeta de "¿No sabes cuál?" quedaría
+// sola en la última fila de escritorio: ahí ocupa las dos columnas y cierra
+// la rejilla. Con impar ya cae en el hueco que queda.
+const proponerAncha = E.disenos.length % 2 === 0;
 ---
 
 <Layout titulo={E.tituloPagina} descripcion={E.entradillaPagina}>
@@ -113,87 +122,73 @@ const conDiseno = (slug: string) => `?diseno=${slug}#solicitud`;
     </Hero>
 
     <section class="pt-12 pb-2 md:pt-16 md:pb-4">
-      <div
-        class="mx-auto flex w-full max-w-7xl flex-col gap-4 px-6 lg:flex-row lg:items-end lg:justify-between lg:gap-12"
-      >
-        <div>
-          <p class="antetitulo text-rust">{E.etiquetaDisenos}</p>
-          <h2 class="mt-4 titulo text-4xl leading-[1.08] text-balance sm:text-5xl">
-            {E.tituloDisenos}
-          </h2>
-        </div>
-        <p class="max-w-md text-[0.9375rem] leading-relaxed text-black/70">
-          {E.textoDisenos.antes}<a
-            href={SERVICIOS.carta.ruta}
-            class="text-rust underline underline-offset-2 hover:text-black">{E.textoDisenos.enlace}</a
-          >{E.textoDisenos.despues}
-        </p>
+      <div class="mx-auto w-full max-w-7xl px-6">
+        <p class="antetitulo text-rust">{E.etiquetaDisenos}</p>
+        <h2 class="mt-4 titulo text-4xl leading-[1.08] text-balance sm:text-5xl">
+          {E.tituloDisenos}
+        </h2>
       </div>
 
-      <div
-        class="mx-auto mt-8 grid w-full max-w-7xl grid-cols-2 gap-x-3.5 gap-y-8 px-6 md:mt-11 lg:grid-cols-4 lg:gap-x-7"
-      >
+      {
+        /* Una columna hasta lg (en móvil la tarjeta sigue siendo horizontal,
+          con la foto estrecha) y dos desde lg. */
+      }
+      <div class="mx-auto mt-8 grid w-full max-w-7xl gap-4 px-6 md:mt-11 lg:grid-cols-2 lg:gap-7">
         {
-          disenos.map(({ diseno, numero, foto }) => (
-            <TarjetaDiseno
-              href={conDiseno(diseno.slug)}
-              data-abre-ficha={diseno.slug}
-              aria-haspopup="dialog"
-              numero={numero}
-              nombre={diseno.nombre}
-              ocasiones={diseno.ocasiones}
+          disenos.map(({ diseno, fotos }) => (
+            <TarjetaEscaparate
+              id={diseno.slug}
+              titulo={diseno.nombre}
+              etiqueta={diseno.ocasiones}
+              descripcion={diseno.descripcion}
+              fotos={fotos}
               precio={E.precio}
-            >
-              {foto ? (
-                <Image
-                  src={foto}
-                  alt={diseno.alt}
-                  widths={[200, 320, 440, 640]}
-                  sizes="(min-width: 1024px) 19rem, 45vw"
-                  loading="lazy"
-                  decoding="async"
-                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none"
-                  style={diseno.enfoque && `object-position: ${diseno.enfoque}`}
-                />
-              ) : (
-                /* El "foto pendiente" de la carta, MARCADO a propósito: dice
-                  qué falta en vez de rellenar con una foto que no es. */
-                <div class="grid h-full w-full place-items-center">
-                  <span class="leyenda text-rust/70">Foto pendiente</span>
-                </div>
-              )}
-            </TarjetaDiseno>
+              textoFoto={E.tarjeta.foto}
+              accion={{
+                texto: E.tarjeta.pedir,
+                href: conDiseno(diseno.slug),
+                "data-elige": diseno.slug,
+              }}
+            />
           ))
         }
 
         {
-          /* La salida para quien no sabe cuál: misma tarjeta, en rust y con
-            las ondas de la franja. Baja al formulario con "Que me proponga
-            Carmela" marcado, sin ficha: no hay nada más que enseñar. El
-            botón es de mentira (un span): la tarjeta entera ya es el
-            enlace. */
+          /* La salida para quien no sabe cuál: del tamaño de las otras, en
+            rust y con las ondas de la franja. Baja al formulario con "Que me
+            proponga Carmela" marcado. El botón es de mentira (un span): la
+            tarjeta entera ya es el enlace. A todo el ancho (`proponerAncha`)
+            es una banda: el texto a la izquierda y el botón a la derecha. */
         }
-        <TarjetaDiseno
+        <a
           href={conDiseno(E.proponer.slug)}
           data-elige={E.proponer.slug}
-          nombre={E.proponer.nombre}
-          ocasiones={E.proponer.ocasiones}
-          precio={E.precio}
-          claseMarco="bg-rust"
+          class:list={[
+            "group relative isolate flex flex-col justify-between gap-8 overflow-hidden rounded-3xl bg-rust p-6 text-linen sm:p-8 lg:px-10 lg:py-9",
+            proponerAncha ? "lg:col-span-2 lg:gap-5" : "lg:min-h-80",
+          ]}
         >
-          <Ondas id="proponer" class="text-linen/12" />
-          <div class="relative flex h-full flex-col p-4.5 sm:p-7">
-            <span class="leyenda text-sand">{E.proponer.leyenda}</span>
-            <span class="mt-auto titulo text-[1.375rem] leading-[1.1] text-balance text-linen sm:text-3xl">
+          <Ondas id="proponer" class="-z-10 text-linen/12" />
+          <span class="leyenda text-sand">{E.proponer.leyenda}</span>
+          <span
+            class:list={[
+              "flex flex-col items-start",
+              proponerAncha && "lg:flex-row lg:items-end lg:justify-between lg:gap-12",
+            ]}
+          >
+            <span class="max-w-md titulo text-[1.75rem] leading-[1.1] text-balance sm:text-4xl">
               {E.proponer.titulo}
             </span>
             <span
-              class="mt-3.5 inline-flex min-h-11 items-center self-start rounded-full bg-sand px-4 accion text-[10px] text-rust transition-colors group-hover:bg-white sm:mt-5 sm:px-5 sm:text-[11px]"
+              class:list={[
+                "mt-5 inline-flex min-h-11 shrink-0 items-center rounded-full bg-sand px-5.5 accion text-[10px] text-rust transition-colors group-hover:bg-white sm:mt-6 sm:text-[11px]",
+                proponerAncha && "lg:mt-0",
+              ]}
             >
               {E.proponer.boton}
             </span>
-          </div>
-        </TarjetaDiseno>
+          </span>
+        </a>
       </div>
 
       {
@@ -211,8 +206,6 @@ const conDiseno = (slug: string) => `?diseno=${slug}#solicitud`;
       </div>
     </section>
 
-    {E.disenos.map((diseno) => <FichaDiseno diseno={diseno} />)}
-
     <SolicitudEspecial />
   </main>
 
@@ -222,15 +215,8 @@ const conDiseno = (slug: string) => `?diseno=${slug}#solicitud`;
 <script>
   import { alPulsarEnlace, elegirDiseno } from "@/lib/elegirDiseno";
 
-  // Las tarjetas, con JS: la de un diseño abre su ficha y la de "que me
-  // proponga" baja al formulario sin recargar (ver elegirDiseno).
-  document.querySelectorAll<HTMLAnchorElement>("a[data-abre-ficha]").forEach((tarjeta) => {
-    const ficha = document.querySelector<HTMLDialogElement>(
-      `dialog[data-ficha][data-diseno="${CSS.escape(tarjeta.dataset.abreFicha!)}"]`,
-    );
-    if (ficha) alPulsarEnlace(tarjeta, () => ficha.showModal());
-  });
-
+  // "Pedir esta tarta" y la tarjeta de "que me proponga" bajan al formulario
+  // sin recargar (ver elegirDiseno).
   document.querySelectorAll<HTMLAnchorElement>("a[data-elige]").forEach((tarjeta) => {
     alPulsarEnlace(tarjeta, () => elegirDiseno(tarjeta.dataset.elige!));
   });
