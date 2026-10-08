@@ -49,12 +49,14 @@ export const ESPECIALES = {
   tituloPagina: "Una tarta pensada para lo que celebras",
   entradillaPagina:
     "Diseños míos que adapto a tu ocasión: tamaño, colores y sabores. Me cuentas qué celebras y te propongo uno.",
-  // TODO: foto propia de la cabecera. Es la misma de los volantes y de la
-  // portada mientras no lleguen las fotos nuevas.
-  fotoCabecera: "tarta-boda-nati.jpeg",
+  // Apaisada a toda pantalla. En el móvil se ve entera de alto y solo cuenta
+  // el horizontal: el 45% la deja entre la tarta y la cara. En escritorio se
+  // ve entera de ancho y solo cuenta el vertical: el 90% la sube para que
+  // entre la tarta hasta la base, a costa de la cara, que aquí importa menos.
+  fotoCabecera: "tartaRosaPintando3.jpg",
   altCabecera:
-    "Tarta de boda de varios pisos cubierta de volantes blancos de azúcar, en una terraza al sol.",
-  enfoqueCabecera: "50% 40%",
+    "Pintando a pincel el glaseado rojo de una tarta sobre la rejilla del obrador, muy de cerca.",
+  enfoqueCabecera: "45% 90%",
   ctaCabecera: "Pedir presupuesto",
   pasos: [
     { titulo: "Me cuentas", detalle: "La ocasión, la fecha y cuántos seréis." },
@@ -176,7 +178,7 @@ export const ESPECIALES = {
         detalle: "El diseño, la ocasión, la fecha y cuántos seréis.",
       },
       {
-        titulo: "Te respondo en [PLAZO].",
+        titulo: "Te respondo en menos de 7 dias.",
         detalle: "Con una propuesta y el presupuesto.",
       },
       {
@@ -186,7 +188,7 @@ export const ESPECIALES = {
     ],
     // TODO: antelación real. Entre corchetes en el texto; el número de abajo
     // es el que usa el calendario y es de relleno.
-    nota: "Es una consulta, no una reserva: la fecha queda tuya cuando confirmamos. Pídela con [ANTELACIÓN] de antelación.",
+    nota: "Es una consulta, no una reserva: la fecha queda tuya cuando confirmamos.",
     /**
      * Días LABORABLES de antelación para la fecha de recogida, contados como
      * los de PEDIDO. Se recoge en el obrador, así que sólo de lunes a viernes

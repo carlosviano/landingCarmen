@@ -38,8 +38,18 @@
 // es el saliente, que es un fallo mucho más benigno. Para meter más texto,
 // subir la altura de la foto.
 import { Image } from "astro:assets";
-import fotoSobreMi from "@/assets/images/carmenSentadaHaciaUnLado.jpg";
 import { SOBRE_MI } from "@/config/portada";
+import fotoSobreMi from "@/assets/images/retratoCarmenSobremi.jpg";
+import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
+
+// La foto es apaisada y su caja vertical (2/3 apilada, 38rem de alto en lg),
+// así que object-cover la pinta mucho más ancha que la caja: en el iPhone,
+// unas 2.25 veces. El sizes tiene que decir ESE ancho o el navegador baja
+// una versión pequeña y la estira (lib/imagenes.ts).
+const sizesFoto = [
+  `(min-width: 1024px) ${anchoCubierto(fotoSobreMi, "42vw", "38rem")}`,
+  anchoCubierto(fotoSobreMi, "calc(100vw - 3rem)", "(100vw - 3rem) * 1.5"),
+].join(", ");
 ---
 
 <section id="sobre-mi" class="scroll-mt-20 py-16 md:py-20">
@@ -96,7 +106,7 @@ import { SOBRE_MI } from "@/config/portada";
           {/* Párrafos sueltos, sin subtitular. El hueco entre ellos es más
               corto que el que los separa del titular: así se leen como un
               texto seguido y no como tres apartados. */}
-          <div class="mt-8 space-y-6 lg:mt-10 lg:space-y-8">
+          <div class="mt-6 space-y-4 lg:mt-8 lg:space-y-5">
             {SOBRE_MI.parrafos.map((parrafo) => (
               <p class="max-w-prose text-sm leading-relaxed text-linen/80 sm:text-base">
                 {parrafo}
@@ -107,7 +117,7 @@ import { SOBRE_MI } from "@/config/portada";
           {/* Cierra en primera persona y conviene que se lea distinta de los
               párrafos: por eso va en The Seasons Light. Sin cursiva, ver
               "Tipografía" en global.css. */}
-          <p class="mt-10 titular text-xl text-linen sm:text-2xl">
+          <p class="mt-8 titular text-xl text-linen sm:text-2xl">
             {SOBRE_MI.firma}
           </p>
         </div>
@@ -115,8 +125,8 @@ import { SOBRE_MI } from "@/config/portada";
           <Image
             src={fotoSobreMi}
             alt={SOBRE_MI.fotoAlt}
-            widths={[320, 480, 640, 900, 1066]}
-            sizes="(min-width: 1024px) 42vw, 100vw"
+            widths={ANCHOS_GRANDES}
+            sizes={sizesFoto}
             loading="lazy"
             class="h-full w-full object-cover object-center"
           />

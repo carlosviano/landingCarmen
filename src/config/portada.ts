@@ -30,7 +30,7 @@ export const HERO = {
   // Sin nombres ni pronombres, igual que el resto de los alt: describe lo que
   // se ve y nada más.
   fotoAlt:
-    "Pintando a pincel el glaseado rojo de una tarta rosa con borde de merengue, sobre una rejilla del obrador.",
+    "Glaseando con un biberón una tarta rosa sobre la rejilla del obrador: el rojo cae en espiral sobre el merengue.",
 } as const;
 
 // Texto de Carmen, condensado. El original es bastante más largo y aquí no
@@ -49,14 +49,15 @@ export const HERO = {
 export const SOBRE_MI = {
   titulo: "Sobre mí",
   parrafos: [
-    "Estudié ADE y trabajé en una consultora, hasta que me decidí por lo que de verdad me apasionaba: me formé en alta pastelería en la Escuela Torreblanca.",
-    "Después llegaron Marbella Club y restaurantes con estrella Michelin como Saddle y DSTAgE. Ahí aprendí el valor de la precisión, del producto y del cuidado por cada detalle.",
+    "Estudié ADE y trabajé en una consultora, hasta que me decidí por lo que de verdad me apasionaba; la pasteleria.",
+    " Me formé en alta pastelería en la Escuela Torreblanca. Después llegaron Marbella Club y restaurantes con estrella Michelin como Saddle y DSTAgE. Ahí aprendí el valor de la precisión, del producto y del cuidado por cada detalle.",
     "La pastelería es una forma de expresar cariño. De ahí nace Estimada Carmela: alta pastelería de Málaga para ocasiones en las que estética y sabor pesan lo mismo.",
   ],
   firma: "Espero que disfrutéis de recibirlo tanto como yo disfruto creándolo.",
   // Sin nombre ni pronombres en el alt: describe lo que se ve y nada más, que
   // es lo que necesita quien no puede ver la foto.
-  fotoAlt: "Emplatando un postre con pinzas, pieza a pieza, en el obrador.",
+  fotoAlt:
+    "Retrato sonriente con chaquetilla blanca de pastelera, contra una pared lisa.",
 } as const;
 
 /** Una foto del carrusel: qué archivo es y qué se ve en ella. */
@@ -69,6 +70,12 @@ export interface FotoGaleria {
    */
   archivo: string;
   alt: string;
+  /**
+   * Punto que no se puede recortar, como `object-position` en CSS ("60% 50%").
+   * Opcional: sin él, la foto va centrada. Hace falta en las apaisadas, de
+   * las que el hueco 4:5 solo deja ver la mitad central.
+   */
+  enfoque?: string;
 }
 
 /** La tira de fotos del carrusel: cómo se llama y qué lleva dentro. */
@@ -82,15 +89,8 @@ export interface Galeria {
 // Añadir una es dejar el archivo en `src/assets/images/` y poner su línea aquí.
 // No hace falta recortarla ni igualarla a las demás: el carrusel las mete todas
 // en el mismo hueco 4:5 con `object-cover`, así que lo único que importa es que
-// el motivo aguante un recorte centrado (ver la nota de Galeria.astro).
-//
-// Dos avisos sobre lo que hay puesto ahora, que es de relleno:
-//
-//   - `mapa-local.png` es lo único de `src/assets/images/` que se ha quedado
-//     fuera a propósito: es la captura del mapa de Contacto, no una foto.
-//   - `sobre-mi.jpg` sí está, pero es la MISMA foto que se ve en la sección de
-//     justo encima. Está para que la tira no se quede en dos: en cuanto haya
-//     fotos de verdad, esa línea fuera.
+// el motivo aguante un recorte centrado (ver la nota de Galeria.astro), o
+// llevar `enfoque` si es apaisada.
 //
 // Los alt describen lo que se ve y nada más, sin nombres ni pronombres, igual
 // que el de SOBRE_MI: es lo que necesita quien no puede ver la foto.
@@ -101,23 +101,28 @@ export const GALERIA: Galeria = {
   titulo: "Galería",
   fotos: [
     {
-      archivo: "trabajando2.jpeg",
-      alt: "A color,Carmen preparando uno de sus postres con la manga pastelera.",
+      archivo: "carmenSentadaHaciaUnLado.jpg",
+      alt: "Sonriendo con chaquetilla blanca de pastelera, sentada en una encimera de acero contra una pared blanca.",
+      enfoque: "60% 50%",
     },
     {
       archivo: "trabajando.jpeg",
-      alt: "En blanco y negro, colocando con pinzas la decoración sobre dos bocados de chocolate.",
+      alt: "A color,Carmen preparando uno de sus postres con la manga pastelera.",
     },
     {
-      archivo: "sobre-mi.jpg",
-      alt: "Emplatando un postre con pinzas, pieza a pieza, en el obrador.",
+      archivo: "carmenPacoTorreblanca.jpg",
+      alt: "Carmen junto a Paco Torreblanca en su oficina.",
     },
     {
-      archivo: "tarta_cumple_kika_2026.jpeg",
+      archivo: "carmenPosandoTorreblanca.jpg",
+      alt: "Carmen posando sonriente con chaquetilla blanca de pastelera en el obrador de la escuela Torre Blanca.",
+    },
+    {
+      archivo: "carmenTrabajandoTorreblanca.jpg",
       alt: "Tarta redonda de cumpleaños estilo Paulova",
     },
     {
-      archivo: "mesa_cumple_nati.jpeg",
+      archivo: "carmenEnElObradorManipulandoChocolate.jpg",
       alt: "Tarta redonda de cumpleaños estilo Paulova",
     },
   ],
@@ -137,6 +142,14 @@ export interface FotoEscaparate {
    * Mismo criterio que `Montaje.enfoque`: depende del encuadre de cada foto.
    */
   enfoque: string;
+  /**
+   * Qué parte de la foto (de 0 a 1) se quita por ABAJO antes de pintarla,
+   * para cuando sobra plato o mesa. Lo recorta Astro en el build, así que
+   * no se baja lo que no se ve. Hace falta cuando la caja es más estrecha
+   * que la foto: ahí la foto se ve entera de alto y `enfoque` no la puede
+   * mover en vertical. Hoy solo lo lee el escaparate de tartas.
+   */
+  recorteAbajo?: number;
 }
 
 /**
@@ -162,7 +175,7 @@ export const ESCAPARATE_EVENTOS: EscaparateEventos = {
   archivo: "mesaEventosHome.jpg",
   alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
   enfoque: "50% 62%",
-  pie: "Mesa dulce sobre musgo y eucalipto · cumpleaños",
+  pie: "Mesa dulce sobre musgo y eucalipto · Pedida",
   cta: "Ver todos los eventos",
 };
 
@@ -189,17 +202,17 @@ export interface Escaparate {
   entradas: [EntradaEscaparate, EntradaEscaparate];
 }
 
-// TODO: la pavlova no está en la carta. Hace falta una foto CON fondo de una
-// tarta de la carta (de Limón y merengue solo hay el recorte sin fondo, que no
-// aguanta un object-cover).
 export const ESCAPARATE: Escaparate = {
   titulo: "Tartas por encargo",
   entradas: [
     {
       servicio: SERVICIOS.carta,
-      archivo: "tarta_cumple_kika_2026.jpeg",
-      alt: "Pavlova coronada de gajos de melocotón asado, vista desde arriba sobre una base dorada.",
-      enfoque: "50% 46%",
+      archivo: "parisBrestZoom2.jpg",
+      // Debajo de la tarta hay una franja de bandeja dorada y mesa que se
+      // comía casi un quinto de la foto.
+      recorteAbajo: 0.15,
+      alt: "París-Brest de cerca: corona de choux con azúcar glas, crema de avellana a manga y avellanas caramelizadas con hilos de caramelo.",
+      enfoque: "50% 50%",
       leyenda: "Temporada · precio cerrado",
     },
     {

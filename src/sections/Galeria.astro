@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
 import { GALERIA } from "@/config/portada";
+import { anchoCubierto } from "@/lib/imagenes";
 
 const archivos = import.meta.glob<{ default: ImageMetadata }>(
   "../assets/images/*.{jpeg,jpg,png,webp,avif}",
@@ -18,8 +19,19 @@ const fotos = GALERIA.fotos.map((foto) => {
       `GALERIA: no existe src/assets/images/${foto.archivo}. Ahí dentro hay: ${hay}`,
     );
   }
-  return { ...foto, src: modulo.default };
+  return { ...foto, src: modulo.default, sizes: sizesDe(modulo.default) };
 });
+
+// El hueco es 4:5, así que una foto apaisada se pinta, con object-cover,
+// casi el doble de ancha que él: el sizes lleva ese ancho y no el del hueco,
+// o el navegador baja una versión pequeña y la estira (lib/imagenes.ts).
+function sizesDe(foto: ImageMetadata) {
+  return [
+    `(min-width: 1024px) ${anchoCubierto(foto, "23rem", "28.75rem")}`,
+    `(min-width: 640px) ${anchoCubierto(foto, "20rem", "25rem")}`,
+    anchoCubierto(foto, "78vw", "97.5vw"),
+  ].join(", ");
+}
 
 const ADELANTO = "4rem";
 const margenTira = `max(0.75rem, (100% - 80rem) / 2 + 1.5rem - ${ADELANTO})`;
@@ -49,11 +61,12 @@ const margenTira = `max(0.75rem, (100% - 80rem) / 2 + 1.5rem - ${ADELANTO})`;
               <Image
                 src={foto.src}
                 alt={foto.alt}
-                widths={[400, 600, 800, 1000]}
-                sizes="(min-width: 1024px) 23rem, (min-width: 640px) 20rem, 78vw"
+                widths={[400, 600, 800, 1000, 1400, 1800, 2200]}
+                sizes={foto.sizes}
                 loading="lazy"
                 decoding="async"
                 class="h-full w-full object-cover object-center"
+                style={foto.enfoque && `object-position: ${foto.enfoque}`}
               />
             </div>
           </li>
