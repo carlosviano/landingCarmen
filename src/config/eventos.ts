@@ -85,32 +85,30 @@ export interface Eventos {
     cta: string;
     cerrar: string;
     /** Rótulo del hueco gris mientras no haya vídeos de verdad. */
-    videoPendiente: string;
+    videoPendiente?: string;
   };
   montajes: Montaje[];
 }
 
 export const EVENTOS: Eventos = {
   etiqueta: "Eventos",
-  titulo: "Cada celebración, una mesa distinta",
-  entradilla:
-    "Mesas dulces, tartas y postres para el día que celebras. El montaje se piensa con la fecha, el sitio y los invitados delante, así que no sale dos veces igual.",
+  titulo: "Momentos para celebrar...",
+  entradilla:"Nos encargamos de endulzar esas celebraciones tan especiales, creando cada propuesta a medida para la ocasión. El lugar, la hora, las personas y cada pequeño detalle se tienen en cuenta para que todo encaje y tú solo tengas que disfrutar. ",
   etiquetaPagina: "Eventos · Málaga",
   tituloPagina: "Para el día concreto que celebras",
   entradillaPagina:
-    "Tartas de boda, mesas dulces y postres emplatados por encargo, montados en el sitio y a su hora.",
-  // TODO: confirmar que se puede publicar: se le ve la cara a la novia.
+"Tartas de boda, dulces y postres emplatados por encargo. Diseñados para cada celebración y preparados en el lugar y momento elegido.",  // TODO: confirmar que se puede publicar: se le ve la cara a la novia.
   fotoCabecera: "tarta-boda-nati-con-nati.jpeg",
   altCabecera:
     "En blanco y negro, una novia se ríe inclinada junto a su tarta de boda, cubierta de pétalos blancos.",
   ctaCabecera: "Pedir presupuesto",
   pasos: [
-    { titulo: "Me cuentas", detalle: "Fecha, sitio, invitados y la idea." },
-    { titulo: "Te propongo", detalle: "Piezas, sabores y presupuesto." },
-    { titulo: "Lo monto", detalle: "El mismo día, en el sitio y a su hora." },
+    { titulo: "La idea", detalle: "Fecha, sitio, invitados..." },
+    { titulo: "La propuesta", detalle: "Piezas, sabores y presupuesto." },
+    { titulo: "La puesta en escena", detalle: "El mismo día, en el sitio y a su hora." },
   ],
   etiquetaMontajes: "Montajes ya servidos",
-  tituloMontajes: "Cada celebración, una mesa distinta",
+  tituloMontajes: "Celebraciones hechas realidad",
   masMontajes: "Hay más proyectos en Instagram",
   cinta: {
     verMas: "Ver más",
@@ -118,69 +116,85 @@ export const EVENTOS: Eventos = {
     etiqueta: "Más del montaje",
     cta: "Quiero algo parecido",
     cerrar: "Cerrar",
-    videoPendiente: "Vídeo pendiente",
   },
   montajes: [
     {
-      tipoEvento: "Cumpleaños",
-      titulo: "Mesa dulce sobre musgo y eucalipto",
-      descripcion:
-        "Un montaje largo sobre mantel negro, con el verde haciendo de estructura: musgo, eucalipto y paniculata sostienen la línea y los dulces se apoyan en ella. Cada bocado va en su propia pieza, con su cucharilla, para cogerlo de pie y sin tener que cortar nada.",
+      tipoEvento: "Pedidas",
+      titulo: "Pequeños bocados sobre musgo y eucalipto",
+      descripcion:"Un montaje de fondo oscuro en el que el musgo y el eucalipto aportaban estructura y profundidad, dejando que los espejos fueran los protagonistas.  Estos, además de aportar un elemento distintivo a la propuesta, se convierten en pequeños platos de cóctel para disfrutar de cada bocado de forma individual.",
       archivo: "mesa_cumple_nati.jpeg",
       alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
-      mes: "[MES 2026]",
+      mes: "Junio 2026",
       lugar: "Málaga",
       enfoque: "50% 62%",
-      // TODO: confirmar con la clienta qué fotos son de este montaje: las del
-      // obrador están puestas para ver la cinta llena.
       galeria: [
         {
           tipo: "foto",
-          archivo: "mesa_cumple_nati.jpeg",
-          alt: "Detalle de la mesa dulce: bocados entre musgo y ramas de eucalipto.",
-          pie: "La mesa, de punta a punta",
-          enfoque: "15% 30%",
+          archivo: "mesaPedida2.jpg",
+          alt: "La mesa vacía antes del servicio: un lecho de musgo con flores blancas y eucalipto sobre mantel oscuro, rodeado de espejos cuadrados.",
+          pie: "El montaje, antes de los dulces",
+          enfoque: "50% 60%",
         },
         {
           tipo: "foto",
-          archivo: "trabajando.jpeg",
-          alt: "En blanco y negro, piezas pequeñas rematadas a mano sobre la encimera del obrador.",
-          pie: "La víspera, en el obrador",
-          enfoque: "50% 40%",
+          archivo: "mesaPedida3.jpg",
+          alt: "Detalle de los espejos cuadrados repartidos sobre el mantel, junto al musgo, las flores blancas y las ramas de eucalipto.",
+          pie: "Los espejos, platos de cóctel",
+          enfoque: "50% 50%",
         },
-        { tipo: "video", pie: "El montaje" },
         {
           tipo: "foto",
-          archivo: "trabajando2.jpeg",
-          alt: "Una mano sostiene un bocado verde mientras la otra lo remata con la manga pastelera.",
-          pie: "Bocado a bocado",
+          archivo: "mesaPedida1.jpg",
+          alt: "Una flor de zanahoria silvestre se alza sobre el musgo y el eucalipto, reflejada en el espejo largo del fondo.",
+          pie: "Musgo, eucalipto y flor silvestre",
+          enfoque: "50% 45%",
+        },
+        {
+          tipo: "foto",
+          archivo: "mesaPedida4.jpg",
+          alt: "La mesa ya servida: cada bocado sobre su espejo, con pétalos de caléndula, y al fondo los últimos retoques.",
+          pie: "Bocado a bocado, ya servida",
+          enfoque: "50% 55%",
         },
       ],
     },
     {
-      tipoEvento: "Cumpleaños",
-      titulo: "Pavlova de melocotón",
-      descripcion:
-        "Merengue, nata montada a mano y melocotón en gajos colocado uno a uno hasta cerrar la corona. Se monta el mismo día de la fiesta: ni la fruta ni el merengue aguantan una noche de nevera sin perder el punto.",
-      archivo: "tarta_cumple_kika_2026.jpeg",
-      alt: "Tarta redonda de merengue y nata coronada con gajos de melocotón, sobre una bandeja dorada.",
-      mes: "[MES 2026]",
+      tipoEvento: "Bodas",
+      titulo: "Tarta de boda",
+      descripcion:"Una tarta de boda inspirada en la silueta de un vestido de gran volumen. Sus formas, capas y movimiento trasladan la elegancia del diseño textil a una pieza dulce, pensada para convertirse en parte de la celebración.",
+      archivo: "tartaPapelAzucar1.jpeg",
+      alt: "tarta de boda inspirada en la silueta de un vestido de gran volumen. Sus formas, capas y movimiento trasladan la elegancia del diseño textil a una pieza dulce",
+      mes: "Septiembre 2026",
       lugar: "Málaga",
       enfoque: "50% 55%",
       galeria: [
         {
           tipo: "foto",
-          archivo: "tarta_cumple_kika_2026_detalle.jpeg",
-          alt: "Detalle de los gajos de melocotón colocados sobre la nata.",
-          pie: "Gajo a gajo",
+          archivo: "tartaPapelAzucar3.jpeg",
+          alt: "Tarta de boda inspirada en la silueta de un vestido de gran volumen en el obrador",
+          pie: "Piezas y estructura en el obrador",
+          enfoque: "50% 90%",
         },
-        { tipo: "video", pie: "Cerrando la corona" },
         {
           tipo: "foto",
-          archivo: "tarta_cumple_kika_2026.jpeg",
-          alt: "La pavlova terminada sobre su bandeja dorada.",
-          pie: "Lista para salir",
+          archivo: "tartaPapelAzucar2.jpeg",
+          alt: "Volantes de azucar de la tarta de boda",
+          pie: "Volantes de azucar",
           enfoque: "50% 90%",
+        },
+        {
+          tipo: "foto",
+          archivo: "tarta-boda-nati.jpeg",
+          alt: "La tarta de boda ya montada con muñecos de los novios encima en la celebracion",
+          pie: "En la celebracion",
+          enfoque: "50% 90%",
+        },
+        {
+          tipo: "foto",
+          archivo: "tarta-boda-nati-con-nati.jpeg",
+          alt: "En blanco y negro, la novia se ríe inclinada junto a su tarta de boda, a juego con el volumen de su vestido.",
+          pie: "La novia junto a su tarta",
+          enfoque: "60% 50%",
         },
       ],
     },
@@ -207,7 +221,7 @@ export const SOLICITUD_EVENTO = {
       detalle: "Fecha, sitio, invitados y lo que tienes en la cabeza.",
     },
     {
-      titulo: "Te respondo en [PLAZO].",
+      titulo: "Te respondo en menos de 7 días.",
       detalle: "Con una propuesta y un presupuesto orientativo.",
     },
     {
@@ -252,5 +266,5 @@ export const SOLICITUD_EVENTO = {
     enlace: "Escríbeme por WhatsApp",
   },
   // Bajo los pasos del marco (MarcoSolicitud).
-  nota: "Todo por encargo · con dos días laborables de antelación",
+  nota: "Todo por encargo",
 };

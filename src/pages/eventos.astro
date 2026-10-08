@@ -23,6 +23,7 @@ import { Icon } from "astro-icon/components";
 import { EVENTOS } from "@/config/eventos";
 import { SOCIAL } from "@/config/site";
 import { fotoDe } from "@/lib/fotos";
+import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
 
 // Un montaje siempre tiene foto (ver la nota de `Montaje.archivo`), así que
 // el `!` es seguro: sólo la habría sin ella si `archivo` no existiera en
@@ -38,6 +39,16 @@ const conFoto = EVENTOS.montajes.map((montaje, i) => ({
 // La foto de la cabecera, resuelta como las de las tarjetas: si el nombre no
 // existe, `fotoDe` revienta el build.
 const fotoCabecera = fotoDe(EVENTOS.fotoCabecera)!;
+
+// A sangre con object-cover: en el móvil la banda es más alta que ancha y
+// una foto apaisada (o menos vertical que la pantalla) se pinta más ancha
+// que el 100vw. El alto es el máximo que puede tener la banda: la pantalla
+// menos la cabecera y la franja más baja (lib/imagenes.ts).
+const sizesCabecera = anchoCubierto(
+  fotoCabecera,
+  "100vw",
+  "(100vh - 8.5625rem)",
+);
 
 // El enlace de cierre de la lista va al perfil, no a un post: busca el mismo
 // SOCIAL que usan cabecera y pie, para no mantener la URL dos veces.
@@ -65,8 +76,8 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
       <Image
         src={fotoCabecera}
         alt={EVENTOS.altCabecera}
-        widths={[640, 960, 1280, 1920]}
-        sizes="100vw"
+        widths={ANCHOS_GRANDES}
+        sizes={sizesCabecera}
         loading="eager"
         fetchpriority="high"
         class="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_38%]"

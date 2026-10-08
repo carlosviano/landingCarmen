@@ -26,11 +26,19 @@ import { Icon } from "astro-icon/components";
 import { ESPECIALES } from "@/config/personalizadas";
 import { SERVICIOS } from "@/config/site";
 import { fotoDe } from "@/lib/fotos";
+import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
 
 const E = ESPECIALES;
 
 // Como en /eventos: si el nombre no existe, `fotoDe` revienta el build.
 const fotoCabecera = fotoDe(E.fotoCabecera)!;
+
+// Como en /eventos: el ancho al que se pinta, no el de la caja.
+const sizesCabecera = anchoCubierto(
+  fotoCabecera,
+  "100vw",
+  "(100vh - 8.5625rem)",
+);
 
 // Las fotos de cada diseño, ya resueltas: la de la tarjeta primero y detrás
 // las de `galeria`.
@@ -64,8 +72,8 @@ const proponerAncha = E.disenos.length % 2 === 0;
       <Image
         src={fotoCabecera}
         alt={E.altCabecera}
-        widths={[640, 960, 1280, 1920]}
-        sizes="100vw"
+        widths={ANCHOS_GRANDES}
+        sizes={sizesCabecera}
         loading="eager"
         fetchpriority="high"
         class="absolute inset-0 -z-10 h-full w-full object-cover"

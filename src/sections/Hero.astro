@@ -48,20 +48,19 @@
 // lg. Apilado, eso da el orden que se quiere en un móvil: primero la promesa y
 // el botón, la foto después. Al revés, el titular quedaría bajo el pliegue.
 //
-// La foto es pintando-tarta-rosa-hero.png: obrador, pintando a pincel el
-// glaseado de una tarta. Es APAISADA (1536×1024), con la tarta abajo a la
-// izquierda y la cara arriba a la derecha, y object-cover recorta por los
-// lados, cerca de un tercio, porque el hueco es casi cuadrado (en móvil, y en
-// lg desde que el hero llena la pantalla).
+// La foto es tartaRosaPintando2.jpg: obrador, glaseando con biberón una tarta
+// rosa sobre una rejilla. Es APAISADA (3:2), con el biberón y la tarta a la
+// izquierda y la cara y el bordado de la chaquetilla a la derecha.
 //
-// Va pegada a la derecha (object-right) en todos los tamaños, y lo que se
-// pierde es el lado izquierdo de la tarta, a propósito. En móvil es lo que
-// hace que entre el bordado "Estimada Carmela" de la chaquetilla, que está en
-// el último sexto de la foto: es la marca dentro de la imagen y pesa más que
-// la tarta entera. En lg, además, el degradado rust vela el 30% izquierdo de
-// la foto (ver su nota, abajo), así que pegada a la derecha lo que queda bajo
-// el velo es tarta, que parece salir del rojo, y la cara, el pincel y el
-// bordado quedan limpios.
+// En móvil el hueco es más ancho que la foto en proporción, así que no se
+// pierde nada por los lados: solo recorta arriba y abajo, y el 20% vertical
+// guarda la cabeza, que ya va pegada al borde de arriba.
+//
+// En lg el hueco es casi cuadrado y object-cover se come cerca de un tercio
+// del ancho. El 55% horizontal reparte ese recorte: el degradado rust vela
+// el 30% izquierdo de la foto (ver su nota, abajo), y lo que queda bajo el
+// velo es la boquilla y el canto de la tarta, que parece salir del rojo. La
+// tarta, la cara y el bordado quedan limpios.
 //
 // Ojo: la mesa dulce (mesa_cumple_nati.jpeg) no puede volver aquí. Es la única
 // foto de evento que hay y la sección de Eventos la necesita justo debajo. Al
@@ -78,9 +77,16 @@
 // patrón (el detalle, en la nota del svg).
 import { Image } from "astro:assets";
 import Hero from "@/components/Hero.astro";
-import fotoHero from "@/assets/images/pintando-tarta-rosa-hero.png";
+import fotoHero from "@/assets/images/tartaRosaPintando2.jpg";
+import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
 import { HERO } from "@/config/portada";
 import { SERVICIOS } from "@/config/site";
+
+// En lg la foto ocupa media banda, y la banda mide la pantalla menos la
+// cabecera (3.5625rem) y la franja (h-20): una caja casi cuadrada, así que
+// la foto apaisada se pinta bastante más ancha que el 50vw de su caja.
+// Apilada, la caja es más ancha que alta y basta el ancho de pantalla.
+const sizesFoto = `(min-width: 1024px) ${anchoCubierto(fotoHero, "50vw", "(100vh - 8.5625rem)")}, 100vw`;
 ---
 
 <Hero claseBanda="bg-rust lg:flex-row lg:items-center">
@@ -212,10 +218,10 @@ import { SERVICIOS } from "@/config/site";
     <Image
       src={fotoHero}
       alt={HERO.fotoAlt}
-      widths={[420, 640, 900, 1200]}
-      sizes="(min-width: 1024px) 50vw, 100vw"
+      widths={ANCHOS_GRANDES}
+      sizes={sizesFoto}
       loading="eager"
-      class="absolute inset-0 h-full w-full object-cover object-right"
+      class="absolute inset-0 h-full w-full object-cover object-[55%_20%]"
     />
 
     {/* Degradado corto sobre el canto izquierdo de la foto. Sin él, la

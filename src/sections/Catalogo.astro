@@ -21,18 +21,40 @@
 import { Image } from "astro:assets";
 import { ESCAPARATE } from "@/config/portada";
 import { fotoDe } from "@/lib/fotos";
+import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
 
 // Las fotos se nombran en config/portada.ts y las resuelve `fotoDe`, que revienta el
 // build si el nombre no existe (ver src/lib/fotos.ts). El `!` es seguro:
 // `fotoDe` sólo devuelve null si se le pasa null, y `archivo` es obligatorio.
-const entradas = ESCAPARATE.entradas.map((entrada) => ({
-  ...entrada,
-  foto: fotoDe(entrada.archivo)!,
-}));
+//
+// Con `recorteAbajo`, la foto sale ya recortada del build: se le da el ancho
+// del original y el alto que queda, y `fit="cover"` con `position="top"` le
+// quita la franja de abajo. Las versiones del srcset heredan ese recorte.
+const entradas = ESCAPARATE.entradas.map((entrada) => {
+  const original = fotoDe(entrada.archivo)!;
+  const recorte = entrada.recorteAbajo
+    ? {
+        width: original.width,
+        height: Math.round(original.height * (1 - entrada.recorteAbajo)),
+      }
+    : null;
+  // La proporción que se pinta, ya recortada: es la que cuenta para el sizes.
+  const pintada = recorte ? { ...original, ...recorte } : original;
+  return { ...entrada, foto: original, recorte, sizes: sizesDe(pintada) };
+});
 
-// Cada mitad ocupa media pantalla en escritorio, y toda en móvil.
-const ANCHOS = [420, 640, 860, 1080];
-const SIZES = "(min-width: 768px) 50vw, 100vw";
+// Cada mitad ocupa media pantalla en escritorio y toda en móvil, pero las
+// cajas son casi cuadradas en escritorio (43.75rem de alto) y una foto
+// apaisada se pinta, con object-cover, bastante más ancha que su 50vw. El
+// sizes lleva ese ancho, con los altos de la caja de abajo (lib/imagenes.ts).
+function sizesDe(foto: ImageMetadata) {
+  return [
+    `(min-width: 1024px) ${anchoCubierto(foto, "50vw", "43.75rem")}`,
+    `(min-width: 768px) ${anchoCubierto(foto, "50vw", "34rem")}`,
+    `(min-width: 640px) ${anchoCubierto(foto, "100vw", "20rem")}`,
+    anchoCubierto(foto, "100vw", "18rem"),
+  ].join(", ");
+}
 
 // El velo del botón: un óvalo oscuro centrado, sólo detrás de él. Un contorno
 // claro a pelo desaparece sobre el merengue o el azúcar blanco de las fotos.
@@ -51,40 +73,43 @@ const VELO =
     sangre. Apiladas en móvil, la carta va primero: es el encargo más
     directo, con precio y tamaño cerrados. */}
   <div class="grid grid-cols-1 md:grid-cols-2">
-    {entradas.map(({ servicio, foto, alt, enfoque, leyenda }) => (
-      <div
-        id={servicio.ancla}
-        class="relative h-72 scroll-mt-20 overflow-hidden bg-taupe sm:h-80 md:h-[34rem] lg:h-[43.75rem]"
-      >
-        <Image
-          src={foto}
-          alt={alt}
-          widths={ANCHOS}
-          sizes={SIZES}
-          loading="lazy"
-          decoding="async"
-          class="h-full w-full object-cover"
-          style={`object-position:${enfoque}`}
-        />
-
+    {entradas.map(
+      ({ servicio, foto, recorte, sizes, alt, enfoque, leyenda }) => (
         <div
-          aria-hidden="true"
-          class="absolute inset-0"
-          style={`background:${VELO}`}
-        />
+          id={servicio.ancla}
+          class="relative h-72 scroll-mt-20 overflow-hidden bg-taupe sm:h-80 md:h-[34rem] lg:h-[43.75rem]"
+        >
+          <Image
+            src={foto}
+            alt={alt}
+            {...(recorte && { ...recorte, fit: "cover", position: "top" })}
+            widths={ANCHOS_GRANDES}
+            sizes={sizes}
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover"
+            style={`object-position:${enfoque}`}
+          />
 
-        {/* `py-4` con `text-xs` deja el botón en unos 48px de alto, por
+          <div
+            aria-hidden="true"
+            class="absolute inset-0"
+            style={`background:${VELO}`}
+          />
+
+          {/* `py-4` con `text-xs` deja el botón en unos 48px de alto, por
             encima del mínimo de 44 para el pulgar. */}
-        <div class="absolute inset-0 flex flex-col items-center justify-center gap-4">
-          <p class="leyenda text-linen">{leyenda}</p>
-          <a
-            href={servicio.ruta}
-            class="rounded-full border-[1.5px] border-linen/90 bg-rust/70 px-8 py-4 text-center accion text-xs text-linen backdrop-blur-[2px] transition-colors duration-300 hover:bg-rust sm:px-10"
-          >
-            {servicio.nombre}
-          </a>
+          <div class="absolute inset-0 flex flex-col items-center justify-center gap-4">
+            <p class="leyenda text-linen">{leyenda}</p>
+            <a
+              href={servicio.ruta}
+              class="rounded-full border-[1.5px] border-linen/90 bg-rust/70 px-8 py-4 text-center accion text-xs text-linen backdrop-blur-[2px] transition-colors duration-300 hover:bg-rust sm:px-10"
+            >
+              {servicio.nombre}
+            </a>
+          </div>
         </div>
-      </div>
-    ))}
+      ),
+    )}
   </div>
 </section>

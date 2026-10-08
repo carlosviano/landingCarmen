@@ -27,6 +27,7 @@ import { Image } from "astro:assets";
 import FotoPendiente from "@/components/FotoPendiente.astro";
 import { Icon } from "astro-icon/components";
 import Lightbox from "@/components/Lightbox.astro";
+import { anchoCubierto } from "@/lib/imagenes";
 
 export interface FotoEscaparate {
   src: ImageMetadata;
@@ -81,6 +82,19 @@ const restantes = fotos.length - miniaturas.length;
 const CASILLA =
   "block size-10 cursor-pointer overflow-hidden rounded-lg bg-taupe/15 lg:size-13 lg:rounded-xl";
 
+// La columna de la foto es estrecha y la tarjeta la estira de alto con el
+// texto (unas 21rem, también en móvil), así que una foto apaisada o cuadrada
+// se pinta, con object-cover, dos o tres veces más ancha que la columna.
+// El alto es aproximado porque lo pone el texto; pasarse un poco solo baja
+// una versión algo mayor (lib/imagenes.ts).
+const ALTO_FOTO = "21rem";
+const sizesFoto = (foto: ImageMetadata) =>
+  [
+    `(min-width: 1024px) ${anchoCubierto(foto, "15.5rem", ALTO_FOTO)}`,
+    `(min-width: 640px) ${anchoCubierto(foto, "12.5rem", ALTO_FOTO)}`,
+    anchoCubierto(foto, "8.5rem", ALTO_FOTO),
+  ].join(", ");
+
 const idLightbox = `lightbox-${id
   .normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "")
@@ -108,8 +122,8 @@ const idLightbox = `lightbox-${id
           <Image
             src={foto.src}
             alt={foto.alt}
-            widths={[280, 400, 560]}
-            sizes="(min-width: 1024px) 15.5rem, (min-width: 640px) 12.5rem, 8.5rem"
+            widths={[280, 400, 560, 800, 1120, 1600]}
+            sizes={sizesFoto(foto.src)}
             loading="lazy"
             decoding="async"
             data-foto={i}
