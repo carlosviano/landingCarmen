@@ -176,13 +176,10 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
             data-ver-mas
             aria-expanded="false"
             aria-controls={idCinta}
-            class="group inline-flex min-h-12 cursor-pointer w-full shrink-0 items-center justify-center gap-3 rounded-full border border-sand bg-sand px-7 accion text-xs text-rust transition-colors hover:border-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] hover:bg-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] aria-expanded:border-rust aria-expanded:bg-transparent aria-expanded:hover:bg-rust aria-expanded:hover:text-linen sm:w-auto sm:self-start lg:self-auto noscript:hidden"
+            class="group inline-flex min-h-12 cursor-pointer w-full shrink-0 items-center justify-center rounded-full border border-sand bg-sand px-7 accion text-xs text-rust transition-colors hover:border-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] hover:bg-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] aria-expanded:border-rust aria-expanded:bg-transparent aria-expanded:hover:bg-rust aria-expanded:hover:text-linen sm:w-auto sm:self-start lg:self-auto noscript:hidden"
           >
             <span class="group-aria-expanded:hidden">{C.verMas}</span>
             <span class="hidden group-aria-expanded:inline">{C.verMenos}</span>
-            <span class="rounded-full bg-rust px-2 py-0.5 text-[11px] tracking-normal text-linen tabular-nums group-aria-expanded:hidden">
-              {piezas.length}
-            </span>
           </button>
         )}
       </div>
