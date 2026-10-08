@@ -176,6 +176,52 @@ PROXIMAMENTE=1 npm run dev
 (PR → staging → main). No se apaga sola el día de la fecha: el sitio es
 estático y nadie lo reconstruye a medianoche.
 
+## Textos legales
+
+Cuatro páginas, una por texto, enlazadas en el pie:
+
+| Página         | Qué es                                  | Texto                                                                    |
+| -------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| `/aviso-legal` | Quién está detrás (art. 10 LSSI)        | [`avisoLegal.ts`](./src/config/legal/avisoLegal.ts)                      |
+| `/condiciones` | Condiciones de venta (TRLGDCU)          | [`condiciones.ts`](./src/config/legal/condiciones.ts)                    |
+| `/privacidad`  | Política de privacidad (RGPD, LOPDGDD)  | [`privacidad.ts`](./src/config/legal/privacidad.ts)                      |
+| `/cookies`     | Lo que se guarda en el navegador        | [`cookies.ts`](./src/config/legal/cookies.ts)                            |
+
+Los textos son datos y los pinta una sola plantilla,
+[`PaginaLegal.astro`](./src/components/legal/PaginaLegal.astro). Los datos
+de la titular (nombre, NIF, email, registro sanitario) se escriben una vez,
+en `TITULAR` de [`src/config/site.ts`](./src/config/site.ts). La primera capa
+de privacidad que va junto a los formularios (`AVISO_FORMULARIO`) vive en
+`privacidad.ts`, al lado de la política completa, para que no se
+contradigan.
+
+**No se abre la web con un corchete en estos textos.** Lo que va entre
+corchetes (`[NIF]`, `[FECHA]`…) es un dato que falta de la clienta. Para ver
+lo que queda:
+
+```sh
+grep -rno "\[[A-ZÁÉÍÓÚÑ][^]]*\]" src/config/legal src/config/site.ts
+```
+
+Al cambiar lo que dice un texto, cambia también su `actualizado`.
+
+Tres cosas que los textos dan por hechas y que hay que mantener ciertas:
+
+- **No hay cookies ni analítica.** Por eso no hay banner. Si entra cualquier
+  cosa que guarde datos en el navegador sin que la visitante lo pida
+  (analítica con cookies, un vídeo incrustado, un píxel de redes), hacen
+  falta un banner y reescribir `cookies.ts` *antes* de publicarlo. Web
+  Analytics de Cloudflare está apagado.
+- **Los formularios llegan al correo por Cloudflare.** Si se quitan o
+  cambia el servicio, hay que tocar `privacidad.ts`.
+- **Las fichas muestran los alérgenos.** Lo dicen las condiciones y lo exige
+  el Reglamento (UE) 1169/2011 para la venta a distancia. Hasta que lo
+  hagan, no se abre la web.
+
+Las fotos en las que se reconoce a alguien necesitan su autorización por
+escrito: la plantilla está en
+[`docs/legal/consentimiento-imagen.md`](./docs/legal/consentimiento-imagen.md).
+
 ## Tipografía
 
 Dos fuentes y ninguna más. El sistema completo (qué papel va con qué peso y

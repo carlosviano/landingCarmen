@@ -1,0 +1,15 @@
+---
+// /aviso-legal: quién está detrás de la web (art. 10 LSSI). El texto vive en
+// src/config/legal/avisoLegal.ts.
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/sections/Header.astro";
+import Footer from "@/sections/Footer.astro";
+import PaginaLegal from "@/components/legal/PaginaLegal.astro";
+import { AVISO_LEGAL } from "@/config/legal/avisoLegal";
+---
+
+<Layout titulo={AVISO_LEGAL.titulo}>
+  <Header />
+  <PaginaLegal texto={AVISO_LEGAL} />
+  <Footer />
+</Layout>

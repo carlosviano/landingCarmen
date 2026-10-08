@@ -186,10 +186,27 @@ const conSelector = tarta.tamanos.length > 1;
   <p data-error role="alert" hidden class="text-sm font-medium text-rust"></p>
 
   {/* Qué pasa al pulsar, como texto visible y no en un `aria-label`: la duda
-      de "¿se envía ya?" la tiene todo el mundo. */}
+      de "¿se envía ya?" la tiene todo el mundo.
+
+      Cierra con las condiciones de venta porque la ley de consumidores pide
+      tenerlas a mano ANTES de pedir, y este es el último sitio antes de
+      pedir. Dice también cuándo queda hecho el pedido (al confirmarlo
+      Carmela, ver "Cómo se hace un pedido" en src/config/legal/condiciones.ts).
+      El enlace abre otra pestaña para no perder el tamaño, la cantidad y la
+      fecha ya elegidos. */}
   <p class="max-w-[42ch] text-xs leading-relaxed text-black/60">
     Se abre WhatsApp con el pedido ya escrito: tamaño, cantidad y fecha. No se
-    envía nada hasta que lo envíes tú.
+    envía nada hasta que lo envíes tú, y el pedido queda hecho cuando te lo
+    confirmemos. Antes de pedir, lee las{" "}
+    <a
+      href="/condiciones"
+      target="_blank"
+      rel="noopener"
+      class="text-rust underline underline-offset-2 hover:text-black"
+    >
+      condiciones de venta
+    </a>
+    .
   </p>
 </form>
 

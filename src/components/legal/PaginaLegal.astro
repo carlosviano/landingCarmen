@@ -1,0 +1,90 @@
+---
+// Plantilla de las páginas legales: antetítulo, titular, una entrada corta,
+// el índice y los apartados. El texto es de cada página (src/config/legal/);
+// esto sólo decide cómo se lee.
+//
+// El índice está porque las condiciones son largas y porque otras partes de
+// la web enlazan a un apartado concreto (/condiciones#alergenos): cada
+// apartado lleva su `id` y `scroll-mt` para que la cabecera fija no le tape
+// el título al llegar.
+import { esLista, trozos, type TextoLegal } from "@/lib/legal";
+
+interface Props {
+  texto: TextoLegal;
+}
+
+const { texto } = Astro.props;
+
+const PARRAFO = "text-base leading-relaxed text-black/75";
+const ENLACE = "text-rust underline underline-offset-2 hover:text-black";
+---
+
+<main class="mx-auto w-full max-w-3xl px-6 py-14 md:py-20">
+  <p class="antetitulo text-rust">{texto.antetitulo}</p>
+  <h1 class="mt-5 titular text-4xl leading-[1.05] text-balance sm:text-5xl">
+    {texto.titulo}
+  </h1>
+  <p class="mt-6 text-base leading-relaxed text-black/75">{texto.intro}</p>
+
+  <nav aria-label="Apartados" class="mt-10">
+    <ol class="flex flex-col gap-2 text-sm text-black/75">
+      {texto.apartados.map((apartado, i) => (
+        <li>
+          <a
+            href={`#${apartado.id}`}
+            class="underline-offset-2 hover:text-rust hover:underline"
+          >
+            {i + 1}. {apartado.titulo}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+
+  <div class="mt-12 flex flex-col divide-y divide-taupe/45 border-y border-taupe/45">
+    {texto.apartados.map((apartado, i) => (
+      <section id={apartado.id} class="scroll-mt-28 py-8">
+        <h2 class="titulo text-2xl">
+          {i + 1}. {apartado.titulo}
+        </h2>
+        {apartado.contenido.map((bloque) =>
+          esLista(bloque) ? (
+            <ul
+              class:list={["mt-3 flex list-disc flex-col gap-2 pl-5", PARRAFO]}
+            >
+              {bloque.lista.map((punto) => (
+                <li>
+                  {trozos(punto).map((t) =>
+                    typeof t === "string" ? (
+                      t
+                    ) : (
+                      <a href={t.href} class={ENLACE}>
+                        {t.texto}
+                      </a>
+                    ),
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class:list={["mt-3", PARRAFO]}>
+              {trozos(bloque).map((t) =>
+                typeof t === "string" ? (
+                  t
+                ) : (
+                  <a href={t.href} class={ENLACE}>
+                    {t.texto}
+                  </a>
+                ),
+              )}
+            </p>
+          ),
+        )}
+      </section>
+    ))}
+  </div>
+
+  <p class="mt-8 dato text-[11px] text-black/50">
+    Última actualización: {texto.actualizado}
+  </p>
+</main>

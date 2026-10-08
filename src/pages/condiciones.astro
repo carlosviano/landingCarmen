@@ -1,15 +1,15 @@
 ---
-// /privacidad: la política de privacidad completa. El texto vive en
-// src/config/legal/privacidad.ts.
+// /condiciones: las condiciones de venta. El texto vive en
+// src/config/legal/condiciones.ts.
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/sections/Header.astro";
 import Footer from "@/sections/Footer.astro";
 import PaginaLegal from "@/components/legal/PaginaLegal.astro";
-import { PRIVACIDAD } from "@/config/legal/privacidad";
+import { CONDICIONES } from "@/config/legal/condiciones";
 ---
 
-<Layout titulo={PRIVACIDAD.titulo}>
+<Layout titulo={CONDICIONES.titulo}>
   <Header />
-  <PaginaLegal texto={PRIVACIDAD} />
+  <PaginaLegal texto={CONDICIONES} />
   <Footer />
 </Layout>

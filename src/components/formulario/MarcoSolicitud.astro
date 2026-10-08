@@ -16,6 +16,7 @@
 import { Icon } from "astro-icon/components";
 import Ondas from "@/components/Ondas.astro";
 import { BOTON, ERROR } from "@/components/formulario/estilos";
+import { AVISO_FORMULARIO as AVISO } from "@/config/legal/privacidad";
 
 interface Props {
   /** Va en `data-solicitud`: es por lo que el script de cada formulario encuentra el suyo. */
@@ -88,8 +89,13 @@ const { tipo, textos: S, whatsapp } = Astro.props;
       {/* La "primera capa" que pide el RGPD: quién, para qué, con qué base
           y dónde ejercer los derechos, justo donde se dan los datos. El resto
           va en /privacidad. La casilla sale sin marcar: el consentimiento
-          tiene que ser un gesto de quien escribe. Lleva los `data-` de Campo
-          a mano porque su texto va al lado y no encima. */}
+          tiene que ser un gesto de quien escribe: además de leer la
+          política, recoge el consentimiento explícito para las alergias, que
+          son datos de salud (ver src/config/legal/privacidad.ts). Lleva los
+          `data-` de Campo a mano porque su texto va al lado y no encima.
+
+          Los enlaces abren en otra pestaña: en esta se perdería lo que ya se
+          ha escrito en el formulario. */}
       <div data-campo="privacidad" class="flex flex-col gap-3 sm:col-span-2">
         <label class="flex items-start gap-3 text-sm leading-relaxed text-black/75">
           <input
@@ -98,23 +104,29 @@ const { tipo, textos: S, whatsapp } = Astro.props;
             class="mt-1 size-4.5 shrink-0 accent-rust"
           />
           <span>
-            He leído la{" "}
+            {AVISO.casilla.antes}
             <a
               href="/privacidad"
+              target="_blank"
+              rel="noopener"
               class="text-rust underline underline-offset-2 hover:text-black"
             >
-              política de privacidad
-            </a>{" "}
-            y acepto que se usen estos datos para responder a mi solicitud.
+              {AVISO.casilla.privacidad}
+            </a>
+            {AVISO.casilla.entre}
+            <a
+              href="/condiciones"
+              target="_blank"
+              rel="noopener"
+              class="text-rust underline underline-offset-2 hover:text-black"
+            >
+              {AVISO.casilla.condiciones}
+            </a>
+            {AVISO.casilla.despues}
           </span>
         </label>
         <p id="privacidad-error" data-error hidden class={ERROR}></p>
-        <p class="text-xs leading-relaxed text-black/60">
-          Responsable: [NOMBRE O RAZÓN SOCIAL]. Finalidad: responder a tu
-          solicitud y prepararte un presupuesto. Base: tu consentimiento. No se
-          ceden a terceros salvo obligación legal. Puedes acceder, rectificar o
-          suprimir tus datos escribiendo a [EMAIL DE CONTACTO].
-        </p>
+        <p class="text-xs leading-relaxed text-black/60">{AVISO.resumen}</p>
       </div>
 
       <p class="flex items-start gap-3 rounded-2xl bg-white/70 p-4 text-sm leading-relaxed text-black/75 ring-1 ring-taupe/45 sm:col-span-2">

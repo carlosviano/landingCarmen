@@ -68,6 +68,33 @@ const WHATSAPP_URL = `https://wa.me/${WHATSAPP_VISIBLE.replace(/\D/g, "")}`;
 // cambia la dirección (src/assets/README.md explica cómo).
 const COORDENADAS = { lat: 36.7212034, lon: -4.3645263 };
 
+// Quién está detrás de la web a efectos legales: Carmela, como autónoma. Lo
+// leen el aviso legal, las condiciones, la privacidad y el aviso junto a los
+// formularios, así que se escribe una vez y aquí.
+//
+// TODO: datos reales. Mientras quede uno entre corchetes no se publica (ver
+// README, "Textos legales").
+export const TITULAR = {
+  /** Nombre y apellidos, como en el alta de autónomos. */
+  nombre: "[NOMBRE Y APELLIDOS]",
+  nif: "[NIF]",
+  /** El correo para reclamaciones y derechos de privacidad. */
+  email: "[EMAIL DE CONTACTO]",
+  /** Número de inscripción del obrador en el registro sanitario. */
+  registroSanitario: "[Nº REGISTRO SANITARIO]",
+  /** El domicilio es el del obrador, en una línea. */
+  domicilio: `${DIRECCION.calle}, ${DIRECCION.portal.toLowerCase()}, ${DIRECCION.cp} ${DIRECCION.ciudad}`,
+} as const;
+
+// Las páginas legales, para el pie. Entran aquí cuando su texto existe: un
+// enlace a una página que no está es peor que no tenerlo.
+export const LEGAL: NavItem[] = [
+  { label: "Aviso legal", href: "/aviso-legal" },
+  { label: "Condiciones", href: "/condiciones" },
+  { label: "Privacidad", href: "/privacidad" },
+  { label: "Cookies", href: "/cookies" },
+];
+
 export const SITE = {
   nombre: "Estimada Carmela",
   // Antetítulo de la dirección en el pie.
