@@ -15,8 +15,14 @@
 // va en sand, como el CTA de la cabecera, mientras invita a abrir; abierta,
 // pasa a borde rust para que no compita con el "Quiero algo parecido" del
 // final de la cinta. Sin JS la cinta sale abierta y el botón no aparece.
+//
+// Pulsar una foto de la cinta la abre a pantalla completa en el lightbox
+// (components/Lightbox.astro), el mismo de /personalizadas, con todas las
+// fotos del montaje y el "Quiero algo parecido" abajo. Los vídeos no entran:
+// de momento son huecos.
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
+import Lightbox from "@/components/Lightbox.astro";
 import { EVENTOS, type Montaje } from "@/config/eventos";
 import { fotoDe } from "@/lib/fotos";
 
@@ -63,13 +69,20 @@ if ((montaje.galeria?.length ?? 0) > MAX_PIEZAS) {
 }
 
 // `fotoDe` revienta el build si el archivo no existe, y en una pieza `foto`
-// el nombre es obligatorio: el `!` es seguro.
+// el nombre es obligatorio: el `!` es seguro. Cada foto se apunta su sitio
+// entre las fotos (sin contar vídeos): es la que abre en el lightbox.
+let nFoto = 0;
 const piezas = (montaje.galeria ?? []).map((pieza) =>
-  pieza.tipo === "foto" ? { ...pieza, src: fotoDe(pieza.archivo)! } : pieza,
+  pieza.tipo === "foto"
+    ? { ...pieza, src: fotoDe(pieza.archivo)!, indice: nFoto++ }
+    : pieza,
+);
+const fotos = piezas.flatMap((p) =>
+  p.tipo === "foto" ? [{ src: p.src, alt: p.alt }] : [],
 );
 
 // Lo que suele traer cada montaje es la cinta: "4 fotos · 1 vídeo".
-const nFotos = piezas.filter((p) => p.tipo === "foto").length;
+const nFotos = fotos.length;
 const nVideos = piezas.length - nFotos;
 const resumen = [
   nFotos && `${nFotos} ${nFotos === 1 ? "foto" : "fotos"}`,
@@ -78,14 +91,16 @@ const resumen = [
   .filter(Boolean)
   .join(" · ");
 
-// El id enlaza el botón con su cinta (aria-controls). Sale del título, que es
-// único en la lista.
-const idCinta = `cinta-${montaje.titulo
+// Los ids enlazan el botón con su cinta (aria-controls) y las fotos con su
+// lightbox. Salen del título, que es único en la lista.
+const slug = montaje.titulo
   .normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "")
   .toLowerCase()
   .replace(/[^a-z0-9]+/g, "-")
-  .replace(/^-|-$/g, "")}`;
+  .replace(/^-|-$/g, "");
+const idCinta = `cinta-${slug}`;
+const idLightbox = `lightbox-${slug}`;
 
 // En móvil y tablet la cinta es un carrusel que se desliza con el dedo:
 // todas las piezas a la misma altura, las fotos en 3:4 y los vídeos en 9:16
@@ -219,10 +234,15 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
                 <li class="shrink-0 snap-start lg:min-w-0">
                   <figure>
                     {pieza.tipo === "foto" ? (
-                      <div
+                      <button
+                        type="button"
+                        data-abre-lightbox={idLightbox}
+                        data-foto={pieza.indice}
+                        aria-haspopup="dialog"
+                        aria-label={`Ver en grande: ${pieza.alt}`}
                         class:list={[
                           ALTO_PIEZA,
-                          "aspect-[3/4] overflow-hidden rounded-2xl bg-taupe/15",
+                          "group relative block aspect-[3/4] cursor-zoom-in overflow-hidden rounded-2xl bg-taupe/15",
                         ]}
                       >
                         <Image
@@ -237,9 +257,19 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
                               ? `object-position:${pieza.enfoque}`
                               : undefined
                           }
-                          class="h-full w-full object-cover object-center"
+                          class="h-full w-full object-cover object-center transition-[scale] duration-300 group-hover:scale-[1.03] motion-reduce:transition-none"
                         />
-                      </div>
+                        {/* Como en el escaparate: que se vea que se amplía. */}
+                        <span
+                          class="absolute right-2.5 bottom-2.5 grid size-8 place-items-center rounded-full bg-linen/90 text-black shadow-md shadow-black/15 transition-colors group-hover:bg-white noscript:hidden lg:right-3.5 lg:bottom-3.5 lg:size-9"
+                          aria-hidden="true"
+                        >
+                          <Icon
+                            name="lucide:maximize-2"
+                            class="size-3.5 lg:size-4"
+                          />
+                        </span>
+                      </button>
                     ) : (
                       <div
                         role="img"
@@ -292,6 +322,17 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
     </div>
   )}
 </article>
+
+{/* Fuera del <article>: la cinta cerrada es `inert`, y dentro de ella el
+    lightbox también lo sería. */}
+{fotos.length > 0 && (
+  <Lightbox
+    id={idLightbox}
+    titulo={montaje.titulo}
+    fotos={fotos}
+    accion={{ texto: C.cta, href: "#solicitud" }}
+  />
+)}
 
 <script>
   for (const tarjeta of document.querySelectorAll<HTMLElement>(

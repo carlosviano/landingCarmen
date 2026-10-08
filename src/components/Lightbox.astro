@@ -6,8 +6,9 @@
 // ("Pedir esta tarta"): quien mira las fotos en grande está a punto de
 // decidirse.
 //
-// Genérico: recibe las fotos, un título y la acción, igual que
-// TarjetaEscaparate, que es quien lo usa. Lo abre cualquier botón con
+// Genérico: recibe las fotos, un título y la acción. Lo usan las tarjetas de
+// escaparate (/personalizadas) y la cinta "Ver más" de /eventos, y tiene que
+// verse y portarse igual en los dos sitios: los cambios, aquí. Lo abre cualquier botón con
 // `data-abre-lightbox="<id>"`, en la foto que diga su `data-foto` (la que se
 // esté viendo). Uno por pieza, con sus fotos hechas en el build: cerrado no
 // se pinta y sus imágenes, en lazy, no cargan hasta que se abre.
@@ -18,12 +19,16 @@
 import type { HTMLAttributes } from "astro/types";
 import { Image } from "astro:assets";
 import { Icon } from "astro-icon/components";
-import type { FotoEscaparate } from "@/components/TarjetaEscaparate.astro";
+
+export interface FotoLightbox {
+  src: ImageMetadata;
+  alt: string;
+}
 
 interface Props {
   id: string;
   titulo: string;
-  fotos: FotoEscaparate[];
+  fotos: FotoLightbox[];
   /** El botón de abajo. Lo que no sea `texto` va tal cual al <a>. */
   accion?: { texto: string; href: string } & Omit<
     HTMLAttributes<"a">,
@@ -56,7 +61,7 @@ const FLECHA =
         {varias && (
           <span
             data-contador
-            class="dato text-[11px] text-linen/60 tabular-nums"
+            class="shrink-0 dato text-[11px] whitespace-nowrap text-linen/60 tabular-nums"
           >
             1 / {fotos.length}
           </span>
