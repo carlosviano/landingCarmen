@@ -51,12 +51,16 @@ const margenTira = `max(0.75rem, (100% - 80rem) / 2 + 1.5rem - ${ADELANTO})`;
       style={`scroll-padding-inline:${margenTira}`}
       class="snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none] motion-safe:scroll-smooth [&::-webkit-scrollbar]:hidden"
     >
+      {/* `w-max`: la lista mide lo que sus fotos. Con el ancho de la tira, las
+          fotos la desbordaban y el padding del final quedaba antes de la
+          última, que se pegaba al borde. Por eso el ancho móvil va en `vw` y
+          no en %: el % sería de la propia lista. */}
       <ul
-        class="flex gap-4 py-3 sm:gap-6"
+        class="flex w-max gap-4 py-3 sm:gap-6"
         style={`padding-inline:${margenTira}`}
       >
         {fotos.map((foto) => (
-          <li class="w-[78%] shrink-0 snap-start sm:w-[20rem] lg:w-[23rem]">
+          <li class="w-[78vw] shrink-0 snap-start sm:w-[20rem] lg:w-[23rem]">
             <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25">
               <Image
                 src={foto.src}
