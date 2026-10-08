@@ -13,7 +13,7 @@ import AddressLink from "@/components/header/AddressLink.astro";
 import Brand from "@/components/header/Brand.astro";
 import NavLinks from "@/components/header/NavLinks.astro";
 import SocialLinks from "@/components/header/SocialLinks.astro";
-import { SITE } from "@/config/site";
+import { LEGAL, SITE } from "@/config/site";
 
 // Año de arranque, fijo: no es la fecha de hoy.
 const DESDE = 2026;
@@ -46,13 +46,18 @@ const DESDE = 2026;
     </div>
 
     <p class="mt-10 border-t border-sand/15 pt-6 text-center dato text-xs text-sand/80 md:mt-14">
-      {SITE.nombre} · trabajando desde {DESDE} ·
-      <a
-        href="/privacidad"
-        class="underline-offset-2 hover:text-linen hover:underline"
-      >
-        Privacidad
-      </a>
+      {SITE.nombre} · trabajando desde {DESDE}
+      {LEGAL.map(({ label, href }) => (
+        <>
+          {" · "}
+          <a
+            href={href}
+            class="underline-offset-2 hover:text-linen hover:underline"
+          >
+            {label}
+          </a>
+        </>
+      ))}
     </p>
   </div>
 </footer>
