@@ -10,7 +10,7 @@
 //
 // Sólo se monta si la tarta está anotada (`estaAnotada`): todos los
 // componentes con `punto`.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import type { Tarta } from "@/config/catalogo";
 
 interface Props {
@@ -28,7 +28,7 @@ const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
 
 <figure class="anotada" style={`--y0:${primerPunto}`}>
   <div class="lienzo" style={`--ar: ${recorte.width} / ${recorte.height}`}>
-    <Image
+    <Foto
       src={recorte}
       alt={tarta.alt}
       widths={[560, 840, 1120, 1400]}

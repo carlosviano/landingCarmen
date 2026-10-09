@@ -30,7 +30,7 @@
 // alto de su fila (`h-full`; la celda de la rejilla y el <li> de la tira ya se
 // estiran solos) y el filete con el precio se va al fondo con `mt-auto`. El
 // hueco que sobra queda entre el nombre y el filete, nunca debajo.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import FotoPendiente from "@/components/FotoPendiente.astro";
 import type { Tarta } from "@/config/catalogo";
 import { precioVisible } from "@/lib/pedido";
@@ -105,7 +105,7 @@ const SIZES = compacta
       metida en una tarjeta. */}
   <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15">
     {foto ? (
-      <Image
+      <Foto
         src={foto}
         alt={tarta.alt}
         widths={ANCHOS}
@@ -118,7 +118,7 @@ const SIZES = compacta
       /* Sin foto con fondo pero con recorte: la tarta entera, sin recortar,
           centrada sobre el marco. `object-contain` porque un recorte apaisado
           en un hueco 4:5 con `cover` perdería media tarta. */
-      <Image
+      <Foto
         src={recorte}
         alt={tarta.alt}
         widths={ANCHOS}

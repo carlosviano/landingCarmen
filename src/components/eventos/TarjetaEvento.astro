@@ -20,7 +20,7 @@
 // (components/Lightbox.astro), el mismo de /personalizadas, con todas las
 // fotos del montaje y el "Quiero algo parecido" abajo. Los vídeos no entran:
 // de momento son huecos.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { Icon } from "astro-icon/components";
 import Lightbox from "@/components/Lightbox.astro";
 import { EVENTOS, type Montaje } from "@/config/eventos";
@@ -135,7 +135,7 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
       !fotoIzquierda && "md:order-2",
     ]}
   >
-    <Image
+    <Foto
       src={foto}
       alt={montaje.alt}
       widths={ANCHOS}
@@ -245,7 +245,7 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
                           "group relative block aspect-[3/4] cursor-zoom-in overflow-hidden rounded-2xl bg-taupe/15",
                         ]}
                       >
-                        <Image
+                        <Foto
                           src={pieza.src}
                           alt={pieza.alt}
                           widths={[300, 450, 600, 800]}

@@ -31,7 +31,7 @@ import FichaAnotada from "@/components/catalogo/FichaAnotada.astro";
 import ListaComponentes from "@/components/catalogo/ListaComponentes.astro";
 import OtrasTartas from "@/components/catalogo/OtrasTartas.astro";
 import Pedido from "@/components/catalogo/Pedido.astro";
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { CATALOGO, type Tarta } from "@/config/catalogo";
 import { conFotos, estaAnotada, otrasTartas } from "@/lib/tartas";
 
@@ -105,7 +105,7 @@ const foto = anotada ? null : fotos.foto;
               ) : (
                 <div class="mx-auto w-full max-w-[26rem] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25 lg:max-w-[27rem]">
                   {foto ? (
-                    <Image
+                    <Foto
                       src={foto}
                       alt={tarta.alt}
                       widths={[420, 640, 900]}

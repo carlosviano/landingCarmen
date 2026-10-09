@@ -17,7 +17,7 @@
 // atrapado, Escape y la página de detrás inerte. El fondo es el casi negro
 // cálido de la web (el del velo de la bienvenida), no negro puro.
 import type { HTMLAttributes } from "astro/types";
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { Icon } from "astro-icon/components";
 
 export interface FotoLightbox {
@@ -90,7 +90,7 @@ const FLECHA =
             }
             class="flex h-full w-full shrink-0 snap-center items-center justify-center px-4 py-2 md:px-24"
           >
-            <Image
+            <Foto
               src={foto.src}
               alt={foto.alt}
               widths={[640, 960, 1280, 1920]}

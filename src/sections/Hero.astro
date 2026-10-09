@@ -75,7 +75,7 @@
 // al primero. En lg no se queda debajo de la foto: cruza por encima de su canto
 // y se apaga con el degradado, para que la imagen parezca salir de detrás del
 // patrón (el detalle, en la nota del svg).
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import Hero from "@/components/Hero.astro";
 import fotoHero from "@/assets/images/tartaRosaPintando2.jpg";
 import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
@@ -215,7 +215,7 @@ const sizesFoto = `(min-width: 1024px) ${anchoCubierto(fotoHero, "50vw", "(100vh
       solo decide entre hermanos posicionados). En lg no se nota porque manda
       el lg:absolute; el estropicio se ve solo por debajo de lg. */}
   <div class="relative min-h-48 flex-1 overflow-hidden lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-    <Image
+    <Foto
       src={fotoHero}
       alt={HERO.fotoAlt}
       widths={ANCHOS_GRANDES}

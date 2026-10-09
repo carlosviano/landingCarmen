@@ -70,6 +70,8 @@ para conocer las utilidades propias). Los `.md` quedan fuera.
 - Lógica pura en `src/lib/`. `lib/tartas.ts` es sólo de servidor (importa
   imágenes); lo que necesita también el navegador va en `lib/pedido.ts`.
 - Componentes por dominio en `src/components/<dominio>/`.
+- Fotos con `Foto.astro` (AVIF con webp de respaldo), nunca con el `<Image>`
+  de Astro directamente. Ver `src/assets/README.md`.
 
 ## Tipografía
 
