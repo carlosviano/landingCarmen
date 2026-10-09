@@ -18,9 +18,9 @@ import { SERVICIOS, type Servicio } from "./site";
 // medida y eventos.
 export const HERO = {
   antetitulo: "Alta pastelería · Málaga",
-  titular: "La estética y el sabor pesan lo mismo",
+  titular: "Cuando la estética y el sabor van de la mano",
   entradilla:
-    "Tartas de temporada, tartas a tu medida y mesas dulces para tus celebraciones. Cada pieza se hace una a una, para el día concreto que celebras.",
+    "Tartas de temporada, tartas a tu medida y eventos personalizados. Cada pieza se hace una a una, para el día concreto que celebras.",
   // Va en el hero porque es la primera pregunta de quien encarga una tarta,
   // y porque un encargo sin plazo a la vista se lee como "para hoy".
   // La leyenda sobre los botones: dice que se pide desde ahí.

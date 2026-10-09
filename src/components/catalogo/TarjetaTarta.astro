@@ -89,7 +89,9 @@ const ANCHOS = compacta ? [160, 320, 480] : [200, 320, 440, 640];
 
 // La franja de abajo: para cuántos y desde cuánto. Los tamaños van de menor a
 // mayor, así que el primero es el más barato.
-const personas = `${tarta.tamanos.map((tamano) => tamano.personas).join(" · ")} personas`;
+const personas = tarta.tamanos[0].personas
+  ? `${tarta.tamanos.map((tamano) => tamano.personas).join(" · ")} personas`
+  : "Tamaño único";
 const desde = `${tarta.tamanos.length > 1 ? "desde " : ""}${precioVisible(tarta.tamanos[0].precio)}`;
 const SIZES = compacta
   ? "(min-width: 1024px) 15rem, 10rem"

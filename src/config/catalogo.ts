@@ -15,8 +15,24 @@
  * ficha medio anotada parece rota.
  */
 export interface ComponenteTarta {
+  /**
+   * El nombre en escritorio, CORTO: debajo va `descripcionCorta`. Lo que ya
+   * dice el nombre de la tarta no se repite: en la de chocolate, "Glaseado" y
+   * no "Glaseado de chocolate negro".
+   */
   etiqueta: string;
+  /**
+   * Lo que cuenta de esa parte, bajo el nombre. Sólo en escritorio y en la
+   * lista de las fichas sin recorte: en móvil la ficha anotada no pinta
+   * descripciones (ver `etiquetaMovil`).
+   */
   descripcionCorta: string;
+  /**
+   * El nombre en móvil, donde va sin descripción: más completo que
+   * `etiqueta` ("Glaseado espejo de chocolate negro" y no "Glaseado"). Hasta
+   * dos líneas. Sin él, en móvil sale `etiqueta`.
+   */
+  etiquetaMovil?: string;
   /**
    * Dónde acaba la línea, en % del recorte: x de izquierda a derecha, y de
    * arriba abajo. En porcentaje y no en píxeles para que siga apuntando al
@@ -26,7 +42,7 @@ export interface ComponenteTarta {
    *  - En móvil sólo se ve el 45 % izquierdo del lienzo (la tarta sangra por
    *    la derecha), así que x tiene que quedar por debajo de ~40.
    *  - Cada etiqueta va a la altura de su punto, así que entre dos puntos
-   *    tiene que haber al menos ~14 de y o las etiquetas se pisan en móvil.
+   *    tiene que haber al menos ~10 de y o las etiquetas se pisan.
    *  - El punto cae SOBRE lo que nombra, nunca en el aire ni en el borde.
    */
   punto?: { x: number; y: number };
@@ -39,8 +55,12 @@ export interface ComponenteTarta {
 
 /** Un tamaño de encargo: para cuántos es y cuánto cuesta. */
 export interface TamanoTarta {
-  /** Texto corto con guion largo: "4–6". La palabra "personas" la pone quien pinta. */
-  personas: string;
+  /**
+   * Texto corto con guion largo: "4–6". La palabra "personas" la pone quien
+   * pinta. Sin él (una tarta de tamaño único que no dice para cuántos es), la
+   * tarjeta pone "Tamaño único" y el mensaje del pedido no habla de personas.
+   */
+  personas?: string;
   /**
    * En euros y como NÚMERO: el total del pedido lo multiplica por la cantidad.
    * Se pinta con `precioVisible()`, que lo pone entre corchetes mientras
@@ -98,7 +118,10 @@ export interface Tarta {
   tamanos: [TamanoTarta, ...TamanoTarta[]];
   /** Texto corto: "Nevera, 24 h", "Fuera de nevera, 2 días"... */
   conservacion: string;
-  /** De 2 a 4. Por encima de 4 las líneas de la ficha se apelotonan. */
+  /**
+   * De 2 a 6. Con más, las líneas de la ficha se apelotonan. Con 5 o 6, las
+   * descripciones de escritorio tienen que caber: comprobarlo a 1440 px.
+   */
   componentes: ComponenteTarta[];
   /** La descripción de la ficha para buscadores y al compartir el enlace (no se pinta en la página). Dos o tres frases. */
   descripcion: string;
@@ -118,10 +141,9 @@ export interface Catalogo {
 // las resuelve `fotoDe()` (src/lib/fotos.ts), que revienta el build si el
 // nombre no existe. Ver src/assets/README.md para cómo se hacen.
 //
-// Ahora mismo la carta tiene SEIS tartas: las que tienen recorte sin fondo.
+// Ahora mismo la carta tiene SIETE tartas, todas con recorte sin fondo.
 // Las siete de la maqueta original (con sus textos inventados) se quitaron a
-// la espera de fotos; están en el historial de git. Las fichas se irán
-// añadiendo según lleguen los recortes.
+// la espera de fotos; están en el historial de git. Las fichas se irán añadiendo según lleguen los recortes.
 export const CATALOGO: Catalogo = {
   etiqueta: "Nuestra carta",
   tituloPagina: "La carta",
@@ -132,13 +154,13 @@ export const CATALOGO: Catalogo = {
       // El id se queda con el nombre antiguo porque esta ficha ya está
       // publicada: cambiarlo rompería los enlaces compartidos.
       id: "limon-y-merengue",
-      nombre: "Tartaleta de limón",
+      nombre: "Tartaleta de lima",
       // TODO: foto con fondo para la tarjeta. Mientras no haya, la tarjeta
       // pinta el recorte sobre el fondo.
       archivo: null,
       // En el lienzo común (ver `Tarta.recorte`).
       recorte: "limon-ficha.png",
-      alt: "Tarta redonda de base de galleta gruesa, cubierta de picos de merengue con ralladura de lima.",
+      alt: "Tartaleta redonda de base de sablé, cubierta de picos de merengue con ralladura de lima.",
       tamanos: [
         { personas: "4–6", precio: 25 },
         { personas: "8–10", precio: 42 },
@@ -147,22 +169,37 @@ export const CATALOGO: Catalogo = {
       componentes: [
         {
           etiqueta: "Ralladura de lima",
-          descripcionCorta: "Por encima del merengue",
-          punto: { x: 22.5, y: 23 },
+          descripcionCorta: "Por encima del merengue, para aportar aroma",
+          punto: { x: 22.5, y: 22 },
         },
         {
           etiqueta: "Merengue",
-          descripcionCorta: "En picos, sobre el limón",
-          punto: { x: 8, y: 45 },
+          etiquetaMovil: "Merengue suizo",
+          descripcionCorta: "Merengue suizo escudillado en picos",
+          punto: { x: 8, y: 36 },
         },
         {
-          etiqueta: "Tartaleta de limón",
-          descripcionCorta: "La base, rellena de limón",
-          punto: { x: 14, y: 72 },
+          etiqueta: "Crema de lima",
+          descripcionCorta: "Para aportar ese punto cremoso y sedoso",
+          punto: { x: 6, y: 50 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Gel de lima",
+          descripcionCorta:
+            "Muy poco, sobre la base: lo justo para aportar ese punto de acidez",
+          punto: { x: 6, y: 64 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Sablé de vainilla",
+          etiquetaMovil: "Base de sablé de vainilla",
+          descripcionCorta: "Base de sablé blanco, estilo tartaleta",
+          punto: { x: 14, y: 77 },
         },
       ],
       descripcion:
-        "Tartaleta de limón cubierta de merengue y terminada con ralladura de lima.",
+        "Tartaleta de sablé de vainilla con gel y crema de lima, cubierta de merengue suizo y ralladura de lima.",
     },
     {
       id: "tartaleta-de-chocolate",
@@ -171,7 +208,7 @@ export const CATALOGO: Catalogo = {
       archivo: null,
       // En el lienzo común (ver `Tarta.recorte`).
       recorte: "chocolate-ficha.png",
-      alt: "Tarta redonda de base de cacao, rellena de chocolate brillante hasta el borde y espolvoreada de cacao en polvo.",
+      alt: "Tartaleta redonda de sablé de chocolate con una cúpula de chocolate glaseada y brillante, espolvoreada de cacao.",
       tamanos: [
         { personas: "4–6", precio: 27 },
         { personas: "8–10", precio: 45 },
@@ -180,28 +217,45 @@ export const CATALOGO: Catalogo = {
       componentes: [
         {
           etiqueta: "Cacao espolvoreado",
-          descripcionCorta: "Por encima",
-          punto: { x: 22, y: 24 },
+          descripcionCorta: "Por encima, como toque final",
+          punto: { x: 20, y: 20 },
         },
         {
-          etiqueta: "Mousse de chocolate negro",
-          descripcionCorta: "La capa de arriba",
-          punto: { x: 8, y: 42 },
+          etiqueta: "Glaseado",
+          etiquetaMovil: "Glaseado espejo de chocolate negro",
+          descripcionCorta:
+            "Glaseado espejo de chocolate negro 70,5%, para aportar brillo",
+          punto: { x: 6, y: 35 },
         },
         {
-          etiqueta: "Cremoso de chocolate negro",
-          descripcionCorta: "Por dentro, bajo la mousse",
-          punto: { x: 12, y: 57 },
+          etiqueta: "Cúpula",
+          etiquetaMovil: "Cúpula de chocolate negro",
+          descripcionCorta: "Semiesfera de chocolate negro 70,5%",
+          punto: { x: 10, y: 48 },
+        },
+        {
+          etiqueta: "Cremoso",
+          etiquetaMovil: "Cremoso de pastelera de chocolate",
+          descripcionCorta:
+            "De pastelera de chocolate: suaviza sin pasar desapercibido",
+          punto: { x: 5, y: 60 },
           dentro: true,
         },
         {
-          etiqueta: "Tartaleta de chocolate negro",
-          descripcionCorta: "La base",
-          punto: { x: 12, y: 78 },
+          etiqueta: "Sal Maldon",
+          descripcionCorta: "Un toque sobre el cremoso",
+          punto: { x: 6, y: 72 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Sablé de chocolate",
+          etiquetaMovil: "Base de sablé de chocolate",
+          descripcionCorta: "Base de sablé de chocolate, estilo tartaleta",
+          punto: { x: 14, y: 84 },
         },
       ],
       descripcion:
-        "Tartaleta de chocolate negro al 70,5% con cremoso y mousse de chocolate negro, espolvoreada de cacao.",
+        "Tartaleta de sablé de chocolate con cremoso de chocolate y un toque de sal Maldon, bajo una cúpula de chocolate negro al 70,5% con glaseado espejo y cacao espolvoreado.",
     },
     {
       id: "pavlova-de-melocoton",
@@ -221,28 +275,33 @@ export const CATALOGO: Catalogo = {
       componentes: [
         {
           etiqueta: "Melocotón",
-          descripcionCorta: "Por encima",
+          etiquetaMovil: "Melocotón natural",
+          descripcionCorta: "Fruta natural como decoración",
           punto: { x: 25, y: 25.5 },
         },
         {
           etiqueta: "Crema pastelera",
-          descripcionCorta: "Con chips de chocolate",
+          etiquetaMovil: "Crema pastelera con chips de chocolate",
+          descripcionCorta:
+            "Con chips de chocolate: la suavidad de la crema con un toque crujiente",
           punto: { x: 33, y: 45 },
         },
         {
-          etiqueta: "Bizcocho",
-          descripcionCorta: "Por dentro",
+          etiqueta: "Chantilly",
+          etiquetaMovil: "Chantilly de vainilla",
+          descripcionCorta: "Crema de nata a la vainilla, en su justa medida",
           punto: { x: 16, y: 61 },
           dentro: true,
         },
         {
           etiqueta: "Merengue seco",
-          descripcionCorta: "Por fuera",
+          etiquetaMovil: "Base de merengue seco",
+          descripcionCorta: "Merengue seco al horno, como base",
           punto: { x: 9, y: 78 },
         },
       ],
       descripcion:
-        "Merengue seco, bizcocho y crema pastelera con chips de chocolate, coronada de melocotón.",
+        "Merengue seco con chantilly de vainilla y crema pastelera con chips de chocolate, coronada de melocotón.",
     },
     {
       id: "tarta-de-la-abuela",
@@ -250,26 +309,54 @@ export const CATALOGO: Catalogo = {
       // TODO: foto con fondo para la tarjeta.
       archivo: null,
       // En el lienzo común (ver `Tarta.recorte`).
-      recorte: "galleta-ficha.png",
-      alt: "Galleta gigante redonda, dorada y con azúcar por encima, salpicada de pepitas de chocolate negro y con leche, sobre una base de cartón.",
+      recorte: "abuela-ficha.png",
+      alt: "Tarta redonda cubierta de chocolate con leche, con la silueta de un muñeco de jengibre recortada en el centro y el borde de color galleta.",
       tamanos: [
         { personas: "4–6", precio: 27 },
         { personas: "8–10", precio: 45 },
       ],
-      conservacion: "Fuera de nevera, 3 días",
+      // TODO: confirmar con Carmen. La de antes ("Fuera de nevera, 3 días")
+      // era la de la galleta.
+      conservacion: "Nevera, 48 h",
+      // Arriba se ven el muñeco y el pistoleado; las tres capas de dentro se
+      // marcan sobre el borde, que es lo que las tapa.
       componentes: [
         {
-          etiqueta: "Cremoso de chocolate",
-          descripcionCorta: "Por encima",
-          punto: { x: 16, y: 34 },
+          etiqueta: "Muñeco de jengibre",
+          etiquetaMovil: "Muñeco de jengibre de chocolate",
+          descripcionCorta: "De chocolate, para transportarte a la infancia",
+          punto: { x: 37, y: 30 },
+        },
+        {
+          etiqueta: "Pistoleado",
+          etiquetaMovil: "Pistoleado de chocolate con leche",
+          descripcionCorta: "De chocolate con leche, por fuera",
+          punto: { x: 12, y: 45 },
         },
         {
           etiqueta: "Mousse de galleta",
-          descripcionCorta: "El cuerpo de la tarta",
-          punto: { x: 13, y: 62 },
+          etiquetaMovil: "Mousse con trocitos de galleta",
+          descripcionCorta: "Con trocitos de galleta",
+          punto: { x: 6, y: 58 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Cremoso",
+          etiquetaMovil: "Cremoso de chocolate con leche",
+          descripcionCorta: "De chocolate con leche, en el interior",
+          punto: { x: 8, y: 69 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Bizcocho",
+          etiquetaMovil: "Base de bizcocho",
+          descripcionCorta: "La base",
+          punto: { x: 14, y: 79 },
+          dentro: true,
         },
       ],
-      descripcion: "Mousse de galleta con cremoso de chocolate.",
+      descripcion:
+        "Mousse de galleta con trocitos, cremoso de chocolate con leche y bizcocho, con pistoleado de chocolate con leche y un muñeco de jengibre de chocolate.",
     },
     {
       id: "nueces-de-macadamia",
@@ -283,28 +370,54 @@ export const CATALOGO: Catalogo = {
       // Sólo se hace en el tamaño grande.
       tamanos: [{ personas: "8–10", precio: 47 }],
       conservacion: "Nevera, 48 h",
-      // Las nueces no se ven en la foto, así que van con el toffee y no con
-      // un punto propio: tres puntos separados caben en la tarta, cuatro se
-      // pisarían.
+      // La tarta es baja (del 25 al 78 % del lienzo en alto) y lleva seis
+      // capas, así que los puntos van más juntos que en las demás. Las capas
+      // de dentro se marcan sobre el aro, que es lo que las tapa.
       componentes: [
         {
+          etiqueta: "Glaseado dorado",
+          etiquetaMovil: "Glaseado dorado con oro",
+          descripcionCorta: "Con oro, para dar luz",
+          punto: { x: 30, y: 27 },
+        },
+        {
+          etiqueta: "Mousse",
+          etiquetaMovil: "Mousse de chocolate blanco",
+          descripcionCorta:
+            "De chocolate blanco, para los no tan amantes del chocolate",
+          punto: { x: 4, y: 37 },
+          dentro: true,
+        },
+        {
           etiqueta: "Toffee",
-          descripcionCorta: "Con nueces de macadamia",
-          punto: { x: 24, y: 29 },
+          descripcionCorta: "Aporta ese toque de caramelo",
+          punto: { x: 3, y: 47 },
+          dentro: true,
         },
         {
-          etiqueta: "Vainilla",
-          descripcionCorta: "Bajo el toffee",
-          punto: { x: 6, y: 43 },
+          etiqueta: "Praliné",
+          etiquetaMovil: "Praliné de macadamia",
+          descripcionCorta:
+            "De nueces de macadamia, que aportan el toque salado",
+          punto: { x: 4, y: 57 },
+          dentro: true,
         },
         {
-          etiqueta: "Borde de chocolate blanco",
-          descripcionCorta: "Por fuera",
-          punto: { x: 13, y: 65 },
+          etiqueta: "Bizcocho",
+          etiquetaMovil: "Doble bizcocho genovés",
+          descripcionCorta: "Doble bizcocho genovés: dos capas",
+          punto: { x: 7, y: 66.5 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Borde",
+          etiquetaMovil: "Borde de chocolate blanco con oro",
+          descripcionCorta: "De chocolate blanco con oro, como decoración",
+          punto: { x: 34, y: 76 },
         },
       ],
       descripcion:
-        "Toffee, vainilla y nueces de macadamia, dentro de un borde de chocolate blanco.",
+        "Doble bizcocho genovés con praliné de macadamia, toffee y mousse de chocolate blanco, con glaseado dorado y un borde de chocolate blanco con oro.",
     },
     {
       id: "choux-de-avellana",
@@ -321,18 +434,73 @@ export const CATALOGO: Catalogo = {
       conservacion: "Nevera, 24 h",
       componentes: [
         {
-          etiqueta: "Masa de profiterol",
-          descripcionCorta: "Rellena de praliné",
-          punto: { x: 20, y: 20 },
+          etiqueta: "Avellana",
+          etiquetaMovil: "Avellana caramelizada",
+          descripcionCorta: "Caramelizada, como decoración",
+          punto: { x: 33, y: 10 },
         },
         {
-          etiqueta: "Mousse de avellana",
-          descripcionCorta: "Entre las dos coronas",
-          punto: { x: 19, y: 72 },
+          etiqueta: "Craquelin",
+          etiquetaMovil: "Craquelin crujiente",
+          descripcionCorta: "Fina capa de azúcar crujiente",
+          punto: { x: 20, y: 24 },
+        },
+        {
+          etiqueta: "Crema de chocolate",
+          descripcionCorta: "En la decoración y en el interior",
+          punto: { x: 10, y: 44 },
+        },
+        {
+          etiqueta: "Muselina",
+          etiquetaMovil: "Muselina de avellana",
+          descripcionCorta: "Crema de avellana y mantequilla batida",
+          punto: { x: 6, y: 59 },
+        },
+        {
+          etiqueta: "Praliné",
+          etiquetaMovil: "Praliné de avellana",
+          descripcionCorta:
+            "De avellana: la combinación perfecta de avellana y caramelo",
+          punto: { x: 8, y: 72 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Pasta choux",
+          descripcionCorta: "Una masa parecida a la del profiterol",
+          punto: { x: 25, y: 85 },
         },
       ],
       descripcion:
-        "Masa de profiterol rellena de praliné, con mousse de avellana.",
+        "Pasta choux con craquelin, rellena de muselina y praliné de avellana, con crema de chocolate y avellanas caramelizadas.",
+    },
+    {
+      id: "galleta",
+      nombre: "Galleta",
+      // TODO: foto con fondo para la tarjeta.
+      archivo: null,
+      // En el lienzo común (ver `Tarta.recorte`).
+      recorte: "galleta-ficha.png",
+      alt: "Galleta gigante redonda, dorada y con azúcar por encima, salpicada de pepitas de chocolate negro y con leche, sobre una base de cartón.",
+      // Tamaño único, sin número de personas: la tarjeta dice "Tamaño único".
+      tamanos: [{ precio: 16 }],
+      conservacion: "Fuera de nevera, 3 días",
+      componentes: [
+        {
+          etiqueta: "Tres chocolates",
+          etiquetaMovil: "Tres tipos de chocolate",
+          descripcionCorta:
+            "Tres tipos de chocolate distintos, para que te recuerde de verdad al sabor de la galleta",
+          punto: { x: 16, y: 35 },
+        },
+        {
+          etiqueta: "Masa de galleta",
+          etiquetaMovil: "Masa jugosa y crujiente",
+          descripcionCorta: "Jugosa y crujiente a la vez",
+          punto: { x: 9, y: 62 },
+        },
+      ],
+      descripcion:
+        "Pensada para que te recuerde de verdad al sabor de la galleta, con tres tipos de chocolate distintos. Jugosa y crujiente a la vez.",
     },
   ],
 };
