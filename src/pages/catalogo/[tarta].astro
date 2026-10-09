@@ -32,6 +32,7 @@ import ListaComponentes from "@/components/catalogo/ListaComponentes.astro";
 import OtrasTartas from "@/components/catalogo/OtrasTartas.astro";
 import Pedido from "@/components/catalogo/Pedido.astro";
 import Foto from "@/components/Foto.astro";
+import TextoRevelado from "@/components/TextoRevelado.astro";
 import { CATALOGO, type Tarta } from "@/config/catalogo";
 import { conFotos, estaAnotada, otrasTartas } from "@/lib/tartas";
 
@@ -96,7 +97,7 @@ const foto = anotada ? null : fotos.foto;
                 linen). Encima y nunca detrás de la foto: ahí el contraste
                 dependería de qué píxel de la tarta le tocara debajo. */}
             <h1 class="ficha-titulo text-center titular text-4xl leading-[1.12] text-balance text-rust sm:text-5xl lg:text-[3.1rem]">
-              {tarta.nombre}
+              <TextoRevelado texto={tarta.nombre} />
             </h1>
 
             <div class="ficha-foto">

@@ -104,8 +104,15 @@ const SIZES = compacta
 >
   {/* El marco es el de la galería del sitio —aspect-[4/5] y rounded-3xl—
       pero sin su anillo ni su sombra: aquí la foto va sola sobre el fondo, no
-      metida en una tarjeta. */}
-  <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15">
+      metida en una tarjeta.
+
+      Zoom y no cortina (ver "Animaciones de entrada" en global.css): en
+      /catalogo la primera fila de tartas está en pantalla al cargar y es el
+      LCP; con cortina se retrasaba hasta casi 2s. */}
+  <div
+    data-revelar="zoom"
+    class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15"
+  >
     {foto ? (
       <Foto
         src={foto}
@@ -140,6 +147,7 @@ const SIZES = compacta
       información, así que va pequeño, apagado y con aria-hidden —quien va con
       lector de pantalla ya sabe por dónde va la lista. */}
   <div
+    data-revelar
     class:list={[
       "flex items-baseline gap-2.5",
       /* El hueco mínimo hasta el filete va aquí, como padding: el margen del

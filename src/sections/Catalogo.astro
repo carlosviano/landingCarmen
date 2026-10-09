@@ -77,6 +77,7 @@ const VELO =
       ({ servicio, foto, recorte, sizes, alt, enfoque, leyenda }) => (
         <div
           id={servicio.ancla}
+          data-revelar="foto"
           class="relative h-72 scroll-mt-20 overflow-hidden bg-taupe sm:h-80 md:h-[34rem] lg:h-[43.75rem]"
         >
           <Foto
@@ -99,7 +100,10 @@ const VELO =
 
           {/* `py-4` con `text-xs` deja el botón en unos 48px de alto, por
             encima del mínimo de 44 para el pulgar. */}
-          <div class="absolute inset-0 flex flex-col items-center justify-center gap-4">
+          <div
+            data-revelar
+            class="absolute inset-0 flex flex-col items-center justify-center gap-4"
+          >
             <p class="leyenda text-linen">{leyenda}</p>
             <a
               href={servicio.ruta}

@@ -22,6 +22,7 @@
 // mapa se va a Google Maps, que es donde de verdad quiere estar.
 import { getImage } from "astro:assets";
 import { Icon } from "astro-icon/components";
+import TextoRevelado from "@/components/TextoRevelado.astro";
 import mapaLocal from "@/assets/images/mapa-local.png";
 import { CONTACTO, HORARIO, SOCIAL } from "@/config/site";
 
@@ -59,13 +60,16 @@ const mapaAncho = await getImage({
         página. Aun así lleva anillo y sombra, porque los claros de esta paleta
         se distinguen entre sí por debajo de 1.2 (ver global.css) y el color
         solo no basta para leerlo como panel. */}
-    <div class="grid overflow-hidden rounded-3xl bg-white shadow-xl shadow-black/5 ring-1 ring-taupe/25 md:grid-cols-2">
+    <div
+      data-revelar
+      class="grid overflow-hidden rounded-3xl bg-white shadow-xl shadow-black/5 ring-1 ring-taupe/25 md:grid-cols-2"
+    >
       {/* justify-center para cuando manda la altura mínima del mapa y sobra
           sitio: sin esto el texto se quedaría pegado arriba. */}
       <div class="flex flex-col justify-center p-8 sm:p-10 lg:p-14">
         <p class="antetitulo text-rust">{CONTACTO.ciudad}</p>
         <p class="mt-3 titulo text-3xl leading-tight text-balance sm:text-4xl md:text-3xl lg:text-5xl">
-          {CONTACTO.titular}
+          <TextoRevelado texto={CONTACTO.titular} />
         </p>
         <p class="mt-3 text-sm text-black/60">{CONTACTO.detalle}</p>
 

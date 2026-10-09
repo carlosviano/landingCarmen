@@ -58,6 +58,15 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
       cssVariable="--font-karla"
       preload={[{ weight: 400, style: "normal", subset: "latin" }]}
     />
+    {/* Enciende las animaciones de entrada (ver "Animaciones de entrada" en
+        global.css). En línea y en el <head> porque tiene que estar antes del
+        primer pintado: si esperara al script de abajo, que va diferido, lo
+        que hay en pantalla se pintaría, se escondería y volvería a salir.
+        Con movimiento reducido no se pone y nada se esconde. */}
+    <script is:inline>
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
+        document.documentElement.dataset.animar = "";
+    </script>
     <slot name="head" />
     <title>{title}</title>
   </head>
@@ -66,3 +75,9 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
     {bienvenida && <Bienvenida />}
   </body>
 </html>
+
+<script>
+  import { revelar } from "@/lib/revelar";
+
+  revelar();
+</script>

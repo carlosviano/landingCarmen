@@ -111,6 +111,17 @@ ondas) por `slot="fondo-franja"`. No le pongas alturas propias a un hero desde
 fuera: si las proporciones tienen que cambiar, cambian en el componente y para
 todas las páginas.
 
+## Animaciones de entrada
+
+Lo que tenga que aparecer al hacer scroll lleva `data-revelar` (sube y se
+funde), `data-revelar="foto"` en el contenedor de una foto (cortina) o, en un
+titular, `<TextoRevelado texto={...} />` dentro del h1/h2 (palabra a palabra).
+Sin librerías: `lib/revelar.ts` decide cuándo y `global.css` («Animaciones de
+entrada») el cómo. Una foto que pueda estar en pantalla al cargar (heros, las
+tarjetas de /catalogo) va con `data-revelar="zoom"`, nunca con cortina: es el
+LCP y la cortina lo retrasa hasta 2s. No se animan formularios, cabecera ni
+páginas legales.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

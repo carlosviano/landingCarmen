@@ -124,12 +124,14 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
     apiladas y no se igualan: la foto va en 4:3 y el texto crece hacia abajo. */}
 <article
   data-montaje
+  data-revelar
   class:list={[
     "grid overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/10 ring-1 ring-taupe/60 md:grid-cols-2 md:grid-rows-[34rem_auto] lg:grid-rows-[31rem_auto]",
     className,
   ]}
 >
   <div
+    data-revelar="foto"
     class:list={[
       "relative aspect-[4/3] overflow-hidden bg-taupe/15 md:aspect-auto",
       !fotoIzquierda && "md:order-2",
