@@ -54,9 +54,9 @@ export const DIRECCION: Direccion = {
 // que descartan la otra calle del mismo nombre (ver la nota de COORDENADAS).
 const DIRECCION_POSTAL = `Calle ${DIRECCION.calle}, ${DIRECCION.cp} ${DIRECCION.ciudad}`;
 
-// TODO: número real. Se escribe tal cual se quiere ver en pantalla; el enlace
-// de wa.me se saca de aquí quitando todo lo que no sea dígito.
-const WHATSAPP_VISIBLE = "+34 600 00 00 00";
+// Se escribe tal cual se quiere ver en pantalla; el enlace de wa.me se saca de
+// aquí quitando todo lo que no sea dígito. El mismo número es el teléfono.
+const WHATSAPP_VISIBLE = "+34 674 99 58 11";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_VISIBLE.replace(/\D/g, "")}`;
 
 // TODO: confirmar que es esta calle. Coordenadas del portal resueltas contra
@@ -79,7 +79,7 @@ export const TITULAR = {
   nombre: "[NOMBRE Y APELLIDOS]",
   nif: "[NIF]",
   /** El correo para reclamaciones y derechos de privacidad. */
-  email: "[EMAIL DE CONTACTO]",
+  email: "contacto@estimadacarmela.com",
   /** Número de inscripción del obrador en el registro sanitario. */
   registroSanitario: "[Nº REGISTRO SANITARIO]",
   /** El domicilio es el del obrador, en una línea. */
@@ -149,11 +149,10 @@ export const NAV: NavItem[] = [
   { label: "Contacto", href: "#contacto" },
 ];
 
-// TODO: enlaces reales de redes.
 export const SOCIAL: SocialLink[] = [
   {
     label: "Instagram",
-    href: "https://www.instagram.com/",
+    href: "https://www.instagram.com/estimadacarmela/",
     icon: "simple-icons:instagram",
   },
   {
