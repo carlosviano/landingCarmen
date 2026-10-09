@@ -420,6 +420,35 @@ export const CATALOGO: Catalogo = {
         "Doble bizcocho genovés con praliné de macadamia, toffee y mousse de chocolate blanco, con glaseado dorado y un borde de chocolate blanco con oro.",
     },
     {
+      id: "galleta",
+      nombre: "Galleta",
+      // TODO: foto con fondo para la tarjeta.
+      archivo: null,
+      // En el lienzo común (ver `Tarta.recorte`).
+      recorte: "galleta-ficha.png",
+      alt: "Galleta gigante redonda, dorada y con azúcar por encima, salpicada de pepitas de chocolate negro y con leche, sobre una base de cartón.",
+      // Tamaño único, sin número de personas: la tarjeta dice "Tamaño único".
+      tamanos: [{ precio: 16 }],
+      conservacion: "Fuera de nevera, 3 días",
+      componentes: [
+        {
+          etiqueta: "Tres chocolates",
+          etiquetaMovil: "Tres tipos de chocolate",
+          descripcionCorta:
+            "Tres tipos de chocolate distintos, para que te recuerde de verdad al sabor de la galleta",
+          punto: { x: 16, y: 35 },
+        },
+        {
+          etiqueta: "Masa de galleta",
+          etiquetaMovil: "Masa jugosa y crujiente",
+          descripcionCorta: "Jugosa y crujiente a la vez",
+          punto: { x: 9, y: 62 },
+        },
+      ],
+      descripcion:
+        "Pensada para que te recuerde de verdad al sabor de la galleta, con tres tipos de chocolate distintos. Jugosa y crujiente a la vez.",
+    },
+    {
       id: "choux-de-avellana",
       nombre: "Choux de avellana",
       // TODO: foto con fondo para la tarjeta.
@@ -472,35 +501,6 @@ export const CATALOGO: Catalogo = {
       ],
       descripcion:
         "Pasta choux con craquelin, rellena de muselina y praliné de avellana, con crema de chocolate y avellanas caramelizadas.",
-    },
-    {
-      id: "galleta",
-      nombre: "Galleta",
-      // TODO: foto con fondo para la tarjeta.
-      archivo: null,
-      // En el lienzo común (ver `Tarta.recorte`).
-      recorte: "galleta-ficha.png",
-      alt: "Galleta gigante redonda, dorada y con azúcar por encima, salpicada de pepitas de chocolate negro y con leche, sobre una base de cartón.",
-      // Tamaño único, sin número de personas: la tarjeta dice "Tamaño único".
-      tamanos: [{ precio: 16 }],
-      conservacion: "Fuera de nevera, 3 días",
-      componentes: [
-        {
-          etiqueta: "Tres chocolates",
-          etiquetaMovil: "Tres tipos de chocolate",
-          descripcionCorta:
-            "Tres tipos de chocolate distintos, para que te recuerde de verdad al sabor de la galleta",
-          punto: { x: 16, y: 35 },
-        },
-        {
-          etiqueta: "Masa de galleta",
-          etiquetaMovil: "Masa jugosa y crujiente",
-          descripcionCorta: "Jugosa y crujiente a la vez",
-          punto: { x: 9, y: 62 },
-        },
-      ],
-      descripcion:
-        "Pensada para que te recuerde de verdad al sabor de la galleta, con tres tipos de chocolate distintos. Jugosa y crujiente a la vez.",
     },
   ],
 };
