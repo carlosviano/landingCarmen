@@ -18,7 +18,7 @@ import Ondas from "@/components/Ondas.astro";
 import Hero from "@/components/Hero.astro";
 import TarjetaEvento from "@/components/eventos/TarjetaEvento.astro";
 import SolicitudEvento from "@/components/eventos/SolicitudEvento.astro";
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { Icon } from "astro-icon/components";
 import { EVENTOS } from "@/config/eventos";
 import { SOCIAL } from "@/config/site";
@@ -73,7 +73,7 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
         midan lo que midan banda y pantalla. El mb-16 de "Inicio" es el hueco
         mínimo entre los dos si la pantalla es baja. */}
     <Hero claseBanda="isolate overflow-hidden bg-black" claseFranja="bg-rust">
-      <Image
+      <Foto
         src={fotoCabecera}
         alt={EVENTOS.altCabecera}
         widths={ANCHOS_GRANDES}

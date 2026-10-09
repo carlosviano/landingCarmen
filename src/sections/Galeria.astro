@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { Icon } from "astro-icon/components";
 import { GALERIA } from "@/config/portada";
 import { anchoCubierto } from "@/lib/imagenes";
@@ -62,7 +62,7 @@ const margenTira = `max(0.75rem, (100% - 80rem) / 2 + 1.5rem - ${ADELANTO})`;
         {fotos.map((foto) => (
           <li class="w-[78vw] shrink-0 snap-start sm:w-[20rem] lg:w-[23rem]">
             <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25">
-              <Image
+              <Foto
                 src={foto.src}
                 alt={foto.alt}
                 widths={[400, 600, 800, 1000, 1400, 1800, 2200]}

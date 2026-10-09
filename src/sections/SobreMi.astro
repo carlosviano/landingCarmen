@@ -37,7 +37,7 @@
 // obliga a la fila a crecer antes de que eso pase, y entonces lo que se pierde
 // es el saliente, que es un fallo mucho más benigno. Para meter más texto,
 // subir la altura de la foto.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { SOBRE_MI } from "@/config/portada";
 import fotoSobreMi from "@/assets/images/retratoCarmenSobremi.jpg";
 import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
@@ -122,7 +122,7 @@ const sizesFoto = [
           </p>
         </div>
         <div class="relative aspect-[2/3] overflow-hidden rounded-3xl shadow-xl shadow-black/20 ring-1 ring-linen/15 lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:aspect-auto lg:h-[38rem]">
-          <Image
+          <Foto
             src={fotoSobreMi}
             alt={SOBRE_MI.fotoAlt}
             widths={ANCHOS_GRANDES}

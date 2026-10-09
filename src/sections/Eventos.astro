@@ -23,7 +23,7 @@
 // Ojo: NO va centrada en vertical en una pantalla entera. El texto empieza
 // arriba, a un `lg:pt-12` fijo, para que lo que hay encima (el díptico) y esto
 // se lean seguidos y no con un hueco que crece con la pantalla.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { EVENTOS } from "@/config/eventos";
 import { ESCAPARATE_EVENTOS } from "@/config/portada";
 import { SERVICIOS } from "@/config/site";
@@ -49,7 +49,7 @@ const foto = fotoDe(ESCAPARATE_EVENTOS.archivo)!;
         href={SERVICIOS.eventos.ruta}
         class="group relative block aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-md shadow-black/5 ring-1 ring-taupe/40 md:aspect-[2/1] lg:aspect-[3/1]"
       >
-        <Image
+        <Foto
           src={foto}
           alt={ESCAPARATE_EVENTOS.alt}
           widths={[420, 640, 860, 1080, 1280]}

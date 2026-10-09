@@ -18,7 +18,7 @@
 // Dos maquetas en una: por debajo de md se apila (imagen en franja arriba y
 // una línea por punto) y desde md va en dos columnas, con la ilustración
 // entera a la izquierda y el detalle de cada punto debajo de su titular.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { Icon } from "astro-icon/components";
 import fachada from "@/assets/images/fachada-ilustracion.jpeg";
 import { BIENVENIDA } from "@/config/bienvenida";
@@ -38,7 +38,7 @@ const VISTO = "bienvenida-vista-v1";
           deja el toldo en medio en vez de la fachada vacía de arriba. En
           escritorio la columna es casi de la proporción del dibujo (2:3) y
           apenas recorta. */}
-      <Image
+      <Foto
         src={fachada}
         alt={BIENVENIDA.fotoAlt}
         widths={[400, 800]}

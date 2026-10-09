@@ -93,11 +93,12 @@ export interface Eventos {
 export const EVENTOS: Eventos = {
   etiqueta: "Eventos",
   titulo: "Momentos para celebrar...",
-  entradilla:"Nos encargamos de endulzar esas celebraciones tan especiales, creando cada propuesta a medida para la ocasión. El lugar, la hora, las personas y cada pequeño detalle se tienen en cuenta para que todo encaje y tú solo tengas que disfrutar. ",
+  entradilla:
+    "Nos encargamos de endulzar esas celebraciones tan especiales, creando cada propuesta a medida para la ocasión. El lugar, la hora, las personas y cada pequeño detalle se tienen en cuenta para que todo encaje y tú solo tengas que disfrutar. ",
   etiquetaPagina: "Eventos · Málaga",
   tituloPagina: "Para el día concreto que celebras",
   entradillaPagina:
-"Tartas de boda, dulces y postres emplatados por encargo. Diseñados para cada celebración y preparados en el lugar y momento elegido.",  // TODO: confirmar que se puede publicar: se le ve la cara a la novia.
+    "Tartas de boda, dulces y postres emplatados por encargo. Diseñados para cada celebración y preparados en el lugar y momento elegido.", // TODO: confirmar que se puede publicar: se le ve la cara a la novia.
   fotoCabecera: "tarta-boda-nati-con-nati.jpeg",
   altCabecera:
     "En blanco y negro, una novia se ríe inclinada junto a su tarta de boda, cubierta de pétalos blancos.",
@@ -105,7 +106,10 @@ export const EVENTOS: Eventos = {
   pasos: [
     { titulo: "La idea", detalle: "Fecha, sitio, invitados..." },
     { titulo: "La propuesta", detalle: "Piezas, sabores y presupuesto." },
-    { titulo: "La puesta en escena", detalle: "El mismo día, en el sitio y a su hora." },
+    {
+      titulo: "La puesta en escena",
+      detalle: "El mismo día, en el sitio y a su hora.",
+    },
   ],
   etiquetaMontajes: "Montajes ya servidos",
   tituloMontajes: "Celebraciones hechas realidad",
@@ -121,7 +125,8 @@ export const EVENTOS: Eventos = {
     {
       tipoEvento: "Pedidas",
       titulo: "Pequeños bocados sobre musgo y eucalipto",
-      descripcion:"Un montaje de fondo oscuro en el que el musgo y el eucalipto aportaban estructura y profundidad, dejando que los espejos fueran los protagonistas.  Estos, además de aportar un elemento distintivo a la propuesta, se convierten en pequeños platos de cóctel para disfrutar de cada bocado de forma individual.",
+      descripcion:
+        "Un montaje de fondo oscuro en el que el musgo y el eucalipto aportaban estructura y profundidad, dejando que los espejos fueran los protagonistas.  Estos, además de aportar un elemento distintivo a la propuesta, se convierten en pequeños platos de cóctel para disfrutar de cada bocado de forma individual.",
       archivo: "mesa_cumple_nati.jpeg",
       alt: "Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.",
       mes: "Junio 2026",
@@ -161,7 +166,8 @@ export const EVENTOS: Eventos = {
     {
       tipoEvento: "Bodas",
       titulo: "Tarta de boda",
-      descripcion:"Una tarta de boda inspirada en la silueta de un vestido de gran volumen. Sus formas, capas y movimiento trasladan la elegancia del diseño textil a una pieza dulce, pensada para convertirse en parte de la celebración.",
+      descripcion:
+        "Una tarta de boda inspirada en la silueta de un vestido de gran volumen. Sus formas, capas y movimiento trasladan la elegancia del diseño textil a una pieza dulce, pensada para convertirse en parte de la celebración.",
       archivo: "tartaPapelAzucar1.jpeg",
       alt: "tarta de boda inspirada en la silueta de un vestido de gran volumen. Sus formas, capas y movimiento trasladan la elegancia del diseño textil a una pieza dulce",
       mes: "Septiembre 2026",

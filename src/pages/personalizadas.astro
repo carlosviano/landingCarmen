@@ -21,7 +21,7 @@ import Ondas from "@/components/Ondas.astro";
 import Hero from "@/components/Hero.astro";
 import TarjetaEscaparate from "@/components/TarjetaEscaparate.astro";
 import SolicitudEspecial from "@/components/especiales/SolicitudEspecial.astro";
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { Icon } from "astro-icon/components";
 import { ESPECIALES } from "@/config/personalizadas";
 import { SERVICIOS } from "@/config/site";
@@ -69,7 +69,7 @@ const proponerAncha = E.disenos.length % 2 === 0;
         (mt-auto) y la franja rust con los pasos. Las proporciones son las
         del marco común (components/Hero.astro). */}
     <Hero claseBanda="isolate overflow-hidden bg-black" claseFranja="bg-rust">
-      <Image
+      <Foto
         src={fotoCabecera}
         alt={E.altCabecera}
         widths={ANCHOS_GRANDES}
