@@ -60,7 +60,10 @@ const margenTira = `max(0.75rem, (100% - 80rem) / 2 + 1.5rem - ${ADELANTO})`;
         style={`padding-inline:${margenTira}`}
       >
         {fotos.map((foto) => (
-          <li class="w-[78vw] shrink-0 snap-start sm:w-[20rem] lg:w-[23rem]">
+          <li
+            data-revelar
+            class="w-[78vw] shrink-0 snap-start sm:w-[20rem] lg:w-[23rem]"
+          >
             <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-lg shadow-black/5 ring-1 ring-taupe/25">
               <Foto
                 src={foto.src}
