@@ -405,7 +405,7 @@ export const CATALOGO: Catalogo = {
       recorte: "nueces-macadamia-ficha.png",
       alt: "Tarta redonda baja de superficie abombada, con un glaseado dorado y brillante, rodeada de un aro claro y jaspeado.",
       // Sólo se hace en el tamaño grande.
-      tamanos: [{ personas: "8–10", precio: 47 }],
+      tamanos: [{ personas: "8–10", precio: 45 }],
       // La tarta es baja (del 25 al 78 % del lienzo en alto) y lleva seis
       // capas, así que los puntos van más juntos que en las demás. Las capas
       // de dentro se marcan sobre el aro, que es lo que las tapa.
@@ -458,7 +458,7 @@ export const CATALOGO: Catalogo = {
     },
     {
       id: "galleta",
-      nombre: "Galleta",
+      nombre: "Galleta XL",
       // TODO: foto con fondo para la tarjeta.
       archivo: null,
       // En el lienzo común (ver `Tarta.recorte`).
@@ -486,8 +486,10 @@ export const CATALOGO: Catalogo = {
         "Pensada para que te recuerde de verdad al sabor de la galleta, con tres tipos de chocolate distintos. Jugosa y crujiente a la vez.",
     },
     {
+      // El id se queda con el nombre antiguo porque esta ficha ya está
+      // publicada: cambiarlo rompería los enlaces compartidos.
       id: "choux-de-avellana",
-      nombre: "Choux de avellana",
+      nombre: "Paris-Brest",
       // TODO: foto con fondo para la tarjeta.
       archivo: null,
       // En el lienzo común (ver `Tarta.recorte`).
