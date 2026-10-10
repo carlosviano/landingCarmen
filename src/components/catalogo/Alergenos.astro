@@ -1,6 +1,6 @@
 ---
 // Los alérgenos de la ficha: los que lleva la receta y, debajo, el aviso de
-// trazas, que es el mismo para todas.
+// contaminación cruzada, que es el mismo para todas.
 //
 // Va en la columna del pedido y ENCIMA de él: es lo último que se lee antes
 // de decidir, y en móvil cae justo después de la tarta y su "qué lleva".
@@ -53,20 +53,23 @@ const lleva = (Object.keys(ALERGENOS) as Alergeno[]).filter((alergeno) =>
     </p>
   )}
 
-  {/* Las trazas y qué hacer con una alergia, con las palabras de las
-      condiciones (`alergenos` en src/config/legal/condiciones.ts). Si cambia
-      allí, cambia aquí. El enlace abre otra pestaña por lo mismo que el de
-      las condiciones del pedido: no perder lo ya elegido. */}
+  {/* El aviso de contaminación cruzada, que es el mismo para todas. Resume
+      el apartado `alergenos` de src/config/legal/condiciones.ts y manda allí
+      para el detalle: si cambia uno, hay que revisar el otro. El enlace abre
+      otra pestaña por lo mismo que el de las condiciones del pedido: no
+      perder lo ya elegido. */}
   <p class="mt-3 text-xs leading-relaxed text-black/65 bajo:mt-2.5">
-    Puede contener trazas de los demás: en el obrador se trabaja con todos. Si
-    hay alguna alergia o intolerancia, dínoslo al pedir.{" "}
+    Además de los alérgenos indicados, en el obrador se elaboran productos con
+    todos los demás, por lo que no podemos descartar la contaminación cruzada.
+    Si tienes alguna alergia o intolerancia, consulta nuestra{" "}
     <a
       href="/condiciones#alergenos"
       target="_blank"
       rel="noopener"
       class="text-rust underline underline-offset-2 hover:text-black"
     >
-      Más sobre alérgenos
-    </a>
+      información sobre alérgenos
+    </a>{" "}
+    antes de hacer el pedido.
   </p>
 </section>
