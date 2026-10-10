@@ -37,6 +37,34 @@ export interface ComponenteTarta {
   dentro?: boolean;
 }
 
+/**
+ * Los catorce alérgenos que el Reglamento (UE) 1169/2011 obliga a declarar
+ * (anexo II), en el orden del anexo. La ficha los pinta SIEMPRE en este orden,
+ * no en el que se escriban en cada tarta: así "Leche" cae en el mismo sitio en
+ * todas y quien busca uno lo encuentra sin leer la lista entera.
+ *
+ * El texto es el que ve el cliente. Nombres cortos y de uso común, los de los
+ * carteles de alérgenos de hostelería.
+ */
+export const ALERGENOS = {
+  gluten: "Gluten",
+  crustaceos: "Crustáceos",
+  huevo: "Huevo",
+  pescado: "Pescado",
+  cacahuetes: "Cacahuetes",
+  soja: "Soja",
+  leche: "Leche",
+  "frutos-de-cascara": "Frutos de cáscara",
+  apio: "Apio",
+  mostaza: "Mostaza",
+  sesamo: "Sésamo",
+  sulfitos: "Sulfitos",
+  altramuces: "Altramuces",
+  moluscos: "Moluscos",
+} as const;
+
+export type Alergeno = keyof typeof ALERGENOS;
+
 /** Un tamaño de encargo: para cuántos es y cuánto cuesta. */
 export interface TamanoTarta {
   /** Texto corto con guion largo: "4–6". La palabra "personas" la pone quien pinta. */
@@ -100,6 +128,17 @@ export interface Tarta {
   conservacion: string;
   /** De 2 a 4. Por encima de 4 las líneas de la ficha se apelotonan. */
   componentes: ComponenteTarta[];
+  /**
+   * Los alérgenos que lleva la RECETA, de los catorce de `ALERGENOS`. Las
+   * trazas no van aquí: el obrador trabaja con todos y eso lo dice la ficha
+   * para todas las tartas (ver "Alérgenos" en src/config/legal/condiciones.ts).
+   *
+   * Obligatorio a propósito, también cuando no lleva ninguno (`[]`): una
+   * tarta nueva sin alérgenos declarados no compila, en vez de salir con la
+   * ficha muda. Es un dato legal (venta a distancia): lo da Carmen, no se
+   * deduce de los componentes.
+   */
+  alergenos: Alergeno[];
   /** La descripción de la ficha para buscadores y al compartir el enlace (no se pinta en la página). Dos o tres frases. */
   descripcion: string;
 }
@@ -144,6 +183,8 @@ export const CATALOGO: Catalogo = {
         { personas: "8–10", precio: 42 },
       ],
       conservacion: "Nevera, 48 h",
+      // POR CONFIRMAR con Carmen: deducido de los componentes, no de la receta.
+      alergenos: ["gluten", "huevo", "leche"],
       componentes: [
         {
           etiqueta: "Ralladura de lima",
@@ -177,6 +218,8 @@ export const CATALOGO: Catalogo = {
         { personas: "8–10", precio: 45 },
       ],
       conservacion: "Nevera, 48 h",
+      // POR CONFIRMAR con Carmen: deducido de los componentes, no de la receta.
+      alergenos: ["gluten", "huevo", "soja", "leche"],
       componentes: [
         {
           etiqueta: "Cacao espolvoreado",
@@ -218,6 +261,8 @@ export const CATALOGO: Catalogo = {
         { personas: "8–10", precio: 42 },
       ],
       conservacion: "Se come recién montada",
+      // POR CONFIRMAR con Carmen: deducido de los componentes, no de la receta.
+      alergenos: ["gluten", "huevo", "soja", "leche"],
       componentes: [
         {
           etiqueta: "Melocotón",
@@ -257,6 +302,8 @@ export const CATALOGO: Catalogo = {
         { personas: "8–10", precio: 45 },
       ],
       conservacion: "Fuera de nevera, 3 días",
+      // POR CONFIRMAR con Carmen: deducido de los componentes, no de la receta.
+      alergenos: ["gluten", "huevo", "soja", "leche"],
       componentes: [
         {
           etiqueta: "Cremoso de chocolate",
@@ -286,6 +333,8 @@ export const CATALOGO: Catalogo = {
       // Las nueces no se ven en la foto, así que van con el toffee y no con
       // un punto propio: tres puntos separados caben en la tarta, cuatro se
       // pisarían.
+      // POR CONFIRMAR con Carmen: deducido de los componentes, no de la receta.
+      alergenos: ["gluten", "huevo", "soja", "leche", "frutos-de-cascara"],
       componentes: [
         {
           etiqueta: "Toffee",
@@ -319,6 +368,8 @@ export const CATALOGO: Catalogo = {
         { personas: "8–10", precio: 45 },
       ],
       conservacion: "Nevera, 24 h",
+      // POR CONFIRMAR con Carmen: deducido de los componentes, no de la receta.
+      alergenos: ["gluten", "huevo", "leche", "frutos-de-cascara"],
       componentes: [
         {
           etiqueta: "Masa de profiterol",

@@ -17,7 +17,8 @@
 //      tarta va en el centro con las etiquetas de "qué lleva" a la izquierda y
 //      una línea de cada una a su capa (FichaAnotada); el pedido, a la
 //      derecha (Pedido). Sin recorte, foto normal (o FotoPendiente) y la lista
-//      sin líneas (ListaComponentes). En escritorio llena una pantalla.
+//      sin líneas (ListaComponentes). Encima del pedido, los alérgenos
+//      (Alergenos). En escritorio llena una pantalla.
 //   2. La tira con las otras tartas (OtrasTartas), que es cómo se pasa de una
 //      a otra.
 //
@@ -27,6 +28,7 @@ import Header from "@/sections/Header.astro";
 import Footer from "@/sections/Footer.astro";
 import BotonVolver from "@/components/BotonVolver.astro";
 import FotoPendiente from "@/components/FotoPendiente.astro";
+import Alergenos from "@/components/catalogo/Alergenos.astro";
 import FichaAnotada from "@/components/catalogo/FichaAnotada.astro";
 import ListaComponentes from "@/components/catalogo/ListaComponentes.astro";
 import OtrasTartas from "@/components/catalogo/OtrasTartas.astro";
@@ -127,6 +129,8 @@ const foto = anotada ? null : fotos.foto;
                   siempre: una lista con viñetas en esta columna. */
                 !anotada && <ListaComponentes componentes={tarta.componentes} />
               }
+
+              <Alergenos alergenos={tarta.alergenos} />
 
               <Pedido tarta={tarta} />
             </div>

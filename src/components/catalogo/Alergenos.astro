@@ -1,0 +1,72 @@
+---
+// Los alérgenos de la ficha: los que lleva la receta y, debajo, el aviso de
+// trazas, que es el mismo para todas.
+//
+// Va en la columna del pedido y ENCIMA de él: es lo último que se lee antes
+// de decidir, y en móvil cae justo después de la tarta y su "qué lleva".
+//
+// Se ve como una pieza aparte (marco rust) porque no es un dato más como la
+// conservación: si alguien busca un alérgeno tiene que encontrarlo sin leer
+// el pedido. Cada uno va en una pastilla rust llena, con su nombre escrito
+// entero y sin iconos: no hay un juego de iconos que cubra los catorce sin
+// inventarse alguno, y un icono que se entiende a medias es justo la duda que
+// esto quiere quitar.
+//
+// Las pastillas son redondas y pequeñas, no las rectangulares del tamaño, y
+// no reaccionan al ratón: son una etiqueta, no algo que se elige.
+//
+// Se pintan en el orden del Reglamento (`ALERGENOS`), no en el del dato.
+import { Icon } from "astro-icon/components";
+import { ALERGENOS, type Alergeno } from "@/config/catalogo";
+
+interface Props {
+  alergenos: Alergeno[];
+}
+
+const { alergenos } = Astro.props;
+
+const lleva = (Object.keys(ALERGENOS) as Alergeno[]).filter((alergeno) =>
+  alergenos.includes(alergeno),
+);
+---
+
+<section
+  aria-labelledby="alergenos-titulo"
+  class="rounded-3xl border border-rust/40 px-5 py-4 bajo:py-3"
+>
+  <h2 id="alergenos-titulo" class="flex items-center gap-2 leyenda text-rust">
+    <Icon name="lucide:circle-alert" class="size-3.5" aria-hidden="true" />
+    Alérgenos
+  </h2>
+
+  {lleva.length > 0 ? (
+    <ul class="mt-3 flex flex-wrap gap-1.5 bajo:mt-2.5">
+      {lleva.map((alergeno) => (
+        <li class="rounded-full bg-rust px-3 py-1 text-[13px] font-medium text-linen">
+          {ALERGENOS[alergeno]}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="mt-2.5 text-sm font-medium">
+      No lleva ninguno de los catorce alérgenos de declaración obligatoria.
+    </p>
+  )}
+
+  {/* Las trazas y qué hacer con una alergia, con las palabras de las
+      condiciones (`alergenos` en src/config/legal/condiciones.ts). Si cambia
+      allí, cambia aquí. El enlace abre otra pestaña por lo mismo que el de
+      las condiciones del pedido: no perder lo ya elegido. */}
+  <p class="mt-3 text-xs leading-relaxed text-black/65 bajo:mt-2.5">
+    Puede contener trazas de los demás: en el obrador se trabaja con todos. Si
+    hay alguna alergia o intolerancia, dínoslo al pedir.{" "}
+    <a
+      href="/condiciones#alergenos"
+      target="_blank"
+      rel="noopener"
+      class="text-rust underline underline-offset-2 hover:text-black"
+    >
+      Más sobre alérgenos
+    </a>
+  </p>
+</section>
