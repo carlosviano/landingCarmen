@@ -16,6 +16,7 @@
 //
 // Sólo se monta si la tarta está anotada (`estaAnotada`): todos los
 // componentes con `punto`.
+import { getImage } from "astro:assets";
 import Foto from "@/components/Foto.astro";
 import type { Tarta } from "@/config/catalogo";
 
@@ -23,9 +24,29 @@ interface Props {
   tarta: Tarta;
   /** El recorte ya resuelto (`conFotos`). */
   recorte: ImageMetadata;
+  /**
+   * Para la carta en PDF (catalogo/carta.astro). Chrome mete en el PDF un
+   * PNG o un AVIF con transparencia sin comprimir (11 MB la carta), y solo
+   * un JPEG tal cual. Así que ahí va un JPEG del recorte ya sobre el linen
+   * del fondo, y no `Foto`.
+   */
+  impresion?: boolean;
 }
 
-const { tarta, recorte } = Astro.props;
+const { tarta, recorte, impresion = false } = Astro.props;
+
+// El linen de global.css (`--color-linen`).
+const jpeg = impresion
+  ? await getImage({
+      src: recorte,
+      format: "jpeg",
+      background: "#edf0da",
+      width: 800,
+      quality: 70,
+      // Al imprimir, una perezosa que no está en pantalla no se carga nunca.
+      loading: "eager",
+    })
+  : null;
 
 // La altura del primer punto: en móvil el "Qué lleva" se cuelga justo encima
 // de la primera etiqueta y no en lo alto del lienzo (ver `.que-lleva`).
@@ -34,15 +55,19 @@ const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
 
 <figure class="anotada" style={`--y0:${primerPunto}`}>
   <div class="lienzo" style={`--ar: ${recorte.width} / ${recorte.height}`}>
-    <Foto
-      src={recorte}
-      alt={tarta.alt}
-      widths={[560, 840, 1120, 1400]}
-      sizes="(min-width: 64rem) 42rem, (min-width: 48rem) 100vw, 140vw"
-      loading="eager"
-      fetchpriority="high"
-      decoding="async"
-    />
+    {jpeg ? (
+      <img src={jpeg.src} alt={tarta.alt} {...jpeg.attributes} />
+    ) : (
+      <Foto
+        src={recorte}
+        alt={tarta.alt}
+        widths={[560, 840, 1120, 1400]}
+        sizes="(min-width: 64rem) 42rem, (min-width: 48rem) 100vw, 140vw"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    )}
   </div>
 
   <h2 class="que-lleva leyenda text-rust">Qué lleva</h2>

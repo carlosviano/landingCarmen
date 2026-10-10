@@ -3,10 +3,29 @@ import { defineConfig, fontProviders } from "astro/config";
 
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
+import { cartaAlDia } from "./scripts/huella-carta.mjs";
+
+// La carta en PDF (public/carta-estimada-carmela.pdf) no se genera en el
+// build: la imprime `npm run carta` en local (ver AGENTS.md, «La carta en
+// PDF»). Esto solo avisa si las tartas, los precios o el contacto han
+// cambiado desde la última vez. Avisa y no falla: un cambio de precio no
+// puede dejar la web sin publicar.
+/** @type {import("astro").AstroIntegration} */
+const avisoCartaPdf = {
+  name: "aviso-carta-pdf",
+  hooks: {
+    "astro:build:start": async ({ logger }) => {
+      if (!(await cartaAlDia()))
+        logger.warn(
+          "La carta en PDF está desactualizada: genérala con `npm run carta`.",
+        );
+    },
+  },
+};
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [icon()],
+  integrations: [icon(), avisoCartaPdf],
 
   // La web usa DOS fuentes y solo dos (el sistema entero está en
   // src/styles/global.css, "Tipografía"):

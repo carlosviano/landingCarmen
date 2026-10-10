@@ -1,0 +1,250 @@
+---
+// /catalogo/carta — la carta para imprimir. No es para visitarla: es de
+// donde sale public/carta-estimada-carmela.pdf (`npm run carta`), el PDF que
+// se comparte desde /catalogo. Ver «La carta en PDF» en AGENTS.md.
+//
+// Se lee en el móvil, abierto desde un chat de WhatsApp, así que cada hoja es
+// un A5 vertical con UNA tarta, montada como la ficha en el móvil: media
+// tarta sangrando por la derecha y las etiquetas de lo que lleva
+// (FichaAnotada, tal cual).
+//
+// Es un documento para informar, no para pedir: sin botones. Para encargar,
+// el WhatsApp va una sola vez, en la última hoja, como dato de contacto.
+//
+// Hojas: portada con el índice, una por tarta y la última, cómo pedir.
+//
+// TODO: los alérgenos, cuando entre `feat/alergenos`: son obligatorios y van
+// en la hoja de cada tarta.
+import { Icon } from "astro-icon/components";
+import QRCode from "qrcode";
+import LayoutImpresion from "@/layouts/LayoutImpresion.astro";
+import FichaAnotada from "@/components/catalogo/FichaAnotada.astro";
+import ListaComponentes from "@/components/catalogo/ListaComponentes.astro";
+import Foto from "@/components/Foto.astro";
+import FotoPendiente from "@/components/FotoPendiente.astro";
+import { BIENVENIDA } from "@/config/bienvenida";
+import { CATALOGO } from "@/config/catalogo";
+import { PEDIDO } from "@/config/pedido";
+import { CONTACTO, SITE, SOCIAL } from "@/config/site";
+import { precioVisible } from "@/lib/pedido";
+import { conFotos, estaAnotada } from "@/lib/tartas";
+
+const tartas = CATALOGO.tartas.map((tarta, i) => ({
+  ...conFotos(tarta),
+  anotada: estaAnotada(tarta),
+  numero: String(i + 1).padStart(2, "0"),
+}));
+const total = String(tartas.length).padStart(2, "0");
+
+const desde = (precios: number[]) =>
+  `${precios.length > 1 ? "desde " : ""}${precioVisible(Math.min(...precios))}`;
+
+const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
+
+// Para quien lo imprima: en papel no se puede tocar el número. SVG en línea,
+// en rust; se hace al construir, sin peticiones.
+const qr = await QRCode.toString(CONTACTO.whatsapp.href, {
+  type: "svg",
+  margin: 0,
+  color: { dark: "#7c2513", light: "#0000" },
+});
+---
+
+<LayoutImpresion titulo={CATALOGO.tituloPagina}>
+  {/* --- Portada --- */}
+  <section class="hoja flex flex-col px-10 pt-14 pb-10">
+    <p class="titulo text-lg text-rust">{SITE.nombre}</p>
+    <p class="mt-14 antetitulo text-rust">{CATALOGO.etiqueta}</p>
+    <h1 class="mt-3 titular text-6xl leading-none">{CATALOGO.tituloPagina}</h1>
+    <p class="mt-5 max-w-[40ch] text-sm leading-relaxed text-black/65">
+      Todas por encargo, con {PEDIDO.antelacion} de antelación. Ingredientes,
+      tamaños y precios en las páginas siguientes.
+    </p>
+
+    <ol class="mt-10 border-t border-taupe/50">
+      {tartas.map(({ tarta, numero }) => (
+        <li class="border-b border-taupe/50">
+          <a href={`#${tarta.id}`} class="flex items-baseline gap-3 py-3.5">
+            <span class="text-[10px] tracking-[0.2em] text-black/40 tabular-nums">
+              {numero}
+            </span>
+            <span class="titulo text-lg leading-snug">{tarta.nombre}</span>
+            <span class="ml-auto text-sm font-medium whitespace-nowrap text-rust">
+              {desde(tarta.tamanos.map((tamano) => tamano.precio))}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+
+    <p class="mt-auto dato text-[10px] text-black/55">
+      {CONTACTO.titular} · {CONTACTO.ciudad} — WhatsApp{" "}
+      {CONTACTO.whatsapp.visible}
+    </p>
+  </section>
+
+  {/* --- Una hoja por tarta --- */}
+  {tartas.map(({ tarta, foto, recorte, anotada, numero }) => (
+    <section id={tarta.id} class="hoja flex flex-col pt-8 pb-9">
+      <header class="flex items-baseline justify-between px-6">
+        <span class="leyenda text-rust">{SITE.nombre}</span>
+        <span class="leyenda text-black/45 tabular-nums">
+          {CATALOGO.tituloPagina} · {numero} / {total}
+        </span>
+      </header>
+
+      <h2 class="mt-6 px-6 titular text-[2.25rem] leading-[1.05]">
+        {tarta.nombre}
+      </h2>
+
+      {/* La tarta, como en la ficha del móvil. Ocupa lo que dejan libre el
+            titular y los precios, centrada en alto; si no cabe entera, se
+            recorta lo mismo por arriba que por abajo, que en el lienzo común
+            es aire alrededor de la tarta. */}
+      <div class="marco mt-4 px-6">
+        {anotada && recorte ? (
+          <FichaAnotada tarta={tarta} recorte={recorte} impresion />
+        ) : (
+          <div class="flex gap-5 py-6">
+            <div class="aspect-[4/5] w-2/5 shrink-0 overflow-hidden rounded-3xl bg-taupe/15">
+              {foto ? (
+                <Foto
+                  src={foto}
+                  alt={tarta.alt}
+                  widths={[480]}
+                  sizes="12rem"
+                  class="h-full w-full object-cover"
+                />
+              ) : (
+                <FotoPendiente class="h-full w-full" />
+              )}
+            </div>
+            <ListaComponentes componentes={tarta.componentes} />
+          </div>
+        )}
+      </div>
+
+      <div class="relative mt-4 px-6">
+        <ul class="border-t border-taupe/50">
+          {tarta.tamanos.map((tamano) => (
+            <li class="flex items-baseline justify-between border-b border-taupe/50 py-2.5">
+              <span class="text-sm text-black/70">
+                {tamano.personas
+                  ? `${tamano.personas} personas`
+                  : "Tamaño único"}
+              </span>
+              <span class="text-lg font-medium text-rust tabular-nums">
+                {precioVisible(tamano.precio)}
+              </span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-4 text-[11px] text-black/55">
+          Por encargo, con {PEDIDO.antelacion} de antelación.
+        </p>
+      </div>
+    </section>
+  ))}
+
+  {/* --- Cómo pedir --- */}
+  <section class="hoja flex flex-col px-10 pt-14 pb-10">
+    <p class="antetitulo text-rust">{BIENVENIDA.titulo}</p>
+    <h2 class="mt-3 titular text-5xl leading-none">Cómo pedir</h2>
+
+    <ul class="mt-9 space-y-6">
+      {BIENVENIDA.puntos.map((punto) => (
+        <li class="flex gap-4">
+          <Icon
+            name={punto.icono}
+            class="mt-0.5 size-5 shrink-0 text-rust"
+            aria-hidden="true"
+          />
+          <div>
+            <p class="font-medium">{punto.titulo}</p>
+            <p class="mt-0.5 text-sm leading-relaxed whitespace-pre-line text-black/65">
+              {punto.detalle}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-auto flex items-end gap-6 border-t border-taupe/50 pt-6">
+      <div class="qr size-24 shrink-0" set:html={qr} aria-hidden="true" />
+      <div class="space-y-2 text-sm">
+        <p class="leyenda text-rust">Pedidos por WhatsApp</p>
+        <p>
+          <a href={CONTACTO.whatsapp.href} class="text-lg font-medium">
+            {CONTACTO.whatsapp.visible}
+          </a>
+        </p>
+        <p class="text-black/65">
+          <a href={instagram.href}>@estimadacarmela</a> en Instagram
+        </p>
+      </div>
+    </div>
+  </section>
+</LayoutImpresion>
+
+<style>
+  @page {
+    size: A5;
+    margin: 0;
+  }
+
+  /* Cada hoja es un A5 exacto. En pantalla se ven una debajo de otra, con
+     aire, para poder revisarlas en el navegador. */
+  .hoja {
+    position: relative;
+    width: 148mm;
+    height: 210mm;
+    margin: 2rem auto;
+    overflow: clip;
+    background: var(--color-linen);
+    print-color-adjust: exact;
+  }
+
+  @media print {
+    .hoja {
+      margin: 0;
+      break-after: page;
+    }
+  }
+
+  /* El hueco de la tarta: todo el alto que sobra. `clip` corta la tarta por
+     la derecha en el borde de la hoja (como el `main` de la ficha) y, si no
+     cabe en alto, por arriba y por abajo a partes iguales (el centrado de
+     flex se sale por los dos lados). */
+  .marco {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    overflow: clip;
+    container-type: size;
+  }
+
+  /* FichaAnotada calcula su ancho como en el móvil: el hueco a la derecha de
+     las etiquetas, por `--zoom`. En la hoja, etiquetas algo más anchas que en
+     el móvil, y un tope por alto: con un titular de dos líneas no queda sitio
+     para la tarta a ese tamaño, y entonces se hace más pequeña (se ve más
+     tarta) en vez de cortarse. El 1.25 es la proporción del lienzo común
+     (1200 × 1040) con un poco de margen: lo que se corta es el aire de
+     alrededor de la tarta, no la tarta. */
+  .marco :global(.anotada) {
+    --lab: 180px;
+    --zoom: 2;
+    flex: none;
+    width: min(
+      calc((100% - var(--lab) + 1.5rem) * var(--zoom)),
+      calc(100cqh * 1.25)
+    );
+  }
+
+  .qr :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
