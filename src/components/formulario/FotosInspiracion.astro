@@ -87,90 +87,93 @@ const { maximo, megasMaximo } = fotos;
 
 <script>
   import { esquemaFotoDe } from "@/lib/solicitud";
+  import { alCargarPagina } from "@/lib/pagina";
 
-  for (const raiz of document.querySelectorAll<HTMLElement>(
-    "[data-fotos-inspiracion]",
-  )) {
-    const maximo = Number(raiz.dataset.maximo);
-    const esquemaFoto = esquemaFotoDe(Number(raiz.dataset.megas));
-    const entrada = raiz.querySelector<HTMLInputElement>("[data-entrada]")!;
-    const zona = raiz.querySelector<HTMLElement>("[data-zona]")!;
-    const lista = raiz.querySelector<HTMLUListElement>("[data-miniaturas]")!;
-    const aviso = raiz.querySelector<HTMLElement>("[data-aviso]")!;
-    const plantilla =
-      raiz.querySelector<HTMLTemplateElement>("[data-plantilla]")!;
+  alCargarPagina(() => {
+    for (const raiz of document.querySelectorAll<HTMLElement>(
+      "[data-fotos-inspiracion]",
+    )) {
+      const maximo = Number(raiz.dataset.maximo);
+      const esquemaFoto = esquemaFotoDe(Number(raiz.dataset.megas));
+      const entrada = raiz.querySelector<HTMLInputElement>("[data-entrada]")!;
+      const zona = raiz.querySelector<HTMLElement>("[data-zona]")!;
+      const lista = raiz.querySelector<HTMLUListElement>("[data-miniaturas]")!;
+      const aviso = raiz.querySelector<HTMLElement>("[data-aviso]")!;
+      const plantilla =
+        raiz.querySelector<HTMLTemplateElement>("[data-plantilla]")!;
 
-    let elegidas: File[] = [];
+      let elegidas: File[] = [];
 
-    const miniatura = (archivo: File) => {
-      const li = plantilla.content.firstElementChild!.cloneNode(
-        true,
-      ) as HTMLLIElement;
-      li.querySelector("img")!.src = URL.createObjectURL(archivo);
-      const quitar = li.querySelector("button")!;
-      quitar.setAttribute("aria-label", `Quitar ${archivo.name}`);
-      quitar.addEventListener("click", () => {
-        elegidas = elegidas.filter((otra) => otra !== archivo);
+      const miniatura = (archivo: File) => {
+        const li = plantilla.content.firstElementChild!.cloneNode(
+          true,
+        ) as HTMLLIElement;
+        li.querySelector("img")!.src = URL.createObjectURL(archivo);
+        const quitar = li.querySelector("button")!;
+        quitar.setAttribute("aria-label", `Quitar ${archivo.name}`);
+        quitar.addEventListener("click", () => {
+          elegidas = elegidas.filter((otra) => otra !== archivo);
+          aviso.textContent = "";
+          pintar();
+        });
+        return li;
+      };
+
+      const pintar = () => {
+        const dt = new DataTransfer();
+        elegidas.forEach((archivo) => dt.items.add(archivo));
+        entrada.files = dt.files;
+
+        lista
+          .querySelectorAll("img")
+          .forEach((img) => URL.revokeObjectURL(img.src));
+        lista.replaceChildren(...elegidas.map(miniatura));
+        // Con el cupo lleno no se ofrece añadir más.
+        zona.hidden = elegidas.length >= maximo;
+        // Para que el formulario (WhatsApp, validación) sepa que algo ha cambiado.
+        entrada.dispatchEvent(new Event("input", { bubbles: true }));
+      };
+
+      const anadir = (nuevas: File[]) => {
+        const rechazos: string[] = [];
+        for (const archivo of nuevas) {
+          if (elegidas.length >= maximo) {
+            rechazos.push(`Caben ${maximo} fotos como mucho.`);
+            break;
+          }
+          const resultado = esquemaFoto.safeParse(archivo);
+          if (resultado.success) elegidas.push(archivo);
+          else
+            rechazos.push(
+              `${archivo.name}: ${resultado.error.issues[0]!.message}`,
+            );
+        }
+        aviso.textContent = rechazos.join(" ");
+        pintar();
+      };
+
+      // Lo recién elegido viene en `files`, que sólo trae la última selección:
+      // se suma a `elegidas` y `pintar` rehace el <input> con todo.
+      entrada.addEventListener("change", () =>
+        anadir([...(entrada.files ?? [])]),
+      );
+
+      zona.addEventListener("dragover", (evento) => {
+        evento.preventDefault();
+        zona.dataset.arrastrando = "";
+      });
+      zona.addEventListener("dragleave", () => delete zona.dataset.arrastrando);
+      zona.addEventListener("drop", (evento) => {
+        evento.preventDefault();
+        delete zona.dataset.arrastrando;
+        anadir([...(evento.dataTransfer?.files ?? [])]);
+      });
+
+      entrada.form?.addEventListener("reset", () => {
+        elegidas = [];
         aviso.textContent = "";
         pintar();
       });
-      return li;
-    };
-
-    const pintar = () => {
-      const dt = new DataTransfer();
-      elegidas.forEach((archivo) => dt.items.add(archivo));
-      entrada.files = dt.files;
-
-      lista
-        .querySelectorAll("img")
-        .forEach((img) => URL.revokeObjectURL(img.src));
-      lista.replaceChildren(...elegidas.map(miniatura));
-      // Con el cupo lleno no se ofrece añadir más.
-      zona.hidden = elegidas.length >= maximo;
-      // Para que el formulario (WhatsApp, validación) sepa que algo ha cambiado.
-      entrada.dispatchEvent(new Event("input", { bubbles: true }));
-    };
-
-    const anadir = (nuevas: File[]) => {
-      const rechazos: string[] = [];
-      for (const archivo of nuevas) {
-        if (elegidas.length >= maximo) {
-          rechazos.push(`Caben ${maximo} fotos como mucho.`);
-          break;
-        }
-        const resultado = esquemaFoto.safeParse(archivo);
-        if (resultado.success) elegidas.push(archivo);
-        else
-          rechazos.push(
-            `${archivo.name}: ${resultado.error.issues[0]!.message}`,
-          );
-      }
-      aviso.textContent = rechazos.join(" ");
-      pintar();
-    };
-
-    // Lo recién elegido viene en `files`, que sólo trae la última selección:
-    // se suma a `elegidas` y `pintar` rehace el <input> con todo.
-    entrada.addEventListener("change", () =>
-      anadir([...(entrada.files ?? [])]),
-    );
-
-    zona.addEventListener("dragover", (evento) => {
-      evento.preventDefault();
-      zona.dataset.arrastrando = "";
-    });
-    zona.addEventListener("dragleave", () => delete zona.dataset.arrastrando);
-    zona.addEventListener("drop", (evento) => {
-      evento.preventDefault();
-      delete zona.dataset.arrastrando;
-      anadir([...(evento.dataTransfer?.files ?? [])]);
-    });
-
-    entrada.form?.addEventListener("reset", () => {
-      elegidas = [];
-      aviso.textContent = "";
-      pintar();
-    });
-  }
+    }
+  });
 </script>

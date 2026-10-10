@@ -103,44 +103,50 @@ const margenTira = `max(0.75rem, (100% - 80rem) / 2 + 1.5rem - ${ADELANTO})`;
 </section>
 
 <script>
-  for (const carrusel of document.querySelectorAll<HTMLElement>(
-    "[data-carrusel]",
-  )) {
-    const tira = carrusel.querySelector<HTMLElement>("[data-tira]");
-    const lista = tira?.querySelector<HTMLElement>("ul");
-    const anterior =
-      carrusel.querySelector<HTMLButtonElement>("[data-anterior]");
-    const siguiente =
-      carrusel.querySelector<HTMLButtonElement>("[data-siguiente]");
-    if (!tira || !lista || !anterior || !siguiente) continue;
+  import { alCargarPagina } from "@/lib/pagina";
 
-    const paso = () => {
-      const foto = lista.firstElementChild;
-      if (!foto) return tira.clientWidth;
-      const hueco = parseFloat(getComputedStyle(lista).columnGap) || 0;
-      return foto.getBoundingClientRect().width + hueco;
-    };
+  alCargarPagina((senal) => {
+    for (const carrusel of document.querySelectorAll<HTMLElement>(
+      "[data-carrusel]",
+    )) {
+      const tira = carrusel.querySelector<HTMLElement>("[data-tira]");
+      const lista = tira?.querySelector<HTMLElement>("ul");
+      const anterior =
+        carrusel.querySelector<HTMLButtonElement>("[data-anterior]");
+      const siguiente =
+        carrusel.querySelector<HTMLButtonElement>("[data-siguiente]");
+      if (!tira || !lista || !anterior || !siguiente) continue;
 
-    const quieto = matchMedia("(prefers-reduced-motion: reduce)");
-    const mover = (sentido: number) => {
-      tira.scrollBy({
-        left: sentido * paso(),
-        behavior: quieto.matches ? "auto" : "smooth",
-      });
-    };
+      const paso = () => {
+        const foto = lista.firstElementChild;
+        if (!foto) return tira.clientWidth;
+        const hueco = parseFloat(getComputedStyle(lista).columnGap) || 0;
+        return foto.getBoundingClientRect().width + hueco;
+      };
 
-    const repasarBotones = () => {
-      const holgura = 2;
-      const tope = tira.scrollWidth - tira.clientWidth;
-      anterior.disabled = tira.scrollLeft <= holgura;
-      siguiente.disabled = tira.scrollLeft >= tope - holgura;
-    };
+      const quieto = matchMedia("(prefers-reduced-motion: reduce)");
+      const mover = (sentido: number) => {
+        tira.scrollBy({
+          left: sentido * paso(),
+          behavior: quieto.matches ? "auto" : "smooth",
+        });
+      };
 
-    anterior.addEventListener("click", () => mover(-1));
-    siguiente.addEventListener("click", () => mover(1));
-    tira.addEventListener("scroll", repasarBotones, { passive: true });
-    new ResizeObserver(repasarBotones).observe(tira);
+      const repasarBotones = () => {
+        const holgura = 2;
+        const tope = tira.scrollWidth - tira.clientWidth;
+        anterior.disabled = tira.scrollLeft <= holgura;
+        siguiente.disabled = tira.scrollLeft >= tope - holgura;
+      };
 
-    repasarBotones();
-  }
+      anterior.addEventListener("click", () => mover(-1));
+      siguiente.addEventListener("click", () => mover(1));
+      tira.addEventListener("scroll", repasarBotones, { passive: true });
+      const vigia = new ResizeObserver(repasarBotones);
+      vigia.observe(tira);
+      senal.addEventListener("abort", () => vigia.disconnect());
+
+      repasarBotones();
+    }
+  });
 </script>

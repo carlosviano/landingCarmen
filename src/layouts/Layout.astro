@@ -1,5 +1,6 @@
 ---
 import { Font } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
 import Bienvenida from "@/components/Bienvenida.astro";
 import { SITE } from "@/config/site";
 import "../styles/global.css";
@@ -62,11 +63,69 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
         global.css). En línea y en el <head> porque tiene que estar antes del
         primer pintado: si esperara al script de abajo, que va diferido, lo
         que hay en pantalla se pintaría, se escondería y volvería a salir.
-        Con movimiento reducido no se pone y nada se esconde. */}
+        Con movimiento reducido no se pone y nada se esconde.
+
+        Con el router (abajo), al cambiar de pantalla Astro cambia los
+        atributos de <html> por los de la página nueva, que llega del servidor
+        sin `data-animar`, y este script no se vuelve a ejecutar (ya corrió).
+        Por eso se vuelve a poner en `astro:after-swap`: justo después del
+        cambio y antes de pintar la página nueva, así que lo que tenga que
+        entrar ya sale escondido. */}
     <script is:inline>
-      if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
-        document.documentElement.dataset.animar = "";
+      const encender = () => {
+        if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
+          document.documentElement.dataset.animar = "";
+      };
+      encender();
+      document.addEventListener("astro:after-swap", encender);
+
+      // En pantallas táctiles, cambio de pantalla sin fundido. En el iPhone
+      // (iOS 26) la barra de estado se teñía de beis durante el fundido:
+      // Safari la colorea con lo que hay arriba de la página y, mientras dura
+      // la capa de la transición, no encuentra la cabecera. Ni darle nombre a
+      // la cabecera ni poner <html> en rust lo arreglaron. Sin
+      // startViewTransition el router de Astro cae a su `fallback` (abajo,
+      // "swap"): sigue sin recargar, con la precarga y sin el giro de la
+      // pestaña; solo se pierde el fundido, y las entradas de la página nueva
+      // ya dan la continuidad. Tiene que correr antes que el script del
+      // router, que mira si existe al cargarse.
+      if (matchMedia("(pointer: coarse)").matches)
+        delete Document.prototype.startViewTransition;
+
+      // Al llegar a un ancla de otra pantalla (de /catalogo a /#sobre-mi),
+      // Astro salta a ella con una navegación de ancla normal, y con el
+      // scroll-smooth de <html> el salto se hacía en scroll animado desde
+      // arriba: atravesaba media portada en pleno fundido, disparando las
+      // entradas de todo lo que cruzaba. Se apaga solo para ese salto. Va
+      // envolviendo el `swap` y no en `astro:after-swap` porque Astro hace el
+      // salto ENTRE los dos: el swap pone en <html> los atributos de la página
+      // nueva (y con ellos el scroll-smooth), luego salta, luego avisa. El
+      // inline style lo quita el siguiente swap, o al acabar de cargar.
+      document.addEventListener("astro:before-swap", (evento) => {
+        const cambiar = evento.swap;
+        evento.swap = () => {
+          cambiar();
+          document.documentElement.style.scrollBehavior = "auto";
+        };
+      });
+      document.addEventListener("astro:page-load", () =>
+        document.documentElement.style.removeProperty("scroll-behavior"),
+      );
     </script>
+    {/* Transiciones entre pantallas: el paso de una página a otra es el
+        fundido cruzado del propio navegador (250ms) en vez de una recarga en
+        blanco, y la pestaña no enseña el giro de carga porque no hay
+        navegación de verdad. Precarga además la página de un enlace al pasar
+        por encima, así que el cambio es casi inmediato.
+
+        Nada lleva transition:name: lo que es igual en las dos pantallas (la
+        cabecera) se queda quieto dentro del fundido (ver Header.astro, por
+        qué no se le da nombre). Con movimiento reducido Astro no anima nada.
+        En táctil no hay fundido (ver el script de arriba): `fallback="swap"`
+        es lo que hace entonces, y también en un navegador sin transiciones.
+
+        Lo que obliga a cambiar en los <script>: ver src/lib/pagina.ts. */}
+    <ClientRouter fallback="swap" />
     <slot name="head" />
     <title>{title}</title>
   </head>
@@ -77,7 +136,8 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
 </html>
 
 <script>
+  import { alCargarPagina } from "@/lib/pagina";
   import { revelar } from "@/lib/revelar";
 
-  revelar();
+  alCargarPagina(revelar);
 </script>

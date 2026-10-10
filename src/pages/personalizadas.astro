@@ -236,12 +236,15 @@ const proponerAncha = E.disenos.length % 2 === 0;
 
 <script>
   import { alPulsarEnlace, elegirDiseno } from "@/lib/elegirDiseno";
+  import { alCargarPagina } from "@/lib/pagina";
 
-  // "Pedir esta tarta" y la tarjeta de "que me proponga" bajan al formulario
-  // sin recargar (ver elegirDiseno).
-  document
-    .querySelectorAll<HTMLAnchorElement>("a[data-elige]")
-    .forEach((tarjeta) => {
-      alPulsarEnlace(tarjeta, () => elegirDiseno(tarjeta.dataset.elige!));
-    });
+  alCargarPagina(() => {
+    // "Pedir esta tarta" y la tarjeta de "que me proponga" bajan al formulario
+    // sin recargar (ver elegirDiseno).
+    document
+      .querySelectorAll<HTMLAnchorElement>("a[data-elige]")
+      .forEach((tarjeta) => {
+        alPulsarEnlace(tarjeta, () => elegirDiseno(tarjeta.dataset.elige!));
+      });
+  });
 </script>

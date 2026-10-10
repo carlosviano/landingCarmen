@@ -337,30 +337,34 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
 )}
 
 <script>
-  for (const tarjeta of document.querySelectorAll<HTMLElement>(
-    "[data-montaje]",
-  )) {
-    const boton = tarjeta.querySelector<HTMLButtonElement>("[data-ver-mas]");
-    const cinta = tarjeta.querySelector<HTMLElement>("[data-cinta]");
-    if (!boton || !cinta) continue;
+  import { alCargarPagina } from "@/lib/pagina";
 
-    const poner = (abierta: boolean) => {
-      boton.setAttribute("aria-expanded", String(abierta));
-      cinta.toggleAttribute("data-abierta", abierta);
-      cinta.inert = !abierta;
-    };
+  alCargarPagina(() => {
+    for (const tarjeta of document.querySelectorAll<HTMLElement>(
+      "[data-montaje]",
+    )) {
+      const boton = tarjeta.querySelector<HTMLButtonElement>("[data-ver-mas]");
+      const cinta = tarjeta.querySelector<HTMLElement>("[data-cinta]");
+      if (!boton || !cinta) continue;
 
-    poner(false);
+      const poner = (abierta: boolean) => {
+        boton.setAttribute("aria-expanded", String(abierta));
+        cinta.toggleAttribute("data-abierta", abierta);
+        cinta.inert = !abierta;
+      };
 
-    boton.addEventListener("click", () =>
-      poner(boton.getAttribute("aria-expanded") !== "true"),
-    );
-
-    // "Cerrar" está al final de la cinta: al plegarla, el foco vuelve al
-    // botón de la tarjeta, que también la trae de vuelta a la vista.
-    cinta.querySelector("[data-cerrar]")?.addEventListener("click", () => {
       poner(false);
-      boton.focus();
-    });
-  }
+
+      boton.addEventListener("click", () =>
+        poner(boton.getAttribute("aria-expanded") !== "true"),
+      );
+
+      // "Cerrar" está al final de la cinta: al plegarla, el foco vuelve al
+      // botón de la tarjeta, que también la trae de vuelta a la vista.
+      cinta.querySelector("[data-cerrar]")?.addEventListener("click", () => {
+        poner(false);
+        boton.focus();
+      });
+    }
+  });
 </script>
