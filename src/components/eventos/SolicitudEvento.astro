@@ -182,23 +182,26 @@ const S = SOLICITUD_EVENTO;
     primeraFechaEvento,
     validarSolicitud,
   } from "@/lib/solicitud";
+  import { alCargarPagina } from "@/lib/pagina";
 
-  document
-    .querySelectorAll<HTMLFormElement>('[data-solicitud="evento"]')
-    .forEach((form) =>
-      montarSolicitud(form, {
-        validar: validarSolicitud,
-        mensaje: (texto) =>
-          mensajeEvento({
-            tipo: texto("tipo"),
-            fecha: texto("fecha"),
-            invitados: texto("invitados"),
-            lugar: texto("lugar"),
-          }),
-        calendario: { primera: primeraFechaEvento },
-        envio: SOLICITUD_EVENTO.envio,
-        enviado:
-          "Recibido. Te escribo en cuanto lo lea para contarte qué se puede montar.",
-      }),
-    );
+  alCargarPagina(() => {
+    document
+      .querySelectorAll<HTMLFormElement>('[data-solicitud="evento"]')
+      .forEach((form) =>
+        montarSolicitud(form, {
+          validar: validarSolicitud,
+          mensaje: (texto) =>
+            mensajeEvento({
+              tipo: texto("tipo"),
+              fecha: texto("fecha"),
+              invitados: texto("invitados"),
+              lugar: texto("lugar"),
+            }),
+          calendario: { primera: primeraFechaEvento },
+          envio: SOLICITUD_EVENTO.envio,
+          enviado:
+            "Recibido. Te escribo en cuanto lo lea para contarte qué se puede montar.",
+        }),
+      );
+  });
 </script>

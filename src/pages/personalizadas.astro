@@ -21,7 +21,8 @@ import Ondas from "@/components/Ondas.astro";
 import Hero from "@/components/Hero.astro";
 import TarjetaEscaparate from "@/components/TarjetaEscaparate.astro";
 import SolicitudEspecial from "@/components/especiales/SolicitudEspecial.astro";
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
+import TextoRevelado from "@/components/TextoRevelado.astro";
 import { Icon } from "astro-icon/components";
 import { ESPECIALES } from "@/config/personalizadas";
 import { SERVICIOS } from "@/config/site";
@@ -69,13 +70,14 @@ const proponerAncha = E.disenos.length % 2 === 0;
         (mt-auto) y la franja rust con los pasos. Las proporciones son las
         del marco común (components/Hero.astro). */}
     <Hero claseBanda="isolate overflow-hidden bg-black" claseFranja="bg-rust">
-      <Image
+      <Foto
         src={fotoCabecera}
         alt={E.altCabecera}
         widths={ANCHOS_GRANDES}
         sizes={sizesCabecera}
         loading="eager"
         fetchpriority="high"
+        data-revelar="zoom"
         class="absolute inset-0 -z-10 h-full w-full object-cover"
         style={`object-position: ${E.enfoqueCabecera}`}
       />
@@ -87,6 +89,7 @@ const proponerAncha = E.disenos.length % 2 === 0;
       <div class="mx-auto flex w-full max-w-7xl flex-1 flex-col px-6 pt-10 pb-12 md:pb-14">
         <a
           href="/"
+          data-revelar
           class="mb-16 inline-flex items-center gap-2 self-start border-b border-linen/40 pb-1 accion text-xs text-linen/85 transition-colors hover:border-linen/70 hover:text-white"
         >
           <Icon
@@ -97,17 +100,23 @@ const proponerAncha = E.disenos.length % 2 === 0;
           Inicio
         </a>
 
-        <p class="mt-auto antetitulo text-sand">{E.etiquetaPagina}</p>
+        <p data-revelar class="mt-auto antetitulo text-sand">
+          {E.etiquetaPagina}
+        </p>
         <h1 class="mt-5 max-w-3xl titular text-4xl leading-[1.05] text-balance text-white sm:text-5xl lg:text-[4.5rem]">
-          {E.tituloPagina}
+          <TextoRevelado texto={E.tituloPagina} />
         </h1>
 
         <div class="mt-7 flex flex-col gap-7 md:flex-row md:items-center md:justify-between">
-          <p class="max-w-[33rem] text-base leading-relaxed text-white/85 sm:text-lg">
+          <p
+            data-revelar
+            class="max-w-[33rem] text-base leading-relaxed text-white/85 sm:text-lg"
+          >
             {E.entradillaPagina}
           </p>
           <a
             href="#solicitud"
+            data-revelar
             class="self-start rounded-full bg-sand px-8 py-4 text-center accion text-xs text-rust shadow-lg shadow-black/25 transition-colors hover:bg-white md:self-auto"
           >
             {E.ctaCabecera}
@@ -118,7 +127,7 @@ const proponerAncha = E.disenos.length % 2 === 0;
       <Ondas slot="fondo-franja" id="especiales-pasos" class="text-linen/12" />
       <ol slot="franja" class="grid w-full gap-5 md:grid-cols-3 md:gap-8">
         {E.pasos.map((paso, i) => (
-          <li class="flex items-center gap-5">
+          <li data-revelar class="flex items-center gap-5">
             <span class="w-6 shrink-0 text-center titulo text-4xl leading-none text-sand">
               {i + 1}
             </span>
@@ -135,9 +144,11 @@ const proponerAncha = E.disenos.length % 2 === 0;
 
     <section class="pt-12 pb-2 md:pt-16 md:pb-4">
       <div class="mx-auto w-full max-w-7xl px-6">
-        <p class="antetitulo text-rust">{E.etiquetaDisenos}</p>
+        <p data-revelar class="antetitulo text-rust">
+          {E.etiquetaDisenos}
+        </p>
         <h2 class="mt-4 titulo text-4xl leading-[1.08] text-balance sm:text-5xl">
-          {E.tituloDisenos}
+          <TextoRevelado texto={E.tituloDisenos} />
         </h2>
       </div>
 
@@ -169,6 +180,7 @@ const proponerAncha = E.disenos.length % 2 === 0;
         <a
           href={conDiseno(E.proponer.slug)}
           data-elige={E.proponer.slug}
+          data-revelar
           class:list={[
             "group relative isolate flex flex-col justify-between gap-8 overflow-hidden rounded-3xl bg-rust p-6 text-linen sm:p-8 lg:px-10 lg:py-9",
             proponerAncha ? "lg:col-span-2 lg:gap-5" : "lg:min-h-80",
@@ -203,6 +215,7 @@ const proponerAncha = E.disenos.length % 2 === 0;
       <div class="mt-12 flex justify-center px-6 md:mt-14">
         <a
           href={SERVICIOS.eventos.ruta}
+          data-revelar
           class="inline-flex max-w-xs items-center gap-2 border-b border-taupe/40 pb-1 text-center accion text-xs leading-relaxed text-black transition-colors hover:border-black sm:max-w-none"
         >
           {E.aEventos}
@@ -223,12 +236,15 @@ const proponerAncha = E.disenos.length % 2 === 0;
 
 <script>
   import { alPulsarEnlace, elegirDiseno } from "@/lib/elegirDiseno";
+  import { alCargarPagina } from "@/lib/pagina";
 
-  // "Pedir esta tarta" y la tarjeta de "que me proponga" bajan al formulario
-  // sin recargar (ver elegirDiseno).
-  document
-    .querySelectorAll<HTMLAnchorElement>("a[data-elige]")
-    .forEach((tarjeta) => {
-      alPulsarEnlace(tarjeta, () => elegirDiseno(tarjeta.dataset.elige!));
-    });
+  alCargarPagina(() => {
+    // "Pedir esta tarta" y la tarjeta de "que me proponga" bajan al formulario
+    // sin recargar (ver elegirDiseno).
+    document
+      .querySelectorAll<HTMLAnchorElement>("a[data-elige]")
+      .forEach((tarjeta) => {
+        alPulsarEnlace(tarjeta, () => elegirDiseno(tarjeta.dataset.elige!));
+      });
+  });
 </script>

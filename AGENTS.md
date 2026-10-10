@@ -70,6 +70,8 @@ para conocer las utilidades propias). Los `.md` quedan fuera.
 - Lógica pura en `src/lib/`. `lib/tartas.ts` es sólo de servidor (importa
   imágenes); lo que necesita también el navegador va en `lib/pedido.ts`.
 - Componentes por dominio en `src/components/<dominio>/`.
+- Fotos con `Foto.astro` (AVIF con webp de respaldo), nunca con el `<Image>`
+  de Astro directamente. Ver `src/assets/README.md`.
 
 ## Tipografía
 
@@ -108,6 +110,30 @@ y lo que va dentro: la banda por el slot por defecto, la franja por
 ondas) por `slot="fondo-franja"`. No le pongas alturas propias a un hero desde
 fuera: si las proporciones tienen que cambiar, cambian en el componente y para
 todas las páginas.
+
+## Animaciones de entrada
+
+Lo que tenga que aparecer al hacer scroll lleva `data-revelar` (sube y se
+funde), `data-revelar="foto"` en el contenedor de una foto (cortina) o, en un
+titular, `<TextoRevelado texto={...} />` dentro del h1/h2 (palabra a palabra).
+Sin librerías: `lib/revelar.ts` decide cuándo y `global.css` («Animaciones de
+entrada») el cómo. Una foto que pueda estar en pantalla al cargar (heros, las
+tarjetas de /catalogo) va con `data-revelar="zoom"`, nunca con cortina: es el
+LCP y la cortina lo retrasa hasta 2s. No se animan formularios, cabecera ni
+páginas legales.
+
+## Transiciones entre pantallas y `<script>`
+
+El Layout lleva el `<ClientRouter />` de Astro: cambiar de pantalla no recarga,
+se cambia el `<body>` con un fundido (en pantallas táctiles, sin fundido: en
+iOS 26 teñía de beis la barra de estado; ver el `<head>` del Layout). Por eso un `<script>` de componente
+**nunca corre suelto**: monta su trabajo con `alCargarPagina` de
+`lib/pagina.ts`, que lo ejecuta en cada pantalla, y pasa la `senal` que recibe
+a todo oyente de `document`, `window` o `matchMedia` y a los observers. Un
+script suelto funciona en la primera pantalla y se queda muerto al navegar,
+sin dar ningún error. Lo que tenga que estar en `<html>` (como
+`data-animar`) se repone en `astro:after-swap`, porque el router cambia sus
+atributos por los de la página nueva.
 
 ## Documentation
 

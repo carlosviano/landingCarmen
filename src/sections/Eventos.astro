@@ -23,7 +23,8 @@
 // Ojo: NO va centrada en vertical en una pantalla entera. El texto empieza
 // arriba, a un `lg:pt-12` fijo, para que lo que hay encima (el díptico) y esto
 // se lean seguidos y no con un hueco que crece con la pantalla.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
+import TextoRevelado from "@/components/TextoRevelado.astro";
 import { EVENTOS } from "@/config/eventos";
 import { ESCAPARATE_EVENTOS } from "@/config/portada";
 import { SERVICIOS } from "@/config/site";
@@ -36,20 +37,26 @@ const foto = fotoDe(ESCAPARATE_EVENTOS.archivo)!;
 
 <section id={SERVICIOS.eventos.ancla} class="scroll-mt-20">
   <div class="mx-auto w-full max-w-7xl px-6 py-16 md:py-20 lg:pt-12 lg:pb-10">
-    <p class="antetitulo text-rust">{EVENTOS.etiqueta}</p>
+    <p data-revelar class="antetitulo text-rust">
+      {EVENTOS.etiqueta}
+    </p>
     <h2 class="mt-5 max-w-2xl titulo text-4xl leading-[1.05] text-balance sm:text-5xl">
-      {EVENTOS.titulo}
+      <TextoRevelado texto={EVENTOS.titulo} />
     </h2>
-    <p class="mt-6 max-w-[34rem] text-base leading-relaxed text-black/80 sm:text-lg">
+    <p
+      data-revelar
+      class="mt-6 max-w-[34rem] text-base leading-relaxed text-black/80 sm:text-lg"
+    >
       {EVENTOS.entradilla}
     </p>
 
     <div class="mt-12 lg:mt-8">
       <a
         href={SERVICIOS.eventos.ruta}
+        data-revelar="foto"
         class="group relative block aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15 shadow-md shadow-black/5 ring-1 ring-taupe/40 md:aspect-[2/1] lg:aspect-[3/1]"
       >
-        <Image
+        <Foto
           src={foto}
           alt={ESCAPARATE_EVENTOS.alt}
           widths={[420, 640, 860, 1080, 1280]}
@@ -63,7 +70,7 @@ const foto = fotoDe(ESCAPARATE_EVENTOS.archivo)!;
           {ESCAPARATE_EVENTOS.cta}
         </span>
       </a>
-      <p class="mt-4 dato text-[11px] text-black/50">
+      <p data-revelar class="mt-4 dato text-[11px] text-black/50">
         {ESCAPARATE_EVENTOS.pie}
       </p>
     </div>

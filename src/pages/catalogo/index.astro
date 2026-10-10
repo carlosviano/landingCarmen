@@ -12,6 +12,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/sections/Header.astro";
 import Footer from "@/sections/Footer.astro";
 import Carta from "@/components/catalogo/Carta.astro";
+import TextoRevelado from "@/components/TextoRevelado.astro";
 import { CATALOGO } from "@/config/catalogo";
 ---
 
@@ -21,11 +22,16 @@ import { CATALOGO } from "@/config/catalogo";
   <main>
     <div class="mx-auto w-full max-w-7xl px-6 pt-14 pb-15 md:pt-20 lg:pb-17">
       {/* Cabecera centrada: antetítulo en mayúsculas y titular en serif. */}
-      <p class="text-center antetitulo text-rust">{CATALOGO.etiqueta}</p>
+      <p data-revelar class="text-center antetitulo text-rust">
+        {CATALOGO.etiqueta}
+      </p>
       <h1 class="mt-3.5 text-center titular text-4xl leading-tight sm:text-5xl lg:text-[3.25rem]">
-        {CATALOGO.tituloPagina}
+        <TextoRevelado texto={CATALOGO.tituloPagina} />
       </h1>
-      <p class="mx-auto mt-4.5 max-w-[54ch] text-center leading-relaxed text-black/62">
+      <p
+        data-revelar
+        class="mx-auto mt-4.5 max-w-[54ch] text-center leading-relaxed text-black/62"
+      >
         {CATALOGO.entradilla}
       </p>
 

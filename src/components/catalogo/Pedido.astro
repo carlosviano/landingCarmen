@@ -221,91 +221,95 @@ const conSelector = tarta.tamanos.length > 1;
     precioVisible,
     problemaFecha,
   } from "@/lib/pedido";
+  import { alCargarPagina } from "@/lib/pagina";
 
-  for (const form of document.querySelectorAll<HTMLFormElement>(
-    "[data-pedido]",
-  )) {
-    const nombre = form.dataset.nombre ?? "";
-    const cantidad = form.querySelector<HTMLInputElement>("[data-cantidad]");
-    const fecha = form.querySelector<HTMLInputElement>(
-      "[data-calendario-valor]",
-    );
-    const botonFecha = form.querySelector<HTMLButtonElement>(
-      "[data-calendario-boton]",
-    );
-    const total = form.querySelector<HTMLElement>("[data-total]");
-    const cta = form.querySelector<HTMLAnchorElement>("[data-cta]");
-    const error = form.querySelector<HTMLElement>("[data-error]");
-    if (!cantidad || !fecha || !botonFecha || !total || !cta || !error)
-      continue;
-
-    // El tamaño marcado; sin selector (un solo tamaño), el del propio <form>.
-    const tamano = () =>
-      form.querySelector<HTMLInputElement>('input[name="tamano"]:checked') ??
-      form;
-    const unidades = () => Math.max(1, Math.round(Number(cantidad.value) || 1));
-
-    const avisar = (problema: string | null) => {
-      error.hidden = problema === null;
-      error.textContent = problema ?? "";
-      if (problema) botonFecha.setAttribute("aria-invalid", "true");
-      else botonFecha.removeAttribute("aria-invalid");
-    };
-
-    const actualizar = () => {
-      const { personas, precio } = tamano().dataset;
-      total.textContent = precioVisible(Number(precio) * unidades());
-      cta.href = PEDIDO.enlace(
-        mensajePedido(nombre, {
-          personas,
-          cantidad: unidades(),
-          fecha: fecha.value || undefined,
-        }),
-      );
-    };
-
-    for (const boton of form.querySelectorAll<HTMLButtonElement>(
-      "[data-paso]",
+  alCargarPagina(() => {
+    for (const form of document.querySelectorAll<HTMLFormElement>(
+      "[data-pedido]",
     )) {
-      boton.addEventListener("click", () => {
-        cantidad.value = String(
-          Math.max(1, unidades() + Number(boton.dataset.paso)),
+      const nombre = form.dataset.nombre ?? "";
+      const cantidad = form.querySelector<HTMLInputElement>("[data-cantidad]");
+      const fecha = form.querySelector<HTMLInputElement>(
+        "[data-calendario-valor]",
+      );
+      const botonFecha = form.querySelector<HTMLButtonElement>(
+        "[data-calendario-boton]",
+      );
+      const total = form.querySelector<HTMLElement>("[data-total]");
+      const cta = form.querySelector<HTMLAnchorElement>("[data-cta]");
+      const error = form.querySelector<HTMLElement>("[data-error]");
+      if (!cantidad || !fecha || !botonFecha || !total || !cta || !error)
+        continue;
+
+      // El tamaño marcado; sin selector (un solo tamaño), el del propio <form>.
+      const tamano = () =>
+        form.querySelector<HTMLInputElement>('input[name="tamano"]:checked') ??
+        form;
+      const unidades = () =>
+        Math.max(1, Math.round(Number(cantidad.value) || 1));
+
+      const avisar = (problema: string | null) => {
+        error.hidden = problema === null;
+        error.textContent = problema ?? "";
+        if (problema) botonFecha.setAttribute("aria-invalid", "true");
+        else botonFecha.removeAttribute("aria-invalid");
+      };
+
+      const actualizar = () => {
+        const { personas, precio } = tamano().dataset;
+        total.textContent = precioVisible(Number(precio) * unidades());
+        cta.href = PEDIDO.enlace(
+          mensajePedido(nombre, {
+            personas,
+            cantidad: unidades(),
+            fecha: fecha.value || undefined,
+          }),
         );
-        actualizar();
-      });
-    }
+      };
 
-    // Al salir del campo se deja en un entero de 1 para arriba: mientras se
-    // escribe no, que borrar para teclear otro número pasa por el vacío.
-    cantidad.addEventListener("change", () => {
-      cantidad.value = String(unidades());
-    });
-
-    const calendario = montarCalendario(form, {
-      primera: () => aISO(fechaMinima()),
-      elegible: esLaborable,
-      alElegir: () => avisar(null),
-    });
-
-    form.addEventListener("input", actualizar);
-    form.addEventListener("change", actualizar);
-
-    // Sin fecha válida no se abre WhatsApp: se explica por qué y se abre el
-    // calendario para elegir otra.
-    cta.addEventListener("click", (evento) => {
-      const problema = problemaFecha(fecha.value);
-      if (problema) {
-        evento.preventDefault();
-        // Que este clic no llegue al "clic fuera" que cierra el calendario.
-        evento.stopPropagation();
-        avisar(problema);
-        calendario.abrir();
+      for (const boton of form.querySelectorAll<HTMLButtonElement>(
+        "[data-paso]",
+      )) {
+        boton.addEventListener("click", () => {
+          cantidad.value = String(
+            Math.max(1, unidades() + Number(boton.dataset.paso)),
+          );
+          actualizar();
+        });
       }
-    });
 
-    // Intro en un campo enviaría el formulario, y no hay adónde enviarlo.
-    form.addEventListener("submit", (evento) => evento.preventDefault());
+      // Al salir del campo se deja en un entero de 1 para arriba: mientras se
+      // escribe no, que borrar para teclear otro número pasa por el vacío.
+      cantidad.addEventListener("change", () => {
+        cantidad.value = String(unidades());
+      });
 
-    actualizar();
-  }
+      const calendario = montarCalendario(form, {
+        primera: () => aISO(fechaMinima()),
+        elegible: esLaborable,
+        alElegir: () => avisar(null),
+      });
+
+      form.addEventListener("input", actualizar);
+      form.addEventListener("change", actualizar);
+
+      // Sin fecha válida no se abre WhatsApp: se explica por qué y se abre el
+      // calendario para elegir otra.
+      cta.addEventListener("click", (evento) => {
+        const problema = problemaFecha(fecha.value);
+        if (problema) {
+          evento.preventDefault();
+          // Que este clic no llegue al "clic fuera" que cierra el calendario.
+          evento.stopPropagation();
+          avisar(problema);
+          calendario.abrir();
+        }
+      });
+
+      // Intro en un campo enviaría el formulario, y no hay adónde enviarlo.
+      form.addEventListener("submit", (evento) => evento.preventDefault());
+
+      actualizar();
+    }
+  });
 </script>

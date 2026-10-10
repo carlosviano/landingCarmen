@@ -116,8 +116,8 @@ Una foto a todo el ancho que en escritorio se recorta a 3:1. Ahora es
 franja. Lo ideal es una foto **horizontal** de una mesa entera. Ojo: no puede
 ser la misma que la del Hero, que va justo encima.
 
-Todas pasan por el `<Image>` de Astro (viven en `src/assets/`, no son URLs
-remotas), así que el build les saca sus webp y sus tamaños.
+Todas pasan por `Foto.astro` (viven en `src/assets/`, no son URLs remotas),
+así que el build les saca sus AVIF y webp y sus tamaños.
 
 ---
 
@@ -194,9 +194,33 @@ salir de otro tamaño. Hoy la más alta es la pavlova, con 1032.
 Con el lienzo hecho, los puntos se buscan sobre la foto con una rejilla en %,
 con las reglas de `ComponenteTarta.punto`.
 
-## Sí pasan por `<Image>` de Astro
+## Sí pasan por `Foto.astro`
 
-Al vivir en `src/assets/` (y no ser URLs remotas), el build les saca sus `webp`
-en varios anchos: la pavlova baja de 112 kB a entre 17 y 64 kB según el hueco.
-Esta carpeta era antes la única parte del sitio que no pasaba por `<Image>`;
-ya no lo es.
+Al vivir en `src/assets/` (y no ser URLs remotas), el build les saca sus AVIF
+y webp en varios anchos: la pavlova baja de 112 kB a entre 17 y 64 kB según el
+hueco, y menos en AVIF. Esta carpeta era antes la única parte del sitio que no
+pasaba por el pipeline de imágenes de Astro; ya no lo es.
+
+---
+
+# AVIF con webp de respaldo: `src/components/Foto.astro`
+
+Las fotos del sitio no usan el `<Image>` de Astro sino `Foto`, que es un
+`<Picture>` con `formats={["avif", "webp"]}`: cada navegador coge el primero
+que entiende. Astro no tiene un ajuste global para cambiar el formato de
+`<Image>`, de ahí el componente. Admite los mismos props que `<Image>`.
+
+Medido al cambiar (octubre de 2026), en bytes de imagen descargados por página:
+entre un 34 y un 49 % menos (la carta, de 570 a 289 kB en móvil). A ojo, en
+recortes al 100 %, no se distingue del webp.
+
+Dos detalles:
+
+- el `<picture>` va con `display: contents`, así que no pinta caja y el `<img>`
+  se coloca igual que antes. Se comprobó midiendo todas las imágenes de cinco
+  páginas a 430 y 1440 px: posiciones idénticas.
+- AVIF tarda más en generarse: un build en frío pasa de unos segundos a ~35 s.
+  Astro guarda las imágenes en caché entre builds.
+
+La excepción es el mapa de contacto, que va como fondo CSS con `getImage()` y
+sigue en webp.

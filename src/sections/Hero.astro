@@ -75,8 +75,9 @@
 // al primero. En lg no se queda debajo de la foto: cruza por encima de su canto
 // y se apaga con el degradado, para que la imagen parezca salir de detrás del
 // patrón (el detalle, en la nota del svg).
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import Hero from "@/components/Hero.astro";
+import TextoRevelado from "@/components/TextoRevelado.astro";
 import fotoHero from "@/assets/images/tartaRosaPintando2.jpg";
 import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
 import { HERO } from "@/config/portada";
@@ -147,13 +148,18 @@ const sizesFoto = `(min-width: 1024px) ${anchoCubierto(fotoHero, "50vw", "(100vh
 
   <div class="relative mx-auto w-full max-w-7xl px-6 lg:z-20">
     <div class="w-full py-14 md:py-16 lg:w-1/2 lg:py-0 lg:pr-12">
-      <p class="antetitulo text-linen">{HERO.antetitulo}</p>
+      <p data-revelar class="antetitulo text-linen">
+        {HERO.antetitulo}
+      </p>
 
       <h1 class="mt-5 titular text-4xl leading-[1.05] text-balance text-linen sm:text-5xl lg:text-6xl xl:text-7xl">
-        {HERO.titular}
+        <TextoRevelado texto={HERO.titular} />
       </h1>
 
-      <p class="mt-6 max-w-[30rem] text-base leading-relaxed text-linen/80 sm:text-lg">
+      <p
+        data-revelar
+        class="mt-6 max-w-[30rem] text-base leading-relaxed text-linen/80 sm:text-lg"
+      >
         {HERO.entradilla}
       </p>
 
@@ -171,10 +177,12 @@ const sizesFoto = `(min-width: 1024px) ${anchoCubierto(fotoHero, "50vw", "(100vh
           debajo, a medias. En fila envolvían a dos líneas sin orden.
           `py-4` con `text-xs` deja cada botón en ~48px, por encima de los
           44 del pulgar. */}
-      <p class="mt-8 leyenda text-linen/80">{HERO.encarga}</p>
+      <p data-revelar class="mt-8 leyenda text-linen/80">
+        {HERO.encarga}
+      </p>
       <ul class="mt-4 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
         {Object.values(SERVICIOS).map(({ nombre, ruta }, indice) => (
-          <li class:list={[indice === 0 && "col-span-2"]}>
+          <li data-revelar class:list={[indice === 0 && "col-span-2"]}>
             <a
               href={ruta}
               class:list={[
@@ -190,7 +198,9 @@ const sizesFoto = `(min-width: 1024px) ${anchoCubierto(fotoHero, "50vw", "(100vh
         ))}
       </ul>
 
-      <p class="mt-6 text-xs text-linen/60">{HERO.nota}</p>
+      <p data-revelar class="mt-6 text-xs text-linen/60">
+        {HERO.nota}
+      </p>
     </div>
   </div>
 
@@ -214,8 +224,11 @@ const sizesFoto = `(min-width: 1024px) ${anchoCubierto(fotoHero, "50vw", "(100vh
       pintarían POR ENCIMA de la imagen (ir después en el DOM no basta, eso
       solo decide entre hermanos posicionados). En lg no se nota porque manda
       el lg:absolute; el estropicio se ve solo por debajo de lg. */}
-  <div class="relative min-h-48 flex-1 overflow-hidden lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-    <Image
+  <div
+    data-revelar="zoom"
+    class="relative min-h-48 flex-1 overflow-hidden lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2"
+  >
+    <Foto
       src={fotoHero}
       alt={HERO.fotoAlt}
       widths={ANCHOS_GRANDES}
@@ -269,6 +282,7 @@ const sizesFoto = `(min-width: 1024px) ${anchoCubierto(fotoHero, "50vw", "(100vh
       vuelve a 5 en lg, donde el punto ya mete aire por su cuenta. */}
   <ul
     slot="franja"
+    data-revelar
     class="flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-2 dato text-[11px] text-black/50 lg:gap-x-5"
   >
     {HERO.credenciales.map((casa, indice) => (

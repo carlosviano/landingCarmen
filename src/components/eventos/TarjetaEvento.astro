@@ -20,7 +20,7 @@
 // (components/Lightbox.astro), el mismo de /personalizadas, con todas las
 // fotos del montaje y el "Quiero algo parecido" abajo. Los vídeos no entran:
 // de momento son huecos.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { Icon } from "astro-icon/components";
 import Lightbox from "@/components/Lightbox.astro";
 import { EVENTOS, type Montaje } from "@/config/eventos";
@@ -124,18 +124,20 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
     apiladas y no se igualan: la foto va en 4:3 y el texto crece hacia abajo. */}
 <article
   data-montaje
+  data-revelar
   class:list={[
     "grid overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/10 ring-1 ring-taupe/60 md:grid-cols-2 md:grid-rows-[34rem_auto] lg:grid-rows-[31rem_auto]",
     className,
   ]}
 >
   <div
+    data-revelar="foto"
     class:list={[
       "relative aspect-[4/3] overflow-hidden bg-taupe/15 md:aspect-auto",
       !fotoIzquierda && "md:order-2",
     ]}
   >
-    <Image
+    <Foto
       src={foto}
       alt={montaje.alt}
       widths={ANCHOS}
@@ -245,7 +247,7 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
                           "group relative block aspect-[3/4] cursor-zoom-in overflow-hidden rounded-2xl bg-taupe/15",
                         ]}
                       >
-                        <Image
+                        <Foto
                           src={pieza.src}
                           alt={pieza.alt}
                           widths={[300, 450, 600, 800]}
@@ -335,30 +337,34 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
 )}
 
 <script>
-  for (const tarjeta of document.querySelectorAll<HTMLElement>(
-    "[data-montaje]",
-  )) {
-    const boton = tarjeta.querySelector<HTMLButtonElement>("[data-ver-mas]");
-    const cinta = tarjeta.querySelector<HTMLElement>("[data-cinta]");
-    if (!boton || !cinta) continue;
+  import { alCargarPagina } from "@/lib/pagina";
 
-    const poner = (abierta: boolean) => {
-      boton.setAttribute("aria-expanded", String(abierta));
-      cinta.toggleAttribute("data-abierta", abierta);
-      cinta.inert = !abierta;
-    };
+  alCargarPagina(() => {
+    for (const tarjeta of document.querySelectorAll<HTMLElement>(
+      "[data-montaje]",
+    )) {
+      const boton = tarjeta.querySelector<HTMLButtonElement>("[data-ver-mas]");
+      const cinta = tarjeta.querySelector<HTMLElement>("[data-cinta]");
+      if (!boton || !cinta) continue;
 
-    poner(false);
+      const poner = (abierta: boolean) => {
+        boton.setAttribute("aria-expanded", String(abierta));
+        cinta.toggleAttribute("data-abierta", abierta);
+        cinta.inert = !abierta;
+      };
 
-    boton.addEventListener("click", () =>
-      poner(boton.getAttribute("aria-expanded") !== "true"),
-    );
-
-    // "Cerrar" está al final de la cinta: al plegarla, el foco vuelve al
-    // botón de la tarjeta, que también la trae de vuelta a la vista.
-    cinta.querySelector("[data-cerrar]")?.addEventListener("click", () => {
       poner(false);
-      boton.focus();
-    });
-  }
+
+      boton.addEventListener("click", () =>
+        poner(boton.getAttribute("aria-expanded") !== "true"),
+      );
+
+      // "Cerrar" está al final de la cinta: al plegarla, el foco vuelve al
+      // botón de la tarjeta, que también la trae de vuelta a la vista.
+      cinta.querySelector("[data-cerrar]")?.addEventListener("click", () => {
+        poner(false);
+        boton.focus();
+      });
+    }
+  });
 </script>

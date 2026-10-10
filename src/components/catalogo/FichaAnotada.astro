@@ -8,9 +8,15 @@
 // columna de etiquetas hasta su punto, en % del recorte. Las líneas son
 // decorativas y van con aria-hidden.
 //
+// En móvil y tableta junto a cada línea va sólo un nombre, sin descripción:
+// con ella, cinco o seis etiquetas no caben en la columna estrecha y la
+// tarta queda cargadísima. Ese nombre es `etiquetaMovil`, más completo que
+// el de escritorio porque tiene que contar solo lo que allí cuenta la
+// descripción.
+//
 // Sólo se monta si la tarta está anotada (`estaAnotada`): todos los
 // componentes con `punto`.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import type { Tarta } from "@/config/catalogo";
 
 interface Props {
@@ -28,7 +34,7 @@ const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
 
 <figure class="anotada" style={`--y0:${primerPunto}`}>
   <div class="lienzo" style={`--ar: ${recorte.width} / ${recorte.height}`}>
-    <Image
+    <Foto
       src={recorte}
       alt={tarta.alt}
       widths={[560, 840, 1120, 1400]}
@@ -47,7 +53,18 @@ const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
         style={`--x:${componente.punto!.x};--y:${componente.punto!.y}`}
       >
         <span class="etiqueta">
-          <span class="font-medium text-black">{componente.etiqueta}</span>
+          {componente.etiquetaMovil ? (
+            <>
+              <span class="nombre-movil font-medium text-black">
+                {componente.etiquetaMovil}
+              </span>
+              <span class="nombre font-medium text-black">
+                {componente.etiqueta}
+              </span>
+            </>
+          ) : (
+            <span class="font-medium text-black">{componente.etiqueta}</span>
+          )}
           <span class="detalle text-black/65">
             {componente.descripcionCorta}
           </span>
@@ -148,7 +165,12 @@ const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
     text-align: right;
   }
 
+  /* En móvil, sólo el nombre de móvil y sin descripción. Con `display:
+     none` el lector de pantalla tampoco lee lo oculto, así que no oye cada
+     nombre dos veces. */
+  .nombre,
   .detalle {
+    display: none;
     font-size: 11px;
     line-height: 1.3;
   }
@@ -227,6 +249,14 @@ const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
       top: 0;
     }
 
+    .nombre-movil {
+      display: none;
+    }
+
+    .nombre {
+      display: inline;
+    }
+
     .etiquetas li {
       gap: 14px;
     }
@@ -237,6 +267,7 @@ const primerPunto = Math.min(...tarta.componentes.map((c) => c.punto!.y));
     }
 
     .detalle {
+      display: inline;
       font-size: 12px;
     }
   }

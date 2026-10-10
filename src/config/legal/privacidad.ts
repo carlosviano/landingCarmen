@@ -26,10 +26,9 @@
 import { TITULAR } from "../site";
 import type { TextoLegal } from "@/lib/legal";
 
-// TODO: datos de Carmela. Quién le da el correo (Gmail es Google Ireland,
-// Outlook es Microsoft Ireland…) y si lleva las cuentas una gestoría.
-const PROVEEDOR_CORREO =
-  "[PROVEEDOR DE CORREO, p. ej. Google Ireland Ltd. (Gmail)]";
+// El correo de contacto@estimadacarmela.com va por Google Workspace.
+const PROVEEDOR_CORREO = "Google Ireland Ltd. (Google Workspace)";
+// TODO: datos de Carmela. Si lleva las cuentas una gestoría.
 const GESTORIA = "[GESTORÍA, si la hay]";
 const PLAZO_SOLICITUDES = "[PLAZO, p. ej. un año]";
 

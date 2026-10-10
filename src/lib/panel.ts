@@ -42,10 +42,18 @@ export function montarPanel(
     if (evento.key === "Escape") cerrar(true);
   });
 
-  document.addEventListener("click", (evento) => {
+  // En document, que sobrevive al cambio de pantalla (lib/pagina.ts): cuando
+  // el panel ya no está en la página, el oyente se quita a sí mismo. Así no
+  // hay que pasar la señal de la página por el calendario y el desplegable.
+  const alPulsarFuera = (evento: MouseEvent) => {
+    if (!panel.isConnected) {
+      document.removeEventListener("click", alPulsarFuera);
+      return;
+    }
     const donde = evento.target as Node;
     if (abierto() && !panel.contains(donde) && !boton.contains(donde)) cerrar();
-  });
+  };
+  document.addEventListener("click", alPulsarFuera);
 
   return { abrir, cerrar };
 }
