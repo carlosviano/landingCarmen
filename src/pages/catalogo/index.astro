@@ -12,6 +12,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/sections/Header.astro";
 import Footer from "@/sections/Footer.astro";
 import Carta from "@/components/catalogo/Carta.astro";
+import CompartirCarta from "@/components/catalogo/CompartirCarta.astro";
 import TextoRevelado from "@/components/TextoRevelado.astro";
 import { CATALOGO } from "@/config/catalogo";
 ---
@@ -34,6 +35,10 @@ import { CATALOGO } from "@/config/catalogo";
       >
         {CATALOGO.entradilla}
       </p>
+      {/* La carta en PDF, para mandarla por WhatsApp sin pasar por la web. */}
+      <div data-revelar class="mt-6 flex justify-center">
+        <CompartirCarta />
+      </div>
 
       {/* Las tarjetas cuelgan del h1 de esta página, así que su nombre es un h2. */}
       <Carta tartas={CATALOGO.tartas} nivelTarjeta={2} class="mt-11 md:mt-12" />

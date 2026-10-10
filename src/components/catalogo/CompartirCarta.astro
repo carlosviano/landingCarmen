@@ -1,0 +1,89 @@
+---
+// La carta en PDF, para mandarla por WhatsApp. Ver «La carta en PDF» en
+// AGENTS.md: el PDF lo genera `npm run carta`.
+//
+// Sin JS, o donde no se pueden compartir archivos (casi todo escritorio), es
+// un enlace que lo descarga. En el móvil el script lo convierte en
+// «Compartir la carta»: abre la hoja de compartir con el PDF ya adjunto, que
+// es el camino corto hasta el chat donde se está decidiendo la tarta.
+//
+// Con borde y no relleno: el único botón lleno de la carta es el de pedir.
+import { Icon } from "astro-icon/components";
+
+const PDF = "/carta-estimada-carmela.pdf";
+---
+
+<a
+  data-compartir-carta
+  href={PDF}
+  download
+  class="inline-flex items-center gap-2.5 rounded-full border border-black/40 px-5 py-3 accion text-[11px] text-rust transition-colors duration-200 hover:border-rust hover:bg-rust hover:text-linen motion-reduce:transition-none"
+>
+  <Icon
+    data-icono-descargar
+    name="lucide:download"
+    class="size-4 shrink-0"
+    aria-hidden="true"
+  />
+  <Icon
+    data-icono-compartir
+    name="lucide:share"
+    class="hidden size-4 shrink-0"
+    aria-hidden="true"
+  />
+  <span data-texto>Descargar la carta (PDF)</span>
+</a>
+
+<script>
+  import { alCargarPagina } from "@/lib/pagina";
+
+  const NOMBRE = "carta-estimada-carmela.pdf";
+
+  alCargarPagina(() => {
+    const enlace = document.querySelector<HTMLAnchorElement>(
+      "[data-compartir-carta]",
+    );
+    if (!enlace || !navigator.canShare) return;
+
+    // ¿Deja este navegador compartir un PDF? Se pregunta con uno vacío: no
+    // hace falta bajarlo para saberlo.
+    const prueba = new File([], NOMBRE, { type: "application/pdf" });
+    if (!navigator.canShare({ files: [prueba] })) return;
+
+    enlace.querySelector("[data-icono-descargar]")?.classList.add("hidden");
+    enlace.querySelector("[data-icono-compartir]")?.classList.remove("hidden");
+    const texto = enlace.querySelector("[data-texto]");
+    if (texto) texto.textContent = "Compartir la carta";
+
+    // El PDF se baja solo cuando alguien va a por él, no al abrir la página:
+    // si no, cada visita a la carta desde el móvil se llevaba el PDF entero
+    // aunque nunca lo compartiera. Empieza al apoyar el dedo (o al llegar con
+    // el teclado), que es un poco antes del clic, y se baja una sola vez.
+    let archivo: Promise<File | null> | null = null;
+    const pedir = () =>
+      (archivo ??= fetch(enlace.href)
+        .then((respuesta) => respuesta.blob())
+        .then((blob) => new File([blob], NOMBRE, { type: "application/pdf" }))
+        .catch(() => null));
+    enlace.addEventListener("pointerdown", pedir, { once: true });
+    enlace.addEventListener("focus", pedir, { once: true });
+
+    enlace.addEventListener("click", async (evento) => {
+      evento.preventDefault();
+      const pdf = await pedir();
+      try {
+        if (!pdf) throw new Error("Sin PDF");
+        await navigator.share({
+          files: [pdf],
+          title: "La carta de Estimada Carmela",
+        });
+      } catch (error) {
+        // Cerrar la hoja sin elegir no es un fallo. Cualquier otra cosa sí,
+        // y entonces, la descarga de siempre. Incluido que la descarga haya
+        // tardado tanto (una conexión muy lenta) que Safari ya no dé el
+        // `share()` por pegado al toque.
+        if ((error as Error).name !== "AbortError") location.href = enlace.href;
+      }
+    });
+  });
+</script>
