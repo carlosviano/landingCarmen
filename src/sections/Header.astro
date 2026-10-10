@@ -13,6 +13,14 @@ import SocialLinks from "@/components/header/SocialLinks.astro";
 // de iOS la barra pegada arriba puede quedar medio píxel por debajo del borde
 // al hacer scroll, y por esa rendija asomaba el contenido que pasa por detrás.
 // La franja la tapa; por encima del borde no se ve nunca.
+//
+// Transiciones entre pantallas (el <ClientRouter /> de Layout.astro): la
+// cabecera NO lleva transition:name. Va dentro del fundido de la página, y
+// como es igual en las dos pantallas se queda quieta sola: el fundido del
+// navegador suma las dos imágenes con plus-lighter, y lo que no cambia no se
+// mueve. Con nombre propio se recorta de la imagen de la página y se pinta
+// como capa aparte, y Safari de iOS no la colocaba bien: por el hueco se veía
+// el linen del fondo y la barra parecía volverse beis al cambiar de pantalla.
 ---
 
 <header class="sticky top-0 z-50 bg-rust text-sand before:pointer-events-none before:absolute before:inset-x-0 before:bottom-full before:h-4 before:bg-rust">

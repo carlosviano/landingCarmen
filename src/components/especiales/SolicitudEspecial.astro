@@ -186,38 +186,41 @@ const PILDORA = `${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`;
     primeraFechaEspecial,
     validarEspecial,
   } from "@/lib/solicitud";
+  import { alCargarPagina } from "@/lib/pagina";
 
-  document
-    .querySelectorAll<HTMLFormElement>('[data-solicitud="especial"]')
-    .forEach((form) => {
-      // El diseño que trae el enlace de la tarjeta. Antes de montar, para que
-      // el WhatsApp salga ya con él. Un slug que no esté en la lista no marca
-      // nada: el selector no encuentra su radio.
-      const diseno = new URLSearchParams(location.search).get("diseno");
-      if (diseno) {
-        const radio = form.querySelector<HTMLInputElement>(
-          `input[name="diseno"][value="${CSS.escape(diseno)}"]`,
-        );
-        if (radio) radio.checked = true;
-      }
+  alCargarPagina(() => {
+    document
+      .querySelectorAll<HTMLFormElement>('[data-solicitud="especial"]')
+      .forEach((form) => {
+        // El diseño que trae el enlace de la tarjeta. Antes de montar, para que
+        // el WhatsApp salga ya con él. Un slug que no esté en la lista no marca
+        // nada: el selector no encuentra su radio.
+        const diseno = new URLSearchParams(location.search).get("diseno");
+        if (diseno) {
+          const radio = form.querySelector<HTMLInputElement>(
+            `input[name="diseno"][value="${CSS.escape(diseno)}"]`,
+          );
+          if (radio) radio.checked = true;
+        }
 
-      montarSolicitud(form, {
-        validar: validarEspecial,
-        mensaje: (texto) =>
-          mensajeEspecial({
-            diseno: texto("diseno"),
-            ocasion: texto("ocasion"),
-            personas: texto("personas"),
-            fecha: texto("fecha"),
-          }),
-        calendario: { primera: primeraFechaEspecial, elegible: esLaborable },
-        envio: ESPECIALES.solicitud.envio,
-        enviado:
-          "Recibido. Te escribo en cuanto lo lea con una propuesta para tu tarta.",
+        montarSolicitud(form, {
+          validar: validarEspecial,
+          mensaje: (texto) =>
+            mensajeEspecial({
+              diseno: texto("diseno"),
+              ocasion: texto("ocasion"),
+              personas: texto("personas"),
+              fecha: texto("fecha"),
+            }),
+          calendario: { primera: primeraFechaEspecial, elegible: esLaborable },
+          envio: ESPECIALES.solicitud.envio,
+          enviado:
+            "Recibido. Te escribo en cuanto lo lea con una propuesta para tu tarta.",
+        });
+
+        // `montarSolicitud` rehace el WhatsApp con cada cambio; el diseño marcado
+        // aquí no ha disparado ninguno.
+        form.dispatchEvent(new Event("change"));
       });
-
-      // `montarSolicitud` rehace el WhatsApp con cada cambio; el diseño marcado
-      // aquí no ha disparado ninguno.
-      form.dispatchEvent(new Event("change"));
-    });
+  });
 </script>

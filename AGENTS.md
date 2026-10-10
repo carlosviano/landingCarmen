@@ -122,6 +122,19 @@ tarjetas de /catalogo) va con `data-revelar="zoom"`, nunca con cortina: es el
 LCP y la cortina lo retrasa hasta 2s. No se animan formularios, cabecera ni
 páginas legales.
 
+## Transiciones entre pantallas y `<script>`
+
+El Layout lleva el `<ClientRouter />` de Astro: cambiar de pantalla no recarga,
+se cambia el `<body>` con un fundido (en pantallas táctiles, sin fundido: en
+iOS 26 teñía de beis la barra de estado; ver el `<head>` del Layout). Por eso un `<script>` de componente
+**nunca corre suelto**: monta su trabajo con `alCargarPagina` de
+`lib/pagina.ts`, que lo ejecuta en cada pantalla, y pasa la `senal` que recibe
+a todo oyente de `document`, `window` o `matchMedia` y a los observers. Un
+script suelto funciona en la primera pantalla y se queda muerto al navegar,
+sin dar ningún error. Lo que tenga que estar en `<html>` (como
+`data-animar`) se repone en `astro:after-swap`, porque el router cambia sus
+atributos por los de la página nueva.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

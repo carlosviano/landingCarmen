@@ -37,7 +37,7 @@ const mostrar = (lote: HTMLElement[]) => {
   });
 };
 
-const empezar = () => {
+const empezar = (senal: AbortSignal) => {
   const observador = new IntersectionObserver(
     (entradas) => {
       const llegan = entradas
@@ -52,6 +52,8 @@ const empezar = () => {
     // llegaría a enseñar un 15 % de sí misma de golpe.
     { rootMargin: "0px 0px -10% 0px" },
   );
+  // Al irse de la pantalla (ver lib/pagina.ts), lo que quedara sin ver.
+  senal.addEventListener("abort", () => observador.disconnect());
 
   // Lo que ya está en pantalla al cargar sale entero, sin esperar al
   // observer: con el margen de abajo, lo que cae en el último 10 % (la franja
@@ -68,7 +70,7 @@ const empezar = () => {
   mostrar(alCargar);
 };
 
-export function revelar() {
+export function revelar(senal: AbortSignal) {
   if (!("animar" in document.documentElement.dataset)) return;
 
   // El modal de bienvenida (primera visita) tapa el hero: si la entrada
@@ -76,8 +78,10 @@ export function revelar() {
   // cierre. Un fotograma de margen porque su script puede correr después de
   // este y abrirlo aún no le ha dado tiempo.
   requestAnimationFrame(() => {
+    if (senal.aborted) return;
     const modal = document.querySelector<HTMLDialogElement>("dialog[open]");
-    if (modal) modal.addEventListener("close", empezar, { once: true });
-    else empezar();
+    if (modal)
+      modal.addEventListener("close", () => empezar(senal), { once: true });
+    else empezar(senal);
   });
 }

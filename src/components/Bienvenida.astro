@@ -135,41 +135,45 @@ const VISTO = "bienvenida-vista-v1";
 </style>
 
 <script>
-  const modal = document.querySelector<HTMLDialogElement>("#bienvenida");
+  import { alCargarPagina } from "@/lib/pagina";
 
-  if (modal) {
-    const clave = modal.dataset.visto ?? "";
+  alCargarPagina(() => {
+    const modal = document.querySelector<HTMLDialogElement>("#bienvenida");
 
-    // localStorage puede no estar (modo privado estricto, cookies bloqueadas)
-    // y entonces lanza. En ese caso se enseña cada vez: mejor repetido que
-    // nunca.
-    const yaVisto = () => {
-      try {
-        return localStorage.getItem(clave) !== null;
-      } catch {
-        return false;
-      }
-    };
+    if (modal) {
+      const clave = modal.dataset.visto ?? "";
 
-    // Cualquier forma de cerrar pasa por el evento "close", Escape incluido.
-    modal.addEventListener("close", () => {
-      try {
-        localStorage.setItem(clave, "1");
-      } catch {
-        // Sin almacenamiento no hay nada que apuntar.
-      }
-    });
+      // localStorage puede no estar (modo privado estricto, cookies bloqueadas)
+      // y entonces lanza. En ese caso se enseña cada vez: mejor repetido que
+      // nunca.
+      const yaVisto = () => {
+        try {
+          return localStorage.getItem(clave) !== null;
+        } catch {
+          return false;
+        }
+      };
 
-    modal.querySelectorAll("[data-cerrar]").forEach((boton) => {
-      boton.addEventListener("click", () => modal.close());
-    });
+      // Cualquier forma de cerrar pasa por el evento "close", Escape incluido.
+      modal.addEventListener("close", () => {
+        try {
+          localStorage.setItem(clave, "1");
+        } catch {
+          // Sin almacenamiento no hay nada que apuntar.
+        }
+      });
 
-    // Un clic en el velo llega al propio <dialog>: el contenido lo tapa por
-    // completo, así que si el destino es el dialog es que se ha pulsado fuera.
-    modal.addEventListener("click", (evento) => {
-      if (evento.target === modal) modal.close();
-    });
+      modal.querySelectorAll("[data-cerrar]").forEach((boton) => {
+        boton.addEventListener("click", () => modal.close());
+      });
 
-    if (!yaVisto()) modal.showModal();
-  }
+      // Un clic en el velo llega al propio <dialog>: el contenido lo tapa por
+      // completo, así que si el destino es el dialog es que se ha pulsado fuera.
+      modal.addEventListener("click", (evento) => {
+        if (evento.target === modal) modal.close();
+      });
+
+      if (!yaVisto()) modal.showModal();
+    }
+  });
 </script>
