@@ -53,6 +53,34 @@ export interface ComponenteTarta {
   dentro?: boolean;
 }
 
+/**
+ * Los catorce alérgenos que el Reglamento (UE) 1169/2011 obliga a declarar
+ * (anexo II), en el orden del anexo. La ficha los pinta SIEMPRE en este orden,
+ * no en el que se escriban en cada tarta: así "Leche" cae en el mismo sitio en
+ * todas y quien busca uno lo encuentra sin leer la lista entera.
+ *
+ * El texto es el que ve el cliente. Nombres cortos y de uso común, los de los
+ * carteles de alérgenos de hostelería.
+ */
+export const ALERGENOS = {
+  gluten: "Gluten",
+  crustaceos: "Crustáceos",
+  huevo: "Huevo",
+  pescado: "Pescado",
+  cacahuetes: "Cacahuetes",
+  soja: "Soja",
+  leche: "Leche",
+  "frutos-de-cascara": "Frutos de cáscara",
+  apio: "Apio",
+  mostaza: "Mostaza",
+  sesamo: "Sésamo",
+  sulfitos: "Sulfitos",
+  altramuces: "Altramuces",
+  moluscos: "Moluscos",
+} as const;
+
+export type Alergeno = keyof typeof ALERGENOS;
+
 /** Un tamaño de encargo: para cuántos es y cuánto cuesta. */
 export interface TamanoTarta {
   /**
@@ -121,6 +149,17 @@ export interface Tarta {
    * descripciones de escritorio tienen que caber: comprobarlo a 1440 px.
    */
   componentes: ComponenteTarta[];
+  /**
+   * Los alérgenos que lleva la RECETA, de los catorce de `ALERGENOS`. Las
+   * trazas no van aquí: el obrador trabaja con todos y eso lo dice la ficha
+   * para todas las tartas (ver "Alérgenos" en src/config/legal/condiciones.ts).
+   *
+   * Obligatorio a propósito, también cuando no lleva ninguno (`[]`): una
+   * tarta nueva sin alérgenos declarados no compila, en vez de salir con la
+   * ficha muda. Es un dato legal (venta a distancia): lo da Carmen, no se
+   * deduce de los componentes.
+   */
+  alergenos: Alergeno[];
   /** La descripción de la ficha para buscadores y al compartir el enlace (no se pinta en la página). Dos o tres frases. */
   descripcion: string;
 }
@@ -163,6 +202,7 @@ export const CATALOGO: Catalogo = {
         { personas: "4–6", precio: 25 },
         { personas: "8–10", precio: 42 },
       ],
+      alergenos: ["gluten", "huevo"],
       componentes: [
         {
           etiqueta: "Ralladura de lima",
@@ -210,6 +250,7 @@ export const CATALOGO: Catalogo = {
         { personas: "4–6", precio: 27 },
         { personas: "8–10", precio: 45 },
       ],
+      alergenos: ["gluten", "huevo", "leche"],
       componentes: [
         {
           etiqueta: "Cacao espolvoreado",
@@ -267,6 +308,7 @@ export const CATALOGO: Catalogo = {
         { personas: "4–6", precio: 25 },
         { personas: "8–10", precio: 42 },
       ],
+      alergenos: ["gluten", "huevo", "leche"],
       componentes: [
         {
           etiqueta: "Melocotón",
@@ -314,6 +356,7 @@ export const CATALOGO: Catalogo = {
       // era la de la galleta.
       // Arriba se ven el muñeco y el pistoleado; las tres capas de dentro se
       // marcan sobre el borde, que es lo que las tapa.
+      alergenos: ["gluten", "huevo", "leche"],
       componentes: [
         {
           etiqueta: "Muñeco de jengibre",
@@ -366,6 +409,7 @@ export const CATALOGO: Catalogo = {
       // La tarta es baja (del 25 al 78 % del lienzo en alto) y lleva seis
       // capas, así que los puntos van más juntos que en las demás. Las capas
       // de dentro se marcan sobre el aro, que es lo que las tapa.
+      alergenos: ["gluten", "huevo", "leche", "frutos-de-cascara"],
       componentes: [
         {
           etiqueta: "Glaseado dorado",
@@ -422,6 +466,7 @@ export const CATALOGO: Catalogo = {
       alt: "Galleta gigante redonda, dorada y con azúcar por encima, salpicada de pepitas de chocolate negro y con leche, sobre una base de cartón.",
       // Tamaño único, sin número de personas: la tarjeta dice "Tamaño único".
       tamanos: [{ precio: 16 }],
+      alergenos: ["gluten", "huevo", "leche", "frutos-de-cascara"],
       componentes: [
         {
           etiqueta: "Tres chocolates",
@@ -452,6 +497,7 @@ export const CATALOGO: Catalogo = {
         { personas: "4–6", precio: 27 },
         { personas: "8–10", precio: 45 },
       ],
+      alergenos: ["gluten", "huevo", "leche", "frutos-de-cascara"],
       componentes: [
         {
           etiqueta: "Avellana",

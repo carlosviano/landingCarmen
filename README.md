@@ -216,8 +216,10 @@ Tres cosas que los textos dan por hechas y que hay que mantener ciertas:
 - **Los formularios llegan al correo por Cloudflare.** Si se quitan o
   cambia el servicio, hay que tocar `privacidad.ts`.
 - **Las fichas muestran los alérgenos.** Lo dicen las condiciones y lo exige
-  el Reglamento (UE) 1169/2011 para la venta a distancia. Hasta que lo
-  hagan, no se abre la web.
+  el Reglamento (UE) 1169/2011 para la venta a distancia. Salen del campo
+  `alergenos` de cada tarta (`src/config/catalogo.ts`), que es obligatorio.
+  Los da Carmen a partir de sus recetas: una tarta nueva o una receta que
+  cambia necesita que ella los confirme antes de publicarse.
 
 Las fotos en las que se reconoce a alguien necesitan su autorización por
 escrito: la plantilla está en
