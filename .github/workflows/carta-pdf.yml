@@ -1,0 +1,22 @@
+# Que no se mergee un cambio de tartas, precios o contacto sin regenerar la
+# carta en PDF (ver «La carta en PDF» en AGENTS.md). Compara una huella: no
+# instala dependencias ni genera nada, así que tarda segundos.
+#
+# Corre en todos los PR y no solo en los que tocan esos archivos: así se puede
+# marcar como obligatoria en las reglas de la rama sin que un PR que no la
+# lanza se quede esperándola.
+name: Carta en PDF
+
+on:
+  pull_request:
+
+jobs:
+  al-dia:
+    name: La carta en PDF está al día
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: node scripts/comprobar-carta.mjs

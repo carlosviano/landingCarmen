@@ -135,6 +135,19 @@ sin dar ningún error. Lo que tenga que estar en `<html>` (como
 `data-animar`) se repone en `astro:after-swap`, porque el router cambia sus
 atributos por los de la página nueva.
 
+## La carta en PDF
+
+`public/carta-estimada-carmela.pdf` sale de imprimir `/catalogo/carta`
+(`src/pages/catalogo/carta.astro`, A5, una hoja por tarta, reutiliza
+`FichaAnotada` con `impresion`) con `npm run carta`
+(`scripts/carta-pdf.mjs`). Se commitea; no se genera en Cloudflare. Si tocas
+tartas, precios, contacto, cómo pedir o esa página, regenéralo y commitea el
+PDF con `src/config/carta-pdf.json` (la huella; ver
+`scripts/huella-carta.mjs`, que decide qué archivos cuentan). Sin eso el build
+avisa de que está desactualizado, y en GitHub la comprobación «Carta en PDF»
+(`.github/workflows/carta-pdf.yml`) falla en el PR. En la hoja, las fotos van en JPEG sobre el
+linen: con transparencia Chrome las mete sin comprimir y el PDF pasa de 10 MB.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build

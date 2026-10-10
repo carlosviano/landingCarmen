@@ -163,7 +163,9 @@ export const SOCIAL: SocialLink[] = [
 ];
 
 export const HORARIO: FranjaHorario[] = [
-  { dias: "Lunes a viernes", horas: "09:00 – 18:00" },
+  // Jornada partida de lunes a jueves; el viernes, seguido.
+  { dias: "Lunes a jueves", horas: "09:00 – 14:00 y 17:00 – 19:30" },
+  { dias: "Viernes", horas: "09:00 – 18:30" },
   // Fines de semana cerrado: coincide con PEDIDO, que sólo entrega de lunes a
   // viernes. Si algún día abre el sábado, hay que cambiar las dos cosas.
   { dias: "Sábados y domingos", horas: "Cerrado" },

@@ -143,13 +143,6 @@ const conSelector = tarta.tamanos.length > 1;
     De lunes a viernes, con {PEDIDO.antelacion} de antelación.
   </p>
 
-  <dl class="border-y border-taupe/45">
-    <div class="flex items-baseline justify-between gap-6 py-2.5">
-      <dt class="dato text-[10px] text-black/60">Conservación</dt>
-      <dd class="text-right text-sm text-black/80">{tarta.conservacion}</dd>
-    </div>
-  </dl>
-
   {/* El precio va AQUÍ, al lado del botón, y no arriba con el nombre: depende
       del tamaño y de la cantidad, así que es un total, y un total se lee
       donde se decide. `aria-live` para que se anuncie al cambiar. */}

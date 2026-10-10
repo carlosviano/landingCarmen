@@ -1,0 +1,41 @@
+---
+// El layout de las páginas que no se ven: se imprimen. Hoy, solo la carta en
+// PDF (src/pages/catalogo/carta.astro, ver «La carta en PDF» en AGENTS.md).
+//
+// Lleva las mismas fuentes y el mismo global.css que Layout.astro y nada más:
+// ni router, ni cabecera, ni bienvenida, ni `data-animar`. Con las
+// animaciones de entrada encendidas, todo lo que no estuviera en pantalla al
+// imprimir saldría escondido en el PDF.
+import { Font } from "astro:assets";
+import { SITE } from "@/config/site";
+import "../styles/global.css";
+
+interface Props {
+  titulo: string;
+}
+
+const { titulo } = Astro.props;
+
+// El mismo proyecto de Adobe Fonts que Layout.astro.
+const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    {/* La página está publicada (es lo que imprime `npm run carta`), pero no
+        es para buscadores: lo que se comparte es el PDF. */}
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+    <link rel="preconnect" href="https://p.typekit.net" crossorigin />
+    <link rel="stylesheet" href={ADOBE_FONTS} />
+    <Font cssVariable="--font-karla" />
+    <title>{`${titulo} · ${SITE.nombre}`}</title>
+  </head>
+  <body class="bg-taupe/30 text-black">
+    <slot />
+  </body>
+</html>

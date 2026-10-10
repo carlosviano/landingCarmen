@@ -144,8 +144,6 @@ export interface Tarta {
    * que viene marcado. Con uno solo, la ficha no pinta el selector.
    */
   tamanos: [TamanoTarta, ...TamanoTarta[]];
-  /** Texto corto: "Nevera, 24 h", "Fuera de nevera, 2 días"... */
-  conservacion: string;
   /**
    * De 2 a 6. Con más, las líneas de la ficha se apelotonan. Con 5 o 6, las
    * descripciones de escritorio tienen que caber: comprobarlo a 1440 px.
@@ -187,7 +185,7 @@ export const CATALOGO: Catalogo = {
   etiqueta: "Nuestra carta",
   tituloPagina: "La carta",
   entradilla:
-    "Todas por encargo. El tamaño, la conservación y la antelación de cada una están en su ficha.",
+    "Todas por encargo. El tamaño y la antelación de cada una están en su ficha.",
   tartas: [
     {
       // El id se queda con el nombre antiguo porque esta ficha ya está
@@ -204,7 +202,6 @@ export const CATALOGO: Catalogo = {
         { personas: "4–6", precio: 25 },
         { personas: "8–10", precio: 42 },
       ],
-      conservacion: "Nevera, 48 h",
       alergenos: ["gluten", "huevo"],
       componentes: [
         {
@@ -253,7 +250,6 @@ export const CATALOGO: Catalogo = {
         { personas: "4–6", precio: 27 },
         { personas: "8–10", precio: 45 },
       ],
-      conservacion: "Nevera, 48 h",
       alergenos: ["gluten", "huevo", "leche"],
       componentes: [
         {
@@ -312,7 +308,6 @@ export const CATALOGO: Catalogo = {
         { personas: "4–6", precio: 25 },
         { personas: "8–10", precio: 42 },
       ],
-      conservacion: "Se come recién montada",
       alergenos: ["gluten", "huevo", "leche"],
       componentes: [
         {
@@ -359,7 +354,6 @@ export const CATALOGO: Catalogo = {
       ],
       // TODO: confirmar con Carmen. La de antes ("Fuera de nevera, 3 días")
       // era la de la galleta.
-      conservacion: "Nevera, 48 h",
       // Arriba se ven el muñeco y el pistoleado; las tres capas de dentro se
       // marcan sobre el borde, que es lo que las tapa.
       alergenos: ["gluten", "huevo", "leche"],
@@ -412,7 +406,6 @@ export const CATALOGO: Catalogo = {
       alt: "Tarta redonda baja de superficie abombada, con un glaseado dorado y brillante, rodeada de un aro claro y jaspeado.",
       // Sólo se hace en el tamaño grande.
       tamanos: [{ personas: "8–10", precio: 47 }],
-      conservacion: "Nevera, 48 h",
       // La tarta es baja (del 25 al 78 % del lienzo en alto) y lleva seis
       // capas, así que los puntos van más juntos que en las demás. Las capas
       // de dentro se marcan sobre el aro, que es lo que las tapa.
@@ -473,7 +466,6 @@ export const CATALOGO: Catalogo = {
       alt: "Galleta gigante redonda, dorada y con azúcar por encima, salpicada de pepitas de chocolate negro y con leche, sobre una base de cartón.",
       // Tamaño único, sin número de personas: la tarjeta dice "Tamaño único".
       tamanos: [{ precio: 16 }],
-      conservacion: "Fuera de nevera, 3 días",
       alergenos: ["gluten", "huevo", "leche", "frutos-de-cascara"],
       componentes: [
         {
@@ -505,7 +497,6 @@ export const CATALOGO: Catalogo = {
         { personas: "4–6", precio: 27 },
         { personas: "8–10", precio: 45 },
       ],
-      conservacion: "Nevera, 24 h",
       alergenos: ["gluten", "huevo", "leche", "frutos-de-cascara"],
       componentes: [
         {
