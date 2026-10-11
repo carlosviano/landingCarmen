@@ -15,13 +15,11 @@
 import { whatsappCon } from "@/config/site";
 import { montarCalendario } from "@/lib/calendario";
 import { montarDesplegable } from "@/lib/desplegable";
-import type { ErroresSolicitud } from "@/lib/solicitud";
+import type { ErroresSolicitud, ResultadoSolicitud } from "@/lib/solicitud";
 import { renovarToken } from "@/lib/turnstile";
 
-export interface OpcionesSolicitud {
-  validar: (
-    datos: FormData,
-  ) => { ok: true } | { ok: false; errores: ErroresSolicitud };
+export interface OpcionesSolicitud<T> {
+  validar: (datos: FormData) => ResultadoSolicitud<T>;
   /** El texto del WhatsApp con lo rellenado. `texto(name)` lee un campo. */
   mensaje: (texto: (nombre: string) => string | undefined) => string;
   /** Los días que deja elegir el calendario, como en `montarCalendario`. */
@@ -30,13 +28,11 @@ export interface OpcionesSolicitud {
   envio: string;
   /** Lo que se lee al recibirse: es lo único que cambia entre formularios. */
   enviado: string;
+  /** La solicitud entera para WhatsApp, por si el envío falla (FalloEnvio.astro). */
+  respaldo: (solicitud: T) => string;
 }
 
-const MENSAJES = {
-  enviando: "Enviando…",
-  fallo:
-    "No se ha podido enviar. Vuelve a probar en un momento o escríbeme por WhatsApp.",
-};
+const ENVIANDO = "Enviando…";
 
 // Lo que se marca como inválido de cada campo: el control que se ve. No el
 // <input> oculto del calendario o del desplegable (se marca su botón), ni el
@@ -79,13 +75,21 @@ function enfocarPrimerError(form: HTMLFormElement) {
   form.querySelector<HTMLElement>("[aria-invalid]")?.focus();
 }
 
-export function montarSolicitud(
+export function montarSolicitud<T>(
   form: HTMLFormElement,
-  opciones: OpcionesSolicitud,
+  opciones: OpcionesSolicitud<T>,
 ): void {
   const estado = form.querySelector<HTMLElement>("[data-estado]")!;
   const boton = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
   const whatsapp = form.querySelector<HTMLAnchorElement>("[data-whatsapp]")!;
+  const fallo = form.querySelector<HTMLElement>("[data-fallo]")!;
+  const reintentar = fallo.querySelector<HTMLElement>(
+    "[data-fallo-reintentar]",
+  )!;
+  const falloWhatsapp = fallo.querySelector<HTMLAnchorElement>(
+    "[data-fallo-whatsapp]",
+  )!;
+  reintentar.addEventListener("click", () => form.requestSubmit());
 
   montarCalendario(form, opciones.calendario);
   form
@@ -112,6 +116,9 @@ export function montarSolicitud(
 
   const alCambiar = () => {
     whatsapp.href = whatsappCon(opciones.mensaje(texto));
+    // Lo que cambie después de un fallo ya no está en el WhatsApp del aviso:
+    // se envía con el próximo intento.
+    fallo.hidden = true;
     revisar();
   };
   form.addEventListener("input", alCambiar);
@@ -131,18 +138,26 @@ export function montarSolicitud(
     revisar();
   });
 
-  const enviar = async (datos: FormData, destino: string) => {
+  const enviar = async (datos: FormData, solicitud: T) => {
     boton.disabled = true;
-    estado.textContent = MENSAJES.enviando;
+    fallo.hidden = true;
+    estado.textContent = ENVIANDO;
     try {
-      const respuesta = await fetch(destino, { method: "POST", body: datos });
+      const respuesta = await fetch(opciones.envio, {
+        method: "POST",
+        body: datos,
+      });
       if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
       form.reset();
       intentado = false;
       tocados.clear();
       estado.textContent = opciones.enviado;
     } catch {
-      estado.textContent = MENSAJES.fallo;
+      // Sea cual sea el motivo, lo mismo: nada se ha perdido, y dos salidas.
+      estado.textContent = "";
+      falloWhatsapp.href = whatsappCon(opciones.respaldo(solicitud));
+      fallo.hidden = false;
+      reintentar.focus();
     } finally {
       renovarToken(form);
       boton.disabled = false;
@@ -160,6 +175,6 @@ export function montarSolicitud(
       return;
     }
 
-    void enviar(new FormData(form), opciones.envio);
+    void enviar(new FormData(form), resultado.solicitud);
   });
 }

@@ -1,9 +1,11 @@
 // Lo que se enseña cuando algo falla: la página 404, el aviso de que no se
-// ha podido cargar una pantalla y la ayuda para cuando WhatsApp no se abre.
+// ha podido cargar una pantalla, el de que no ha salido un formulario y la
+// ayuda para cuando WhatsApp no se abre.
 //
-// Las tres cosas persiguen lo mismo: que quien quiere encargar algo no se
+// Las cuatro cosas persiguen lo mismo: que quien quiere encargar algo no se
 // quede sin camino. Por eso ninguna es un callejón: la 404 lleva a los tres
-// servicios, el aviso deja reintentar y la ayuda de WhatsApp da el mensaje ya
+// servicios, los avisos dejan reintentar, el del formulario pasa la
+// solicitud entera a WhatsApp y la ayuda de WhatsApp da el mensaje ya
 // escrito para copiarlo.
 
 import { CONTACTO } from "./site";
@@ -30,6 +32,16 @@ export const AVISO_CARGA = {
     "Parece que la conexión ha fallado. Vuelve a intentarlo en un momento.",
   reintentar: "Reintentar",
   cerrar: "Cerrar aviso",
+} as const;
+
+// El aviso de que una solicitud no ha podido enviarse (sin conexión, o el
+// correo no ha salido). Ver formulario/FalloEnvio.astro.
+export const FALLO_ENVIO = {
+  titulo: "No se ha podido enviar tu solicitud",
+  texto:
+    "No se ha perdido nada de lo que has escrito. Vuelve a intentarlo o mándamela por WhatsApp: va ya escrita.",
+  reintentar: "Reintentar",
+  whatsapp: "Enviarla por WhatsApp",
 } as const;
 
 // La ayuda de WhatsApp (AyudaWhatsapp.astro). Sale DESPUÉS de pulsar un

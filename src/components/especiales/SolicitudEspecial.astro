@@ -180,6 +180,7 @@ const PILDORA = `${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`;
 <script>
   import { ESPECIALES } from "@/config/personalizadas";
   import { esLaborable } from "@/lib/pedido";
+  import { respaldoEspecial } from "@/lib/correoSolicitud";
   import { montarSolicitud } from "@/lib/formularioSolicitud";
   import {
     mensajeEspecial,
@@ -216,6 +217,7 @@ const PILDORA = `${PASTILLA} flex min-h-11 items-center px-4 bajo:min-h-10`;
           envio: ESPECIALES.solicitud.envio,
           enviado:
             "Recibido. Te escribo en cuanto lo lea con una propuesta para tu tarta.",
+          respaldo: respaldoEspecial,
         });
 
         // `montarSolicitud` rehace el WhatsApp con cada cambio; el diseño marcado

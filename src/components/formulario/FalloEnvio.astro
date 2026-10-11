@@ -1,0 +1,65 @@
+---
+// El aviso de que una solicitud no ha podido enviarse: sin conexión, Turnstile
+// bloqueado o el correo que no sale. Da igual por qué: lo que importa es que
+// quien escribe no se quede sin camino (ver config/errores.ts).
+//
+// Dos salidas: reintentar, que vuelve a enviar lo mismo, y WhatsApp con la
+// solicitud entera ya escrita (`respaldoEvento` / `respaldoEspecial`, en
+// src/lib/correoSolicitud.ts). Si WhatsApp no se abre, su enlace es uno más
+// de wa.me y la ayuda de AyudaWhatsapp.astro sale sola.
+//
+// Lo enseña, lo rellena y lo esconde `montarSolicitud`
+// (src/lib/formularioSolicitud.ts). Va al final del formulario, después del
+// WhatsApp de siempre: el "¿No se abre WhatsApp?" de debajo del botón coge el
+// primer enlace a wa.me del formulario, y tiene que ser aquel.
+import { Icon } from "astro-icon/components";
+import { BOTON } from "@/components/formulario/estilos";
+import { FALLO_ENVIO as F } from "@/config/errores";
+
+interface Props {
+  /** Un enlace de WhatsApp válido para el HTML; el bueno lo pone el script. */
+  whatsapp: string;
+  class?: string;
+}
+
+const { whatsapp, class: clase } = Astro.props;
+---
+
+<div
+  data-fallo
+  role="alert"
+  hidden
+  class:list={[
+    "flex flex-col gap-5 rounded-2xl bg-linen p-5 ring-1 ring-rust/30 sm:p-6",
+    clase,
+  ]}
+>
+  <div class="flex items-start gap-3.5 sm:gap-4">
+    <span class="grid size-10 shrink-0 place-items-center rounded-full bg-rust text-sand">
+      <Icon name="lucide:send" class="size-4.5" aria-hidden="true" />
+    </span>
+    <div class="flex flex-col gap-1 pt-px sm:gap-1.5">
+      <p class="titulo text-[1.3rem] leading-tight sm:text-2xl">{F.titulo}</p>
+      <p class="text-sm leading-normal text-black/70 sm:text-[15px]">
+        {F.texto}
+      </p>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-3 sm:ml-14 sm:flex-row sm:flex-wrap">
+    <button type="button" data-fallo-reintentar class={BOTON}>
+      <Icon name="lucide:refresh-cw" class="size-3.75" aria-hidden="true" />
+      {F.reintentar}
+    </button>
+    <a
+      data-fallo-whatsapp
+      href={whatsapp}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-flex items-center justify-center gap-2.5 rounded-full px-4 py-4 accion text-[11px] whitespace-nowrap text-black ring-1 ring-black/25 transition-colors hover:ring-black sm:px-6 sm:text-xs sm:tracking-[0.16em]"
+    >
+      <Icon name="simple-icons:whatsapp" class="size-4" aria-hidden="true" />
+      {F.whatsapp}
+    </a>
+  </div>
+</div>
