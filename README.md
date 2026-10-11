@@ -233,11 +233,26 @@ Antes, una vez:
    Cloudflare pone solo los registros DNS (SPF, DKIM).
 2. **Email Routing** → *Destination addresses* → añadir el correo de destino.
    Llega un enlace de verificación que hay que pulsar desde ese buzón.
+   **Sin esto el envío falla con 502**: en el plan gratuito sólo se envía a
+   direcciones verificadas.
+
+   Email Routing marcará sus *DNS records* como **Misconfigured**. Es lo
+   esperado y **no hay que arreglarlo**: espera sus MX, y los MX son los de
+   Google Workspace, que es quien recibe el correo de `contacto@`. Si se deja
+   que Cloudflare los «corrija», `contacto@` deja de recibir. De Email Routing
+   sólo se usa la lista de destinatarios verificados.
 3. **Turnstile** → crear un widget para `estimadacarmela.com` (y el dominio
    `pages.dev` del proyecto, para las previews). Da las dos claves.
 
 Con el primer envío real, mirar que no ha caído en spam y, si ha caído,
 marcarlo como «No es spam».
+
+Para probar en una preview, su rama tiene que estar en **Settings → Builds →
+Branch control → Preview branches**: las que no están salen en Deployments
+con ⏩ y «No deployment available».
+
+Al probar, **con DevTools cerrado**: Turnstile se defiende de quien lo
+inspecciona, se para en *Sources* y la verificación falla.
 
 ### Probar en local
 
