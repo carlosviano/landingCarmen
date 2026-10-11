@@ -1,0 +1,14 @@
+{
+  // Las Pages Functions corren en Workers, no en un navegador: sus tipos son
+  // los del runtime de Cloudflare (Response, FormData…), que chocan con los
+  // del DOM que usa el resto del proyecto. Por eso se comprueban aparte, con
+  // `tsc -p functions` dentro de `npm run check`.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "types": ["@cloudflare/workers-types"],
+    "noEmit": true
+  },
+  "include": ["./**/*"],
+  "exclude": []
+}

@@ -9,12 +9,15 @@
 // va primero: es lo que explica para qué sirve todo lo de debajo.
 //
 // Cierra el formulario con lo que no cambia entre uno y otro: la casilla de
-// privacidad, el aviso de que es una consulta, el estado del envío, el botón
-// y el WhatsApp de segunda vía. Lo hace funcionar `montarSolicitud`
+// privacidad, el aviso de que es una consulta, Turnstile, el estado del
+// envío, el botón, el WhatsApp de segunda vía y el aviso por si el envío
+// falla. Lo hace funcionar `montarSolicitud`
 // (src/lib/formularioSolicitud.ts), que cada formulario llama desde su script
 // con su esquema y su mensaje.
 import { Icon } from "astro-icon/components";
 import Ondas from "@/components/Ondas.astro";
+import FalloEnvio from "@/components/formulario/FalloEnvio.astro";
+import Turnstile from "@/components/formulario/Turnstile.astro";
 import { BOTON, ERROR } from "@/components/formulario/estilos";
 import { AYUDA_WHATSAPP } from "@/config/errores";
 import { AVISO_FORMULARIO as AVISO } from "@/config/legal/privacidad";
@@ -139,6 +142,8 @@ const { tipo, textos: S, whatsapp } = Astro.props;
         {S.aviso}
       </p>
 
+      <Turnstile class="sm:col-span-2" />
+
       <p
         data-estado
         role="status"
@@ -180,6 +185,8 @@ const { tipo, textos: S, whatsapp } = Astro.props;
           </button>
         </div>
       </div>
+
+      <FalloEnvio whatsapp={whatsapp} class="sm:col-span-2" />
     </form>
   </div>
 </section>

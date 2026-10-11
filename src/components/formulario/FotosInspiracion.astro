@@ -8,9 +8,11 @@
 // fotos y luego otra más dejaría sólo la última. Tras cada cambio vuelca la
 // lista en el <input>, que es lo que viaja con el formulario.
 //
-// Cada foto se pasa por `esquemaFotoDe`, el mismo que valida la solicitud
-// entera: lo que aquí se rechaza es justo lo que el envío no aceptaría. Los
-// límites viajan al script en `data-` porque cada formulario tiene los suyos.
+// Cada foto se reduce al añadirla (`reducirFoto`: tienen que caber en un
+// correo) y después se pasa por `esquemaFotoDe`, el mismo que valida la
+// solicitud entera: lo que aquí se rechaza es justo lo que el envío no
+// aceptaría. Los límites viajan al script en `data-` porque cada formulario
+// tiene los suyos.
 import { Icon } from "astro-icon/components";
 import { SOLICITUD_EVENTO } from "@/config/eventos";
 
@@ -88,6 +90,7 @@ const { maximo, megasMaximo } = fotos;
 <script>
   import { esquemaFotoDe } from "@/lib/solicitud";
   import { alCargarPagina } from "@/lib/pagina";
+  import { reducirFoto } from "@/lib/reducirFoto";
 
   alCargarPagina(() => {
     for (const raiz of document.querySelectorAll<HTMLElement>(
@@ -134,18 +137,19 @@ const { maximo, megasMaximo } = fotos;
         entrada.dispatchEvent(new Event("input", { bubbles: true }));
       };
 
-      const anadir = (nuevas: File[]) => {
+      const anadir = async (nuevas: File[]) => {
         const rechazos: string[] = [];
-        for (const archivo of nuevas) {
+        for (const original of nuevas) {
           if (elegidas.length >= maximo) {
             rechazos.push(`Caben ${maximo} fotos como mucho.`);
             break;
           }
+          const archivo = await reducirFoto(original);
           const resultado = esquemaFoto.safeParse(archivo);
           if (resultado.success) elegidas.push(archivo);
           else
             rechazos.push(
-              `${archivo.name}: ${resultado.error.issues[0]!.message}`,
+              `${original.name}: ${resultado.error.issues[0]!.message}`,
             );
         }
         aviso.textContent = rechazos.join(" ");
@@ -154,8 +158,9 @@ const { maximo, megasMaximo } = fotos;
 
       // Lo recién elegido viene en `files`, que sólo trae la última selección:
       // se suma a `elegidas` y `pintar` rehace el <input> con todo.
-      entrada.addEventListener("change", () =>
-        anadir([...(entrada.files ?? [])]),
+      entrada.addEventListener(
+        "change",
+        () => void anadir([...(entrada.files ?? [])]),
       );
 
       zona.addEventListener("dragover", (evento) => {
@@ -166,7 +171,7 @@ const { maximo, megasMaximo } = fotos;
       zona.addEventListener("drop", (evento) => {
         evento.preventDefault();
         delete zona.dataset.arrastrando;
-        anadir([...(evento.dataTransfer?.files ?? [])]);
+        void anadir([...(evento.dataTransfer?.files ?? [])]);
       });
 
       entrada.form?.addEventListener("reset", () => {

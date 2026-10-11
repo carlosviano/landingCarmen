@@ -220,8 +220,8 @@ export const ESPECIALES = {
     aviso:
       "Esta solicitud es una consulta, no una reserva. Revisaremos tu petición y te confirmaremos la fecha y los detalles según nuestra disponibilidad.",
     boton: "Enviar solicitud",
-    // Mismo destino que SOLICITUD_EVENTO.envio, y por lo mismo null.
-    envio: null as string | null,
+    // La misma Function que SOLICITUD_EVENTO.envio, con su tipo.
+    envio: "/api/solicitud/especial",
     whatsapp: {
       antes: "¿Prefieres hablar?",
       enlace: "Escríbeme por WhatsApp",

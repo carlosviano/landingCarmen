@@ -1,0 +1,37 @@
+---
+// Turnstile, el captcha de Cloudflare, dentro de un formulario de solicitud.
+// Comprueba en segundo plano que quien escribe es una persona y deja un token
+// en un campo oculto (`cf-turnstile-response`), que viaja con el formulario y
+// verifica la Function antes de enviar el correo
+// (functions/_lib/turnstile.ts).
+//
+// Casi nunca se ve: sólo si Turnstile duda y pide que se pulse una casilla.
+// No se carga hasta que se empieza a rellenar el formulario; lo carga, lo
+// pinta y lo renueva src/lib/turnstile.ts.
+import { PUBLIC_TURNSTILE_SITE_KEY } from "astro:env/client";
+
+interface Props {
+  class?: string;
+}
+
+const { class: clase } = Astro.props;
+---
+
+<div
+  hidden
+  data-turnstile
+  data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}
+  class={clase}
+></div>
+
+<script>
+  import { alCargarPagina } from "@/lib/pagina";
+  import { montarTurnstile } from "@/lib/turnstile";
+
+  alCargarPagina((senal) => {
+    for (const widget of document.querySelectorAll<HTMLElement>(
+      "[data-turnstile]",
+    ))
+      montarTurnstile(widget, senal);
+  });
+</script>

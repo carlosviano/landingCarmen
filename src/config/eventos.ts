@@ -263,10 +263,9 @@ export const SOLICITUD_EVENTO = {
   aviso:
     "Esta solicitud es una consulta, no una reserva. Revisaremos tu petición y te confirmaremos la fecha y los detalles según nuestra disponibilidad, por lo que no podemos garantizar eventos con muy poca antelación.",
   boton: "Enviar solicitud",
-  // Adónde se manda el formulario (POST multipart, con las fotos dentro).
-  // TODO: conectar. Mientras sea null el formulario valida pero no envía, y
-  // lo dice en pantalla: así nadie cree haber mandado algo que no ha llegado.
-  envio: null as string | null,
+  // Adónde se manda el formulario (POST multipart, con las fotos dentro): la
+  // Pages Function que se lo reenvía a Carmela por correo.
+  envio: "/api/solicitud/evento",
   whatsapp: {
     antes: "¿Prefieres hablar?",
     enlace: "Escríbeme por WhatsApp",
