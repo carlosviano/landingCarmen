@@ -53,5 +53,12 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    // zod lo importan los scripts de los formularios (src/lib/solicitud.ts) y
+    // el escaneo de arranque de Vite no lo ve: lo descubría en la primera
+    // página con formulario, reoptimizaba, y desde ahí la barra de desarrollo
+    // de Astro pedía su script con el hash viejo (504 "Outdated Optimize Dep"
+    // en consola, en todas las pantallas, hasta reiniciar). Declarado aquí se
+    // optimiza al arrancar y no hay segunda pasada. Sólo afecta a `astro dev`.
+    optimizeDeps: { include: ["zod"] },
   },
 });
