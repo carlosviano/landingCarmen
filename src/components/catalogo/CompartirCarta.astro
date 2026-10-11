@@ -2,10 +2,10 @@
 // La carta en PDF, para mandarla por WhatsApp. Ver «La carta en PDF» en
 // AGENTS.md: el PDF lo genera `npm run carta`.
 //
-// Sin JS, o donde no se pueden compartir archivos (casi todo escritorio), es
-// un enlace que lo abre en una pestaña nueva: el visor del navegador deja
-// leerlo antes de decidir si se guarda, y la carta se queda donde estaba.
-// En el móvil el script lo convierte en «Compartir la carta»: abre la hoja de
+// Sin JS, en escritorio o donde no se pueden compartir archivos, es un
+// enlace que lo abre en una pestaña nueva: el visor del navegador deja leerlo
+// antes de decidir si se guarda, y la carta se queda donde estaba. En el
+// móvil el script lo convierte en «Compartir la carta»: abre la hoja de
 // compartir con el PDF ya adjunto, que es el camino corto hasta el chat donde
 // se está decidiendo la tarta.
 //
@@ -46,7 +46,15 @@ const PDF = "/carta-estimada-carmela.pdf";
     const enlace = document.querySelector<HTMLAnchorElement>(
       "[data-compartir-carta]",
     );
-    if (!enlace || !navigator.canShare) return;
+    // Solo en pantallas táctiles. En el Mac, Safari y Chrome también dejan
+    // compartir archivos, y el botón acababa en la hoja de compartir del
+    // sistema en vez de abrir la carta: en escritorio se quiere verla.
+    if (
+      !enlace ||
+      !navigator.canShare ||
+      !matchMedia("(pointer: coarse)").matches
+    )
+      return;
 
     // ¿Deja este navegador compartir un PDF? Se pregunta con uno vacío: no
     // hace falta bajarlo para saberlo.
