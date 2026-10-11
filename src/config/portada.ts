@@ -118,16 +118,21 @@ export const GALERIA: Galeria = {
       alt: "A color,Carmen preparando uno de sus postres con la manga pastelera.",
     },
     {
-      archivo: "carmenPacoTorreblanca.jpg",
-      alt: "Carmen junto a Paco Torreblanca en su oficina.",
+      // Apaisada: las manos, la manga y el bol van a la derecha.
+      archivo: "carmenConMangaPastelera.jpg",
+      alt: "Llenando una manga pastelera sobre un bol de acero, junto al horno del obrador.",
+      enfoque: "70% 50%",
     },
     {
       archivo: "carmenPosandoTorreblanca.jpg",
       alt: "Carmen posando sonriente con chaquetilla blanca de pastelera en el obrador de la escuela Torre Blanca.",
     },
     {
-      archivo: "carmenTrabajandoTorreblanca.jpg",
-      alt: "Tarta redonda de cumpleaños estilo Paulova",
+      // Retocada para quitar la cara del hombre de la derecha. El 30% vertical
+      // guarda la gorra entera y deja fuera casi todo el resto de barba.
+      archivo: "carmenTorreblancaTrabajandoConHombre.png",
+      alt: "Sonriendo con gorra y chaquetilla de Torreblanca ante una mesa de pasteles con fresas, en el obrador.",
+      enfoque: "50% 30%",
     },
     {
       archivo: "carmenEnElObradorManipulandoChocolate.jpg",
