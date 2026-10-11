@@ -39,7 +39,7 @@ blanca sobre el gris del mar se lee como un recorte, no como una etiqueta.
 
 # sobre-mi.jpg
 
-La foto del obrador de la sección "Sobre mí". 1066 × 1600 (2:3).
+La foto del obrador de la sección "Sobre Carmen". 1066 × 1600 (2:3).
 
 - en móvil se ve entera: el hueco lleva `aspect-[2/3]`, el mismo formato
 - en escritorio manda la altura (`lg:h-[38rem]`) y `object-cover` recorta por

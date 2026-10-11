@@ -48,7 +48,7 @@ export const ESPECIALES = {
   etiquetaPagina: "Tartas especiales · Málaga",
   tituloPagina: "Una tarta pensada para lo que celebras",
   entradillaPagina:
-    "Diseños míos que adapto a tu ocasión: tamaño, colores y sabores. Me cuentas qué celebras y te propongo uno.",
+    "Diseños propios que adaptamos a tu ocasión: tamaño, colores y sabores. Nos cuentas qué celebras y te proponemos uno.",
   // Apaisada a toda pantalla. En el móvil se ve entera de alto y solo cuenta
   // el horizontal: el 45% la deja entre la tarta y la cara. En escritorio se
   // ve entera de ancho y solo cuenta el vertical: el 90% la sube para que
@@ -59,9 +59,12 @@ export const ESPECIALES = {
   enfoqueCabecera: "45% 90%",
   ctaCabecera: "Pedir presupuesto",
   pasos: [
-    { titulo: "Me cuentas", detalle: "La ocasión, la fecha y cuántos seréis." },
     {
-      titulo: "Te propongo",
+      titulo: "Nos cuentas",
+      detalle: "La ocasión, la fecha y cuántos seréis.",
+    },
+    {
+      titulo: "Te proponemos",
       detalle: "Un diseño, sus sabores y el presupuesto.",
     },
     {
@@ -69,8 +72,8 @@ export const ESPECIALES = {
       detalle: "En el obrador, lista para tu celebración.",
     },
   ],
-  etiquetaDisenos: "Diseños de Carmela",
-  tituloDisenos: "Elige uno, o deja que te proponga",
+  etiquetaDisenos: "Nuestros diseños",
+  tituloDisenos: "Elige uno o déjanos proponerte otro",
   /** La columna derecha de cada tarjeta: no hay precio cerrado. */
   precio: "a presupuesto",
   // TODO: fotos nuevas de cada diseño. Las de ahora son las que ya había
@@ -148,20 +151,21 @@ export const ESPECIALES = {
   },
   /**
    * La última tarjeta de la rejilla, en rust: para quien no sabe cuál elegir.
-   * Lleva al formulario con "Que me proponga Carmela" marcado.
+   * Lleva al formulario con "Que me propongáis uno" marcado.
    */
   proponer: {
     slug: "que-me-proponga",
     leyenda: "¿No sabes cuál?",
-    titulo: "Cuéntame qué celebras y te propongo uno",
-    boton: "Que me proponga",
+    titulo: "Cuéntanos qué celebras y te proponemos uno",
+    boton: "Pedir una propuesta",
     nombre: "A tu medida",
     ocasiones: "Cualquier ocasión",
     /** La pastilla del campo "Diseño". */
-    opcion: "Que me proponga Carmela",
+    opcion: "Que me propongáis uno",
   },
   /** Cierre de la rejilla, hacia /eventos: la frontera entre los dos servicios. */
-  aEventos: "¿Prefieres que la lleve y la monte yo? Eso es un evento",
+  aEventos:
+    "¿Prefieres que la llevemos y la montemos nosotros? Eso es un evento",
 
   // El formulario del final de la página. Mismos controles, mismo envío y
   // misma validación que SOLICITUD_EVENTO (ver src/lib/solicitud.ts); cambian
@@ -170,15 +174,15 @@ export const ESPECIALES = {
     etiqueta: "¿Tienes fecha?",
     titulo: "Pide tu tarta especial",
     texto:
-      "Con estos datos te digo qué diseño encaja, en qué plazo y con qué presupuesto.",
+      "Con estos datos te decimos qué diseño encaja, en qué plazo y con qué presupuesto.",
     // TODO: plazo real de respuesta, el mismo que el de eventos.
     pasos: [
       {
-        titulo: "Me envías la solicitud.",
+        titulo: "Nos envías la solicitud.",
         detalle: "El diseño, la ocasión, la fecha y cuántos seréis.",
       },
       {
-        titulo: "Te respondo en menos de 7 dias.",
+        titulo: "Te respondemos en menos de 7 días.",
         detalle: "Con una propuesta y el presupuesto.",
       },
       {
@@ -224,7 +228,7 @@ export const ESPECIALES = {
     envio: "/api/solicitud/especial",
     whatsapp: {
       antes: "¿Prefieres hablar?",
-      enlace: "Escríbeme por WhatsApp",
+      enlace: "Escríbenos por WhatsApp",
     },
   },
 };

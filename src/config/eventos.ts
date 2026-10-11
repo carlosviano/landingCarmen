@@ -216,18 +216,18 @@ export const EVENTOS: Eventos = {
 // orden: cambiar una es cambiarla aquí.
 export const SOLICITUD_EVENTO = {
   etiqueta: "¿Tienes fecha?",
-  titulo: "Cuéntame qué celebras",
+  titulo: "Cuéntanos qué celebras",
   texto:
-    "Con estos datos te digo qué se puede montar, en qué plazo y con qué presupuesto. Cuanto más concretes, más afinada sale la propuesta.",
+    "Con estos datos te decimos qué se puede montar, en qué plazo y con qué presupuesto. Cuanto más concretes, más afinada sale la propuesta.",
   // TODO: plazo real de respuesta. Entre corchetes para que no se publique
   // sin querer, mismo criterio que los precios.
   pasos: [
     {
-      titulo: "Me envías la solicitud.",
+      titulo: "Nos envías la solicitud.",
       detalle: "Fecha, sitio, invitados y lo que tienes en la cabeza.",
     },
     {
-      titulo: "Te respondo en menos de 7 días.",
+      titulo: "Te respondemos en menos de 7 días.",
       detalle: "Con una propuesta y un presupuesto orientativo.",
     },
     {
@@ -254,7 +254,7 @@ export const SOLICITUD_EVENTO = {
     "Más de 200",
   ] as const,
   placeholderInteres:
-    "Cuéntame qué tienes en mente: qué te gustaría servir, el estilo de la celebración, colores, alergias… cualquier detalle que te importe.",
+    "Cuéntanos qué tienes en mente: qué te gustaría servir, el estilo de la celebración, colores, alergias… cualquier detalle que te importe.",
   // Fotos de inspiración. Cuatro como mucho y de hasta 8 MB cada una: una
   // foto de iPhone pesa 2–5 MB, y más de cuatro ya no inspiran, dispersan.
   fotos: { maximo: 4, megasMaximo: 8 },
@@ -268,7 +268,7 @@ export const SOLICITUD_EVENTO = {
   envio: "/api/solicitud/evento",
   whatsapp: {
     antes: "¿Prefieres hablar?",
-    enlace: "Escríbeme por WhatsApp",
+    enlace: "Escríbenos por WhatsApp",
   },
   // Bajo los pasos del marco (MarcoSolicitud).
   nota: "Todo por encargo",

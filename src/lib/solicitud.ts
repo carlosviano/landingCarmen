@@ -121,7 +121,7 @@ export const esquemaSolicitud = z.object({
   interes: z
     .string()
     .trim()
-    .min(1, "Cuéntame qué tienes en mente, aunque sea en una frase.")
+    .min(1, "Cuéntanos qué tienes en mente, aunque sea en una frase.")
     .max(2000, "Es demasiado largo: 2000 caracteres como mucho."),
   fotos: fotosHasta(SOLICITUD_EVENTO.fotos),
   enlace: z.union([
@@ -144,7 +144,7 @@ export const OPCIONES_DISENO = [
 export const esquemaEspecial = z.object({
   // Obligatorio: quien no sabe cuál tiene "Que me proponga Carmela".
   diseno: z
-    .string({ error: "Elige un diseño, o que te proponga uno." })
+    .string({ error: "Elige un diseño, o que te propongamos uno." })
     .refine(
       (valor) => OPCIONES_DISENO.some((opcion) => opcion.valor === valor),
       "Elige uno de la lista.",

@@ -98,9 +98,6 @@ export const LEGAL: NavItem[] = [
 export const SITE = {
   nombre: "Estimada Carmela",
   // Antetítulo de la dirección en el pie.
-  //
-  // Nota: el resto del sitio habla en primera persona ("Sobre mí") y esto en
-  // plural. Conviene unificar el trato.
   encuentranos: "Encuéntranos",
   // La dirección en un renglón, para donde solo cabe uno (el panel móvil). Sin
   // el portal: ahí no hay sitio, y quien va a ir se abre el mapa o baja al pie.
@@ -145,7 +142,7 @@ export const NAV: NavItem[] = [
     label: nombre,
     href: ruta,
   })),
-  { label: "Sobre mí", href: "#sobre-mi" },
+  { label: "Sobre Carmen", href: "#sobre-carmen" },
   { label: "Contacto", href: "#contacto" },
 ];
 

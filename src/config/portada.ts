@@ -1,4 +1,4 @@
-// La portada: el hero, "Sobre mí", el carrusel y los dos escaparates (el
+// La portada: el hero, "Sobre Carmen", el carrusel y los dos escaparates (el
 // díptico de tartas y la foto de eventos).
 
 import { SERVICIOS, type Servicio } from "./site";
@@ -43,17 +43,25 @@ export const HERO = {
 // celebrar, regalar, sorprender", y el detalle de que Paco Torreblanca es
 // referente mundial. Encajan bien en una página aparte o en el pie.
 //
-// Los párrafos van sueltos, sin subtitular: son tres tiempos de un relato en
-// primera persona, no tres apartados. Si algún día vuelven los subtitulares,
+// Los párrafos van sueltos, sin subtitular: son tres tiempos de un relato, no
+// tres apartados.
+//
+// En tercera persona y con su nombre, Carmen: Estimada Carmela es la marca, y
+// el resto del sitio habla como marca, en plural ("Escríbenos", "Nuestra
+// carta"). La única primera persona del singular es la firma, y va como cita
+// suya, entre comillas y firmada. Si algún día vuelven los subtitulares,
 // están en el historial de git (iban en un `bloques` con titulo y texto).
 export const SOBRE_MI = {
-  titulo: "Sobre mí",
+  titulo: "Sobre Carmen",
   parrafos: [
-    "Estudié ADE y trabajé en una consultora, hasta que me decidí por lo que de verdad me apasionaba; la pasteleria.",
-    " Me formé en alta pastelería en la Escuela Torreblanca. Después llegaron Marbella Club y restaurantes con estrella Michelin como Saddle y DSTAgE. Ahí aprendí el valor de la precisión, del producto y del cuidado por cada detalle.",
-    "La pastelería es una forma de expresar cariño. De ahí nace Estimada Carmela: alta pastelería de Málaga para ocasiones en las que estética y sabor pesan lo mismo.",
+    "Carmen estudió ADE y trabajó en una consultora, hasta que se decidió por lo que de verdad le apasionaba: la pastelería.",
+    "Se formó en alta pastelería en la Escuela Torreblanca. Después llegaron Marbella Club y restaurantes con estrella Michelin como Saddle y DSTAgE. Ahí aprendió el valor de la precisión, del producto y del cuidado por cada detalle.",
+    "Para ella, la pastelería es una forma de expresar cariño. De ahí nace Estimada Carmela: alta pastelería de Málaga para ocasiones en las que estética y sabor pesan lo mismo.",
   ],
-  firma: "Espero que disfrutéis de recibirlo tanto como yo disfruto creándolo.",
+  firma: {
+    cita: "Espero que disfrutéis de recibirlo tanto como yo disfruto creándolo.",
+    autora: "Carmen",
+  },
   // Sin nombre ni pronombres en el alt: describe lo que se ve y nada más, que
   // es lo que necesita quien no puede ver la foto.
   fotoAlt:
