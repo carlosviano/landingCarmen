@@ -213,8 +213,9 @@
                             base. Lo pone TextoRevelado.astro, no a mano.
 
   Todo cuelga de `[data-animar]` en <html>, que el <head> de Layout.astro pone
-  solo con JS y sin movimiento reducido. Sin él, ni se esconde nada ni se
-  anima: la página se ve entera desde el primer pintado.
+  solo con JS, sin movimiento reducido y la primera vez que se entra en esa
+  pantalla en la visita. Sin él, ni se esconde nada ni se anima: la página se
+  ve entera desde el primer pintado.
 
   Fuera de @layer a propósito: lo que no está en una capa gana a todas, así
   que el estado oculto puede con un `opacity-*` o un `clip-path` de utilidad

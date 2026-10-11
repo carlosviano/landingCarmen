@@ -72,9 +72,20 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
         sin `data-animar`, y este script no se vuelve a ejecutar (ya corrió).
         Por eso se vuelve a poner en `astro:after-swap`: justo después del
         cambio y antes de pintar la página nueva, así que lo que tenga que
-        entrar ya sale escondido. */}
+        entrar ya sale escondido.
+
+        Una vez por pantalla y visita: volver a la portada desde /catalogo y
+        ver otra vez las mismas entradas cansa. Las pantallas ya animadas se
+        apuntan en memoria, no en sessionStorage: con el router la visita
+        entera es una sola carga, así que basta, y no se guarda nada en el
+        dispositivo (ver config/legal/cookies.ts). Al recargar o abrir otra
+        pestaña, se vuelve a animar. */}
     <script is:inline>
+      const animadas = new Set();
       const encender = () => {
+        const pantalla = location.pathname.replace(/\/$/, "") || "/";
+        if (animadas.has(pantalla)) return;
+        animadas.add(pantalla);
         if (!matchMedia("(prefers-reduced-motion: reduce)").matches)
           document.documentElement.dataset.animar = "";
       };

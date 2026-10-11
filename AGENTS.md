@@ -124,7 +124,9 @@ Sin librerías: `lib/revelar.ts` decide cuándo y `global.css` («Animaciones de
 entrada») el cómo. Una foto que pueda estar en pantalla al cargar (heros, las
 tarjetas de /catalogo) va con `data-revelar="zoom"`, nunca con cortina: es el
 LCP y la cortina lo retrasa hasta 2s. No se animan formularios, cabecera ni
-páginas legales.
+páginas legales. Cada pantalla anima solo la primera vez que se entra en la
+visita: al volver a ella sale quieta (lo lleva el script del `<head>` del
+Layout, en memoria; al recargar vuelve a animar).
 
 ## Transiciones entre pantallas y `<script>`
 
