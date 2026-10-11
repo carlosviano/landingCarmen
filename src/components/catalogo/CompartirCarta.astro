@@ -3,9 +3,11 @@
 // AGENTS.md: el PDF lo genera `npm run carta`.
 //
 // Sin JS, o donde no se pueden compartir archivos (casi todo escritorio), es
-// un enlace que lo descarga. En el móvil el script lo convierte en
-// «Compartir la carta»: abre la hoja de compartir con el PDF ya adjunto, que
-// es el camino corto hasta el chat donde se está decidiendo la tarta.
+// un enlace que lo abre en una pestaña nueva: el visor del navegador deja
+// leerlo antes de decidir si se guarda, y la carta se queda donde estaba.
+// En el móvil el script lo convierte en «Compartir la carta»: abre la hoja de
+// compartir con el PDF ya adjunto, que es el camino corto hasta el chat donde
+// se está decidiendo la tarta.
 //
 // Con borde y no relleno: el único botón lleno de la carta es el de pedir.
 import { Icon } from "astro-icon/components";
@@ -16,12 +18,13 @@ const PDF = "/carta-estimada-carmela.pdf";
 <a
   data-compartir-carta
   href={PDF}
-  download
+  target="_blank"
+  rel="noopener"
   class="inline-flex items-center gap-2.5 rounded-full border border-black/40 px-5 py-3 accion text-[11px] text-rust transition-colors duration-200 hover:border-rust hover:bg-rust hover:text-linen motion-reduce:transition-none"
 >
   <Icon
-    data-icono-descargar
-    name="lucide:download"
+    data-icono-abrir
+    name="lucide:file-text"
     class="size-4 shrink-0"
     aria-hidden="true"
   />
@@ -31,7 +34,7 @@ const PDF = "/carta-estimada-carmela.pdf";
     class="hidden size-4 shrink-0"
     aria-hidden="true"
   />
-  <span data-texto>Descargar la carta (PDF)</span>
+  <span data-texto>Ver la carta (PDF)</span>
 </a>
 
 <script>
@@ -50,7 +53,7 @@ const PDF = "/carta-estimada-carmela.pdf";
     const prueba = new File([], NOMBRE, { type: "application/pdf" });
     if (!navigator.canShare({ files: [prueba] })) return;
 
-    enlace.querySelector("[data-icono-descargar]")?.classList.add("hidden");
+    enlace.querySelector("[data-icono-abrir]")?.classList.add("hidden");
     enlace.querySelector("[data-icono-compartir]")?.classList.remove("hidden");
     const texto = enlace.querySelector("[data-texto]");
     if (texto) texto.textContent = "Compartir la carta";
@@ -79,9 +82,10 @@ const PDF = "/carta-estimada-carmela.pdf";
         });
       } catch (error) {
         // Cerrar la hoja sin elegir no es un fallo. Cualquier otra cosa sí,
-        // y entonces, la descarga de siempre. Incluido que la descarga haya
-        // tardado tanto (una conexión muy lenta) que Safari ya no dé el
-        // `share()` por pegado al toque.
+        // y entonces, el PDF en esta misma pestaña: una nueva la bloquearía
+        // el navegador, porque tras el `await` ya no va pegada al toque. Eso
+        // incluye que la descarga haya tardado tanto (una conexión muy lenta)
+        // que Safari ya no dé el `share()` por pegado al toque.
         if ((error as Error).name !== "AbortError") location.href = enlace.href;
       }
     });
