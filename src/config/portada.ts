@@ -30,7 +30,7 @@ export const HERO = {
   // Sin nombres ni pronombres, igual que el resto de los alt: describe lo que
   // se ve y nada más.
   fotoAlt:
-    "Glaseando con un biberón una tarta rosa sobre la rejilla del obrador: el rojo cae en espiral sobre el merengue.",
+    "Pintando a pincel el glaseado rojo de una tarta rosa con borde de merengue, sobre la rejilla del obrador.",
 } as const;
 
 // Texto de Carmen, condensado. El original es bastante más largo y aquí no
