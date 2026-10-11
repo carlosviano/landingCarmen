@@ -1,0 +1,9 @@
+# Variables de la Pages Function de los formularios para probar en local con
+# `npm run preview:pages`. Cópialo a `.dev.vars` (que no se sube a git).
+#
+# Con esto no sale ningún correo: CORREO_EN_CONSOLA escribe en la terminal
+# el que se enviaría, y el secreto es el de pruebas de Turnstile, que acepta
+# siempre. En Cloudflare las variables van en el panel de Pages (README,
+# «Formularios»).
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+CORREO_EN_CONSOLA=1

@@ -14,11 +14,11 @@
 //    texto libre y en WhatsApp salen solas, así que hace falta consentimiento
 //    EXPLÍCITO: es lo que recoge ahora la casilla del formulario.
 //
-//  - El formulario todavía no envía (envio: null en eventos.ts y
-//    personalizadas.ts). El texto da por hecho el montaje previsto: una Pages
-//    Function de Cloudflare que lo reenvía al correo de Carmela. Si al final
-//    se quitan los formularios, sobran el apartado "Solicitudes de
-//    presupuesto", Cloudflare como encargado del formulario y AVISO_FORMULARIO.
+//  - Los formularios llegan al correo de Carmela por una Pages Function de
+//    Cloudflare (functions/api/solicitud/[tipo].ts), que lo envía con Email
+//    Service. Si se quitan los formularios, sobran el apartado "Solicitudes
+//    de presupuesto", Cloudflare como encargado del formulario y
+//    AVISO_FORMULARIO; si cambia el servicio de envío, cambia el encargado.
 //
 //  - Facturas: seis años, por el Código de Comercio (art. 30), que es el más
 //    largo de los plazos que obligan a una autónoma; los fiscales son cuatro.

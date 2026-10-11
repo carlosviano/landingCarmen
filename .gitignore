@@ -17,6 +17,12 @@ pnpm-debug.log*
 .env
 .env.production
 
+# variables de la Pages Function en local (ver .dev.vars.example)
+.dev.vars
+
+# estado local de wrangler (npm run preview:pages)
+.wrangler/
+
 # macOS-specific files
 .DS_Store
 

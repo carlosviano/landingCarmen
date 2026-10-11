@@ -10,7 +10,8 @@
 // puesto se ve en el acto, sin esperar a enviar) y, al enviar, todos. Desde
 // que un campo enseña su error se revalida con cada cambio, para que el aviso
 // se vaya en cuanto se arregla. Sin JS el formulario se ve entero pero no se
-// envía: el envío lo hace esto, y sólo cuando hay adónde (`envio`).
+// envía: el envío lo hace esto, a la Pages Function de `envio`
+// (functions/api/solicitud/[tipo].ts).
 import { whatsappCon } from "@/config/site";
 import { montarCalendario } from "@/lib/calendario";
 import { montarDesplegable } from "@/lib/desplegable";
@@ -24,15 +25,21 @@ export interface OpcionesSolicitud {
   mensaje: (texto: (nombre: string) => string | undefined) => string;
   /** Los días que deja elegir el calendario, como en `montarCalendario`. */
   calendario: Parameters<typeof montarCalendario>[1];
-  /** Adónde se manda (POST multipart). `null`: valida pero no envía, y lo dice. */
-  envio: string | null;
+  /** Adónde se manda (POST multipart, con las fotos y el token de Turnstile). */
+  envio: string;
   /** Lo que se lee al recibirse: es lo único que cambia entre formularios. */
   enviado: string;
 }
 
+// El widget de Turnstile (components/formulario/Turnstile.astro), que llega
+// con su propio <script> desde Cloudflare.
+declare global {
+  interface Window {
+    turnstile?: { reset(widget: Element): void };
+  }
+}
+
 const MENSAJES = {
-  sinConectar:
-    "El envío del formulario todavía no está conectado. Mientras tanto, escríbeme por WhatsApp.",
   enviando: "Enviando…",
   fallo:
     "No se ha podido enviar. Vuelve a probar en un momento o escríbeme por WhatsApp.",
@@ -144,6 +151,8 @@ export function montarSolicitud(
     } catch {
       estado.textContent = MENSAJES.fallo;
     } finally {
+      // El token de Turnstile ya se ha gastado, haya ido bien o no.
+      window.turnstile?.reset(form.querySelector(".cf-turnstile")!);
       boton.disabled = false;
     }
   };
@@ -159,10 +168,6 @@ export function montarSolicitud(
       return;
     }
 
-    if (!opciones.envio) {
-      estado.textContent = MENSAJES.sinConectar;
-      return;
-    }
     void enviar(new FormData(form), opciones.envio);
   });
 }

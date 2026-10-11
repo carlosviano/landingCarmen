@@ -22,6 +22,7 @@ npm install
 | `npm run build`    | Build local a `./dist/` (pasa por `nvm use`)    |
 | `npm run build:ci` | Build sin nvm. **Lo usa Cloudflare, no tú**     |
 | `npm run preview`  | Sirve `./dist/` para verlo antes de publicar    |
+| `npm run preview:pages` | Build + sitio con la Function de los formularios (`localhost:8788`) |
 
 La diferencia entre `build` y `build:ci` está explicada en
 [AGENTS.md](./AGENTS.md#el-build-de-ci-buildci). Resumen: en local nvm fija la
@@ -175,6 +176,82 @@ PROXIMAMENTE=1 npm run dev
 [`src/config/proximamente.ts`](./src/config/proximamente.ts) y seguir el flujo de siempre
 (PR → staging → main). No se apaga sola el día de la fecha: el sitio es
 estático y nadie lo reconstruye a medianoche.
+
+## Formularios
+
+Los formularios de `/eventos` y `/personalizadas` le llegan a Carmela por
+correo. La web sigue siendo estática: lo único que se ejecuta en servidor es
+una **Pages Function**, [`functions/api/solicitud/[tipo].ts`](./functions/api/solicitud/[tipo].ts),
+que Cloudflare publica junto al sitio en `/api/solicitud/evento` y
+`/api/solicitud/especial`.
+
+```
+navegador                         Pages Function                 Gmail de Carmela
+valida (zod) y reduce  ── POST ─► 1. Turnstile: ¿es persona?
+las fotos a 1600 px               2. valida con el mismo zod
+                                  3. Email Service (API REST) ──► responder = la clienta
+```
+
+| Pieza                                   | Dónde                                                                      |
+| --------------------------------------- | -------------------------------------------------------------------------- |
+| Qué es una solicitud válida             | [`src/lib/solicitud.ts`](./src/lib/solicitud.ts), lo usan las dos puntas  |
+| Cómo se redacta el correo               | [`src/lib/correoSolicitud.ts`](./src/lib/correoSolicitud.ts)              |
+| Turnstile y el envío                    | [`functions/_lib/`](./functions/_lib/)                                     |
+| Reducir las fotos antes de subirlas     | [`src/lib/reducirFoto.ts`](./src/lib/reducirFoto.ts)                      |
+
+Por qué así y no de otra forma:
+
+- **API REST y no el binding `send_email`**: las Pages Functions no admiten
+  ese binding, que es sólo de Workers.
+- **Gratis porque sólo se envía a una dirección verificada** de la cuenta. Un
+  correo de confirmación a la clienta (a cualquier dirección) exige el plan
+  Workers Paid.
+- **Las fotos se reducen en el navegador**: un correo tiene techo (5 MiB, 25
+  a una dirección verificada) y base64 lo infla un tercio. Una foto de móvil
+  de 6 MB sale en unos 250 KB.
+
+### Variables del panel
+
+En Pages → **Settings → Variables and Secrets**, por entorno (Production y
+Preview). Pages las aplica en el **siguiente deploy**: después de cambiar
+una, hay que volver a desplegar (Deployments → el último → *Retry
+deployment*).
+
+| Variable                    | Tipo     | Qué es                                                                 |
+| --------------------------- | -------- | ---------------------------------------------------------------------- |
+| `CORREO_DESTINO`            | texto    | Adónde llegan. Producción: Carmela. Preview: quien pruebe              |
+| `CLOUDFLARE_ACCOUNT_ID`     | texto    | El ID de la cuenta (lo enseña el panel, en la barra lateral)          |
+| `CLOUDFLARE_EMAIL_TOKEN`    | secreto  | Token de API con permiso de envío de Email Service, y nada más         |
+| `TURNSTILE_SECRET`          | secreto  | La clave secreta del widget de Turnstile                               |
+| `PUBLIC_TURNSTILE_SITE_KEY` | texto    | La clave pública del widget. **Del build**, la lee Astro (`astro:env`) |
+
+Antes, una vez:
+
+1. **Email Service** → dar de alta `estimadacarmela.com` para enviar.
+   Cloudflare pone solo los registros DNS (SPF, DKIM).
+2. **Email Routing** → *Destination addresses* → añadir el correo de destino.
+   Llega un enlace de verificación que hay que pulsar desde ese buzón.
+3. **Turnstile** → crear un widget para `estimadacarmela.com` (y el dominio
+   `pages.dev` del proyecto, para las previews). Da las dos claves.
+
+Con el primer envío real, mirar que no ha caído en spam y, si ha caído,
+marcarlo como «No es spam».
+
+### Probar en local
+
+`npm run dev` no ejecuta la Function: el formulario valida pero el envío
+falla (y lo dice). Para probar el envío:
+
+```sh
+cp .dev.vars.example .dev.vars   # una vez
+npm run preview:pages
+```
+
+Con `.dev.vars` tal cual no sale ningún correo: la Function escribe en la
+terminal el que enviaría (`CORREO_EN_CONSOLA=1`), y Turnstile usa las claves
+de prueba de Cloudflare, que pasan siempre. Los fallos de envío en Cloudflare
+salen en los logs de la Function (Pages → Deployments → el deploy →
+*Functions*).
 
 ## Textos legales
 

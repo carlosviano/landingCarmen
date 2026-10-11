@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, fontProviders } from "astro/config";
+import { defineConfig, envField, fontProviders } from "astro/config";
 
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
@@ -31,6 +31,22 @@ export default defineConfig({
       fallbacks: ["system-ui", "sans-serif"],
     },
   ],
+
+  env: {
+    schema: {
+      // La clave PÚBLICA del widget de Turnstile de los formularios. Se fija
+      // por entorno en el panel de Pages, como variable del build. Sin ella
+      // vale la de pruebas de Cloudflare, que siempre pasa: en local no hace
+      // falta nada, y en Cloudflare la Function la rechaza, porque allí el
+      // secreto es el de verdad. La secreta es TURNSTILE_SECRET, de la
+      // Function (functions/api/solicitud/[tipo].ts).
+      PUBLIC_TURNSTILE_SITE_KEY: envField.string({
+        context: "client",
+        access: "public",
+        default: "1x00000000000000000000AA",
+      }),
+    },
+  },
 
   vite: {
     plugins: [tailwindcss()],
