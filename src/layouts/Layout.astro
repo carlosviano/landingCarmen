@@ -1,6 +1,8 @@
 ---
 import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
+import AvisoCarga from "@/components/AvisoCarga.astro";
+import AyudaWhatsapp from "@/components/AyudaWhatsapp.astro";
 import Bienvenida from "@/components/Bienvenida.astro";
 import { SITE } from "@/config/site";
 import "../styles/global.css";
@@ -132,6 +134,9 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
   <body class="min-h-full w-full bg-linen text-black">
     <slot />
     {bienvenida && <Bienvenida />}
+    {/* Lo que sale cuando algo falla: ver src/config/errores.ts. */}
+    <AyudaWhatsapp />
+    <AvisoCarga />
   </body>
 </html>
 

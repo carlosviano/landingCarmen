@@ -16,6 +16,7 @@
 import { Icon } from "astro-icon/components";
 import Ondas from "@/components/Ondas.astro";
 import { BOTON, ERROR } from "@/components/formulario/estilos";
+import { AYUDA_WHATSAPP } from "@/config/errores";
 import { AVISO_FORMULARIO as AVISO } from "@/config/legal/privacidad";
 
 interface Props {
@@ -168,6 +169,15 @@ const { tipo, textos: S, whatsapp } = Astro.props;
             />
             {S.whatsapp.enlace}
           </a>
+          {/* Sólo con JS: ver AyudaWhatsapp.astro. */}
+          <button
+            type="button"
+            data-ayuda-whatsapp
+            hidden
+            class="cursor-pointer self-start text-xs text-black/60 underline underline-offset-2 hover:text-rust sm:self-auto"
+          >
+            {AYUDA_WHATSAPP.enlaceAyuda}
+          </button>
         </div>
       </div>
     </form>
