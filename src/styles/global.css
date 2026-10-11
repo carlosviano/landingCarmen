@@ -197,3 +197,125 @@
     outline-color: var(--color-sand);
   }
 }
+
+/*
+  Animaciones de entrada. Lo marcado con `data-revelar` aparece la primera vez
+  que entra en pantalla; cuándo lo decide src/lib/revelar.ts poniéndole
+  `data-visto`. Tres maneras, según el valor del atributo:
+
+    data-revelar            sube 1.5rem y se funde. Textos y bloques.
+    data-revelar="foto"     se destapa de abajo arriba como una cortina, y la
+                            foto de dentro se asienta desde un poco de zoom.
+                            Para el CONTENEDOR de una foto, no para el <img>.
+    data-revelar="zoom"     solo el asiento del zoom, sin esconder nada. Para
+                            la foto del hero, que es el LCP (ver abajo).
+    data-revelar="palabras" cada palabra sube desde detrás de su propia línea
+                            base. Lo pone TextoRevelado.astro, no a mano.
+
+  Todo cuelga de `[data-animar]` en <html>, que el <head> de Layout.astro pone
+  solo con JS y sin movimiento reducido. Sin él, ni se esconde nada ni se
+  anima: la página se ve entera desde el primer pintado.
+
+  Fuera de @layer a propósito: lo que no está en una capa gana a todas, así
+  que el estado oculto puede con un `opacity-*` o un `clip-path` de utilidad
+  que lleve la pieza.
+
+  Animaciones y no transiciones, y siempre con relleno `backwards`: el
+  fotograma de salida se aplica durante el retraso, y al acabar la animación
+  deja de existir. Así no pisa el `transition` ni el `scale` de hover que ya
+  traen muchas fotos (group-hover:scale-[1.03]). Una transición sí los
+  pisaría.
+
+  Ojo: `revelar-sube` anima `translate`, que es la misma propiedad que usan
+  las clases translate-* de Tailwind. En una pieza con -translate-x-1/2 (un
+  botón centrado en absolute) daría un salto al acabar: ponlo en su
+  envoltorio.
+*/
+:root {
+  --curva-revelar: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+[data-animar] [data-revelar=""]:not([data-visto]) {
+  opacity: 0;
+}
+[data-animar] [data-revelar=""][data-visto] {
+  animation: revelar-sube 0.8s var(--curva-revelar) var(--retraso, 0ms)
+    backwards;
+}
+
+/* La cortina va de -3rem a -3rem por cada lado y no de 0 a 0: con un recorte
+   ajustado a la caja, la sombra y el anillo de las tarjetas (shadow-xl,
+   ring-1) quedarían cortados mientras dura y aparecerían de golpe al final. */
+[data-animar] [data-revelar="foto"]:not([data-visto]) {
+  clip-path: inset(calc(100% + 3rem) -3rem -3rem);
+}
+[data-animar] [data-revelar="foto"][data-visto] {
+  animation: revelar-cortina 1.1s var(--curva-revelar) var(--retraso, 0ms)
+    backwards;
+}
+[data-animar] [data-revelar="foto"][data-visto] img {
+  animation: revelar-asienta 1.6s var(--curva-revelar) var(--retraso, 0ms)
+    backwards;
+}
+
+/* La foto del hero no puede ir con cortina: es el LCP, y Chrome no lo cuenta
+   hasta que se destapa, así que la entrada lo retrasaba casi un segundo
+   (medido: de ~40ms a ~1s, y el LCP pasaba a ser la entradilla). Aquí solo
+   se asienta del zoom: `scale` no esconde nada y la foto cuenta desde el
+   primer pintado. Va en el contenedor de la foto o, en un hero con la foto
+   a sangre y sin contenedor (/eventos), en la propia <Foto>. El zoom va ya puesto antes de `data-visto` para que no dé
+   un salto al llegar el script. */
+[data-animar] [data-revelar="zoom"]:not([data-visto]) img,
+[data-animar] img[data-revelar="zoom"]:not([data-visto]) {
+  scale: 1.12;
+}
+[data-animar] [data-revelar="zoom"][data-visto] img,
+[data-animar] img[data-revelar="zoom"][data-visto] {
+  animation: revelar-asienta 1.6s var(--curva-revelar) var(--retraso, 0ms)
+    backwards;
+}
+
+/* Cada palabra es un span (el recorte) con otro dentro (lo que sube). El
+   recorte es un clip-path y no overflow: hidden: con overflow, un inline-block
+   pasa a tener la línea base en su borde de abajo y el titular se descuadra.
+   El clip-path no toca la maquetación. Se sale 0.3em por arriba para las
+   tildes de las mayúsculas y nada por abajo, que la caja del span ya incluye
+   los descendentes. */
+[data-animar] [data-revelar="palabras"] > span {
+  clip-path: inset(-0.3em -0.1em 0);
+}
+[data-revelar="palabras"] > span > span {
+  display: inline-block;
+}
+[data-animar] [data-revelar="palabras"]:not([data-visto]) > span > span {
+  translate: 0 110%;
+}
+[data-animar] [data-revelar="palabras"][data-visto] > span > span {
+  animation: revelar-palabra 0.9s var(--curva-revelar)
+    calc(var(--retraso, 0ms) + var(--i, 0) * 60ms) backwards;
+}
+
+@keyframes revelar-sube {
+  from {
+    opacity: 0;
+    translate: 0 1.5rem;
+  }
+}
+@keyframes revelar-cortina {
+  from {
+    clip-path: inset(calc(100% + 3rem) -3rem -3rem);
+  }
+  to {
+    clip-path: inset(-3rem);
+  }
+}
+@keyframes revelar-asienta {
+  from {
+    scale: 1.12;
+  }
+}
+@keyframes revelar-palabra {
+  from {
+    translate: 0 110%;
+  }
+}

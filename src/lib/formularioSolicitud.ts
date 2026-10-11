@@ -16,6 +16,7 @@ import { whatsappCon } from "@/config/site";
 import { montarCalendario } from "@/lib/calendario";
 import { montarDesplegable } from "@/lib/desplegable";
 import type { ErroresSolicitud } from "@/lib/solicitud";
+import { renovarToken } from "@/lib/turnstile";
 
 export interface OpcionesSolicitud {
   validar: (
@@ -29,14 +30,6 @@ export interface OpcionesSolicitud {
   envio: string;
   /** Lo que se lee al recibirse: es lo único que cambia entre formularios. */
   enviado: string;
-}
-
-// El widget de Turnstile (components/formulario/Turnstile.astro), que llega
-// con su propio <script> desde Cloudflare.
-declare global {
-  interface Window {
-    turnstile?: { reset(widget: Element): void };
-  }
 }
 
 const MENSAJES = {
@@ -151,8 +144,7 @@ export function montarSolicitud(
     } catch {
       estado.textContent = MENSAJES.fallo;
     } finally {
-      // El token de Turnstile ya se ha gastado, haya ido bien o no.
-      window.turnstile?.reset(form.querySelector(".cf-turnstile")!);
+      renovarToken(form);
       boton.disabled = false;
     }
   };

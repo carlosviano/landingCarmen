@@ -18,7 +18,8 @@ import Ondas from "@/components/Ondas.astro";
 import Hero from "@/components/Hero.astro";
 import TarjetaEvento from "@/components/eventos/TarjetaEvento.astro";
 import SolicitudEvento from "@/components/eventos/SolicitudEvento.astro";
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
+import TextoRevelado from "@/components/TextoRevelado.astro";
 import { Icon } from "astro-icon/components";
 import { EVENTOS } from "@/config/eventos";
 import { SOCIAL } from "@/config/site";
@@ -73,13 +74,14 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
         midan lo que midan banda y pantalla. El mb-16 de "Inicio" es el hueco
         mínimo entre los dos si la pantalla es baja. */}
     <Hero claseBanda="isolate overflow-hidden bg-black" claseFranja="bg-rust">
-      <Image
+      <Foto
         src={fotoCabecera}
         alt={EVENTOS.altCabecera}
         widths={ANCHOS_GRANDES}
         sizes={sizesCabecera}
         loading="eager"
         fetchpriority="high"
+        data-revelar="zoom"
         class="absolute inset-0 -z-10 h-full w-full object-cover object-[50%_38%]"
       />
       <div
@@ -90,6 +92,7 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
       <div class="mx-auto flex w-full max-w-7xl flex-1 flex-col px-6 pt-10 pb-12 md:pb-14">
         <a
           href="/"
+          data-revelar
           class="mb-16 inline-flex items-center gap-2 self-start border-b border-linen/40 pb-1 accion text-xs text-linen/85 transition-colors hover:border-linen/70 hover:text-white"
         >
           <Icon
@@ -100,17 +103,23 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
           Inicio
         </a>
 
-        <p class="mt-auto antetitulo text-sand">{EVENTOS.etiquetaPagina}</p>
+        <p data-revelar class="mt-auto antetitulo text-sand">
+          {EVENTOS.etiquetaPagina}
+        </p>
         <h1 class="mt-5 max-w-3xl titular text-4xl leading-[1.05] text-balance text-white sm:text-5xl lg:text-[4.5rem]">
-          {EVENTOS.tituloPagina}
+          <TextoRevelado texto={EVENTOS.tituloPagina} />
         </h1>
 
         <div class="mt-7 flex flex-col gap-7 md:flex-row md:items-center md:justify-between">
-          <p class="max-w-[33rem] text-base leading-relaxed text-white/85 sm:text-lg">
+          <p
+            data-revelar
+            class="max-w-[33rem] text-base leading-relaxed text-white/85 sm:text-lg"
+          >
             {EVENTOS.entradillaPagina}
           </p>
           <a
             href="#solicitud"
+            data-revelar
             class="self-start rounded-full bg-sand px-8 py-4 text-center accion text-xs text-rust shadow-lg shadow-black/25 transition-colors hover:bg-white md:self-auto"
           >
             {EVENTOS.ctaCabecera}
@@ -121,7 +130,7 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
       <Ondas slot="fondo-franja" id="eventos-pasos" class="text-linen/12" />
       <ol slot="franja" class="grid w-full gap-5 md:grid-cols-3 md:gap-8">
         {EVENTOS.pasos.map((paso, i) => (
-          <li class="flex items-center gap-5">
+          <li data-revelar class="flex items-center gap-5">
             <span class="w-6 shrink-0 text-center titulo text-4xl leading-none text-sand">
               {i + 1}
             </span>
@@ -138,9 +147,11 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
 
     <section class="pt-12 pb-2 md:pt-16 md:pb-4">
       <div class="mx-auto w-full max-w-7xl px-6">
-        <p class="antetitulo text-rust">{EVENTOS.etiquetaMontajes}</p>
+        <p data-revelar class="antetitulo text-rust">
+          {EVENTOS.etiquetaMontajes}
+        </p>
         <h2 class="mt-4 titulo text-4xl leading-[1.08] text-balance sm:text-5xl">
-          {EVENTOS.tituloMontajes}
+          <TextoRevelado texto={EVENTOS.tituloMontajes} />
         </h2>
       </div>
 
@@ -159,6 +170,7 @@ const instagram = SOCIAL.find((red) => red.label === "Instagram")!;
           href={instagram.href}
           target="_blank"
           rel="noopener noreferrer"
+          data-revelar
           class="inline-flex items-center gap-2 border-b border-taupe/40 pb-1 text-center accion text-xs text-black transition-colors hover:border-black"
         >
           <Icon

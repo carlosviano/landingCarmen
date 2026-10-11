@@ -23,7 +23,7 @@
 // columna mida lo que mida la descripción, con un mínimo para que una tarjeta
 // con poco texto no quede en una tira.
 import type { HTMLAttributes } from "astro/types";
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import FotoPendiente from "@/components/FotoPendiente.astro";
 import { Icon } from "astro-icon/components";
 import Lightbox from "@/components/Lightbox.astro";
@@ -105,6 +105,7 @@ const idLightbox = `lightbox-${id
 
 <article
   data-escaparate
+  data-revelar
   class="grid grid-cols-[8.5rem_minmax(0,1fr)] overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/5 ring-1 ring-taupe/60 sm:grid-cols-[12.5rem_minmax(0,1fr)] lg:min-h-80 lg:grid-cols-[15.5rem_minmax(0,1fr)]"
 >
   <div class="relative min-h-52 bg-taupe/15">
@@ -119,7 +120,7 @@ const idLightbox = `lightbox-${id
         class="group absolute inset-0 cursor-zoom-in overflow-hidden"
       >
         {fotos.map((foto, i) => (
-          <Image
+          <Foto
             src={foto.src}
             alt={foto.alt}
             widths={[280, 400, 560, 800, 1120, 1600]}
@@ -175,7 +176,7 @@ const idLightbox = `lightbox-${id
                 "opacity-70 ring-rust ring-offset-2 ring-offset-white transition hover:opacity-100 aria-pressed:opacity-100 aria-pressed:ring-2",
               ]}
             >
-              <Image
+              <Foto
                 src={foto.src}
                 alt=""
                 widths={[80, 120]}
@@ -198,7 +199,7 @@ const idLightbox = `lightbox-${id
               aria-label={`Ver las ${fotos.length} fotos de ${titulo}`}
               class:list={[CASILLA, "group relative"]}
             >
-              <Image
+              <Foto
                 src={fotos[miniaturas.length].src}
                 alt=""
                 widths={[80, 120]}
@@ -249,27 +250,33 @@ const idLightbox = `lightbox-${id
 )}
 
 <script>
-  // Pulsar una miniatura enciende su foto en el marco y la marca a ella. El
-  // botón del marco se apunta cuál es, para abrir el lightbox en esa.
-  for (const tarjeta of document.querySelectorAll<HTMLElement>(
-    "[data-escaparate]",
-  )) {
-    const marco = tarjeta.querySelector<HTMLElement>("[data-marco]");
-    const fotos = [...tarjeta.querySelectorAll<HTMLElement>("img[data-foto]")];
-    const miniaturas = [
-      ...tarjeta.querySelectorAll<HTMLButtonElement>("[data-miniatura]"),
-    ];
+  import { alCargarPagina } from "@/lib/pagina";
 
-    miniaturas.forEach((miniatura, i) =>
-      miniatura.addEventListener("click", () => {
-        fotos.forEach((foto, j) =>
-          foto.toggleAttribute("data-activa", i === j),
-        );
-        miniaturas.forEach((otra, j) =>
-          otra.setAttribute("aria-pressed", String(i === j)),
-        );
-        if (marco) marco.dataset.foto = String(i);
-      }),
-    );
-  }
+  alCargarPagina(() => {
+    // Pulsar una miniatura enciende su foto en el marco y la marca a ella. El
+    // botón del marco se apunta cuál es, para abrir el lightbox en esa.
+    for (const tarjeta of document.querySelectorAll<HTMLElement>(
+      "[data-escaparate]",
+    )) {
+      const marco = tarjeta.querySelector<HTMLElement>("[data-marco]");
+      const fotos = [
+        ...tarjeta.querySelectorAll<HTMLElement>("img[data-foto]"),
+      ];
+      const miniaturas = [
+        ...tarjeta.querySelectorAll<HTMLButtonElement>("[data-miniatura]"),
+      ];
+
+      miniaturas.forEach((miniatura, i) =>
+        miniatura.addEventListener("click", () => {
+          fotos.forEach((foto, j) =>
+            foto.toggleAttribute("data-activa", i === j),
+          );
+          miniaturas.forEach((otra, j) =>
+            otra.setAttribute("aria-pressed", String(i === j)),
+          );
+          if (marco) marco.dataset.foto = String(i);
+        }),
+      );
+    }
+  });
 </script>

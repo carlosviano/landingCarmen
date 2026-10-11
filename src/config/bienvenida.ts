@@ -26,7 +26,13 @@ export interface PuntoBienvenida {
 //
 // El horario, el plazo y la dirección salen de las constantes de arriba: si
 // cambian allí, cambian aquí solos.
-const LABORABLES = HORARIO[0];
+//
+// El horario son los días que abre, un renglón por tramo («Lunes a jueves:
+// 09:00 – 14:00 y 17:00 – 19:30», «Viernes: 09:00 – 18:30»). El salto de
+// línea lo respeta el `whitespace-pre-line` de quien lo pinta.
+const ABIERTO = HORARIO.filter(({ horas }) => horas !== "Cerrado")
+  .map(({ dias, horas }) => `${dias}: ${horas}`)
+  .join("\n");
 
 export const BIENVENIDA = {
   antetitulo: "Bienvenida",
@@ -44,15 +50,15 @@ export const BIENVENIDA = {
     {
       icono: "lucide:shopping-bag",
       titulo: "Solo recogida",
-      detalle: "No hacemos envíos: los pedidos se recogen en el obrador.",
+      detalle: "Los pedidos se recogen en el obrador.",
     },
     {
       icono: "lucide:clock",
       titulo: "Horario de recogida",
-      detalle: `${LABORABLES.dias}, ${LABORABLES.horas}`,
-      // Sin "Recogida de" delante: con la fuente del sistema parte en dos
-      // líneas a 390px, y el punto de arriba ya dice que es recogida.
-      corto: `${LABORABLES.dias}, ${LABORABLES.horas}`,
+      detalle: ABIERTO,
+      // Con jornada partida el horario no cabe en el renglón corto del
+      // móvil: allí sale también el detalle, debajo del título.
+      detalleEnMovil: true,
     },
     {
       icono: "lucide:calendar",
@@ -66,6 +72,6 @@ export const BIENVENIDA = {
       detalle: CONTACTO.detalle,
       detalleEnMovil: true,
     },
-  ] satisfies PuntoBienvenida[],
+  ] as PuntoBienvenida[],
   boton: "Entendido",
 } as const;

@@ -1,0 +1,35 @@
+---
+// Un titular que entra palabra a palabra (ver "Animaciones de entrada" en
+// global.css). Va DENTRO del h1/h2, que sigue siendo de quien lo usa con sus
+// clases de siempre:
+//
+//   <h2 class="titulo text-5xl ..."><TextoRevelado texto={X.titulo} /></h2>
+//
+// Se parte en el servidor y no en el navegador: el HTML llega ya con las
+// palabras, sin parpadeo ni JS para esto. El texto sigue siendo el mismo,
+// palabra a palabra y con sus espacios, así que se lee, se copia y se indexa
+// igual que antes.
+//
+// Solo para titulares. En un párrafo cansa, y el texto corrido entra entero
+// con `data-revelar` a secas.
+//
+// Se parte por espacios normales y no por cualquier blanco: un espacio duro
+// ( ) en el texto está para que dos palabras no se separen, y así siguen
+// juntas también aquí.
+interface Props {
+  texto: string;
+}
+
+const palabras = Astro.props.texto.split(" ").filter(Boolean);
+---
+
+<span data-revelar="palabras">
+  {palabras.map((palabra, indice) => (
+    <>
+      {indice > 0 && " "}
+      <span>
+        <span style={`--i:${indice}`}>{palabra}</span>
+      </span>
+    </>
+  ))}
+</span>

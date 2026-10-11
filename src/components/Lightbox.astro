@@ -17,7 +17,7 @@
 // atrapado, Escape y la página de detrás inerte. El fondo es el casi negro
 // cálido de la web (el del velo de la bienvenida), no negro puro.
 import type { HTMLAttributes } from "astro/types";
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import { Icon } from "astro-icon/components";
 
 export interface FotoLightbox {
@@ -90,7 +90,7 @@ const FLECHA =
             }
             class="flex h-full w-full shrink-0 snap-center items-center justify-center px-4 py-2 md:px-24"
           >
-            <Image
+            <Foto
               src={foto.src}
               alt={foto.alt}
               widths={[640, 960, 1280, 1920]}
@@ -204,86 +204,94 @@ const FLECHA =
 </style>
 
 <script>
-  for (const caja of document.querySelectorAll<HTMLDialogElement>(
-    "dialog[data-lightbox]",
-  )) {
-    const pista = caja.querySelector<HTMLElement>("[data-pista]")!;
-    const diapositivas = [
-      ...pista.querySelectorAll<HTMLElement>("[data-diapositiva]"),
-    ];
-    const contador = caja.querySelector<HTMLElement>("[data-contador]");
-    const anterior = caja.querySelector<HTMLButtonElement>("[data-anterior]");
-    const siguiente = caja.querySelector<HTMLButtonElement>("[data-siguiente]");
-    const puntos = [
-      ...caja.querySelectorAll<HTMLButtonElement>("[data-punto]"),
-    ];
+  import { alCargarPagina } from "@/lib/pagina";
 
-    const actual = () => Math.round(pista.scrollLeft / pista.clientWidth);
-
-    const irA = (i: number, comportamiento: ScrollBehavior = "smooth") => {
-      const destino = Math.max(0, Math.min(i, diapositivas.length - 1));
-      pista.scrollTo({
-        left: destino * pista.clientWidth,
-        behavior: comportamiento,
-      });
-    };
-
-    // Contador, flechas y puntos siguen al scroll, venga del dedo, de las
-    // flechas, de los puntos o del teclado.
-    const pintar = () => {
-      const i = actual();
-      if (contador) contador.textContent = `${i + 1} / ${diapositivas.length}`;
-      if (anterior) anterior.disabled = i === 0;
-      if (siguiente) siguiente.disabled = i === diapositivas.length - 1;
-      puntos.forEach((punto, j) => {
-        if (j === i) punto.setAttribute("aria-current", "true");
-        else punto.removeAttribute("aria-current");
-      });
-    };
-    pista.addEventListener("scroll", pintar, { passive: true });
-
-    anterior?.addEventListener("click", () => irA(actual() - 1));
-    siguiente?.addEventListener("click", () => irA(actual() + 1));
-    puntos.forEach((punto, i) => punto.addEventListener("click", () => irA(i)));
-
-    caja.addEventListener("keydown", (evento) => {
-      if (evento.key === "ArrowLeft") irA(actual() - 1);
-      else if (evento.key === "ArrowRight") irA(actual() + 1);
-      else return;
-      evento.preventDefault();
-    });
-
-    caja
-      .querySelector("[data-cerrar]")
-      ?.addEventListener("click", () => caja.close());
-
-    // Pulsar el hueco alrededor de la foto (no la foto) también cierra.
-    pista.addEventListener("click", (evento) => {
-      if ((evento.target as HTMLElement).hasAttribute("data-diapositiva"))
-        caja.close();
-    });
-
-    // La acción cierra antes de hacer lo suyo: en captura, para ir por
-    // delante de lo que la página le haya colgado al enlace (bajar al
-    // formulario no funciona con la página bloqueada detrás).
-    caja.addEventListener(
-      "click",
-      (evento) => {
-        if ((evento.target as HTMLElement).closest("[data-accion-lightbox]"))
-          caja.close();
-      },
-      { capture: true },
-    );
-
-    // Los botones que lo abren, en la foto que digan.
-    for (const boton of document.querySelectorAll<HTMLElement>(
-      `[data-abre-lightbox="${CSS.escape(caja.id)}"]`,
+  alCargarPagina(() => {
+    for (const caja of document.querySelectorAll<HTMLDialogElement>(
+      "dialog[data-lightbox]",
     )) {
-      boton.addEventListener("click", () => {
-        caja.showModal();
-        irA(Number(boton.dataset.foto ?? 0), "instant");
-        pintar();
+      const pista = caja.querySelector<HTMLElement>("[data-pista]")!;
+      const diapositivas = [
+        ...pista.querySelectorAll<HTMLElement>("[data-diapositiva]"),
+      ];
+      const contador = caja.querySelector<HTMLElement>("[data-contador]");
+      const anterior = caja.querySelector<HTMLButtonElement>("[data-anterior]");
+      const siguiente =
+        caja.querySelector<HTMLButtonElement>("[data-siguiente]");
+      const puntos = [
+        ...caja.querySelectorAll<HTMLButtonElement>("[data-punto]"),
+      ];
+
+      const actual = () => Math.round(pista.scrollLeft / pista.clientWidth);
+
+      const irA = (i: number, comportamiento: ScrollBehavior = "smooth") => {
+        const destino = Math.max(0, Math.min(i, diapositivas.length - 1));
+        pista.scrollTo({
+          left: destino * pista.clientWidth,
+          behavior: comportamiento,
+        });
+      };
+
+      // Contador, flechas y puntos siguen al scroll, venga del dedo, de las
+      // flechas, de los puntos o del teclado.
+      const pintar = () => {
+        const i = actual();
+        if (contador)
+          contador.textContent = `${i + 1} / ${diapositivas.length}`;
+        if (anterior) anterior.disabled = i === 0;
+        if (siguiente) siguiente.disabled = i === diapositivas.length - 1;
+        puntos.forEach((punto, j) => {
+          if (j === i) punto.setAttribute("aria-current", "true");
+          else punto.removeAttribute("aria-current");
+        });
+      };
+      pista.addEventListener("scroll", pintar, { passive: true });
+
+      anterior?.addEventListener("click", () => irA(actual() - 1));
+      siguiente?.addEventListener("click", () => irA(actual() + 1));
+      puntos.forEach((punto, i) =>
+        punto.addEventListener("click", () => irA(i)),
+      );
+
+      caja.addEventListener("keydown", (evento) => {
+        if (evento.key === "ArrowLeft") irA(actual() - 1);
+        else if (evento.key === "ArrowRight") irA(actual() + 1);
+        else return;
+        evento.preventDefault();
       });
+
+      caja
+        .querySelector("[data-cerrar]")
+        ?.addEventListener("click", () => caja.close());
+
+      // Pulsar el hueco alrededor de la foto (no la foto) también cierra.
+      pista.addEventListener("click", (evento) => {
+        if ((evento.target as HTMLElement).hasAttribute("data-diapositiva"))
+          caja.close();
+      });
+
+      // La acción cierra antes de hacer lo suyo: en captura, para ir por
+      // delante de lo que la página le haya colgado al enlace (bajar al
+      // formulario no funciona con la página bloqueada detrás).
+      caja.addEventListener(
+        "click",
+        (evento) => {
+          if ((evento.target as HTMLElement).closest("[data-accion-lightbox]"))
+            caja.close();
+        },
+        { capture: true },
+      );
+
+      // Los botones que lo abren, en la foto que digan.
+      for (const boton of document.querySelectorAll<HTMLElement>(
+        `[data-abre-lightbox="${CSS.escape(caja.id)}"]`,
+      )) {
+        boton.addEventListener("click", () => {
+          caja.showModal();
+          irA(Number(boton.dataset.foto ?? 0), "instant");
+          pintar();
+        });
+      }
     }
-  }
+  });
 </script>

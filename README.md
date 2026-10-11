@@ -23,6 +23,7 @@ npm install
 | `npm run build:ci` | Build sin nvm. **Lo usa Cloudflare, no tú**     |
 | `npm run preview`  | Sirve `./dist/` para verlo antes de publicar    |
 | `npm run preview:pages` | Build + sitio con la Function de los formularios (`localhost:8788`) |
+| `npm run carta`    | Build y regenera la carta en PDF (ver abajo)    |
 
 La diferencia entre `build` y `build:ci` está explicada en
 [AGENTS.md](./AGENTS.md#el-build-de-ci-buildci). Resumen: en local nvm fija la
@@ -292,12 +293,39 @@ Tres cosas que los textos dan por hechas y que hay que mantener ciertas:
 - **Los formularios llegan al correo por Cloudflare.** Si se quitan o
   cambia el servicio, hay que tocar `privacidad.ts`.
 - **Las fichas muestran los alérgenos.** Lo dicen las condiciones y lo exige
-  el Reglamento (UE) 1169/2011 para la venta a distancia. Hasta que lo
-  hagan, no se abre la web.
+  el Reglamento (UE) 1169/2011 para la venta a distancia. Salen del campo
+  `alergenos` de cada tarta (`src/config/catalogo.ts`), que es obligatorio.
+  Los da Carmen a partir de sus recetas: una tarta nueva o una receta que
+  cambia necesita que ella los confirme antes de publicarse.
 
 Las fotos en las que se reconoce a alguien necesitan su autorización por
 escrito: la plantilla está en
 [`docs/legal/consentimiento-imagen.md`](./docs/legal/consentimiento-imagen.md).
+
+## La carta en PDF
+
+En /catalogo hay un botón para llevarse la carta en PDF (en el móvil,
+«Compartir la carta» la adjunta directamente a WhatsApp). Es
+`public/carta-estimada-carmela.pdf`: una hoja A5 por tarta, con la tarta
+anotada como en la ficha, sus tamaños y precios; es informativa, sin botones,
+y el WhatsApp va como contacto en la última hoja.
+
+**No se genera sola en el deploy.** La imprime un Chrome (o Brave, o Edge) en
+tu máquina desde `/catalogo/carta`, porque The Seasons solo la sirve Adobe a
+navegadores. Cada vez que cambien tartas, precios, fotos o contacto:
+
+```
+npm run carta    # build + PDF; luego commitea el PDF y src/config/carta-pdf.json
+```
+
+Si se te olvida, el build avisa («La carta en PDF está desactualizada») pero
+no falla, y en el PR falla la comprobación de GitHub «Carta en PDF». Se puede
+mirar antes con `node scripts/comprobar-carta.mjs`. Ojo con la pantalla de «próximamente»: el PDF está en `public/` y
+se publica igual, con precios, aunque /catalogo no se vea.
+
+Pendiente: los alérgenos (rama `feat/alergenos`) tienen que entrar también en
+la hoja de cada tarta. Y confirmar que la licencia de Adobe Fonts cubre
+incrustar The Seasons en un PDF que se reparte.
 
 ## Tipografía
 
