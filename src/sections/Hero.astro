@@ -48,19 +48,24 @@
 // lg. Apilado, eso da el orden que se quiere en un móvil: primero la promesa y
 // el botón, la foto después. Al revés, el titular quedaría bajo el pliegue.
 //
-// La foto es tartaRosaPintando2.jpg: obrador, glaseando con biberón una tarta
-// rosa sobre una rejilla. Es APAISADA (3:2), con el biberón y la tarta a la
-// izquierda y la cara y el bordado de la chaquetilla a la derecha.
+// La foto es pintando-tarta-rosa-hero.png: obrador, pintando a pincel el
+// glaseado de una tarta rosa sobre una rejilla. Es APAISADA (3:2), con el
+// pincel y la tarta abajo a la izquierda y la cara y el bordado de la
+// chaquetilla a la derecha. La cabeza va pegada al borde de arriba y la
+// tarta al de abajo.
 //
 // En móvil el hueco es más ancho que la foto en proporción, así que no se
-// pierde nada por los lados: solo recorta arriba y abajo, y el 20% vertical
-// guarda la cabeza, que ya va pegada al borde de arriba.
+// pierde nada por los lados: solo recorta arriba y abajo, y el 75% vertical
+// carga el recorte arriba para que la tarta salga entera. Lo que se pierde es
+// pelo; la cara queda.
 //
 // En lg el hueco es casi cuadrado y object-cover se come cerca de un tercio
-// del ancho. El 55% horizontal reparte ese recorte: el degradado rust vela
-// el 30% izquierdo de la foto (ver su nota, abajo), y lo que queda bajo el
-// velo es la boquilla y el canto de la tarta, que parece salir del rojo. La
-// tarta, la cara y el bordado quedan limpios.
+// del ancho. Ahí el 90% horizontal carga ese recorte a la izquierda para que
+// el bordado "Estimada Carmela" entre entero (con el 55% de móvil se quedaba
+// fuera). El precio es la tarta: se pierde su mitad izquierda y el degradado
+// rust (ver su nota, abajo) vela la mano y el canto de lo que queda, que
+// parece salir del rojo. El pincel, la cara y el bordado quedan limpios.
+// Comprobado a 1280, 1440 y 1920 de ancho.
 //
 // Ojo: la mesa dulce (mesa_cumple_nati.jpeg) no puede volver aquí. Es la única
 // foto de evento que hay y la sección de Eventos la necesita justo debajo. Al
@@ -78,7 +83,7 @@
 import Foto from "@/components/Foto.astro";
 import Hero from "@/components/Hero.astro";
 import TextoRevelado from "@/components/TextoRevelado.astro";
-import fotoHero from "@/assets/images/tartaRosaPintando2.jpg";
+import fotoHero from "@/assets/images/pintando-tarta-rosa-hero.png";
 import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
 import { HERO } from "@/config/portada";
 import { SERVICIOS } from "@/config/site";
@@ -234,7 +239,7 @@ const sizesFoto = `(min-width: 1024px) ${anchoCubierto(fotoHero, "50vw", "(100vh
       widths={ANCHOS_GRANDES}
       sizes={sizesFoto}
       loading="eager"
-      class="absolute inset-0 h-full w-full object-cover object-[55%_20%]"
+      class="absolute inset-0 h-full w-full object-cover object-[55%_75%] lg:object-[90%_75%]"
     />
 
     {/* Degradado corto sobre el canto izquierdo de la foto. Sin él, la

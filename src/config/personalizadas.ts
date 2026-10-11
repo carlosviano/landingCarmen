@@ -83,12 +83,14 @@ export const ESPECIALES = {
       slug: "la-rosa",
       nombre: "La rosa",
       ocasiones: "Cumpleaños · aniversarios",
-      archivo: "pintando-tarta-rosa-hero.png",
-      alt: "Tarta rosa con borde de merengue mientras se pinta a pincel su glaseado rojo.",
-      enfoque: "28% 75%",
-      // TODO: descripción real y fotos de detalle de la rosa.
+      // Recortada de tartaRosa5.JPG sin la pared blanca de arriba: el marco
+      // de la tarjeta es estrecho y alto, y con la foto vertical la pared
+      // salía entera por mucho que se moviera el enfoque.
+      archivo: "tartaRosa5-sin-pared.jpg",
+      alt: "Tarta de glaseado rojo en espiral con un cerco de frambuesas, sobre una base dorada.",
+      enfoque: "48% 55%",
       descripcion:
-        "[Descripción del diseño: cómo es, qué lleva por fuera, para cuántas personas sale y qué se puede cambiar.]",
+        "Bizcocho con interior y mousse de frambuesa, decorado en forma de rosa. Diseñada para un 30 cumpleaños.",
       galeria: [
         {
           archivo: "tartaRosa1.JPG",
@@ -107,8 +109,8 @@ export const ESPECIALES = {
           alt: "La tarta terminada, de glaseado rojo en espiral, sobre una base dorada.",
         },
         {
-          archivo: "tartaRosa5.JPG",
-          alt: "La tarta terminada vista desde arriba, sobre una base dorada.",
+          archivo: "pintando-tarta-rosa-hero.png",
+          alt: "Tarta rosa con borde de merengue mientras se pinta a pincel su glaseado rojo.",
         },
       ],
     },
@@ -119,9 +121,8 @@ export const ESPECIALES = {
       archivo: "tarta-boda-nati.jpeg",
       alt: "Tarta de varios pisos cubierta de volantes blancos de azúcar.",
       enfoque: "50% 55%",
-      // TODO: descripción real y fotos de detalle de los volantes.
       descripcion:
-        "[Descripción del diseño: cómo es, qué lleva por fuera, para cuántas personas sale y qué se puede cambiar.]",
+        "Chocolate y avellanas, con un diseño inspirado en el vestido de volantes de una novia.",
       galeria: [
         {
           archivo: "tartaPapelAzucar3.jpeg",
