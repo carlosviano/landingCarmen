@@ -28,6 +28,7 @@ import {
   PASTILLA,
 } from "@/components/formulario/estilos";
 import type { Tarta } from "@/config/catalogo";
+import { AYUDA_WHATSAPP } from "@/config/errores";
 import { PEDIDO } from "@/config/pedido";
 import { mensajePedido, precioVisible } from "@/lib/pedido";
 
@@ -177,6 +178,17 @@ const conSelector = tarta.tamanos.length > 1;
   </div>
 
   <p data-error role="alert" hidden class="text-sm font-medium text-rust"></p>
+
+  {/* Sólo con JS (lo enciende AyudaWhatsapp.astro): abre la ayuda con el
+      pedido ya escrito, por si WhatsApp no se abre. */}
+  <button
+    type="button"
+    data-ayuda-whatsapp
+    hidden
+    class="cursor-pointer self-start text-xs text-black/60 underline underline-offset-2 hover:text-rust"
+  >
+    {AYUDA_WHATSAPP.enlaceAyuda}
+  </button>
 
   {/* Qué pasa al pulsar, como texto visible y no en un `aria-label`: la duda
       de "¿se envía ya?" la tiene todo el mundo.
