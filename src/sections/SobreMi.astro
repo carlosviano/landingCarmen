@@ -1,9 +1,9 @@
 ---
-// Sección "sobre mí". Banda de color a todo el ancho con el texto a la
+// Sección "Sobre Carmen". Banda de color a todo el ancho con el texto a la
 // izquierda y la foto a la derecha, montada encima y sobresaliendo por arriba
 // y por abajo.
 //
-// Es el destino del ancla #sobre-mi del NAV.
+// Es el destino del ancla #sobre-carmen del NAV.
 //
 // La banda sangra de canto a canto a propósito: es la única sección que lo
 // hace y de ahí saca su peso. Si además se metiera en el max-w-7xl como la de
@@ -53,7 +53,7 @@ const sizesFoto = [
 ].join(", ");
 ---
 
-<section id="sobre-mi" class="scroll-mt-20 py-16 md:py-20">
+<section id="sobre-carmen" class="scroll-mt-20 py-16 md:py-20">
   <div class="relative">
     <div class="absolute inset-x-0 inset-y-0 bg-rust lg:inset-y-10">
       <svg
@@ -97,7 +97,7 @@ const sizesFoto = [
             saldría a leerse sobre linen. Con él, la fila crece antes y lo que
             se pierde es el saliente de la foto, que es un fallo benigno. */}
         <div class="lg:col-start-1 lg:col-end-8 lg:row-start-1 lg:py-14 lg:pr-16">
-          {/* h2 y no p: es el titular de la sección y el destino de #sobre-mi.
+          {/* h2 y no p: es el titular de la sección y el destino de #sobre-carmen.
               Contacto.astro lleva uno en sr-only por lo mismo, aunque su
               diseño no lo enseñe. */}
           <h2 class="titulo text-5xl leading-none text-linen sm:text-6xl lg:text-7xl">
@@ -118,12 +118,18 @@ const sizesFoto = [
             ))}
           </div>
 
-          {/* Cierra en primera persona y conviene que se lea distinta de los
-              párrafos: por eso va en The Seasons Light. Sin cursiva, ver
-              "Tipografía" en global.css. */}
-          <p data-revelar class="mt-8 titular text-xl text-linen sm:text-2xl">
-            {SOBRE_MI.firma}
-          </p>
+          {/* Cierra con una cita suya, en primera persona entre párrafos en
+              tercera: por eso va entre comillas, firmada y en The Seasons
+              Light, para que se lea distinta. Sin cursiva, ver "Tipografía"
+              en global.css. */}
+          <figure data-revelar class="mt-8">
+            <blockquote class="titular text-xl text-linen sm:text-2xl">
+              «{SOBRE_MI.firma.cita}»
+            </blockquote>
+            <figcaption class="mt-3 leyenda text-linen/70">
+              {SOBRE_MI.firma.autora}
+            </figcaption>
+          </figure>
         </div>
         <div
           data-revelar="foto"

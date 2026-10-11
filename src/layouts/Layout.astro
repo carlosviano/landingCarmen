@@ -28,7 +28,7 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
 ---
 
 <!doctype html>
-{/* scroll-smooth para que los enlaces a anclas de la portada (el "Sobre mí"
+{/* scroll-smooth para que los enlaces a anclas de la portada (el "Sobre Carmen"
     y el "Contacto" de la barra) bajen deslizando en vez de saltar;
     solo con motion-safe. */}
 <html lang="es" class="motion-safe:scroll-smooth">
@@ -92,7 +92,7 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
       if (matchMedia("(pointer: coarse)").matches)
         delete Document.prototype.startViewTransition;
 
-      // Al llegar a un ancla de otra pantalla (de /catalogo a /#sobre-mi),
+      // Al llegar a un ancla de otra pantalla (de /catalogo a /#sobre-carmen),
       // Astro salta a ella con una navegación de ancla normal, y con el
       // scroll-smooth de <html> el salto se hacía en scroll animado desde
       // arriba: atravesaba media portada en pleno fundido, disparando las
