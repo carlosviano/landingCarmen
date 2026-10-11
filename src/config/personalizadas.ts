@@ -175,15 +175,14 @@ export const ESPECIALES = {
     titulo: "Pide tu tarta especial",
     texto:
       "Con estos datos te decimos qué diseño encaja, en qué plazo y con qué presupuesto.",
-    // TODO: plazo real de respuesta, el mismo que el de eventos.
     pasos: [
       {
         titulo: "Nos envías la solicitud.",
         detalle: "El diseño, la ocasión, la fecha y cuántos seréis.",
       },
       {
-        titulo: "Te respondemos en menos de 7 días.",
-        detalle: "Con una propuesta y el presupuesto.",
+        titulo: "Te respondemos con una propuesta.",
+        detalle: "Y con el presupuesto.",
       },
       {
         titulo: "Cerramos y la recoges.",

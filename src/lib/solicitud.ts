@@ -124,13 +124,6 @@ export const esquemaSolicitud = z.object({
     .min(1, "Cuéntanos qué tienes en mente, aunque sea en una frase.")
     .max(2000, "Es demasiado largo: 2000 caracteres como mucho."),
   fotos: fotosHasta(SOLICITUD_EVENTO.fotos),
-  enlace: z.union([
-    z.literal(""),
-    z.url({
-      protocol: /^https?$/,
-      error: "Pega el enlace entero, empezando por https://",
-    }),
-  ]),
   ...contacto,
 });
 
