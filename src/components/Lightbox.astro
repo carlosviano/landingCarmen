@@ -282,11 +282,26 @@ const FLECHA =
         { capture: true },
       );
 
+      // Al cerrar, el <dialog> devuelve el foco al botón que lo abrió. En
+      // iOS un toque no enfoca botones, así que Safari toma esa vuelta por
+      // teclado y deja el anillo rust de :focus-visible sobre la foto, como
+      // si siguiera pulsada. Si se abrió con el dedo o el ratón, el foco
+      // vuelve igual (para quien siga con teclado o lector), pero sin anillo.
+      let origen: HTMLElement | null = null;
+      caja.addEventListener("close", () => {
+        if (!origen) return;
+        origen.blur();
+        origen.focus({ preventScroll: true, focusVisible: false });
+        origen = null;
+      });
+
       // Los botones que lo abren, en la foto que digan.
       for (const boton of document.querySelectorAll<HTMLElement>(
         `[data-abre-lightbox="${CSS.escape(caja.id)}"]`,
       )) {
-        boton.addEventListener("click", () => {
+        boton.addEventListener("click", (evento) => {
+          // detail 0: lo ha activado el teclado, y ahí el anillo sí toca.
+          origen = evento.detail > 0 ? boton : null;
           caja.showModal();
           irA(Number(boton.dataset.foto ?? 0), "instant");
           pintar();
