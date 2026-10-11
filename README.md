@@ -198,6 +198,7 @@ las fotos a 1600 px               2. valida con el mismo zod
 | Qué es una solicitud válida             | [`src/lib/solicitud.ts`](./src/lib/solicitud.ts), lo usan las dos puntas  |
 | Cómo se redacta el correo               | [`src/lib/correoSolicitud.ts`](./src/lib/correoSolicitud.ts)              |
 | Turnstile y el envío                    | [`functions/_lib/`](./functions/_lib/)                                     |
+| El widget de Turnstile, con el router   | [`src/lib/turnstile.ts`](./src/lib/turnstile.ts)                          |
 | Reducir las fotos antes de subirlas     | [`src/lib/reducirFoto.ts`](./src/lib/reducirFoto.ts)                      |
 
 Por qué así y no de otra forma:
