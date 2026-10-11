@@ -90,7 +90,7 @@ export const PRIVACIDAD: TextoLegal = {
         "Para funcionar, la web y el obrador usan algunos servicios que tratan datos por encargo de Estimada Carmela, sólo para prestar su servicio y con contrato que los obliga a protegerlos:",
         {
           lista: [
-            "Cloudflare, Inc.: aloja la web y hace llegar los formularios.",
+            "Cloudflare, Inc.: aloja la web, comprueba con Turnstile que las solicitudes las envía una persona y las hace llegar.",
             `${PROVEEDOR_CORREO}: el correo donde llegan las solicitudes.`,
             `${GESTORIA}: lleva la contabilidad y ve los datos de facturación.`,
           ],

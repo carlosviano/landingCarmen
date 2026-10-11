@@ -2,13 +2,15 @@
 //
 // El art. 22.2 de la LSSI pide consentimiento para guardar o leer cosas en el
 // dispositivo de quien visita (cookies y también localStorage), salvo lo
-// técnico o lo que pide la propia persona. Hoy la web sólo guarda un dato, y
-// es de esos, así que NO hace falta banner. Si algún día entra analítica con
+// técnico o lo que pide la propia persona. Hoy la web guarda dos datos, y
+// los dos son de esos, así que NO hace falta banner. Si algún día entra analítica con
 // cookies, un vídeo incrustado o un píxel de redes, eso cambia: hará falta
 // banner y reescribir esta página antes de publicarlo.
 //
-// La clave es la de components/Bienvenida.astro (VISTO). Si cambia allí,
-// cambia aquí.
+// Las claves son la de components/Bienvenida.astro (VISTO) y la que guarda
+// Turnstile, comprobada a mano en el navegador el 2026-10-11. Si cambian,
+// cambian aquí. Turnstile sólo se carga al empezar a rellenar un formulario
+// (src/lib/turnstile.ts): si eso cambia, cambia el texto de su dato.
 
 import type { TextoLegal } from "@/lib/legal";
 
@@ -30,13 +32,14 @@ export const COOKIES: TextoLegal = {
       id: "que-guarda",
       titulo: "Qué guarda esta web",
       contenido: [
-        "Ninguna cookie. Sólo un dato en el almacenamiento local de tu navegador:",
+        "Ninguna cookie. Sólo dos datos en el almacenamiento local de tu navegador:",
         {
           lista: [
             "«bienvenida-vista-v1»: recuerda que ya has cerrado el aviso de bienvenida, para no enseñártelo cada vez. Se guarda cuando lo cierras, no caduca y no contiene ningún dato sobre ti.",
+            "«cf.turnstile.u»: lo guarda Cloudflare Turnstile, el sistema que comprueba que las solicitudes de presupuesto las envía una persona y no un programa automático. Sólo se guarda si empiezas a rellenar uno de esos formularios, y queda en el espacio de Cloudflare (challenges.cloudflare.com), no en el de esta web. No se usa para publicidad ni para seguirte por otras webs.",
           ],
         },
-        "Es un dato técnico que sirve para algo que tú has pedido (cerrar el aviso), así que la ley no exige pedirte consentimiento para guardarlo (artículo 22.2 de la Ley 34/2002).",
+        "Los dos son datos técnicos que sirven para algo que tú has pedido (cerrar el aviso, enviar tu solicitud de forma segura), así que la ley no exige pedirte consentimiento para guardarlos (artículo 22.2 de la Ley 34/2002).",
       ],
     },
     {
@@ -47,7 +50,7 @@ export const COOKIES: TextoLegal = {
         {
           lista: [
             "Adobe Fonts sirve la tipografía de los titulares. Tu navegador le pide la fuente y Adobe recibe tu dirección IP y la página desde la que se pide, y cuenta las visitas para calcular su licencia. No instala cookies.",
-            "Cloudflare aloja la web. Puede instalar una cookie técnica de seguridad si detecta tráfico sospechoso, para distinguir a las personas de los programas automáticos.",
+            "Cloudflare aloja la web. Puede instalar una cookie técnica de seguridad si detecta tráfico sospechoso, para distinguir a las personas de los programas automáticos. En los formularios de solicitud, además, Turnstile (también de Cloudflare) hace esa comprobación cuando empiezas a rellenarlos, y guarda el dato que se explica arriba.",
           ],
         },
         "Los enlaces a WhatsApp, Instagram o Google Maps no cargan nada hasta que los pulsas. A partir de ahí estás en su web, con sus propias cookies y condiciones.",
@@ -57,7 +60,7 @@ export const COOKIES: TextoLegal = {
       id: "borrar",
       titulo: "Cómo borrarlo",
       contenido: [
-        "Puedes borrar el dato de la bienvenida, y cualquier cookie, desde los ajustes de privacidad de tu navegador (en «Borrar datos de navegación» o similar). Si lo borras, volverás a ver el aviso de bienvenida la próxima vez.",
+        "Puedes borrar estos datos, y cualquier cookie, desde los ajustes de privacidad de tu navegador (en «Borrar datos de navegación» o similar). Si lo borras, volverás a ver el aviso de bienvenida la próxima vez.",
       ],
     },
     {

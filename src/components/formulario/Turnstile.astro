@@ -6,7 +6,8 @@
 // (functions/_lib/turnstile.ts).
 //
 // Casi nunca se ve: sólo si Turnstile duda y pide que se pulse una casilla.
-// Lo pinta y lo renueva src/lib/turnstile.ts.
+// No se carga hasta que se empieza a rellenar el formulario; lo carga, lo
+// pinta y lo renueva src/lib/turnstile.ts.
 import { PUBLIC_TURNSTILE_SITE_KEY } from "astro:env/client";
 
 interface Props {
@@ -22,15 +23,6 @@ const { class: clase } = Astro.props;
   data-sitekey={PUBLIC_TURNSTILE_SITE_KEY}
   class={clase}
 ></div>
-
-{/* De Cloudflare y sin empaquetar: Turnstile sólo funciona cargado desde su
-    URL. El router lo ejecuta una sola vez por visita. */}
-<script
-  is:inline
-  src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
-  async
-  defer
-></script>
 
 <script>
   import { alCargarPagina } from "@/lib/pagina";
