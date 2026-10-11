@@ -219,16 +219,14 @@ export const SOLICITUD_EVENTO = {
   titulo: "Cuéntanos qué celebras",
   texto:
     "Con estos datos te decimos qué se puede montar, en qué plazo y con qué presupuesto. Cuanto más concretes, más afinada sale la propuesta.",
-  // TODO: plazo real de respuesta. Entre corchetes para que no se publique
-  // sin querer, mismo criterio que los precios.
   pasos: [
     {
       titulo: "Nos envías la solicitud.",
       detalle: "Fecha, sitio, invitados y lo que tienes en la cabeza.",
     },
     {
-      titulo: "Te respondemos en menos de 7 días.",
-      detalle: "Con una propuesta y un presupuesto orientativo.",
+      titulo: "Te respondemos con una propuesta.",
+      detalle: "Y con un presupuesto orientativo.",
     },
     {
       titulo: "Cerramos el montaje.",

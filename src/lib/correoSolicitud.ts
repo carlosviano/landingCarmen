@@ -52,7 +52,6 @@ function resumenEvento(solicitud: Solicitud): Resumen {
       ["Invitados", solicitud.invitados],
       ["Lugar", solicitud.lugar],
       ["Qué tiene en mente", solicitud.interes],
-      ["Enlace", solicitud.enlace],
     ],
   };
 }
