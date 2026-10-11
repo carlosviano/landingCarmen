@@ -360,11 +360,15 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
       );
 
       // "Cerrar" está al final de la cinta: al plegarla, el foco vuelve al
-      // botón de la tarjeta, que también la trae de vuelta a la vista.
-      cinta.querySelector("[data-cerrar]")?.addEventListener("click", () => {
-        poner(false);
-        boton.focus();
-      });
+      // botón de la tarjeta, que también la trae de vuelta a la vista. Sin
+      // anillo si se ha pulsado con el dedo o el ratón (detail > 0): en iOS
+      // Safari lo pintaría como si viniera del teclado (ver Lightbox.astro).
+      cinta
+        .querySelector<HTMLElement>("[data-cerrar]")
+        ?.addEventListener("click", (evento) => {
+          poner(false);
+          boton.focus({ focusVisible: evento.detail === 0 });
+        });
     }
   });
 </script>
