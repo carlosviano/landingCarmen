@@ -14,7 +14,7 @@ interface Titular {
 }
 
 export const PROXIMAMENTE = {
-  enProduccion: true,
+  enProduccion: false,
   titular: { antes: "Próximamente" } as Titular,
   entradilla:
     "Deseando estar en tus cumpleaños, celebraciones y eventos más especiales",
