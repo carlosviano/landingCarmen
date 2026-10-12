@@ -14,7 +14,8 @@
 // se pinta y sus imágenes, en lazy, no cargan hasta que se abre.
 //
 // Es un <dialog> nativo, como la bienvenida: showModal() trae el foco
-// atrapado, Escape y la página de detrás inerte. El fondo es el casi negro
+// atrapado, Escape y la página de detrás inerte. "Atrás" lo cierra, como en
+// una app (ver el script). El fondo es el casi negro
 // cálido de la web (el del velo de la bienvenida), no negro puro.
 import type { HTMLAttributes } from "astro/types";
 import Foto from "@/components/Foto.astro";
@@ -206,7 +207,7 @@ const FLECHA =
 <script>
   import { alCargarPagina } from "@/lib/pagina";
 
-  alCargarPagina(() => {
+  alCargarPagina((senal) => {
     for (const caja of document.querySelectorAll<HTMLDialogElement>(
       "dialog[data-lightbox]",
     )) {
@@ -270,14 +271,67 @@ const FLECHA =
           caja.close();
       });
 
+      // "Atrás" (el botón de Android, el gesto de iOS) cierra el lightbox en
+      // vez de dejar la pantalla: al abrir se mete una entrada en el
+      // historial, sin cambiar la URL, y al volver de ella sólo se cierra.
+      // Si se cierra de otra forma (la X, Escape, el hueco), se deshace esa
+      // entrada para que el siguiente "atrás" sea el de verdad.
+      //
+      // Ojo con el router de Astro: un popstate que traiga su estado lo toma
+      // por un cambio de pantalla y, con la misma URL y sin hash, rehace la
+      // página entera. Y no se le puede parar: su oyente va antes (pararlo
+      // en captura no basta, Chrome los llama por orden de registro). Lo que
+      // sí hace es ignorar los popstate sin estado, así que mientras el
+      // lightbox está abierto las DOS entradas van con `null`: la nueva y la
+      // de la pantalla, cuyo estado se guarda y se repone al volver a ella.
+      let enHistorial = false;
+      let deshaciendo = false;
+      let estadoAstro: unknown = null;
+      let relanzar: HTMLElement | null = null;
+
+      window.addEventListener(
+        "popstate",
+        () => {
+          if (!enHistorial && !deshaciendo) return;
+          history.replaceState(estadoAstro, "");
+          if (deshaciendo) {
+            deshaciendo = false;
+            relanzar?.click();
+            relanzar = null;
+          } else {
+            enHistorial = false;
+            caja.close();
+          }
+        },
+        { signal: senal },
+      );
+
+      caja.addEventListener("close", () => {
+        if (!enHistorial) return;
+        enHistorial = false;
+        deshaciendo = true;
+        history.back();
+      });
+
       // La acción cierra antes de hacer lo suyo: en captura, para ir por
       // delante de lo que la página le haya colgado al enlace (bajar al
-      // formulario no funciona con la página bloqueada detrás).
+      // formulario no funciona con la página bloqueada detrás). Y si hay
+      // entrada en el historial, el clic espera a que se deshaga y se
+      // relanza: si no, el `history.back()` llegaría después y desharía lo
+      // que el enlace haya hecho con la URL.
       caja.addEventListener(
         "click",
         (evento) => {
-          if ((evento.target as HTMLElement).closest("[data-accion-lightbox]"))
-            caja.close();
+          const enlace = (evento.target as HTMLElement).closest<HTMLElement>(
+            "[data-accion-lightbox]",
+          );
+          if (!enlace) return;
+          if (enHistorial) {
+            evento.preventDefault();
+            evento.stopImmediatePropagation();
+            relanzar = enlace;
+          }
+          caja.close();
         },
         { capture: true },
       );
@@ -303,6 +357,10 @@ const FLECHA =
           // detail 0: lo ha activado el teclado, y ahí el anillo sí toca.
           origen = evento.detail > 0 ? boton : null;
           caja.showModal();
+          estadoAstro = history.state;
+          history.replaceState(null, "");
+          history.pushState(null, "");
+          enHistorial = true;
           irA(Number(boton.dataset.foto ?? 0), "instant");
           pintar();
         });
