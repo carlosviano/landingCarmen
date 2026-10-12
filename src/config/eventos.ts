@@ -222,7 +222,7 @@ export const SOLICITUD_EVENTO = {
   pasos: [
     {
       titulo: "Nos envías la solicitud.",
-      detalle: "Fecha, sitio, invitados y lo que tienes en la cabeza.",
+      detalle: "Fecha, sitio, invitados y lo que tienes en mente.",
     },
     {
       titulo: "Te respondemos con una propuesta.",
