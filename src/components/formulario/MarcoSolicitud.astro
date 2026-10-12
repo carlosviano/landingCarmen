@@ -21,6 +21,7 @@ import Turnstile from "@/components/formulario/Turnstile.astro";
 import { BOTON, ERROR } from "@/components/formulario/estilos";
 import { AYUDA_WHATSAPP } from "@/config/errores";
 import { AVISO_FORMULARIO as AVISO } from "@/config/legal/privacidad";
+import { LEGALES_PUBLICADOS } from "@/config/site";
 
 interface Props {
   /** Va en `data-solicitud`: es por lo que el script de cada formulario encuentra el suyo. */
@@ -99,7 +100,9 @@ const { tipo, textos: S, whatsapp } = Astro.props;
           `data-` de Campo a mano porque su texto va al lado y no encima.
 
           Los enlaces abren en otra pestaña: en esta se perdería lo que ya se
-          ha escrito en el formulario. */}
+          ha escrito en el formulario. Sin los textos publicados
+          (LEGALES_PUBLICADOS) la casilla se queda, pero sólo con el
+          consentimiento: no puede decir "he leído" algo que no se enseña. */}
       <div data-campo="privacidad" class="flex flex-col gap-3 sm:col-span-2">
         <label class="flex items-start gap-3 text-sm leading-relaxed text-black/75">
           <input
@@ -107,27 +110,31 @@ const { tipo, textos: S, whatsapp } = Astro.props;
             name="privacidad"
             class="mt-1 size-4.5 shrink-0 accent-rust"
           />
-          <span>
-            {AVISO.casilla.antes}
-            <a
-              href="/privacidad"
-              target="_blank"
-              rel="noopener"
-              class="text-rust underline underline-offset-2 hover:text-black"
-            >
-              {AVISO.casilla.privacidad}
-            </a>
-            {AVISO.casilla.entre}
-            <a
-              href="/condiciones"
-              target="_blank"
-              rel="noopener"
-              class="text-rust underline underline-offset-2 hover:text-black"
-            >
-              {AVISO.casilla.condiciones}
-            </a>
-            {AVISO.casilla.despues}
-          </span>
+          {LEGALES_PUBLICADOS ? (
+            <span>
+              {AVISO.casilla.antes}
+              <a
+                href="/privacidad"
+                target="_blank"
+                rel="noopener"
+                class="text-rust underline underline-offset-2 hover:text-black"
+              >
+                {AVISO.casilla.privacidad}
+              </a>
+              {AVISO.casilla.entre}
+              <a
+                href="/condiciones"
+                target="_blank"
+                rel="noopener"
+                class="text-rust underline underline-offset-2 hover:text-black"
+              >
+                {AVISO.casilla.condiciones}
+              </a>
+              {AVISO.casilla.despues}
+            </span>
+          ) : (
+            <span>{AVISO.casillaSinEnlaces}</span>
+          )}
         </label>
         <p id="privacidad-error" data-error hidden class={ERROR}></p>
         <p class="text-xs leading-relaxed text-black/60">{AVISO.resumen}</p>

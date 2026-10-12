@@ -86,14 +86,24 @@ export const TITULAR = {
   domicilio: `${DIRECCION.calle}, ${DIRECCION.portal.toLowerCase()}, ${DIRECCION.cp} ${DIRECCION.ciudad}`,
 } as const;
 
+// Si los textos legales están listos para enseñarse. En false (se abrió la web
+// sin ellos: la clienta los va pasando) no sale ningún enlace a ellos —ni el
+// pie, ni el del pedido, ni el de alérgenos, ni los de la casilla de los
+// formularios— y las cuatro páginas llevan noindex. Siguen existiendo en su
+// URL, con los corchetes, para ir revisándolas. Pasa a true cuando no quede
+// ninguno (ver README, "Textos legales").
+export const LEGALES_PUBLICADOS = false;
+
 // Las páginas legales, para el pie. Entran aquí cuando su texto existe: un
 // enlace a una página que no está es peor que no tenerlo.
-export const LEGAL: NavItem[] = [
-  { label: "Aviso legal", href: "/aviso-legal" },
-  { label: "Condiciones", href: "/condiciones" },
-  { label: "Privacidad", href: "/privacidad" },
-  { label: "Cookies", href: "/cookies" },
-];
+export const LEGAL: NavItem[] = LEGALES_PUBLICADOS
+  ? [
+      { label: "Aviso legal", href: "/aviso-legal" },
+      { label: "Condiciones", href: "/condiciones" },
+      { label: "Privacidad", href: "/privacidad" },
+      { label: "Cookies", href: "/cookies" },
+    ]
+  : [];
 
 export const SITE = {
   nombre: "Estimada Carmela",

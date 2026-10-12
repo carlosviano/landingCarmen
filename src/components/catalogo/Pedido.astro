@@ -30,6 +30,7 @@ import {
 import type { Tarta } from "@/config/catalogo";
 import { AYUDA_WHATSAPP } from "@/config/errores";
 import { PEDIDO } from "@/config/pedido";
+import { LEGALES_PUBLICADOS } from "@/config/site";
 import { mensajePedido, precioVisible } from "@/lib/pedido";
 
 interface Props {
@@ -198,20 +199,27 @@ const conSelector = tarta.tamanos.length > 1;
       pedir. Dice también cuándo queda hecho el pedido (al confirmarlo
       Carmela, ver "Cómo se hace un pedido" en src/config/legal/condiciones.ts).
       El enlace abre otra pestaña para no perder el tamaño, la cantidad y la
-      fecha ya elegidos. */}
+      fecha ya elegidos. Sin las condiciones publicadas (LEGALES_PUBLICADOS)
+      la frase no sale. */}
   <p class="max-w-[42ch] text-xs leading-relaxed text-black/60">
     Se abre WhatsApp con el pedido ya escrito: tamaño, cantidad y fecha. No se
     envía nada hasta que lo envíes tú, y el pedido queda hecho cuando te lo
-    confirmemos. Antes de pedir, lee las{" "}
-    <a
-      href="/condiciones"
-      target="_blank"
-      rel="noopener"
-      class="text-rust underline underline-offset-2 hover:text-black"
-    >
-      condiciones de venta
-    </a>
-    .
+    confirmemos.
+    {LEGALES_PUBLICADOS && (
+      <>
+        {" "}
+        Antes de pedir, lee las{" "}
+        <a
+          href="/condiciones"
+          target="_blank"
+          rel="noopener"
+          class="text-rust underline underline-offset-2 hover:text-black"
+        >
+          condiciones de venta
+        </a>
+        .
+      </>
+    )}
   </p>
 </form>
 
