@@ -94,7 +94,7 @@ const contacto = {
     .pipe(z.email("Este email no parece válido.")),
   privacidad: z.literal("on", {
     error:
-      "Para enviar la solicitud tienes que aceptar la política de privacidad.",
+      "Para enviar la solicitud tienes que marcar la casilla de privacidad.",
   }),
 };
 

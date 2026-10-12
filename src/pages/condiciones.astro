@@ -4,11 +4,17 @@
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/sections/Header.astro";
 import Footer from "@/sections/Footer.astro";
+import { LEGALES_PUBLICADOS } from "@/config/site";
 import PaginaLegal from "@/components/legal/PaginaLegal.astro";
 import { CONDICIONES } from "@/config/legal/condiciones";
 ---
 
 <Layout titulo={CONDICIONES.titulo}>
+  {/* Mientras no se enlacen (LEGALES_PUBLICADOS), fuera de Google: aún
+      llevan datos entre corchetes. */}
+  <Fragment slot="head">
+    {!LEGALES_PUBLICADOS && <meta name="robots" content="noindex" />}
+  </Fragment>
   <Header />
   <PaginaLegal texto={CONDICIONES} />
   <Footer />

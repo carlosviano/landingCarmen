@@ -42,18 +42,22 @@ import { LEGAL, SITE } from "@/config/site";
       </div>
     </div>
 
-    <p class="mt-10 border-t border-sand/15 pt-6 text-center dato text-xs text-sand/80 md:mt-14">
-      {LEGAL.map(({ label, href }, indice) => (
-        <>
-          {indice > 0 && " · "}
-          <a
-            href={href}
-            class="underline-offset-2 hover:text-linen hover:underline"
-          >
-            {label}
-          </a>
-        </>
-      ))}
-    </p>
+    {/* Sin enlaces legales (LEGALES_PUBLICADOS en false) no queda ni la raya:
+        una línea de separación sin nada debajo parece un fallo. */}
+    {LEGAL.length > 0 && (
+      <p class="mt-10 border-t border-sand/15 pt-6 text-center dato text-xs text-sand/80 md:mt-14">
+        {LEGAL.map(({ label, href }, indice) => (
+          <>
+            {indice > 0 && " · "}
+            <a
+              href={href}
+              class="underline-offset-2 hover:text-linen hover:underline"
+            >
+              {label}
+            </a>
+          </>
+        ))}
+      </p>
+    )}
   </div>
 </footer>

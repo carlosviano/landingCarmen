@@ -23,7 +23,7 @@
 //  - Facturas: seis años, por el Código de Comercio (art. 30), que es el más
 //    largo de los plazos que obligan a una autónoma; los fiscales son cuatro.
 
-import { TITULAR } from "../site";
+import { LEGALES_PUBLICADOS, TITULAR } from "../site";
 import type { TextoLegal } from "@/lib/legal";
 
 // El correo de contacto@estimadacarmela.com va por Google Workspace.
@@ -162,5 +162,9 @@ export const AVISO_FORMULARIO = {
     despues:
       " y, si menciono alergias o intolerancias, consiento que se usen para preparar mi presupuesto.",
   },
-  resumen: `Responsable: ${TITULAR.nombre} (Estimada Carmela). Finalidad: responder a tu solicitud y prepararte un presupuesto. Base: que lo pides tú y, para las alergias, tu consentimiento. Destinatarios: nadie, salvo obligación legal; Cloudflare y el proveedor de correo lo hacen llegar. Derechos: acceder, rectificar, suprimir y los demás, en ${TITULAR.email}.`,
+  // La casilla mientras la política y las condiciones no se enlazan
+  // (LEGALES_PUBLICADOS en false).
+  casillaSinEnlaces:
+    "Consiento que se usen mis datos para responder a mi solicitud y, si menciono alergias o intolerancias, para preparar mi presupuesto.",
+  resumen: `Responsable: ${LEGALES_PUBLICADOS ? `${TITULAR.nombre} (Estimada Carmela)` : "Estimada Carmela"}. Finalidad: responder a tu solicitud y prepararte un presupuesto. Base: que lo pides tú y, para las alergias, tu consentimiento. Destinatarios: nadie, salvo obligación legal; Cloudflare y el proveedor de correo lo hacen llegar. Derechos: acceder, rectificar, suprimir y los demás, en ${TITULAR.email}.`,
 } as const;
