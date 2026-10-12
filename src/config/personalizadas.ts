@@ -220,7 +220,7 @@ export const ESPECIALES = {
     // entre corchetes en la ayuda para que no se publique sin querer.
     fotos: { maximo: 4, megasMaximo: 8 },
     ayudaFotos:
-      "Si tienes fotos de algo que te guste, súbelas: hasta [4], de 8 MB como mucho cada una.",
+      "Si tienes fotos de algo que te guste, súbelas: hasta 4 fotos, de 8 MB como mucho cada una.",
     aviso:
       "Esta solicitud es una consulta, no una reserva. Revisaremos tu petición y te confirmaremos la fecha y los detalles según nuestra disponibilidad.",
     boton: "Enviar solicitud",
