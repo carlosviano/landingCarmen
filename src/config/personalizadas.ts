@@ -48,18 +48,23 @@ export const ESPECIALES = {
   etiquetaPagina: "Tartas especiales · Málaga",
   tituloPagina: "Una tarta pensada para lo que celebras",
   entradillaPagina:
-    "Diseños míos que adapto a tu ocasión: tamaño, colores y sabores. Me cuentas qué celebras y te propongo uno.",
-  // TODO: foto propia de la cabecera. Es la misma de los volantes y de la
-  // portada mientras no lleguen las fotos nuevas.
-  fotoCabecera: "tarta-boda-nati.jpeg",
+    "Diseños propios que adaptamos a tu ocasión: tamaño, colores y sabores. Nos cuentas qué celebras y te proponemos uno.",
+  // Apaisada a toda pantalla. En el móvil se ve entera de alto y solo cuenta
+  // el horizontal: el 45% la deja entre la tarta y la cara. En escritorio se
+  // ve entera de ancho y solo cuenta el vertical: el 90% la sube para que
+  // entre la tarta hasta la base, a costa de la cara, que aquí importa menos.
+  fotoCabecera: "tartaRosaPintando3.jpg",
   altCabecera:
-    "Tarta de boda de varios pisos cubierta de volantes blancos de azúcar, en una terraza al sol.",
-  enfoqueCabecera: "50% 40%",
+    "Pintando a pincel el glaseado rojo de una tarta sobre la rejilla del obrador, muy de cerca.",
+  enfoqueCabecera: "45% 90%",
   ctaCabecera: "Pedir presupuesto",
   pasos: [
-    { titulo: "Me cuentas", detalle: "La ocasión, la fecha y cuántos seréis." },
     {
-      titulo: "Te propongo",
+      titulo: "Nos cuentas",
+      detalle: "La ocasión, la fecha y cuántos seréis.",
+    },
+    {
+      titulo: "Te proponemos",
       detalle: "Un diseño, sus sabores y el presupuesto.",
     },
     {
@@ -67,8 +72,8 @@ export const ESPECIALES = {
       detalle: "En el obrador, lista para tu celebración.",
     },
   ],
-  etiquetaDisenos: "Diseños de Carmela",
-  tituloDisenos: "Elige uno, o deja que te proponga",
+  etiquetaDisenos: "Nuestros diseños",
+  tituloDisenos: "Elige uno o déjanos proponerte otro",
   /** La columna derecha de cada tarjeta: no hay precio cerrado. */
   precio: "a presupuesto",
   // TODO: fotos nuevas de cada diseño. Las de ahora son las que ya había
@@ -78,12 +83,14 @@ export const ESPECIALES = {
       slug: "la-rosa",
       nombre: "La rosa",
       ocasiones: "Cumpleaños · aniversarios",
-      archivo: "pintando-tarta-rosa-hero.png",
-      alt: "Tarta rosa con borde de merengue mientras se pinta a pincel su glaseado rojo.",
-      enfoque: "28% 75%",
-      // TODO: descripción real y fotos de detalle de la rosa.
+      // Recortada de tartaRosa5.JPG sin la pared blanca de arriba: el marco
+      // de la tarjeta es estrecho y alto, y con la foto vertical la pared
+      // salía entera por mucho que se moviera el enfoque.
+      archivo: "tartaRosa5-sin-pared.jpg",
+      alt: "Tarta de glaseado rojo en espiral con un cerco de frambuesas, sobre una base dorada.",
+      enfoque: "48% 55%",
       descripcion:
-        "[Descripción del diseño: cómo es, qué lleva por fuera, para cuántas personas sale y qué se puede cambiar.]",
+        "Bizcocho con interior y mousse de frambuesa, decorado en forma de rosa. Diseñada para un 30 cumpleaños.",
       galeria: [
         {
           archivo: "tartaRosa1.JPG",
@@ -102,8 +109,8 @@ export const ESPECIALES = {
           alt: "La tarta terminada, de glaseado rojo en espiral, sobre una base dorada.",
         },
         {
-          archivo: "tartaRosa5.JPG",
-          alt: "La tarta terminada vista desde arriba, sobre una base dorada.",
+          archivo: "pintando-tarta-rosa-hero.png",
+          alt: "Tarta rosa con borde de merengue mientras se pinta a pincel su glaseado rojo.",
         },
       ],
     },
@@ -114,9 +121,8 @@ export const ESPECIALES = {
       archivo: "tarta-boda-nati.jpeg",
       alt: "Tarta de varios pisos cubierta de volantes blancos de azúcar.",
       enfoque: "50% 55%",
-      // TODO: descripción real y fotos de detalle de los volantes.
       descripcion:
-        "[Descripción del diseño: cómo es, qué lleva por fuera, para cuántas personas sale y qué se puede cambiar.]",
+        "Chocolate y avellanas, con un diseño inspirado en el vestido de volantes de una novia.",
       galeria: [
         {
           archivo: "tartaPapelAzucar3.jpeg",
@@ -146,20 +152,21 @@ export const ESPECIALES = {
   },
   /**
    * La última tarjeta de la rejilla, en rust: para quien no sabe cuál elegir.
-   * Lleva al formulario con "Que me proponga Carmela" marcado.
+   * Lleva al formulario con "Que me propongáis uno" marcado.
    */
   proponer: {
     slug: "que-me-proponga",
     leyenda: "¿No sabes cuál?",
-    titulo: "Cuéntame qué celebras y te propongo uno",
-    boton: "Que me proponga",
+    titulo: "Cuéntanos qué celebras y te proponemos uno",
+    boton: "Pedir una propuesta",
     nombre: "A tu medida",
     ocasiones: "Cualquier ocasión",
     /** La pastilla del campo "Diseño". */
-    opcion: "Que me proponga Carmela",
+    opcion: "Que me propongáis uno",
   },
   /** Cierre de la rejilla, hacia /eventos: la frontera entre los dos servicios. */
-  aEventos: "¿Prefieres que la lleve y la monte yo? Eso es un evento",
+  aEventos:
+    "¿Prefieres que la llevemos y la montemos nosotros? Eso es un evento",
 
   // El formulario del final de la página. Mismos controles, mismo envío y
   // misma validación que SOLICITUD_EVENTO (ver src/lib/solicitud.ts); cambian
@@ -168,16 +175,15 @@ export const ESPECIALES = {
     etiqueta: "¿Tienes fecha?",
     titulo: "Pide tu tarta especial",
     texto:
-      "Con estos datos te digo qué diseño encaja, en qué plazo y con qué presupuesto.",
-    // TODO: plazo real de respuesta, el mismo que el de eventos.
+      "Con estos datos te decimos qué diseño encaja, en qué plazo y con qué presupuesto.",
     pasos: [
       {
-        titulo: "Me envías la solicitud.",
+        titulo: "Nos envías la solicitud.",
         detalle: "El diseño, la ocasión, la fecha y cuántos seréis.",
       },
       {
-        titulo: "Te respondo en [PLAZO].",
-        detalle: "Con una propuesta y el presupuesto.",
+        titulo: "Te respondemos con una propuesta.",
+        detalle: "Y con el presupuesto.",
       },
       {
         titulo: "Cerramos y la recoges.",
@@ -186,7 +192,7 @@ export const ESPECIALES = {
     ],
     // TODO: antelación real. Entre corchetes en el texto; el número de abajo
     // es el que usa el calendario y es de relleno.
-    nota: "Es una consulta, no una reserva: la fecha queda tuya cuando confirmamos. Pídela con [ANTELACIÓN] de antelación.",
+    nota: "Es una consulta, no una reserva: la fecha queda tuya cuando confirmamos.",
     /**
      * Días LABORABLES de antelación para la fecha de recogida, contados como
      * los de PEDIDO. Se recoge en el obrador, así que sólo de lunes a viernes
@@ -214,15 +220,15 @@ export const ESPECIALES = {
     // entre corchetes en la ayuda para que no se publique sin querer.
     fotos: { maximo: 4, megasMaximo: 8 },
     ayudaFotos:
-      "Si tienes fotos de algo que te guste, súbelas: hasta [4], de 8 MB como mucho cada una.",
+      "Si tienes fotos de algo que te guste, súbelas: hasta 4 fotos, de 8 MB como mucho cada una.",
     aviso:
       "Esta solicitud es una consulta, no una reserva. Revisaremos tu petición y te confirmaremos la fecha y los detalles según nuestra disponibilidad.",
     boton: "Enviar solicitud",
-    // Mismo destino que SOLICITUD_EVENTO.envio, y por lo mismo null.
-    envio: null as string | null,
+    // La misma Function que SOLICITUD_EVENTO.envio, con su tipo.
+    envio: "/api/solicitud/especial",
     whatsapp: {
       antes: "¿Prefieres hablar?",
-      enlace: "Escríbeme por WhatsApp",
+      enlace: "Escríbenos por WhatsApp",
     },
   },
 };

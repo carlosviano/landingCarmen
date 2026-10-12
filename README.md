@@ -22,6 +22,8 @@ npm install
 | `npm run build`    | Build local a `./dist/` (pasa por `nvm use`)    |
 | `npm run build:ci` | Build sin nvm. **Lo usa Cloudflare, no tú**     |
 | `npm run preview`  | Sirve `./dist/` para verlo antes de publicar    |
+| `npm run preview:pages` | Build + sitio con la Function de los formularios (`localhost:8788`) |
+| `npm run carta`    | Build y regenera la carta en PDF (ver abajo)    |
 
 La diferencia entre `build` y `build:ci` está explicada en
 [AGENTS.md](./AGENTS.md#el-build-de-ci-buildci). Resumen: en local nvm fija la
@@ -175,6 +177,171 @@ PROXIMAMENTE=1 npm run dev
 [`src/config/proximamente.ts`](./src/config/proximamente.ts) y seguir el flujo de siempre
 (PR → staging → main). No se apaga sola el día de la fecha: el sitio es
 estático y nadie lo reconstruye a medianoche.
+
+## Formularios
+
+Los formularios de `/eventos` y `/personalizadas` le llegan a Carmela por
+correo. La web sigue siendo estática: lo único que se ejecuta en servidor es
+una **Pages Function**, [`functions/api/solicitud/[tipo].ts`](./functions/api/solicitud/[tipo].ts),
+que Cloudflare publica junto al sitio en `/api/solicitud/evento` y
+`/api/solicitud/especial`.
+
+```
+navegador                         Pages Function                 Gmail de Carmela
+valida (zod) y reduce  ── POST ─► 1. Turnstile: ¿es persona?
+las fotos a 1600 px               2. valida con el mismo zod
+                                  3. Email Service (API REST) ──► responder = la clienta
+```
+
+| Pieza                                   | Dónde                                                                      |
+| --------------------------------------- | -------------------------------------------------------------------------- |
+| Qué es una solicitud válida             | [`src/lib/solicitud.ts`](./src/lib/solicitud.ts), lo usan las dos puntas  |
+| Cómo se redacta el correo               | [`src/lib/correoSolicitud.ts`](./src/lib/correoSolicitud.ts)              |
+| Turnstile y el envío                    | [`functions/_lib/`](./functions/_lib/)                                     |
+| El widget de Turnstile, con el router   | [`src/lib/turnstile.ts`](./src/lib/turnstile.ts)                          |
+| Reducir las fotos antes de subirlas     | [`src/lib/reducirFoto.ts`](./src/lib/reducirFoto.ts)                      |
+
+Por qué así y no de otra forma:
+
+- **API REST y no el binding `send_email`**: las Pages Functions no admiten
+  ese binding, que es sólo de Workers.
+- **Gratis porque sólo se envía a una dirección verificada** de la cuenta. Un
+  correo de confirmación a la clienta (a cualquier dirección) exige el plan
+  Workers Paid.
+- **Las fotos se reducen en el navegador**: un correo tiene techo (5 MiB, 25
+  a una dirección verificada) y base64 lo infla un tercio. Una foto de móvil
+  de 6 MB sale en unos 250 KB.
+
+### Variables del panel
+
+En Pages → **Settings → Variables and Secrets**, por entorno (Production y
+Preview). Pages las aplica en el **siguiente deploy**: después de cambiar
+una, hay que volver a desplegar (Deployments → el último → *Retry
+deployment*).
+
+| Variable                    | Tipo     | Qué es                                                                 |
+| --------------------------- | -------- | ---------------------------------------------------------------------- |
+| `CORREO_DESTINO`            | texto    | Adónde llegan. Producción: Carmela. Preview: quien pruebe              |
+| `CLOUDFLARE_ACCOUNT_ID`     | texto    | El ID de la cuenta (lo enseña el panel, en la barra lateral)          |
+| `CLOUDFLARE_EMAIL_TOKEN`    | secreto  | Token de API con permiso de envío de Email Service, y nada más         |
+| `TURNSTILE_SECRET`          | secreto  | La clave secreta del widget de Turnstile                               |
+| `PUBLIC_TURNSTILE_SITE_KEY` | texto    | La clave pública del widget. **Del build**, la lee Astro (`astro:env`) |
+
+Antes, una vez:
+
+1. **Email Service** → dar de alta `estimadacarmela.com` para enviar.
+   Cloudflare pone solo los registros DNS (SPF, DKIM).
+2. **Email Routing** → *Destination addresses* → añadir el correo de destino.
+   Llega un enlace de verificación que hay que pulsar desde ese buzón.
+   **Sin esto el envío falla con 502**: en el plan gratuito sólo se envía a
+   direcciones verificadas.
+
+   Email Routing marcará sus *DNS records* como **Misconfigured**. Es lo
+   esperado y **no hay que arreglarlo**: espera sus MX, y los MX son los de
+   Google Workspace, que es quien recibe el correo de `contacto@`. Si se deja
+   que Cloudflare los «corrija», `contacto@` deja de recibir. De Email Routing
+   sólo se usa la lista de destinatarios verificados.
+3. **Turnstile** → crear un widget para `estimadacarmela.com` (y el dominio
+   `pages.dev` del proyecto, para las previews). Da las dos claves.
+
+Con el primer envío real, mirar que no ha caído en spam y, si ha caído,
+marcarlo como «No es spam».
+
+Para probar en una preview, su rama tiene que estar en **Settings → Builds →
+Branch control → Preview branches**: las que no están salen en Deployments
+con ⏩ y «No deployment available».
+
+Al probar, **con DevTools cerrado**: Turnstile se defiende de quien lo
+inspecciona, se para en *Sources* y la verificación falla.
+
+### Probar en local
+
+`npm run dev` no ejecuta la Function: el formulario valida pero el envío
+falla (y lo dice). Para probar el envío:
+
+```sh
+cp .dev.vars.example .dev.vars   # una vez
+npm run preview:pages
+```
+
+Con `.dev.vars` tal cual no sale ningún correo: la Function escribe en la
+terminal el que enviaría (`CORREO_EN_CONSOLA=1`), y Turnstile usa las claves
+de prueba de Cloudflare, que pasan siempre. Los fallos de envío en Cloudflare
+salen en los logs de la Function (Pages → Deployments → el deploy →
+*Functions*).
+
+## Textos legales
+
+Cuatro páginas, una por texto, enlazadas en el pie:
+
+| Página         | Qué es                                  | Texto                                                                    |
+| -------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| `/aviso-legal` | Quién está detrás (art. 10 LSSI)        | [`avisoLegal.ts`](./src/config/legal/avisoLegal.ts)                      |
+| `/condiciones` | Condiciones de venta (TRLGDCU)          | [`condiciones.ts`](./src/config/legal/condiciones.ts)                    |
+| `/privacidad`  | Política de privacidad (RGPD, LOPDGDD)  | [`privacidad.ts`](./src/config/legal/privacidad.ts)                      |
+| `/cookies`     | Lo que se guarda en el navegador        | [`cookies.ts`](./src/config/legal/cookies.ts)                            |
+
+Los textos son datos y los pinta una sola plantilla,
+[`PaginaLegal.astro`](./src/components/legal/PaginaLegal.astro). Los datos
+de la titular (nombre, NIF, email, registro sanitario) se escriben una vez,
+en `TITULAR` de [`src/config/site.ts`](./src/config/site.ts). La primera capa
+de privacidad que va junto a los formularios (`AVISO_FORMULARIO`) vive en
+`privacidad.ts`, al lado de la política completa, para que no se
+contradigan.
+
+**No se abre la web con un corchete en estos textos.** Lo que va entre
+corchetes (`[NIF]`, `[FECHA]`…) es un dato que falta de la clienta. Para ver
+lo que queda:
+
+```sh
+grep -rno "\[[A-ZÁÉÍÓÚÑ][^]]*\]" src/config/legal src/config/site.ts
+```
+
+Al cambiar lo que dice un texto, cambia también su `actualizado`.
+
+Tres cosas que los textos dan por hechas y que hay que mantener ciertas:
+
+- **No hay cookies ni analítica.** Por eso no hay banner. Si entra cualquier
+  cosa que guarde datos en el navegador sin que la visitante lo pida
+  (analítica con cookies, un vídeo incrustado, un píxel de redes), hacen
+  falta un banner y reescribir `cookies.ts` *antes* de publicarlo. Web
+  Analytics de Cloudflare está apagado.
+- **Los formularios llegan al correo por Cloudflare.** Si se quitan o
+  cambia el servicio, hay que tocar `privacidad.ts`.
+- **Las fichas muestran los alérgenos.** Lo dicen las condiciones y lo exige
+  el Reglamento (UE) 1169/2011 para la venta a distancia. Salen del campo
+  `alergenos` de cada tarta (`src/config/catalogo.ts`), que es obligatorio.
+  Los da Carmen a partir de sus recetas: una tarta nueva o una receta que
+  cambia necesita que ella los confirme antes de publicarse.
+
+Las fotos en las que se reconoce a alguien necesitan su autorización por
+escrito: la plantilla está en
+[`docs/legal/consentimiento-imagen.md`](./docs/legal/consentimiento-imagen.md).
+
+## La carta en PDF
+
+En /catalogo hay un botón para llevarse la carta en PDF (en el móvil,
+«Compartir la carta» la adjunta directamente a WhatsApp). Es
+`public/carta-estimada-carmela.pdf`: una hoja A5 por tarta, con la tarta
+anotada como en la ficha, sus tamaños y precios; es informativa, sin botones,
+y el WhatsApp va como contacto en la última hoja.
+
+**No se genera sola en el deploy.** La imprime un Chrome (o Brave, o Edge) en
+tu máquina desde `/catalogo/carta`, porque The Seasons solo la sirve Adobe a
+navegadores. Cada vez que cambien tartas, precios, fotos o contacto:
+
+```
+npm run carta    # build + PDF; luego commitea el PDF y src/config/carta-pdf.json
+```
+
+Si se te olvida, el build avisa («La carta en PDF está desactualizada») pero
+no falla, y en el PR falla la comprobación de GitHub «Carta en PDF». Se puede
+mirar antes con `node scripts/comprobar-carta.mjs`. Ojo con la pantalla de «próximamente»: el PDF está en `public/` y
+se publica igual, con precios, aunque /catalogo no se vea.
+
+Pendiente: los alérgenos (rama `feat/alergenos`) tienen que entrar también en
+la hoja de cada tarta. Y confirmar que la licencia de Adobe Fonts cubre
+incrustar The Seasons en un PDF que se reparte.
 
 ## Tipografía
 

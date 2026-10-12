@@ -1,12 +1,31 @@
 // @ts-check
-import { defineConfig, fontProviders } from "astro/config";
+import { defineConfig, envField, fontProviders } from "astro/config";
 
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
+import { cartaAlDia } from "./scripts/huella-carta.mjs";
+
+// La carta en PDF (public/carta-estimada-carmela.pdf) no se genera en el
+// build: la imprime `npm run carta` en local (ver AGENTS.md, «La carta en
+// PDF»). Esto solo avisa si las tartas, los precios o el contacto han
+// cambiado desde la última vez. Avisa y no falla: un cambio de precio no
+// puede dejar la web sin publicar.
+/** @type {import("astro").AstroIntegration} */
+const avisoCartaPdf = {
+  name: "aviso-carta-pdf",
+  hooks: {
+    "astro:build:start": async ({ logger }) => {
+      if (!(await cartaAlDia()))
+        logger.warn(
+          "La carta en PDF está desactualizada: genérala con `npm run carta`.",
+        );
+    },
+  },
+};
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [icon()],
+  integrations: [icon(), avisoCartaPdf],
 
   // La web usa DOS fuentes y solo dos (el sistema entero está en
   // src/styles/global.css, "Tipografía"):
@@ -32,7 +51,30 @@ export default defineConfig({
     },
   ],
 
+  env: {
+    schema: {
+      // La clave PÚBLICA del widget de Turnstile de los formularios. Se fija
+      // por entorno en el panel de Pages, como variable del build. Sin ella
+      // vale la de pruebas de Cloudflare, que siempre pasa: en local no hace
+      // falta nada, y en Cloudflare la Function la rechaza, porque allí el
+      // secreto es el de verdad. La secreta es TURNSTILE_SECRET, de la
+      // Function (functions/api/solicitud/[tipo].ts).
+      PUBLIC_TURNSTILE_SITE_KEY: envField.string({
+        context: "client",
+        access: "public",
+        default: "1x00000000000000000000AA",
+      }),
+    },
+  },
+
   vite: {
     plugins: [tailwindcss()],
+    // zod lo importan los scripts de los formularios (src/lib/solicitud.ts) y
+    // el escaneo de arranque de Vite no lo ve: lo descubría en la primera
+    // página con formulario, reoptimizaba, y desde ahí la barra de desarrollo
+    // de Astro pedía su script con el hash viejo (504 "Outdated Optimize Dep"
+    // en consola, en todas las pantallas, hasta reiniciar). Declarado aquí se
+    // optimiza al arrancar y no hay segunda pasada. Sólo afecta a `astro dev`.
+    optimizeDeps: { include: ["zod"] },
   },
 });

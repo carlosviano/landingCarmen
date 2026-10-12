@@ -1,0 +1,30 @@
+---
+// Toda foto del sitio pasa por aquí, en vez de por el <Image> de Astro.
+//
+// AVIF CON WEBP DE RESPALDO. AVIF pesa casi la mitad que webp a la misma
+// calidad (medido con las fotos de este proyecto: −47 %), pero algún
+// navegador viejo no lo lee. <Picture> ofrece los dos y cada navegador coge
+// el primero que entiende. Astro no tiene un ajuste global para cambiar el
+// formato de <Image>, por eso este componente.
+//
+// `fallbackFormat: webp`: el <img> de dentro lleva webp y no el JPG o PNG
+// original, que pesaría megas si algún navegador llegara a pedirlo.
+//
+// `display: contents` en el <picture>: no pinta caja, así que el <img> se
+// coloca como si fuera hijo directo de quien lo contiene (los `h-full`,
+// `absolute inset-0` y compañía siguen funcionando igual que con <Image>).
+// Las clases y los atributos que se le pasan van al <img>, no al <picture>.
+import type { ComponentProps } from "astro/types";
+import { Picture } from "astro:assets";
+
+// Los mismos props que <Picture>; `formats`, `fallbackFormat` y
+// `pictureAttributes` se pisan abajo.
+type Props = ComponentProps<typeof Picture>;
+---
+
+<Picture
+  {...Astro.props}
+  formats={["avif", "webp"]}
+  fallbackFormat="webp"
+  pictureAttributes={{ style: "display: contents" }}
+/>

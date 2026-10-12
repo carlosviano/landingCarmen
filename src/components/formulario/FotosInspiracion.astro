@@ -8,9 +8,11 @@
 // fotos y luego otra más dejaría sólo la última. Tras cada cambio vuelca la
 // lista en el <input>, que es lo que viaja con el formulario.
 //
-// Cada foto se pasa por `esquemaFotoDe`, el mismo que valida la solicitud
-// entera: lo que aquí se rechaza es justo lo que el envío no aceptaría. Los
-// límites viajan al script en `data-` porque cada formulario tiene los suyos.
+// Cada foto se reduce al añadirla (`reducirFoto`: tienen que caber en un
+// correo) y después se pasa por `esquemaFotoDe`, el mismo que valida la
+// solicitud entera: lo que aquí se rechaza es justo lo que el envío no
+// aceptaría. Los límites viajan al script en `data-` porque cada formulario
+// tiene los suyos.
 import { Icon } from "astro-icon/components";
 import { SOLICITUD_EVENTO } from "@/config/eventos";
 
@@ -87,90 +89,96 @@ const { maximo, megasMaximo } = fotos;
 
 <script>
   import { esquemaFotoDe } from "@/lib/solicitud";
+  import { alCargarPagina } from "@/lib/pagina";
+  import { reducirFoto } from "@/lib/reducirFoto";
 
-  for (const raiz of document.querySelectorAll<HTMLElement>(
-    "[data-fotos-inspiracion]",
-  )) {
-    const maximo = Number(raiz.dataset.maximo);
-    const esquemaFoto = esquemaFotoDe(Number(raiz.dataset.megas));
-    const entrada = raiz.querySelector<HTMLInputElement>("[data-entrada]")!;
-    const zona = raiz.querySelector<HTMLElement>("[data-zona]")!;
-    const lista = raiz.querySelector<HTMLUListElement>("[data-miniaturas]")!;
-    const aviso = raiz.querySelector<HTMLElement>("[data-aviso]")!;
-    const plantilla =
-      raiz.querySelector<HTMLTemplateElement>("[data-plantilla]")!;
+  alCargarPagina(() => {
+    for (const raiz of document.querySelectorAll<HTMLElement>(
+      "[data-fotos-inspiracion]",
+    )) {
+      const maximo = Number(raiz.dataset.maximo);
+      const esquemaFoto = esquemaFotoDe(Number(raiz.dataset.megas));
+      const entrada = raiz.querySelector<HTMLInputElement>("[data-entrada]")!;
+      const zona = raiz.querySelector<HTMLElement>("[data-zona]")!;
+      const lista = raiz.querySelector<HTMLUListElement>("[data-miniaturas]")!;
+      const aviso = raiz.querySelector<HTMLElement>("[data-aviso]")!;
+      const plantilla =
+        raiz.querySelector<HTMLTemplateElement>("[data-plantilla]")!;
 
-    let elegidas: File[] = [];
+      let elegidas: File[] = [];
 
-    const miniatura = (archivo: File) => {
-      const li = plantilla.content.firstElementChild!.cloneNode(
-        true,
-      ) as HTMLLIElement;
-      li.querySelector("img")!.src = URL.createObjectURL(archivo);
-      const quitar = li.querySelector("button")!;
-      quitar.setAttribute("aria-label", `Quitar ${archivo.name}`);
-      quitar.addEventListener("click", () => {
-        elegidas = elegidas.filter((otra) => otra !== archivo);
+      const miniatura = (archivo: File) => {
+        const li = plantilla.content.firstElementChild!.cloneNode(
+          true,
+        ) as HTMLLIElement;
+        li.querySelector("img")!.src = URL.createObjectURL(archivo);
+        const quitar = li.querySelector("button")!;
+        quitar.setAttribute("aria-label", `Quitar ${archivo.name}`);
+        quitar.addEventListener("click", () => {
+          elegidas = elegidas.filter((otra) => otra !== archivo);
+          aviso.textContent = "";
+          pintar();
+        });
+        return li;
+      };
+
+      const pintar = () => {
+        const dt = new DataTransfer();
+        elegidas.forEach((archivo) => dt.items.add(archivo));
+        entrada.files = dt.files;
+
+        lista
+          .querySelectorAll("img")
+          .forEach((img) => URL.revokeObjectURL(img.src));
+        lista.replaceChildren(...elegidas.map(miniatura));
+        // Con el cupo lleno no se ofrece añadir más.
+        zona.hidden = elegidas.length >= maximo;
+        // Para que el formulario (WhatsApp, validación) sepa que algo ha cambiado.
+        entrada.dispatchEvent(new Event("input", { bubbles: true }));
+      };
+
+      const anadir = async (nuevas: File[]) => {
+        const rechazos: string[] = [];
+        for (const original of nuevas) {
+          if (elegidas.length >= maximo) {
+            rechazos.push(`Caben ${maximo} fotos como mucho.`);
+            break;
+          }
+          const archivo = await reducirFoto(original);
+          const resultado = esquemaFoto.safeParse(archivo);
+          if (resultado.success) elegidas.push(archivo);
+          else
+            rechazos.push(
+              `${original.name}: ${resultado.error.issues[0]!.message}`,
+            );
+        }
+        aviso.textContent = rechazos.join(" ");
+        pintar();
+      };
+
+      // Lo recién elegido viene en `files`, que sólo trae la última selección:
+      // se suma a `elegidas` y `pintar` rehace el <input> con todo.
+      entrada.addEventListener(
+        "change",
+        () => void anadir([...(entrada.files ?? [])]),
+      );
+
+      zona.addEventListener("dragover", (evento) => {
+        evento.preventDefault();
+        zona.dataset.arrastrando = "";
+      });
+      zona.addEventListener("dragleave", () => delete zona.dataset.arrastrando);
+      zona.addEventListener("drop", (evento) => {
+        evento.preventDefault();
+        delete zona.dataset.arrastrando;
+        void anadir([...(evento.dataTransfer?.files ?? [])]);
+      });
+
+      entrada.form?.addEventListener("reset", () => {
+        elegidas = [];
         aviso.textContent = "";
         pintar();
       });
-      return li;
-    };
-
-    const pintar = () => {
-      const dt = new DataTransfer();
-      elegidas.forEach((archivo) => dt.items.add(archivo));
-      entrada.files = dt.files;
-
-      lista
-        .querySelectorAll("img")
-        .forEach((img) => URL.revokeObjectURL(img.src));
-      lista.replaceChildren(...elegidas.map(miniatura));
-      // Con el cupo lleno no se ofrece añadir más.
-      zona.hidden = elegidas.length >= maximo;
-      // Para que el formulario (WhatsApp, validación) sepa que algo ha cambiado.
-      entrada.dispatchEvent(new Event("input", { bubbles: true }));
-    };
-
-    const anadir = (nuevas: File[]) => {
-      const rechazos: string[] = [];
-      for (const archivo of nuevas) {
-        if (elegidas.length >= maximo) {
-          rechazos.push(`Caben ${maximo} fotos como mucho.`);
-          break;
-        }
-        const resultado = esquemaFoto.safeParse(archivo);
-        if (resultado.success) elegidas.push(archivo);
-        else
-          rechazos.push(
-            `${archivo.name}: ${resultado.error.issues[0]!.message}`,
-          );
-      }
-      aviso.textContent = rechazos.join(" ");
-      pintar();
-    };
-
-    // Lo recién elegido viene en `files`, que sólo trae la última selección:
-    // se suma a `elegidas` y `pintar` rehace el <input> con todo.
-    entrada.addEventListener("change", () =>
-      anadir([...(entrada.files ?? [])]),
-    );
-
-    zona.addEventListener("dragover", (evento) => {
-      evento.preventDefault();
-      zona.dataset.arrastrando = "";
-    });
-    zona.addEventListener("dragleave", () => delete zona.dataset.arrastrando);
-    zona.addEventListener("drop", (evento) => {
-      evento.preventDefault();
-      delete zona.dataset.arrastrando;
-      anadir([...(evento.dataTransfer?.files ?? [])]);
-    });
-
-    entrada.form?.addEventListener("reset", () => {
-      elegidas = [];
-      aviso.textContent = "";
-      pintar();
-    });
-  }
+    }
+  });
 </script>

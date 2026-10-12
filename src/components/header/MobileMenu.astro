@@ -70,46 +70,60 @@ const PANEL_ID = "menu-movil";
 </div>
 
 <script>
-  const toggle =
-    document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
-  const panel = document.getElementById("menu-movil");
+  import { alCargarPagina } from "@/lib/pagina";
 
-  if (toggle && panel) {
-    const etiqueta = toggle.querySelector("[data-menu-label]");
-    const iconoAbrir = toggle.querySelector("[data-icon-open]");
-    const iconoCerrar = toggle.querySelector("[data-icon-close]");
+  alCargarPagina((senal) => {
+    const toggle =
+      document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+    const panel = document.getElementById("menu-movil");
 
-    const estaAbierto = () => !panel.classList.contains("hidden");
+    if (toggle && panel) {
+      const etiqueta = toggle.querySelector("[data-menu-label]");
+      const iconoAbrir = toggle.querySelector("[data-icon-open]");
+      const iconoCerrar = toggle.querySelector("[data-icon-close]");
 
-    const mostrar = (abierto: boolean) => {
-      panel.classList.toggle("hidden", !abierto);
-      document.documentElement.classList.toggle("overflow-hidden", abierto);
-      iconoAbrir?.classList.toggle("hidden", abierto);
-      iconoCerrar?.classList.toggle("hidden", !abierto);
-      toggle.setAttribute("aria-expanded", String(abierto));
-      if (etiqueta)
-        etiqueta.textContent = abierto ? "Cerrar menú" : "Abrir menú";
-    };
+      const estaAbierto = () => !panel.classList.contains("hidden");
 
-    toggle.addEventListener("click", () => mostrar(!estaAbierto()));
+      const mostrar = (abierto: boolean) => {
+        panel.classList.toggle("hidden", !abierto);
+        document.documentElement.classList.toggle("overflow-hidden", abierto);
+        iconoAbrir?.classList.toggle("hidden", abierto);
+        iconoCerrar?.classList.toggle("hidden", !abierto);
+        toggle.setAttribute("aria-expanded", String(abierto));
+        if (etiqueta)
+          etiqueta.textContent = abierto ? "Cerrar menú" : "Abrir menú";
+      };
 
-    // Al pulsar un enlace navegamos a la sección: el panel ya estorba.
-    panel.addEventListener("click", (evento) => {
-      if ((evento.target as HTMLElement).closest("a[href^='#']"))
-        mostrar(false);
-    });
+      toggle.addEventListener("click", () => mostrar(!estaAbierto()));
 
-    // Si la pantalla crece hasta md con el panel abierto (girar una tableta),
-    // el panel desaparece por CSS pero el bloqueo del scroll no: se cierra.
-    matchMedia("(min-width: 48rem)").addEventListener("change", (consulta) => {
-      if (consulta.matches) mostrar(false);
-    });
+      // Al pulsar un enlace navegamos a la sección: el panel ya estorba.
+      panel.addEventListener("click", (evento) => {
+        if ((evento.target as HTMLElement).closest("a[href^='#']"))
+          mostrar(false);
+      });
 
-    document.addEventListener("keydown", (evento) => {
-      if (evento.key === "Escape" && estaAbierto()) {
-        mostrar(false);
-        toggle.focus();
-      }
-    });
-  }
+      // Si la pantalla crece hasta md con el panel abierto (girar una tableta),
+      // el panel desaparece por CSS pero el bloqueo del scroll no: se cierra.
+      matchMedia("(min-width: 48rem)").addEventListener(
+        "change",
+        (consulta) => {
+          if (consulta.matches) mostrar(false);
+        },
+        // El matchMedia y el document sobreviven al cambio de pantalla:
+        // sin la señal, cada visita sumaría otro oyente (lib/pagina.ts).
+        { signal: senal },
+      );
+
+      document.addEventListener(
+        "keydown",
+        (evento) => {
+          if (evento.key === "Escape" && estaAbierto()) {
+            mostrar(false);
+            toggle.focus();
+          }
+        },
+        { signal: senal },
+      );
+    }
+  });
 </script>

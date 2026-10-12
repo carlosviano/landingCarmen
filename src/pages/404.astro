@@ -1,0 +1,96 @@
+---
+// La 404. Cloudflare Pages sirve el 404.html de la raíz para cualquier ruta
+// que no exista, con su código 404.
+//
+// No es un callejón: debajo del aviso van los tres servicios con su foto, que
+// es a donde quería llegar casi cualquiera que acaba aquí (una ficha de una
+// tarta que ya no está en la carta, un enlace viejo de Instagram).
+//
+// Sin el modal de bienvenida: quien llega por un enlace roto ya tiene bastante
+// con entender dónde está. Lo verá en la siguiente pantalla.
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/sections/Header.astro";
+import Footer from "@/sections/Footer.astro";
+import Foto from "@/components/Foto.astro";
+import { Icon } from "astro-icon/components";
+import { NO_ENCONTRADA as N } from "@/config/errores";
+import { ESCAPARATE, ESCAPARATE_EVENTOS } from "@/config/portada";
+import { SERVICIOS } from "@/config/site";
+import { fotoDe } from "@/lib/fotos";
+
+const [carta, personalizadas] = ESCAPARATE.entradas;
+const destinos = [
+  carta,
+  personalizadas,
+  {
+    ...ESCAPARATE_EVENTOS,
+    servicio: SERVICIOS.eventos,
+    leyenda: N.leyendaEventos,
+  },
+].map((destino) => ({ ...destino, foto: fotoDe(destino.archivo)! }));
+---
+
+<Layout titulo={N.titulo} bienvenida={false}>
+  <Header />
+  <main class="mx-auto w-full max-w-7xl px-6 pt-10 pb-16 md:pt-16 md:pb-24">
+    <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
+      <div class="flex max-w-2xl flex-col gap-3.5 md:gap-4.5">
+        <h1 class="titular text-[2.9rem] leading-none text-rust md:text-7xl">
+          {N.titular}
+        </h1>
+        <p class="max-w-[52ch] leading-relaxed text-black/75 md:text-lg">
+          {N.texto}
+        </p>
+      </div>
+      <a
+        href="/"
+        class="flex h-12 shrink-0 items-center justify-center rounded bg-rust px-7 accion text-xs text-linen transition-colors hover:bg-rust-hondo"
+      >
+        {N.volver}
+      </a>
+    </div>
+
+    {/* Una sola maqueta para los dos tamaños: en móvil, filas compactas con
+        miniatura (caben las tres sin bajar); desde md, tarjetas con la foto
+        arriba, como el escaparate de la portada. */}
+    <ul class="mt-8 grid gap-2.5 md:mt-12 md:grid-cols-3 md:gap-6">
+      {destinos.map((destino) => (
+        <li class="flex">
+          <a
+            href={destino.servicio.ruta}
+            class="group flex flex-1 items-center gap-4 rounded-2xl bg-white p-2 pr-5 md:flex-col md:items-stretch md:gap-0 md:overflow-hidden md:rounded-3xl md:p-0 md:shadow-xl md:shadow-black/10"
+          >
+            {/* En su caja: el <picture> de Foto va en `display: contents` y
+                sus <source> contarían como hijos del flex, cada uno con su
+                `gap`, y empujarían la foto. */}
+            <span class="block shrink-0">
+              <Foto
+                src={destino.foto}
+                alt={destino.alt}
+                widths={[160, 480, 800, 1200]}
+                sizes="(min-width: 768px) 33vw, 72px"
+                loading="lazy"
+                class="size-18 rounded-[10px] object-cover md:h-62 md:w-full md:rounded-none"
+                style={`object-position: ${destino.enfoque}`}
+              />
+            </span>
+            <span class="flex flex-1 items-center justify-between gap-4 md:px-6 md:py-5">
+              <span class="flex flex-col gap-1 md:flex-col-reverse md:gap-1.5">
+                <span class="titulo text-[1.4rem] leading-tight md:text-3xl">
+                  {destino.servicio.nombre}
+                </span>
+                <span class="leyenda text-rust">{destino.leyenda}</span>
+              </span>
+              <Icon
+                name="lucide:arrow-right"
+                class="size-5 shrink-0 text-rust transition-transform group-hover:translate-x-1 motion-reduce:transition-none md:size-5.5"
+                aria-hidden="true"
+              />
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </main>
+  <Footer />
+</Layout>

@@ -1,9 +1,9 @@
 ---
-// Sección "sobre mí". Banda de color a todo el ancho con el texto a la
+// Sección "Sobre Carmen". Banda de color a todo el ancho con el texto a la
 // izquierda y la foto a la derecha, montada encima y sobresaliendo por arriba
 // y por abajo.
 //
-// Es el destino del ancla #sobre-mi del NAV.
+// Es el destino del ancla #sobre-carmen del NAV.
 //
 // La banda sangra de canto a canto a propósito: es la única sección que lo
 // hace y de ahí saca su peso. Si además se metiera en el max-w-7xl como la de
@@ -37,12 +37,23 @@
 // obliga a la fila a crecer antes de que eso pase, y entonces lo que se pierde
 // es el saliente, que es un fallo mucho más benigno. Para meter más texto,
 // subir la altura de la foto.
-import { Image } from "astro:assets";
-import fotoSobreMi from "@/assets/images/carmenSentadaHaciaUnLado.jpg";
+import Foto from "@/components/Foto.astro";
+import TextoRevelado from "@/components/TextoRevelado.astro";
 import { SOBRE_MI } from "@/config/portada";
+import fotoSobreMi from "@/assets/images/retratoCarmenSobremi.jpg";
+import { ANCHOS_GRANDES, anchoCubierto } from "@/lib/imagenes";
+
+// La foto es apaisada y su caja vertical (2/3 apilada, 38rem de alto en lg),
+// así que object-cover la pinta mucho más ancha que la caja: en el iPhone,
+// unas 2.25 veces. El sizes tiene que decir ESE ancho o el navegador baja
+// una versión pequeña y la estira (lib/imagenes.ts).
+const sizesFoto = [
+  `(min-width: 1024px) ${anchoCubierto(fotoSobreMi, "42vw", "38rem")}`,
+  anchoCubierto(fotoSobreMi, "calc(100vw - 3rem)", "(100vw - 3rem) * 1.5"),
+].join(", ");
 ---
 
-<section id="sobre-mi" class="scroll-mt-20 py-16 md:py-20">
+<section id="sobre-carmen" class="scroll-mt-20 py-16 md:py-20">
   <div class="relative">
     <div class="absolute inset-x-0 inset-y-0 bg-rust lg:inset-y-10">
       <svg
@@ -86,37 +97,49 @@ import { SOBRE_MI } from "@/config/portada";
             saldría a leerse sobre linen. Con él, la fila crece antes y lo que
             se pierde es el saliente de la foto, que es un fallo benigno. */}
         <div class="lg:col-start-1 lg:col-end-8 lg:row-start-1 lg:py-14 lg:pr-16">
-          {/* h2 y no p: es el titular de la sección y el destino de #sobre-mi.
+          {/* h2 y no p: es el titular de la sección y el destino de #sobre-carmen.
               Contacto.astro lleva uno en sr-only por lo mismo, aunque su
               diseño no lo enseñe. */}
           <h2 class="titulo text-5xl leading-none text-linen sm:text-6xl lg:text-7xl">
-            {SOBRE_MI.titulo}
+            <TextoRevelado texto={SOBRE_MI.titulo} />
           </h2>
 
           {/* Párrafos sueltos, sin subtitular. El hueco entre ellos es más
               corto que el que los separa del titular: así se leen como un
               texto seguido y no como tres apartados. */}
-          <div class="mt-8 space-y-6 lg:mt-10 lg:space-y-8">
+          <div class="mt-6 space-y-4 lg:mt-8 lg:space-y-5">
             {SOBRE_MI.parrafos.map((parrafo) => (
-              <p class="max-w-prose text-sm leading-relaxed text-linen/80 sm:text-base">
+              <p
+                data-revelar
+                class="max-w-prose text-sm leading-relaxed text-linen/80 sm:text-base"
+              >
                 {parrafo}
               </p>
             ))}
           </div>
 
-          {/* Cierra en primera persona y conviene que se lea distinta de los
-              párrafos: por eso va en The Seasons Light. Sin cursiva, ver
-              "Tipografía" en global.css. */}
-          <p class="mt-10 titular text-xl text-linen sm:text-2xl">
-            {SOBRE_MI.firma}
-          </p>
+          {/* Cierra con una cita suya, en primera persona entre párrafos en
+              tercera: por eso va entre comillas, firmada y en The Seasons
+              Light, para que se lea distinta. Sin cursiva, ver "Tipografía"
+              en global.css. */}
+          <figure data-revelar class="mt-8">
+            <blockquote class="titular text-xl text-linen sm:text-2xl">
+              «{SOBRE_MI.firma.cita}»
+            </blockquote>
+            <figcaption class="mt-3 leyenda text-linen/70">
+              {SOBRE_MI.firma.autora}
+            </figcaption>
+          </figure>
         </div>
-        <div class="relative aspect-[2/3] overflow-hidden rounded-3xl shadow-xl shadow-black/20 ring-1 ring-linen/15 lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:aspect-auto lg:h-[38rem]">
-          <Image
+        <div
+          data-revelar="foto"
+          class="relative aspect-[2/3] overflow-hidden rounded-3xl shadow-xl shadow-black/20 ring-1 ring-linen/15 lg:col-start-8 lg:col-end-13 lg:row-start-1 lg:aspect-auto lg:h-[38rem]"
+        >
+          <Foto
             src={fotoSobreMi}
             alt={SOBRE_MI.fotoAlt}
-            widths={[320, 480, 640, 900, 1066]}
-            sizes="(min-width: 1024px) 42vw, 100vw"
+            widths={ANCHOS_GRANDES}
+            sizes={sizesFoto}
             loading="lazy"
             class="h-full w-full object-cover object-center"
           />

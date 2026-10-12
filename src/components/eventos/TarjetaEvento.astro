@@ -15,8 +15,14 @@
 // va en sand, como el CTA de la cabecera, mientras invita a abrir; abierta,
 // pasa a borde rust para que no compita con el "Quiero algo parecido" del
 // final de la cinta. Sin JS la cinta sale abierta y el botón no aparece.
-import { Image } from "astro:assets";
+//
+// Pulsar una foto de la cinta la abre a pantalla completa en el lightbox
+// (components/Lightbox.astro), el mismo de /personalizadas, con todas las
+// fotos del montaje y el "Quiero algo parecido" abajo. Los vídeos no entran:
+// de momento son huecos.
+import Foto from "@/components/Foto.astro";
 import { Icon } from "astro-icon/components";
+import Lightbox from "@/components/Lightbox.astro";
 import { EVENTOS, type Montaje } from "@/config/eventos";
 import { fotoDe } from "@/lib/fotos";
 
@@ -41,7 +47,7 @@ const C = EVENTOS.cinta;
 // que el texto tiene un tope: con él cabe en la altura fija en cualquier
 // ancho. Pasarse para el build, como pasarse de piezas.
 const MAX_TITULO = 40;
-const MAX_DESCRIPCION = 280;
+const MAX_DESCRIPCION = 310;
 for (const [campo, texto, max] of [
   ["el título", montaje.titulo, MAX_TITULO],
   ["la descripción", montaje.descripcion, MAX_DESCRIPCION],
@@ -63,13 +69,20 @@ if ((montaje.galeria?.length ?? 0) > MAX_PIEZAS) {
 }
 
 // `fotoDe` revienta el build si el archivo no existe, y en una pieza `foto`
-// el nombre es obligatorio: el `!` es seguro.
+// el nombre es obligatorio: el `!` es seguro. Cada foto se apunta su sitio
+// entre las fotos (sin contar vídeos): es la que abre en el lightbox.
+let nFoto = 0;
 const piezas = (montaje.galeria ?? []).map((pieza) =>
-  pieza.tipo === "foto" ? { ...pieza, src: fotoDe(pieza.archivo)! } : pieza,
+  pieza.tipo === "foto"
+    ? { ...pieza, src: fotoDe(pieza.archivo)!, indice: nFoto++ }
+    : pieza,
+);
+const fotos = piezas.flatMap((p) =>
+  p.tipo === "foto" ? [{ src: p.src, alt: p.alt }] : [],
 );
 
 // Lo que suele traer cada montaje es la cinta: "4 fotos · 1 vídeo".
-const nFotos = piezas.filter((p) => p.tipo === "foto").length;
+const nFotos = fotos.length;
 const nVideos = piezas.length - nFotos;
 const resumen = [
   nFotos && `${nFotos} ${nFotos === 1 ? "foto" : "fotos"}`,
@@ -78,14 +91,16 @@ const resumen = [
   .filter(Boolean)
   .join(" · ");
 
-// El id enlaza el botón con su cinta (aria-controls). Sale del título, que es
-// único en la lista.
-const idCinta = `cinta-${montaje.titulo
+// Los ids enlazan el botón con su cinta (aria-controls) y las fotos con su
+// lightbox. Salen del título, que es único en la lista.
+const slug = montaje.titulo
   .normalize("NFD")
   .replace(/[\u0300-\u036f]/g, "")
   .toLowerCase()
   .replace(/[^a-z0-9]+/g, "-")
-  .replace(/^-|-$/g, "")}`;
+  .replace(/^-|-$/g, "");
+const idCinta = `cinta-${slug}`;
+const idLightbox = `lightbox-${slug}`;
 
 // En móvil y tablet la cinta es un carrusel que se desliza con el dedo:
 // todas las piezas a la misma altura, las fotos en 3:4 y los vídeos en 9:16
@@ -109,18 +124,20 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
     apiladas y no se igualan: la foto va en 4:3 y el texto crece hacia abajo. */}
 <article
   data-montaje
+  data-revelar
   class:list={[
     "grid overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/10 ring-1 ring-taupe/60 md:grid-cols-2 md:grid-rows-[34rem_auto] lg:grid-rows-[31rem_auto]",
     className,
   ]}
 >
   <div
+    data-revelar="foto"
     class:list={[
       "relative aspect-[4/3] overflow-hidden bg-taupe/15 md:aspect-auto",
       !fotoIzquierda && "md:order-2",
     ]}
   >
-    <Image
+    <Foto
       src={foto}
       alt={montaje.alt}
       widths={ANCHOS}
@@ -176,13 +193,10 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
             data-ver-mas
             aria-expanded="false"
             aria-controls={idCinta}
-            class="group inline-flex min-h-12 cursor-pointer w-full shrink-0 items-center justify-center gap-3 rounded-full border border-sand bg-sand px-7 accion text-xs text-rust transition-colors hover:border-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] hover:bg-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] aria-expanded:border-rust aria-expanded:bg-transparent aria-expanded:hover:bg-rust aria-expanded:hover:text-linen sm:w-auto sm:self-start lg:self-auto noscript:hidden"
+            class="group inline-flex min-h-12 cursor-pointer w-full shrink-0 items-center justify-center rounded-full border border-sand bg-sand px-7 accion text-xs text-rust transition-colors hover:border-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] hover:bg-[color-mix(in_oklab,var(--color-sand),var(--color-rust)_14%)] aria-expanded:border-rust aria-expanded:bg-transparent aria-expanded:hover:bg-rust aria-expanded:hover:text-linen sm:w-auto sm:self-start lg:self-auto noscript:hidden"
           >
             <span class="group-aria-expanded:hidden">{C.verMas}</span>
             <span class="hidden group-aria-expanded:inline">{C.verMenos}</span>
-            <span class="rounded-full bg-rust px-2 py-0.5 text-[11px] tracking-normal text-linen tabular-nums group-aria-expanded:hidden">
-              {piezas.length}
-            </span>
           </button>
         )}
       </div>
@@ -222,13 +236,18 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
                 <li class="shrink-0 snap-start lg:min-w-0">
                   <figure>
                     {pieza.tipo === "foto" ? (
-                      <div
+                      <button
+                        type="button"
+                        data-abre-lightbox={idLightbox}
+                        data-foto={pieza.indice}
+                        aria-haspopup="dialog"
+                        aria-label={`Ver en grande: ${pieza.alt}`}
                         class:list={[
                           ALTO_PIEZA,
-                          "aspect-[3/4] overflow-hidden rounded-2xl bg-taupe/15",
+                          "group relative block aspect-[3/4] cursor-zoom-in overflow-hidden rounded-2xl bg-taupe/15",
                         ]}
                       >
-                        <Image
+                        <Foto
                           src={pieza.src}
                           alt={pieza.alt}
                           widths={[300, 450, 600, 800]}
@@ -240,9 +259,19 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
                               ? `object-position:${pieza.enfoque}`
                               : undefined
                           }
-                          class="h-full w-full object-cover object-center"
+                          class="h-full w-full object-cover object-center transition-[scale] duration-300 group-hover:scale-[1.03] motion-reduce:transition-none"
                         />
-                      </div>
+                        {/* Como en el escaparate: que se vea que se amplía. */}
+                        <span
+                          class="absolute right-2.5 bottom-2.5 grid size-8 place-items-center rounded-full bg-linen/90 text-black shadow-md shadow-black/15 transition-colors group-hover:bg-white noscript:hidden lg:right-3.5 lg:bottom-3.5 lg:size-9"
+                          aria-hidden="true"
+                        >
+                          <Icon
+                            name="lucide:maximize-2"
+                            class="size-3.5 lg:size-4"
+                          />
+                        </span>
+                      </button>
                     ) : (
                       <div
                         role="img"
@@ -296,31 +325,50 @@ const ALTO_PIEZA = "h-80 lg:h-auto lg:w-full lg:aspect-[3/4]";
   )}
 </article>
 
+{/* Fuera del <article>: la cinta cerrada es `inert`, y dentro de ella el
+    lightbox también lo sería. */}
+{fotos.length > 0 && (
+  <Lightbox
+    id={idLightbox}
+    titulo={montaje.titulo}
+    fotos={fotos}
+    accion={{ texto: C.cta, href: "#solicitud" }}
+  />
+)}
+
 <script>
-  for (const tarjeta of document.querySelectorAll<HTMLElement>(
-    "[data-montaje]",
-  )) {
-    const boton = tarjeta.querySelector<HTMLButtonElement>("[data-ver-mas]");
-    const cinta = tarjeta.querySelector<HTMLElement>("[data-cinta]");
-    if (!boton || !cinta) continue;
+  import { alCargarPagina } from "@/lib/pagina";
 
-    const poner = (abierta: boolean) => {
-      boton.setAttribute("aria-expanded", String(abierta));
-      cinta.toggleAttribute("data-abierta", abierta);
-      cinta.inert = !abierta;
-    };
+  alCargarPagina(() => {
+    for (const tarjeta of document.querySelectorAll<HTMLElement>(
+      "[data-montaje]",
+    )) {
+      const boton = tarjeta.querySelector<HTMLButtonElement>("[data-ver-mas]");
+      const cinta = tarjeta.querySelector<HTMLElement>("[data-cinta]");
+      if (!boton || !cinta) continue;
 
-    poner(false);
+      const poner = (abierta: boolean) => {
+        boton.setAttribute("aria-expanded", String(abierta));
+        cinta.toggleAttribute("data-abierta", abierta);
+        cinta.inert = !abierta;
+      };
 
-    boton.addEventListener("click", () =>
-      poner(boton.getAttribute("aria-expanded") !== "true"),
-    );
-
-    // "Cerrar" está al final de la cinta: al plegarla, el foco vuelve al
-    // botón de la tarjeta, que también la trae de vuelta a la vista.
-    cinta.querySelector("[data-cerrar]")?.addEventListener("click", () => {
       poner(false);
-      boton.focus();
-    });
-  }
+
+      boton.addEventListener("click", () =>
+        poner(boton.getAttribute("aria-expanded") !== "true"),
+      );
+
+      // "Cerrar" está al final de la cinta: al plegarla, el foco vuelve al
+      // botón de la tarjeta, que también la trae de vuelta a la vista. Sin
+      // anillo si se ha pulsado con el dedo o el ratón (detail > 0): en iOS
+      // Safari lo pintaría como si viniera del teclado (ver Lightbox.astro).
+      cinta
+        .querySelector<HTMLElement>("[data-cerrar]")
+        ?.addEventListener("click", (evento) => {
+          poner(false);
+          boton.focus({ focusVisible: evento.detail === 0 });
+        });
+    }
+  });
 </script>

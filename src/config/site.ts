@@ -54,9 +54,9 @@ export const DIRECCION: Direccion = {
 // que descartan la otra calle del mismo nombre (ver la nota de COORDENADAS).
 const DIRECCION_POSTAL = `Calle ${DIRECCION.calle}, ${DIRECCION.cp} ${DIRECCION.ciudad}`;
 
-// TODO: número real. Se escribe tal cual se quiere ver en pantalla; el enlace
-// de wa.me se saca de aquí quitando todo lo que no sea dígito.
-const WHATSAPP_VISIBLE = "+34 600 00 00 00";
+// Se escribe tal cual se quiere ver en pantalla; el enlace de wa.me se saca de
+// aquí quitando todo lo que no sea dígito. El mismo número es el teléfono.
+const WHATSAPP_VISIBLE = "+34 600 90 71 34";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_VISIBLE.replace(/\D/g, "")}`;
 
 // TODO: confirmar que es esta calle. Coordenadas del portal resueltas contra
@@ -68,12 +68,46 @@ const WHATSAPP_URL = `https://wa.me/${WHATSAPP_VISIBLE.replace(/\D/g, "")}`;
 // cambia la dirección (src/assets/README.md explica cómo).
 const COORDENADAS = { lat: 36.7212034, lon: -4.3645263 };
 
+// Quién está detrás de la web a efectos legales: Carmela, como autónoma. Lo
+// leen el aviso legal, las condiciones, la privacidad y el aviso junto a los
+// formularios, así que se escribe una vez y aquí.
+//
+// TODO: datos reales. Mientras quede uno entre corchetes no se publica (ver
+// README, "Textos legales").
+export const TITULAR = {
+  /** Nombre y apellidos, como en el alta de autónomos. */
+  nombre: "[NOMBRE Y APELLIDOS]",
+  nif: "[NIF]",
+  /** El correo para reclamaciones y derechos de privacidad. */
+  email: "contacto@estimadacarmela.com",
+  /** Número de inscripción del obrador en el registro sanitario. */
+  registroSanitario: "[Nº REGISTRO SANITARIO]",
+  /** El domicilio es el del obrador, en una línea. */
+  domicilio: `${DIRECCION.calle}, ${DIRECCION.portal.toLowerCase()}, ${DIRECCION.cp} ${DIRECCION.ciudad}`,
+} as const;
+
+// Si los textos legales están listos para enseñarse. En false (se abrió la web
+// sin ellos: la clienta los va pasando) no sale ningún enlace a ellos —ni el
+// pie, ni el del pedido, ni el de alérgenos, ni los de la casilla de los
+// formularios— y las cuatro páginas llevan noindex. Siguen existiendo en su
+// URL, con los corchetes, para ir revisándolas. Pasa a true cuando no quede
+// ninguno (ver README, "Textos legales").
+export const LEGALES_PUBLICADOS = false;
+
+// Las páginas legales, para el pie. Entran aquí cuando su texto existe: un
+// enlace a una página que no está es peor que no tenerlo.
+export const LEGAL: NavItem[] = LEGALES_PUBLICADOS
+  ? [
+      { label: "Aviso legal", href: "/aviso-legal" },
+      { label: "Condiciones", href: "/condiciones" },
+      { label: "Privacidad", href: "/privacidad" },
+      { label: "Cookies", href: "/cookies" },
+    ]
+  : [];
+
 export const SITE = {
   nombre: "Estimada Carmela",
   // Antetítulo de la dirección en el pie.
-  //
-  // Nota: el resto del sitio habla en primera persona ("Sobre mí") y esto en
-  // plural. Conviene unificar el trato.
   encuentranos: "Encuéntranos",
   // La dirección en un renglón, para donde solo cabe uno (el panel móvil). Sin
   // el portal: ahí no hay sitio, y quien va a ir se abre el mapa o baja al pie.
@@ -118,15 +152,14 @@ export const NAV: NavItem[] = [
     label: nombre,
     href: ruta,
   })),
-  { label: "Sobre mí", href: "#sobre-mi" },
+  { label: "Sobre Carmen", href: "#sobre-carmen" },
   { label: "Contacto", href: "#contacto" },
 ];
 
-// TODO: enlaces reales de redes.
 export const SOCIAL: SocialLink[] = [
   {
     label: "Instagram",
-    href: "https://www.instagram.com/",
+    href: "https://www.instagram.com/estimadacarmela/",
     icon: "simple-icons:instagram",
   },
   {
@@ -137,7 +170,9 @@ export const SOCIAL: SocialLink[] = [
 ];
 
 export const HORARIO: FranjaHorario[] = [
-  { dias: "Lunes a viernes", horas: "09:00 – 18:00" },
+  // Jornada partida de lunes a jueves; el viernes, seguido.
+  { dias: "Lunes a jueves", horas: "09:00 – 14:00 y 17:00 – 19:30" },
+  { dias: "Viernes", horas: "09:00 – 18:30" },
   // Fines de semana cerrado: coincide con PEDIDO, que sólo entrega de lunes a
   // viernes. Si algún día abre el sábado, hay que cambiar las dos cosas.
   { dias: "Sábados y domingos", horas: "Cerrado" },

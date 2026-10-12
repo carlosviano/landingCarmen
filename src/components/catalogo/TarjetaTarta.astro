@@ -30,7 +30,7 @@
 // alto de su fila (`h-full`; la celda de la rejilla y el <li> de la tira ya se
 // estiran solos) y el filete con el precio se va al fondo con `mt-auto`. El
 // hueco que sobra queda entre el nombre y el filete, nunca debajo.
-import { Image } from "astro:assets";
+import Foto from "@/components/Foto.astro";
 import FotoPendiente from "@/components/FotoPendiente.astro";
 import type { Tarta } from "@/config/catalogo";
 import { precioVisible } from "@/lib/pedido";
@@ -89,7 +89,9 @@ const ANCHOS = compacta ? [160, 320, 480] : [200, 320, 440, 640];
 
 // La franja de abajo: para cuántos y desde cuánto. Los tamaños van de menor a
 // mayor, así que el primero es el más barato.
-const personas = `${tarta.tamanos.map((tamano) => tamano.personas).join(" · ")} personas`;
+const personas = tarta.tamanos[0].personas
+  ? `${tarta.tamanos.map((tamano) => tamano.personas).join(" · ")} personas`
+  : "Tamaño único";
 const desde = `${tarta.tamanos.length > 1 ? "desde " : ""}${precioVisible(tarta.tamanos[0].precio)}`;
 const SIZES = compacta
   ? "(min-width: 1024px) 15rem, 10rem"
@@ -102,10 +104,17 @@ const SIZES = compacta
 >
   {/* El marco es el de la galería del sitio —aspect-[4/5] y rounded-3xl—
       pero sin su anillo ni su sombra: aquí la foto va sola sobre el fondo, no
-      metida en una tarjeta. */}
-  <div class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15">
+      metida en una tarjeta.
+
+      Zoom y no cortina (ver "Animaciones de entrada" en global.css): en
+      /catalogo la primera fila de tartas está en pantalla al cargar y es el
+      LCP; con cortina se retrasaba hasta casi 2s. */}
+  <div
+    data-revelar="zoom"
+    class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15"
+  >
     {foto ? (
-      <Image
+      <Foto
         src={foto}
         alt={tarta.alt}
         widths={ANCHOS}
@@ -118,7 +127,7 @@ const SIZES = compacta
       /* Sin foto con fondo pero con recorte: la tarta entera, sin recortar,
           centrada sobre el marco. `object-contain` porque un recorte apaisado
           en un hueco 4:5 con `cover` perdería media tarta. */
-      <Image
+      <Foto
         src={recorte}
         alt={tarta.alt}
         widths={ANCHOS}
@@ -138,6 +147,7 @@ const SIZES = compacta
       información, así que va pequeño, apagado y con aria-hidden —quien va con
       lector de pantalla ya sabe por dónde va la lista. */}
   <div
+    data-revelar
     class:list={[
       "flex items-baseline gap-2.5",
       /* El hueco mínimo hasta el filete va aquí, como padding: el margen del

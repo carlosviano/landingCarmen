@@ -1,0 +1,334 @@
+---
+// La ayuda para cuando WhatsApp no se abre. Pedir en esta web ES escribir por
+// WhatsApp, así que si el enlace falla no hay venta: esto da el mensaje ya
+// escrito para copiarlo, el número y, en móvil, la llamada.
+//
+// Ningún navegador avisa de si una app se ha abierto, así que no se puede
+// saber si wa.me ha funcionado. Por eso:
+//
+// - Sale SIEMPRE tras pulsar un enlace de WhatsApp, que se abre igual: la
+//   ayuda nunca es un paso de más antes de llegar a WhatsApp. Si se abre la
+//   app o la pestaña de wa.me, la página pasa a segundo plano y la ayuda
+//   espera a que se vuelva; si a los 2 s la página sigue a la vista, es que
+//   no se ha abierto nada y sale ya. A quien sí le funcionó le toca cerrarla:
+//   se prefiere eso a dejar sin salida a quien no.
+// - Y bajo los botones de pedir y de los formularios, el enlace "¿No se abre
+//   WhatsApp?" la abre a mano (ver `data-ayuda-whatsapp`), por si se cerró.
+//
+// Vale para cualquier enlace a wa.me de la web, sin marcarlo: el mensaje sale
+// del propio enlace (su `?text=`). Si el enlace no lleva mensaje (el icono de
+// la cabecera, el número de contacto), la ayuda va sin el bloque del mensaje.
+//
+// Es un <dialog> nativo, como el de bienvenida (Bienvenida.astro): foco
+// atrapado, Escape y el resto inerte. Sin JS no se abre nunca, y los enlaces
+// van a wa.me como siempre.
+import { Icon } from "astro-icon/components";
+import { AYUDA_WHATSAPP as W } from "@/config/errores";
+---
+
+<dialog
+  id="ayuda-whatsapp"
+  data-modo="movil"
+  data-mensaje="no"
+  aria-labelledby="ayuda-whatsapp-titulo"
+  class="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-md bg-linen p-0 text-black shadow-2xl shadow-black/35 backdrop:bg-[rgb(28_16_10/0.58)] md:max-w-140"
+>
+  <div class="relative flex flex-col gap-5 px-5.5 pt-6.5 pb-5.5 md:gap-6.5 md:px-12 md:pt-11 md:pb-10">
+    <div class="flex flex-col gap-2 pr-8 md:gap-2.5 md:pr-0">
+      <p class="antetitulo text-rust">{W.antetitulo}</p>
+      <h2
+        id="ayuda-whatsapp-titulo"
+        class="titulo text-[1.7rem] leading-tight md:text-4xl"
+      >
+        <span data-solo="con-mensaje">{W.titulo.conMensaje}</span>
+        <span data-solo="sin-mensaje">{W.titulo.sinMensaje}</span>
+      </h2>
+      <p class="text-sm leading-normal text-black/75 md:text-[15px]">
+        <span data-solo="movil con-mensaje">{W.texto.movil.conMensaje}</span>
+        <span data-solo="movil sin-mensaje">{W.texto.movil.sinMensaje}</span>
+        <span data-solo="escritorio con-mensaje">
+          {W.texto.escritorio.conMensaje}
+        </span>
+        <span data-solo="escritorio sin-mensaje">
+          {W.texto.escritorio.sinMensaje}
+        </span>
+      </p>
+    </div>
+
+    <div
+      data-solo="con-mensaje"
+      class="flex flex-col gap-3 rounded-md bg-white px-4 py-3.5 md:gap-3.5 md:px-5 md:py-4.5"
+    >
+      <p data-ayuda-texto class="text-sm leading-normal md:text-[15px]"></p>
+      <button
+        type="button"
+        data-copiar="mensaje"
+        class="flex h-12 cursor-pointer items-center justify-center gap-2 rounded bg-rust px-5 accion text-xs text-linen transition-colors hover:bg-rust-hondo md:h-11 md:self-start"
+      >
+        <span data-icono="reposo" class="flex">
+          <Icon name="lucide:copy" class="size-3.75" aria-hidden="true" />
+        </span>
+        <span data-icono="hecho" hidden class="flex">
+          <Icon name="lucide:check" class="size-3.75" aria-hidden="true" />
+        </span>
+        <span data-texto="reposo">{W.copiarMensaje}</span>
+        <span data-texto="hecho" hidden>
+          {W.mensajeCopiado}
+        </span>
+        <span data-texto="a-mano" hidden>
+          {W.copiarAMano}
+        </span>
+      </button>
+    </div>
+
+    <ul class="border-t border-rust/25">
+      <li class="flex items-center gap-3 border-b border-rust/25 py-2 md:gap-4 md:py-3.5">
+        <Icon
+          name="simple-icons:whatsapp"
+          class="size-5 shrink-0 text-rust md:size-5.5"
+          aria-hidden="true"
+        />
+        <div class="flex flex-1 flex-col gap-px">
+          <span class="leyenda text-taupe">{W.numero.etiqueta}</span>
+          <span class="text-[15px] font-semibold md:text-base">
+            {W.numero.visible}
+          </span>
+        </div>
+        <button
+          type="button"
+          data-copiar="numero"
+          aria-label={W.numero.copiar}
+          class="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full text-rust transition-colors hover:bg-rust/8"
+        >
+          <span data-icono="reposo" class="flex">
+            <Icon name="lucide:copy" class="size-4.5" aria-hidden="true" />
+          </span>
+          <span data-icono="hecho" hidden class="flex">
+            <Icon name="lucide:check" class="size-4.5" aria-hidden="true" />
+          </span>
+        </button>
+      </li>
+      <li data-solo="movil">
+        <a
+          href={W.llamar.href}
+          class="flex items-center gap-3 border-b border-rust/25 py-2"
+        >
+          <Icon
+            name="lucide:phone"
+            class="size-5 shrink-0 text-rust"
+            aria-hidden="true"
+          />
+          <span class="flex flex-1 flex-col gap-px">
+            <span class="leyenda text-taupe">{W.llamar.etiqueta}</span>
+            <span class="text-[15px] font-semibold">{W.numero.visible}</span>
+          </span>
+          <span class="grid size-11 shrink-0 place-items-center">
+            <Icon
+              name="lucide:arrow-right"
+              class="size-4.5 text-rust"
+              aria-hidden="true"
+            />
+          </span>
+        </a>
+      </li>
+    </ul>
+
+    {/* `data-ayuda-abrir`: el enlace a wa.me de dentro no vuelve a disparar
+        la ayuda (ver el script), que ya está abierta. */}
+    <a
+      data-ayuda-abrir
+      target="_blank"
+      rel="noopener noreferrer"
+      class="self-center py-2 accion text-xs text-rust underline underline-offset-4 hover:text-black"
+    >
+      {W.abrir}
+    </a>
+
+    <button
+      type="button"
+      data-cerrar
+      aria-label={W.cerrar}
+      class="absolute top-2 right-2 grid size-11 cursor-pointer place-items-center rounded-full transition-colors hover:bg-black/5 md:top-3.5 md:right-3.5"
+    >
+      <Icon name="lucide:x" class="size-4.5 md:size-5" aria-hidden="true" />
+    </button>
+
+    <p data-anuncio role="status" class="sr-only"></p>
+  </div>
+</dialog>
+
+<style is:global>
+  html:has(#ayuda-whatsapp[open]) {
+    overflow: hidden;
+  }
+
+  /* Lo que no toca en este modo, o sin mensaje, fuera. `data-solo` lleva una
+     o dos condiciones separadas por espacio: hacen falta todas. */
+  #ayuda-whatsapp[data-modo="movil"] [data-solo~="escritorio"],
+  #ayuda-whatsapp[data-modo="escritorio"] [data-solo~="movil"],
+  #ayuda-whatsapp[data-mensaje="si"] [data-solo~="sin-mensaje"],
+  #ayuda-whatsapp[data-mensaje="no"] [data-solo~="con-mensaje"] {
+    display: none;
+  }
+</style>
+
+<script>
+  import { AYUDA_WHATSAPP } from "@/config/errores";
+  import { alCargarPagina } from "@/lib/pagina";
+
+  const WA = 'a[href^="https://wa.me/"]';
+  // Lo mismo que mira el Layout para quitar el fundido: dedo, no ratón. Sólo
+  // decide los textos y si se ofrece llamar.
+  const tactil = () => matchMedia("(pointer: coarse)").matches;
+  // Cuánto se espera a que WhatsApp se lleve la página antes de dar por
+  // hecho que no se ha abierto nada.
+  const ESPERA = 2000;
+
+  // El estado de un botón de copiar: qué texto y qué icono enseña. "a-mano"
+  // (no se pudo copiar) deja el icono de copiar con su propio texto.
+  function marcar(boton: HTMLElement, estado: "reposo" | "hecho" | "a-mano") {
+    for (const pieza of boton.querySelectorAll<Element>("[data-texto]"))
+      pieza.toggleAttribute(
+        "hidden",
+        pieza.getAttribute("data-texto") !== estado,
+      );
+    const icono = estado === "hecho" ? "hecho" : "reposo";
+    for (const pieza of boton.querySelectorAll<Element>("[data-icono]"))
+      pieza.toggleAttribute(
+        "hidden",
+        pieza.getAttribute("data-icono") !== icono,
+      );
+  }
+
+  alCargarPagina((senal) => {
+    const modal = document.querySelector<HTMLDialogElement>("#ayuda-whatsapp");
+    if (!modal) return;
+
+    const texto = modal.querySelector<HTMLElement>("[data-ayuda-texto]")!;
+    const anuncio = modal.querySelector<HTMLElement>("[data-anuncio]")!;
+    let mensaje = "";
+
+    function abrir(enlace: string) {
+      mensaje = new URL(enlace).searchParams.get("text") ?? "";
+      modal!.dataset.modo = tactil() ? "movil" : "escritorio";
+      modal!.dataset.mensaje = mensaje ? "si" : "no";
+      texto.textContent = mensaje;
+      for (const a of modal!.querySelectorAll<HTMLAnchorElement>(
+        "[data-ayuda-abrir]",
+      ))
+        a.href = enlace;
+      if (!modal!.open) modal!.showModal();
+    }
+
+    // La ayuda sale a la vuelta si la página se ha ido a segundo plano (la
+    // app, o wa.me en otra pestaña), o a los ESPERA ms si no se ha ido. Un
+    // segundo toque reinicia.
+    let cancelar = () => {};
+    function esperar(enlace: string) {
+      cancelar();
+      let seFue = false;
+      const salir = () => {
+        cancelar();
+        abrir(enlace);
+      };
+      const alCambiar = () => {
+        if (document.hidden) seFue = true;
+        else if (seFue) salir();
+      };
+      const reloj = setTimeout(() => {
+        if (!seFue) salir();
+      }, ESPERA);
+      document.addEventListener("visibilitychange", alCambiar);
+      cancelar = () => {
+        clearTimeout(reloj);
+        document.removeEventListener("visibilitychange", alCambiar);
+        cancelar = () => {};
+      };
+    }
+    senal.addEventListener("abort", () => cancelar());
+
+    document.addEventListener(
+      "click",
+      (evento) => {
+        const objetivo = evento.target as Element | null;
+
+        // El enlace a mano, bajo los botones de pedir y de los formularios:
+        // abre la ayuda con el enlace de WhatsApp de su mismo formulario.
+        const ayuda = objetivo?.closest("[data-ayuda-whatsapp]");
+        if (ayuda) {
+          const vecino = ayuda
+            .closest("form")
+            ?.querySelector<HTMLAnchorElement>(WA);
+          if (vecino) abrir(vecino.href);
+          return;
+        }
+
+        // Si otro lo ha frenado (la ficha sin fecha válida), no hubo salto.
+        // Con una tecla pulsada es "abrir en otra pestaña": se respeta.
+        if (
+          evento.defaultPrevented ||
+          evento.button !== 0 ||
+          evento.metaKey ||
+          evento.ctrlKey ||
+          evento.shiftKey ||
+          evento.altKey
+        )
+          return;
+        const enlace = objetivo?.closest<HTMLAnchorElement>(WA);
+        if (!enlace || modal.contains(enlace)) return;
+
+        esperar(enlace.href);
+      },
+      { signal: senal },
+    );
+
+    // El enlace "¿No se abre WhatsApp?" sólo se enseña con JS: sin él no
+    // haría nada.
+    for (const enlace of document.querySelectorAll<HTMLElement>(
+      "[data-ayuda-whatsapp]",
+    ))
+      enlace.hidden = false;
+
+    // Copiar. Si el navegador no deja (sin permiso, un iframe), el mensaje se
+    // queda seleccionado para copiarlo a mano.
+    for (const boton of modal.querySelectorAll<HTMLButtonElement>(
+      "[data-copiar]",
+    )) {
+      const esMensaje = boton.dataset.copiar === "mensaje";
+      let vuelta: ReturnType<typeof setTimeout>;
+      boton.addEventListener("click", async () => {
+        clearTimeout(vuelta);
+        const valor = esMensaje ? mensaje : AYUDA_WHATSAPP.numero.visible;
+        try {
+          await navigator.clipboard.writeText(valor);
+          marcar(boton, "hecho");
+          anuncio.textContent = esMensaje
+            ? AYUDA_WHATSAPP.mensajeCopiado
+            : AYUDA_WHATSAPP.numero.copiado;
+          vuelta = setTimeout(() => {
+            marcar(boton, "reposo");
+            anuncio.textContent = "";
+          }, 2500);
+        } catch {
+          if (!esMensaje) return;
+          const rango = document.createRange();
+          rango.selectNodeContents(texto);
+          getSelection()?.removeAllRanges();
+          getSelection()?.addRange(rango);
+          marcar(boton, "a-mano");
+        }
+      });
+    }
+
+    for (const boton of modal.querySelectorAll("[data-cerrar]"))
+      boton.addEventListener("click", () => modal.close());
+    modal.addEventListener("click", (evento) => {
+      if (evento.target === modal) modal.close();
+    });
+    // Al cerrar, los botones de copiar vuelven a su texto.
+    modal.addEventListener("close", () => {
+      for (const boton of modal.querySelectorAll<HTMLElement>("[data-copiar]"))
+        marcar(boton, "reposo");
+    });
+  });
+</script>
