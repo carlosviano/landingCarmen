@@ -56,7 +56,7 @@ const DIRECCION_POSTAL = `Calle ${DIRECCION.calle}, ${DIRECCION.cp} ${DIRECCION.
 
 // Se escribe tal cual se quiere ver en pantalla; el enlace de wa.me se saca de
 // aquí quitando todo lo que no sea dígito. El mismo número es el teléfono.
-const WHATSAPP_VISIBLE = "+34 600 90 71 34";
+const WHATSAPP_VISIBLE = "+34 674 99 58 11";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_VISIBLE.replace(/\D/g, "")}`;
 
 // TODO: confirmar que es esta calle. Coordenadas del portal resueltas contra
