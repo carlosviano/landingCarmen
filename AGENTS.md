@@ -154,6 +154,13 @@ avisa de que está desactualizado, y en GitHub la comprobación «Carta en PDF»
 (`.github/workflows/carta-pdf.yml`) falla en el PR. En la hoja, las fotos van en JPEG sobre el
 linen: con transparencia Chrome las mete sin comprimir y el PDF pasa de 10 MB.
 
+## SEO local y GEO
+
+El trabajo de SEO, Google Business Profile y GEO va por specs en
+`docs/seo-geo/`. Si te piden una spec o un paso de ese trabajo, empieza por
+`docs/seo-geo/ESTADO.md`: ahí están las reglas, el estado y los datos del
+negocio que no se pueden inventar.
+
 ## Documentation
 
 Full documentation: https://docs.astro.build
