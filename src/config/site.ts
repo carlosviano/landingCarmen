@@ -98,10 +98,10 @@ export const LEGALES_PUBLICADOS = false;
 // enlace a una página que no está es peor que no tenerlo.
 export const LEGAL: NavItem[] = LEGALES_PUBLICADOS
   ? [
-      { label: "Aviso legal", href: "/aviso-legal" },
-      { label: "Condiciones", href: "/condiciones" },
-      { label: "Privacidad", href: "/privacidad" },
-      { label: "Cookies", href: "/cookies" },
+      { label: "Aviso legal", href: "/aviso-legal/" },
+      { label: "Condiciones", href: "/condiciones/" },
+      { label: "Privacidad", href: "/privacidad/" },
+      { label: "Cookies", href: "/cookies/" },
     ]
   : [];
 
@@ -134,15 +134,15 @@ export interface Servicio {
 // "La carta" y no "Catálogo": es como se llama la página (/catalogo se queda
 // como URL para no romper enlaces ya compartidos).
 export const SERVICIOS = {
-  carta: { nombre: "La carta", ruta: "/catalogo", ancla: "carta" },
+  carta: { nombre: "La carta", ruta: "/catalogo/", ancla: "carta" },
   // Las tartas a medida que diseña Carmela y se recogen en el obrador
   // (ver ESPECIALES).
   personalizadas: {
     nombre: "Personalizadas",
-    ruta: "/personalizadas",
+    ruta: "/personalizadas/",
     ancla: "personalizadas",
   },
-  eventos: { nombre: "Eventos", ruta: "/eventos", ancla: "eventos" },
+  eventos: { nombre: "Eventos", ruta: "/eventos/", ancla: "eventos" },
 } as const satisfies Record<string, Servicio>;
 
 // Los servicios van primero y en el orden de la portada: el menú se lee de

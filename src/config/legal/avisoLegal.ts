@@ -72,9 +72,9 @@ export const AVISO_LEGAL: TextoLegal = {
       contenido: [
         [
           "Qué se hace con tus datos está en la ",
-          { texto: "política de privacidad", href: "/privacidad" },
+          { texto: "política de privacidad", href: "/privacidad/" },
           ", y lo que guarda la web en tu navegador, en la ",
-          { texto: "política de cookies", href: "/cookies" },
+          { texto: "política de cookies", href: "/cookies/" },
           ".",
         ],
       ],

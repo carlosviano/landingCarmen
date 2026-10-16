@@ -51,7 +51,7 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
 
 - [x] 1. `site` + `@astrojs/sitemap` con filtro, canonical en el Layout y
       `Sitemap:` en robots.txt.
-- [ ] 2. Enlaces internos con barra final.
+- [x] 2. Enlaces internos con barra final.
 - [ ] 3. `DIRECCION.portal` → «Primera planta, local 7». Quitar el `TODO`
       de las coordenadas. Regenerar el PDF de la carta si cambia la dirección
       que sale en él.
@@ -106,3 +106,12 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
   `dist/`: sitemap con 11 URLs, todas con barra; canonical bien en las
   páginas; `robots.txt` con `Sitemap:` en un build con
   `CF_PAGES_BRANCH=main`. Nota: [02-1](../notes/02-1-sitemap-canonical-robots.md).
+- 2026-10-16. Paso 2 hecho. `SERVICIOS.*.ruta` y `LEGAL` en `site.ts`, los
+  `href` de `config/legal/`, `TarjetaTarta`, `[tarta].astro`, `Pedido`,
+  `MarcoSolicitud` y `Alergenos` (`/condiciones/#alergenos`). En `dist/`
+  ya solo quedan sin barra los archivos (favicon, CSS, fuentes, PDF). Las
+  comparaciones de ruta (`middleware.ts`, `AvisoCarga`, el `<head>` del
+  Layout) ya quitaban la barra final, así que no cambian. El build avisa de
+  que el PDF de la carta está desactualizado porque `site.ts` entra en la
+  huella; el PDF no imprime rutas, así que se regenera en el paso 3 con la
+  dirección. Nota: [02-2](../notes/02-2-enlaces-con-barra.md).

@@ -35,7 +35,7 @@ paso X de la spec NN».
 Ficha creada; Google está procesando la verificación desde el 2026-10-15.
 Mientras tanto se avanza con la **spec 02** → [specs/02-seo-tecnico-base.md](specs/02-seo-tecnico-base.md),
 en la rama `feat/seo-tecnico-base` (worktree `../landingCarmen-seo-tecnico`).
-Paso 1 hecho; sigue el paso 2 (enlaces internos con barra final).
+Pasos 1 y 2 hechos; sigue el paso 3 (local 7 en la dirección y PDF de la carta).
 
 ## Bloqueantes
 

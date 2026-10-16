@@ -37,7 +37,7 @@ export const CONDICIONES: TextoLegal = {
         `Estimada Carmela es el obrador de repostería de ${TITULAR.nombre}, con NIF ${TITULAR.nif}, en ${TITULAR.domicilio}, inscrito en el registro sanitario con el número ${TITULAR.registroSanitario}.`,
         [
           `Puedes escribir a ${TITULAR.email} o por WhatsApp al ${CONTACTO.whatsapp.visible}. El resto de datos están en el `,
-          { texto: "aviso legal", href: "/aviso-legal" },
+          { texto: "aviso legal", href: "/aviso-legal/" },
           ".",
         ],
         "Estas condiciones valen para las tres formas de encargar: las tartas de la carta, las personalizadas y los eventos. Lo que sólo afecta a una lo dice su apartado. Se aplican las que estén publicadas el día en que se confirma tu pedido.",
@@ -160,7 +160,7 @@ export const CONDICIONES: TextoLegal = {
         "[MATERIAL PRESTADO: CUÁNDO SE RECOGE Y QUÉ PASA SI SE ROMPE O SE PIERDE.]",
         [
           "Sólo publicamos fotos del montaje en las que se reconozca a alguien si esa persona lo ha autorizado por escrito. Más en la ",
-          { texto: "política de privacidad", href: "/privacidad" },
+          { texto: "política de privacidad", href: "/privacidad/" },
           ".",
         ],
       ],

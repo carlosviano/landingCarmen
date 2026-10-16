@@ -18,6 +18,7 @@ lee.
 | Nota | De qué va |
 |---|---|
 | [02-1 · Mapa, robots y «la de verdad»](02-1-sitemap-canonical-robots.md) | Darle a Google un mapa de la web, decirle dónde está ese mapa y cuál es la dirección buena de cada página |
+| [02-2 · Enlaces con barra final](02-2-enlaces-con-barra.md) | Que los botones de la web lleven directos a cada página, sin dar un rodeo |
 
 ## Cómo se leen los trozos de código
 

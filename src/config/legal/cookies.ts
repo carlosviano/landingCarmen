@@ -69,7 +69,7 @@ export const COOKIES: TextoLegal = {
       contenido: [
         [
           "Qué se hace con tus datos personales está en la ",
-          { texto: "política de privacidad", href: "/privacidad" },
+          { texto: "política de privacidad", href: "/privacidad/" },
           ". Si esta web empieza a usar cookies que necesiten tu permiso, te lo pediremos antes de instalarlas y lo contaremos aquí.",
         ],
       ],
