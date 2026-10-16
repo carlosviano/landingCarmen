@@ -45,7 +45,9 @@ export interface FranjaHorario {
 // Contacto con la calle de titular— y siguen saliendo todas de aquí.
 export const DIRECCION: Direccion = {
   calle: "Escultor Marín Higuero, 6",
-  portal: "Primera planta",
+  // Con el local: el de al lado (el 8) tiene su propia ficha en Google, y sin
+  // el número no hay forma de saber cuál es.
+  portal: "Primera planta, local 7",
   cp: "29017",
   ciudad: "Málaga",
 };
@@ -59,8 +61,8 @@ const DIRECCION_POSTAL = `Calle ${DIRECCION.calle}, ${DIRECCION.cp} ${DIRECCION.
 const WHATSAPP_VISIBLE = "+34 674 99 58 11";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_VISIBLE.replace(/\D/g, "")}`;
 
-// TODO: confirmar que es esta calle. Coordenadas del portal resueltas contra
-// Nominatim (OpenStreetMap). Ojo: existe otra "Calle Escultor Marín Higuero"
+// Coordenadas del portal resueltas contra Nominatim (OpenStreetMap), y
+// confirmadas. Ojo: existe otra "Calle Escultor Marín Higuero"
 // en Arriate, también en Málaga, pero allí no hay número 6.
 //
 // Ya no se usan para pintar nada: el mapa es una imagen estática. Se quedan

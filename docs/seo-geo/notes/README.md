@@ -17,8 +17,10 @@ lee.
 
 | Nota | De qué va |
 |---|---|
+| [01-1 · La ficha de Google](01-1-la-ficha-de-google.md) | Qué es la tarjeta de Estimada Carmela en Google Maps, cómo se creó, quién es su dueña y por qué hay que esperar a que Google la verifique |
 | [02-1 · Mapa, robots y «la de verdad»](02-1-sitemap-canonical-robots.md) | Darle a Google un mapa de la web, decirle dónde está ese mapa y cuál es la dirección buena de cada página |
 | [02-2 · Enlaces con barra final](02-2-enlaces-con-barra.md) | Que los botones de la web lleven directos a cada página, sin dar un rodeo |
+| [02-3 · La dirección completa: «local 7»](02-3-direccion-local-7.md) | Que la web diga exactamente la misma dirección que la ficha de Google |
 
 ## Cómo se leen los trozos de código
 

@@ -33,16 +33,18 @@ paso X de la spec NN».
 
 **Spec 01**: Google Business Profile → [specs/01-google-business-profile.md](specs/01-google-business-profile.md)
 Ficha creada; Google está procesando la verificación desde el 2026-10-15.
+Pasos 1–4 hechos (nota en [notes/01-1](notes/01-1-la-ficha-de-google.md)); el paso 5
+está preparado en la spec, para pegarlo cuando la ficha salga «Verificada».
 Mientras tanto se avanza con la **spec 02** → [specs/02-seo-tecnico-base.md](specs/02-seo-tecnico-base.md),
 en la rama `feat/seo-tecnico-base` (worktree `../landingCarmen-seo-tecnico`).
-Pasos 1 y 2 hechos; sigue el paso 3 (local 7 en la dirección y PDF de la carta).
+Pasos 1 a 3 hechos; sigue el paso 4 (títulos y descripciones).
 
 ## Bloqueantes
 
 - [x] ~~Teléfono en producción~~: mergeado en `main` (#50) y comprobado en
       la web en vivo el 2026-10-15.
-- [ ] La web dice «Primera planta» sin el local: hay que añadir «local 7» en
-      `DIRECCION.portal` de `src/config/site.ts` (spec 02).
+- [x] ~~La web dice «Primera planta» sin el local~~: «local 7» añadido en
+      `feat/seo-tecnico-base` (spec 02, paso 3); sale a producción con el PR.
 - [ ] `staging` va por detrás de `main` y sigue con el teléfono antiguo:
       hay que ponerla al día con `main`.
 
@@ -51,7 +53,7 @@ Pasos 1 y 2 hechos; sigue el paso 3 (local 7 en la dirección y PDF de la carta)
 | Spec | Tarea | Fase | Quién | Estado |
 |---|---|---|---|---|
 | 00 | Montar SDD y fijar los datos del negocio | Semana 1 | Carlos + asistente | hecho |
-| 01 | Google Business Profile: crear y verificar | Semana 1 | Carmen + Carlos | en curso |
+| 01 | Google Business Profile: crear y verificar | Semana 1 | Carmen + Carlos | en curso: verificación «procesando»; paso 5 preparado |
 | 02 | Web: `site`, sitemap, canonical, robots `Sitemap:`, 301 de pages.dev, titles y descriptions | Semana 1 | Carlos/asistente | en curso |
 | 03 | Open Graph y Twitter cards | Semana 1 | Carlos/asistente | pendiente |
 | 04 | Search Console (dominio por DNS) y Bing Webmaster Tools | Semana 1 | Carlos | pendiente |

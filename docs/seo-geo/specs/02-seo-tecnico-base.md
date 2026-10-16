@@ -52,7 +52,7 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
 - [x] 1. `site` + `@astrojs/sitemap` con filtro, canonical en el Layout y
       `Sitemap:` en robots.txt.
 - [x] 2. Enlaces internos con barra final.
-- [ ] 3. `DIRECCION.portal` → «Primera planta, local 7». Quitar el `TODO`
+- [x] 3. `DIRECCION.portal` → «Primera planta, local 7». Quitar el `TODO`
       de las coordenadas. Regenerar el PDF de la carta si cambia la dirección
       que sale en él.
 - [ ] 4. Títulos y descripciones nuevos para cada página indexable.
@@ -115,3 +115,9 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
   que el PDF de la carta está desactualizado porque `site.ts` entra en la
   huella; el PDF no imprime rutas, así que se regenera en el paso 3 con la
   dirección. Nota: [02-2](../notes/02-2-enlaces-con-barra.md).
+- 2026-10-16. Paso 3 hecho. `DIRECCION.portal` = «Primera planta, local 7»
+  (sale en el pie, el panel móvil, Contacto, aviso legal y condiciones);
+  `TODO` de las coordenadas quitado. La carta no imprime el portal, pero
+  `site.ts` entra en la huella: PDF regenerado (mismo tamaño) y huella
+  `29062bd6f800bed5`. El primer `npm run carta` falló por tiempo esperando
+  las fuentes; al repetirlo salió. Nota: [02-3](../notes/02-3-direccion-local-7.md).

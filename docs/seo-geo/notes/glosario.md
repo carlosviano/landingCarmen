@@ -95,6 +95,16 @@ la ponga **arriba** cuando alguien busca algo relacionado. Hay dos partes:
 lo importante no es salir el primero en toda España, sino cuando alguien
 de Málaga busca tartas.
 
+### NAP
+
+Son las iniciales en inglés de **nombre, dirección y teléfono** (*Name,
+Address, Phone*). Es la regla de oro del SEO local: esos tres datos tienen
+que estar escritos **exactamente igual** en todas partes (la web, la ficha
+de Google, Instagram, cualquier guía). Google cruza lo que encuentra en
+todos esos sitios; si coincide, se fía más del negocio y lo enseña mejor
+a quien busca cerca. Los de Estimada Carmela están en
+[DATOS-NEGOCIO.md](../DATOS-NEGOCIO.md).
+
 ### GEO
 
 Aquí **GEO** no es «geografía»: son las siglas de «optimización para
@@ -175,3 +185,68 @@ copia repetida que hay que controlar.
 Es una etiqueta escondida en una página que le dice a Google: «puedes
 leerme, pero no me apuntes». La llevan, por ejemplo, los textos legales
 mientras les falten datos.
+
+## La ficha de Google
+
+### Ficha de Google (Google Business Profile)
+
+Es la **tarjeta de un negocio dentro de Google**: nombre, dirección,
+teléfono, horario, fotos y opiniones. Sale en Google Maps y al lado de
+los resultados cuando alguien busca el negocio. No forma parte de la web:
+se rellena aparte, en un panel de Google. Su nombre oficial es *Google
+Business Profile* (antes, *Google My Business*).
+
+### Mapa de resultados
+
+El **mapita con tres negocios** que Google enseña arriba cuando alguien
+busca algo con sitio, como «pastelería en El Palo» o «tartas cerca de
+mí». Sale de las fichas, no de las webs. Salir ahí es casi lo más
+importante del SEO local.
+
+### NAP
+
+Las siglas en inglés de **Nombre, Dirección y Teléfono** (*Name, Address,
+Phone*). Son los datos que Google compara entre la ficha, la web,
+Instagram y cualquier directorio para saber que todos hablan del mismo
+negocio. Por eso tienen que estar escritos **exactamente igual** en todas
+partes: los de esta web están en `DATOS-NEGOCIO.md`.
+
+### Categoría
+
+La etiqueta que le dice a Google **qué es** el negocio. Hay una
+**principal** (aquí, «Pastelería»), que es la que más cuenta, y se pueden
+añadir **secundarias**. Hay que elegirlas de la lista que da Google, no
+se pueden inventar.
+
+### Verificación
+
+La prueba de que el negocio **existe de verdad** y de que quien hace la
+ficha tiene que ver con él: un código por correo, un SMS, una llamada o
+un vídeo del local. Hasta que Google no la da por buena, la ficha no sale
+del todo. Mientras está «procesando» es mejor no cambiar el nombre, la
+dirección ni la categoría principal.
+
+### Propietario y administrador
+
+Las personas que pueden entrar a cambiar la ficha. El **propietario
+principal** es el dueño del todo (solo hay uno); los **propietarios**
+pueden casi todo; los **administradores** pueden cambiar datos y contestar
+opiniones, pero no decidir quién manda.
+
+### Pin
+
+La **chincheta** que marca en el mapa dónde está el negocio. Tiene que
+estar justo sobre el edificio: si se mueve, la gente que va en coche
+llega a otro sitio.
+
+### Zona de servicio y ficha híbrida
+
+La **zona de servicio** es el sitio adonde el negocio va a trabajar a casa
+del cliente (aquí, la provincia de Málaga, para montar mesas dulces). Una
+**ficha híbrida** enseña a la vez la dirección, porque la gente va a
+recoger, y la zona de servicio, porque el negocio también se desplaza.
+
+### Duplicado
+
+Dos fichas para el **mismo negocio**. Es malo: Google reparte la
+confianza entre las dos, o las castiga. Hay que buscarlas y quitarlas.
