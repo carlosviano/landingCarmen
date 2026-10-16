@@ -55,7 +55,7 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
 - [x] 3. `DIRECCION.portal` → «Primera planta, local 7». Quitar el `TODO`
       de las coordenadas. Regenerar el PDF de la carta si cambia la dirección
       que sale en él.
-- [ ] 4. Títulos y descripciones nuevos para cada página indexable.
+- [x] 4. Títulos y descripciones nuevos para cada página indexable.
 - [ ] 5. 301 de `<proyecto>.pages.dev` → `https://estimadacarmela.com` con
       Bulk Redirects (panel de Cloudflare, con aprobación de Carlos).
 - [ ] 6. PR a `staging`, revisión, y de ahí a `main`.
@@ -121,3 +121,19 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
   `site.ts` entra en la huella: PDF regenerado (mismo tamaño) y huella
   `29062bd6f800bed5`. El primer `npm run carta` falló por tiempo esperando
   las fuentes; al repetirlo salió. Nota: [02-3](../notes/02-3-direccion-local-7.md).
+- 2026-10-16. Paso 4 hecho. Tipo `Seo` (`titulo`, `descripcion`) en
+  `site.ts`; campo `seo` en `catalogo.ts`, `eventos.ts` y
+  `personalizadas.ts`, `SEO_PORTADA` en `portada.ts` y
+  `CATALOGO.tituloSeoTarta(nombre)` para las fichas, cuya description es
+  la `descripcion` de cada tarta. Los `tituloPagina`/`entradillaPagina` no
+  cambian: siguen siendo el h1 y la entradilla. Palabras según la
+  investigación: «mesa dulce» y «tarta de boda» sí; «corner», «stand»,
+  «buffet» y «barra de postres» no tienen búsquedas en España. Eventos:
+  «Mesas dulces y tartas de boda para eventos en Málaga», con bautizos en
+  la description (añadido a `DATOS-NEGOCIO.md`). Comprobado en `dist/`: 11
+  páginas indexables con title y description propios. Se pasan de largo
+  el title de «Tartaleta de chocolate negro 70,5%» (75) y su description
+  (168); se acepta, Google corta el final. Los legales siguen con la
+  description por defecto: hay que darles una al publicarlos. Carta
+  regenerada (`site.ts` y `catalogo.ts` entran en la huella). Nota:
+  [02-4](../notes/02-4-titulos-y-descripciones.md).

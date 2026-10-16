@@ -1,5 +1,7 @@
 // La carta: qué es una tarta (tipos) y las tartas que hay.
 
+import type { Seo } from "./site";
+
 /**
  * Una parte de la tarta, de las que se listan en "qué lleva".
  *
@@ -171,6 +173,13 @@ export interface Catalogo {
   tituloPagina: string;
   /** Entradilla de /catalogo. */
   entradilla: string;
+  /** El <title> y la description de /catalogo (ver `Seo`). */
+  seo: Seo;
+  /**
+   * El <title> de la ficha de cada tarta, a partir de su nombre. La
+   * description es la `descripcion` de la tarta.
+   */
+  tituloSeoTarta: (nombre: string) => string;
   tartas: Tarta[];
 }
 
@@ -186,6 +195,15 @@ export const CATALOGO: Catalogo = {
   tituloPagina: "La carta",
   entradilla:
     "Todas por encargo. El tamaño y la antelación de cada una están en su ficha.",
+  seo: {
+    titulo: "La carta: tartas por encargo en Málaga",
+    descripcion:
+      "Tartas de temporada con precio cerrado, por encargo, con dos días laborables de antelación. Recogida en el obrador de El Palo, Málaga.",
+  },
+  // Un nombre largo ("Tartaleta de chocolate negro 70,5%") pasa de los ~60
+  // caracteres que enseña Google: corta el " · Estimada Carmela" del final,
+  // que es lo que menos falta hace.
+  tituloSeoTarta: (nombre) => `${nombre} por encargo en Málaga`,
   tartas: [
     {
       // El id se queda con el nombre antiguo porque esta ficha ya está

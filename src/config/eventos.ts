@@ -1,5 +1,7 @@
 // /eventos: la página, sus montajes y el formulario de solicitud.
 
+import type { Seo } from "./site";
+
 /**
  * Un montaje ya servido: qué se hizo, para qué celebración y cómo. Cada uno
  * es una tarjeta de /eventos, en el orden de esta lista.
@@ -63,6 +65,8 @@ export interface Eventos {
   etiquetaPagina: string;
   tituloPagina: string;
   entradillaPagina: string;
+  /** El <title> y la description de /eventos (ver `Seo`). */
+  seo: Seo;
   /** Foto a sangre de la cabecera de /eventos. Nombre en `src/assets/images/`. */
   fotoCabecera: string;
   altCabecera: string;
@@ -99,6 +103,13 @@ export const EVENTOS: Eventos = {
   tituloPagina: "Para el día concreto que celebras",
   entradillaPagina:
     "Tartas de boda, dulces y postres emplatados por encargo. Diseñados para cada celebración y preparados en el lugar y momento elegido.", // TODO: confirmar que se puede publicar: se le ve la cara a la novia.
+  // "Mesa dulce" es lo que más se busca; "corner", "stand" o "buffet" no
+  // tienen búsquedas en España. "Para eventos" dice que no es solo de bodas.
+  seo: {
+    titulo: "Mesas dulces y tartas de boda para eventos en Málaga",
+    descripcion:
+      "Tartas de boda, mesa dulce y postres para bodas, bautizos, empresas y celebraciones en Málaga. Lo montamos en el lugar del evento. Pide presupuesto.",
+  },
   fotoCabecera: "tarta-boda-nati-con-nati.jpeg",
   altCabecera:
     "En blanco y negro, una novia se ríe inclinada junto a su tarta de boda, cubierta de pétalos blancos.",

@@ -10,7 +10,8 @@ import "../styles/global.css";
 interface Props {
   /**
    * Se antepone al nombre del sitio en el <title>. Sin él queda solo el
-   * nombre, que es lo que quiere la portada.
+   * nombre. Cada página indexable pasa el `seo.titulo` de su config, no su
+   * titular: ver `Seo` en config/site.ts.
    */
   titulo?: string;
   descripcion?: string;

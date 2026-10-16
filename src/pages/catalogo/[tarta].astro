@@ -61,7 +61,10 @@ const recorte = anotada ? fotos.recorte : null;
 const foto = anotada ? null : fotos.foto;
 ---
 
-<Layout titulo={tarta.nombre} descripcion={tarta.descripcion}>
+<Layout
+  titulo={CATALOGO.tituloSeoTarta(tarta.nombre)}
+  descripcion={tarta.descripcion}
+>
   <Header />
 
   {/* `overflow-x-clip`: en móvil la tarta anotada se pinta más ancha que la

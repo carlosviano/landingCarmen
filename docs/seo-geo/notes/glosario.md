@@ -95,16 +95,6 @@ la ponga **arriba** cuando alguien busca algo relacionado. Hay dos partes:
 lo importante no es salir el primero en toda España, sino cuando alguien
 de Málaga busca tartas.
 
-### NAP
-
-Son las iniciales en inglés de **nombre, dirección y teléfono** (*Name,
-Address, Phone*). Es la regla de oro del SEO local: esos tres datos tienen
-que estar escritos **exactamente igual** en todas partes (la web, la ficha
-de Google, Instagram, cualquier guía). Google cruza lo que encuentra en
-todos esos sitios; si coincide, se fía más del negocio y lo enseña mejor
-a quien busca cerca. Los de Estimada Carmela están en
-[DATOS-NEGOCIO.md](../DATOS-NEGOCIO.md).
-
 ### GEO
 
 Aquí **GEO** no es «geografía»: son las siglas de «optimización para
@@ -185,6 +175,22 @@ copia repetida que hay que controlar.
 Es una etiqueta escondida en una página que le dice a Google: «puedes
 leerme, pero no me apuntes». La llevan, por ejemplo, los textos legales
 mientras les falten datos.
+
+### Título y descripción
+
+Son el **cartel de una página en Google**. El **título** es la línea azul
+grande de cada resultado (en el código, la etiqueta `<title>`; también es
+lo que sale en la pestaña del navegador). La **descripción** son las dos
+líneas grises de debajo (en el código, `<meta name="description">`). No se
+ven dentro de la página: los lee Google y los enseña a quien busca. Google
+corta el título hacia los 60 caracteres y la descripción hacia los 155.
+
+### Palabra clave
+
+Lo que la gente **escribe en Google** cuando busca algo: «tarta de boda
+Málaga», «mesa dulce». Para elegir las palabras de un título se mira
+cuánto se busca cada una. Una palabra muy bonita que nadie escribe no trae
+a nadie.
 
 ## La ficha de Google
 

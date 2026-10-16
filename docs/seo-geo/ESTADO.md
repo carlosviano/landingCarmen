@@ -37,7 +37,8 @@ Pasos 1–4 hechos (nota en [notes/01-1](notes/01-1-la-ficha-de-google.md)); el 
 está preparado en la spec, para pegarlo cuando la ficha salga «Verificada».
 Mientras tanto se avanza con la **spec 02** → [specs/02-seo-tecnico-base.md](specs/02-seo-tecnico-base.md),
 en la rama `feat/seo-tecnico-base` (worktree `../landingCarmen-seo-tecnico`).
-Pasos 1 a 3 hechos; sigue el paso 4 (títulos y descripciones).
+Pasos 1 a 4 hechos; sigue el paso 5 (301 de `pages.dev`, en el panel de
+Cloudflare).
 
 ## Bloqueantes
 

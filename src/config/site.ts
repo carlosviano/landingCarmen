@@ -107,6 +107,18 @@ export const LEGAL: NavItem[] = LEGALES_PUBLICADOS
     ]
   : [];
 
+/**
+ * Lo que ven los buscadores de una página: el <title> (el Layout le añade
+ * " · Estimada Carmela") y la description, que es el texto gris bajo el
+ * enlace en Google. Va aparte del titular y la entradilla de la página
+ * porque no sirven para lo mismo: el titular se escribe para quien ya está
+ * dentro, y esto para quien busca "tartas en Málaga" y aún no ha entrado.
+ */
+export interface Seo {
+  titulo: string;
+  descripcion: string;
+}
+
 export const SITE = {
   nombre: "Estimada Carmela",
   // Antetítulo de la dirección en el pie.

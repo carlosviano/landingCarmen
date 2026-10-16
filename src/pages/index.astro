@@ -1,5 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { SEO_PORTADA } from "../config/portada";
 import Header from "../sections/Header.astro";
 import Hero from "../sections/Hero.astro";
 import Eventos from "../sections/Eventos.astro";
@@ -10,7 +11,7 @@ import Contacto from "../sections/Contacto.astro";
 import Footer from "../sections/Footer.astro";
 ---
 
-<Layout>
+<Layout titulo={SEO_PORTADA.titulo} descripcion={SEO_PORTADA.descripcion}>
   <Header />
   <Hero />
   <Catalogo />

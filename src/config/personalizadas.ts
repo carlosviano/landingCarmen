@@ -1,5 +1,7 @@
 // /personalizadas: los diseños de Carmela y su formulario.
 
+import type { Seo } from "./site";
+
 /**
  * Un diseño de Carmela: una tarta a medida que se adapta a cada ocasión (la
  * rosa, los volantes de la boda). No es una tarta de la carta con un nombre
@@ -49,6 +51,11 @@ export const ESPECIALES = {
   tituloPagina: "Una tarta pensada para lo que celebras",
   entradillaPagina:
     "Diseños propios que adaptamos a tu ocasión: tamaño, colores y sabores. Nos cuentas qué celebras y te proponemos uno.",
+  seo: {
+    titulo: "Tartas personalizadas en Málaga",
+    descripcion:
+      "Diseños propios que adaptamos a tu ocasión: tamaño, colores y sabores. Nos cuentas qué celebras, te proponemos uno y la recoges en El Palo, Málaga.",
+  } satisfies Seo,
   // Apaisada a toda pantalla. En el móvil se ve entera de alto y solo cuenta
   // el horizontal: el 45% la deja entre la tarta y la cara. En escritorio se
   // ve entera de ancho y solo cuenta el vertical: el 90% la sube para que

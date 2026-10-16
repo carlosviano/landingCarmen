@@ -1,7 +1,14 @@
 // La portada: el hero, "Sobre Carmen", el carrusel y los dos escaparates (el
 // díptico de tartas y la foto de eventos).
 
-import { SERVICIOS, type Servicio } from "./site";
+import { SERVICIOS, type Seo, type Servicio } from "./site";
+
+// El <title> y la description de la portada (ver `Seo`).
+export const SEO_PORTADA: Seo = {
+  titulo: "Alta pastelería por encargo en Málaga",
+  descripcion:
+    "Tartas de temporada, personalizadas y de boda, y mesa dulce para eventos. Obrador en El Palo, Málaga, con recogida de lunes a viernes.",
+};
 
 // Hero. Lleva un botón por servicio, a su página: es el camino más corto a
 // encargar (ver la nota en Hero.astro). El pedido de la carta se hace desde

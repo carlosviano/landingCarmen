@@ -54,7 +54,7 @@ todas las fichas.
 
 1. **La carta:** tartas de temporada con precio cerrado.
 2. **Tartas personalizadas:** diseños a medida que se recogen en el obrador.
-3. **Eventos:** mesas dulces y pastelería para bodas, empresas y celebraciones.
+3. **Eventos:** mesas dulces y pastelería para bodas, bautizos, empresas y celebraciones.
 
 En los eventos, Carmen monta la mesa dulce en el lugar del evento (zona
 que cubre: `[POR CONFIRMAR]`).
