@@ -19,10 +19,23 @@ interface Props {
    * una pantalla de espera y el modal hablaría de una web que aún no está.
    */
   bienvenida?: boolean;
+  /**
+   * El <link rel="canonical"> al dominio (`site` de astro.config.mjs). Lo
+   * apaga el 404: no es la página de ninguna URL.
+   */
+  canonica?: boolean;
 }
 
-const { titulo, descripcion = SITE.nombre, bienvenida = true } = Astro.props;
+const {
+  titulo,
+  descripcion = SITE.nombre,
+  bienvenida = true,
+  canonica = true,
+} = Astro.props;
 const title = titulo ? `${titulo} · ${SITE.nombre}` : SITE.nombre;
+// Siempre al dominio, aunque se sirva desde staging o desde *.pages.dev: así
+// Google no cuenta esas copias como páginas aparte.
+const urlCanonica = new URL(Astro.url.pathname, Astro.site);
 
 // Proyecto web de Adobe Fonts con The Seasons. Es de una cuenta de Creative
 // Cloud que no es de la clienta (ver README, "Tipografía").
@@ -47,6 +60,7 @@ const ADOBE_FONTS = "https://use.typekit.net/gwa1cko.css";
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="description" content={descripcion} />
+    {canonica && <link rel="canonical" href={urlCanonica} />}
     <meta name="author" content="Carlos Viano" />
     {/* The Seasons: la sirve Adobe (use.typekit.net), que es lo que cubre su
         licencia. Ni se descarga ni va por la API de fuentes de Astro. Trae

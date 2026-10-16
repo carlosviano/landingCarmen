@@ -30,7 +30,7 @@ const destinos = [
 ].map((destino) => ({ ...destino, foto: fotoDe(destino.archivo)! }));
 ---
 
-<Layout titulo={N.titulo} bienvenida={false}>
+<Layout titulo={N.titulo} bienvenida={false} canonica={false}>
   <Header />
   <main class="mx-auto w-full max-w-7xl px-6 pt-10 pb-16 md:pt-16 md:pb-24">
     <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16">

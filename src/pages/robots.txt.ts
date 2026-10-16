@@ -20,6 +20,8 @@ const RAMA_PRODUCCION = "main";
 const CUERPO = {
   indexable: `User-agent: *
 Allow: /
+
+Sitemap: ${new URL("sitemap-index.xml", import.meta.env.SITE)}
 `,
   bloqueado: `# Rama de staging o preview: no es el sitio público.
 User-agent: *

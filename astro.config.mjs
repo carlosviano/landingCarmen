@@ -1,9 +1,11 @@
 // @ts-check
 import { defineConfig, envField, fontProviders } from "astro/config";
 
+import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import icon from "astro-icon";
 import { cartaAlDia } from "./scripts/huella-carta.mjs";
+import { LEGALES_PUBLICADOS } from "./src/config/site.ts";
 
 // La carta en PDF (public/carta-estimada-carmela.pdf) no se genera en el
 // build: la imprime `npm run carta` en local (ver AGENTS.md, «La carta en
@@ -23,9 +25,31 @@ const avisoCartaPdf = {
   },
 };
 
+// Lo que existe pero no es para Google: la pantalla de espera, la carta de
+// imprimir (el PDF ya está enlazado) y los legales mientras sigan con
+// corchetes (llevan noindex; entran solos al publicarlos). El 404 lo deja
+// fuera la propia integración.
+const FUERA_DEL_SITEMAP = new Set([
+  "/proximamente/",
+  "/catalogo/carta/",
+  ...(LEGALES_PUBLICADOS
+    ? []
+    : ["/aviso-legal/", "/condiciones/", "/privacidad/", "/cookies/"]),
+]);
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [icon(), avisoCartaPdf],
+  // El dominio canónico, sin www (www hace una 301 hacia él). De aquí salen
+  // el sitemap, el canonical del Layout y la línea Sitemap: de robots.txt.
+  site: "https://estimadacarmela.com",
+
+  integrations: [
+    icon(),
+    avisoCartaPdf,
+    sitemap({
+      filter: (url) => !FUERA_DEL_SITEMAP.has(new URL(url).pathname),
+    }),
+  ],
 
   // La web usa DOS fuentes y solo dos (el sistema entero está en
   // src/styles/global.css, "Tipografía"):
