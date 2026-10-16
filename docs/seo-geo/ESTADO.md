@@ -5,6 +5,7 @@ paso X de la spec NN».
 
 - Datos del negocio tal y como se publican en todas partes: [DATOS-NEGOCIO.md](DATOS-NEGOCIO.md)
 - Plantilla para specs nuevas: [specs/_PLANTILLA.md](specs/_PLANTILLA.md)
+- Notas explicadas para quien no sabe de webs ni de marketing: [notes/](notes/README.md)
 
 ## Cómo trabajar (para cualquier asistente)
 
@@ -22,13 +23,19 @@ paso X de la spec NN».
    OK antes de tocar nada.
 6. Al acabar un paso, actualiza los checks y el «Registro» de la spec, y la
    tabla y «En curso» de este archivo.
+7. Y escribe su nota en `notes/` (`<spec>-<paso>-<tema>.md`, enlazada en
+   `notes/README.md`): qué se hizo, por qué, y trozos del código
+   explicados, para alguien que nunca ha hecho una web ni marketing, con
+   palabras que entienda un niño de 12 años. Las palabras nuevas, al
+   `notes/glosario.md`.
 
 ## En curso
 
 **Spec 01**: Google Business Profile → [specs/01-google-business-profile.md](specs/01-google-business-profile.md)
-(la spec 00 solo espera el commit y el PR de `docs/seo-geo`)
 Ficha creada; Google está procesando la verificación desde el 2026-10-15.
-Mientras tanto se avanza con la **spec 02** → [specs/02-seo-tecnico-base.md](specs/02-seo-tecnico-base.md)
+Mientras tanto se avanza con la **spec 02** → [specs/02-seo-tecnico-base.md](specs/02-seo-tecnico-base.md),
+en la rama `feat/seo-tecnico-base` (worktree `../landingCarmen-seo-tecnico`).
+Paso 1 hecho; sigue el paso 2 (enlaces internos con barra final).
 
 ## Bloqueantes
 
@@ -43,7 +50,7 @@ Mientras tanto se avanza con la **spec 02** → [specs/02-seo-tecnico-base.md](s
 
 | Spec | Tarea | Fase | Quién | Estado |
 |---|---|---|---|---|
-| 00 | Montar SDD y fijar los datos del negocio | Semana 1 | Carlos + asistente | falta el PR |
+| 00 | Montar SDD y fijar los datos del negocio | Semana 1 | Carlos + asistente | hecho |
 | 01 | Google Business Profile: crear y verificar | Semana 1 | Carmen + Carlos | en curso |
 | 02 | Web: `site`, sitemap, canonical, robots `Sitemap:`, 301 de pages.dev, titles y descriptions | Semana 1 | Carlos/asistente | en curso |
 | 03 | Open Graph y Twitter cards | Semana 1 | Carlos/asistente | pendiente |

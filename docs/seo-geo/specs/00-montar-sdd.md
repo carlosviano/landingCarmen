@@ -1,6 +1,6 @@
 # Spec 00: montar el SDD y fijar los datos del negocio
 
-- **Estado:** en curso
+- **Estado:** hecho
 - **Quién:** Carlos + asistente
 - **Depende de:** nada
 
@@ -29,13 +29,13 @@ fijados en un solo sitio.
 - [x] 1. Crear `ESTADO.md`, `DATOS-NEGOCIO.md`, `specs/_PLANTILLA.md` y esta spec.
 - [x] 2. Carlos revisa `DATOS-NEGOCIO.md` y corrige lo que haga falta.
 - [x] 3. Mergear el teléfono bueno (`fix/telefono-anterior`) a `main`.
-- [ ] 4. Commit de `docs/seo-geo/` y merge a `main`, por PR en el navegador.
+- [x] 4. Commit de `docs/seo-geo/` y merge a `main`, por PR en el navegador.
 
 ## Criterios de aceptación
 
 - [x] La web de producción enseña `+34 674 99 58 11`.
 - [x] `DATOS-NEGOCIO.md` revisado por Carlos, sin datos inventados.
-- [ ] `docs/seo-geo/` está en `main`.
+- [x] `docs/seo-geo/` está en `main`.
 
 ## Registro
 
@@ -46,3 +46,4 @@ fijados en un solo sitio.
   El teléfono está mergeado en `main` (#50); comprobado en la web en vivo con
   curl. `www` hace una 301 al dominio sin www. Se trae `origin/main` a
   `docs/seo-geo` (avance directo). Queda el commit y el PR.
+- 2026-10-16. Mergeado en `main` por el PR #51. Spec cerrada.

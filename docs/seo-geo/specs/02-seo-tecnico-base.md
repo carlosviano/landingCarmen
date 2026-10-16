@@ -49,7 +49,7 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
 
 ## Pasos
 
-- [ ] 1. `site` + `@astrojs/sitemap` con filtro, canonical en el Layout y
+- [x] 1. `site` + `@astrojs/sitemap` con filtro, canonical en el Layout y
       `Sitemap:` en robots.txt.
 - [ ] 2. Enlaces internos con barra final.
 - [ ] 3. `DIRECCION.portal` → «Primera planta, local 7». Quitar el `TODO`
@@ -100,3 +100,9 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
 ## Registro
 
 - 2026-10-15. Spec creada con lo que había al empezar (ver Contexto).
+- 2026-10-16. Paso 1 hecho en `feat/seo-tecnico-base` (`a8ed06d`). Además
+  de lo previsto, el Layout tiene una prop `canonica` (por defecto `true`)
+  y el 404 la apaga, para no publicar un canonical a `/404`. Comprobado en
+  `dist/`: sitemap con 11 URLs, todas con barra; canonical bien en las
+  páginas; `robots.txt` con `Sitemap:` en un build con
+  `CF_PAGES_BRANCH=main`. Nota: [02-1](../notes/02-1-sitemap-canonical-robots.md).
