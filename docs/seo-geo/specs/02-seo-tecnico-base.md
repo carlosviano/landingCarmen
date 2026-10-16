@@ -27,7 +27,7 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
   (`SERVICIOS.*.ruta` en `site.ts`, `TarjetaTarta.astro`,
   `[tarta].astro`, `Pedido.astro` y `MarcoSolicitud.astro`), así que cada
   clic da un salto de redirección.
-- `www` → dominio sin www: ya hace una 301. El `<proyecto>.pages.dev` de
+- `www` → dominio sin www: ya hace una 301. El `landingcarmen.pages.dev` de
   producción sirve la misma web sin redirigir (contenido duplicado).
 - `DIRECCION.portal` dice «Primera planta» y le falta «, local 7» (lo pide
   la spec 01).
@@ -56,7 +56,7 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
       de las coordenadas. Regenerar el PDF de la carta si cambia la dirección
       que sale en él.
 - [x] 4. Títulos y descripciones nuevos para cada página indexable.
-- [ ] 5. 301 de `<proyecto>.pages.dev` → `https://estimadacarmela.com` con
+- [x] 5. 301 de `landingcarmen.pages.dev` → `https://estimadacarmela.com` con
       Bulk Redirects (panel de Cloudflare, con aprobación de Carlos).
 - [ ] 6. PR a `staging`, revisión, y de ahí a `main`.
 
@@ -93,7 +93,7 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
 - [ ] Cada página indexable lleva
       `<link rel="canonical" href="https://estimadacarmela.com/.../">`.
 - [ ] Ningún enlace interno da 308.
-- [ ] `curl -I https://<proyecto>.pages.dev/catalogo/` → 301 a
+- [x] `curl -I https://landingcarmen.pages.dev/catalogo/` → 301 a
       `https://estimadacarmela.com/catalogo/`.
 - [ ] `npm run check` y `npm run build` limpios.
 
@@ -137,3 +137,14 @@ Situación de partida, comprobada el 2026-10-15 con curl y leyendo el código:
   description por defecto: hay que darles una al publicarlos. Carta
   regenerada (`site.ts` y `catalogo.ts` entran en la huella). Nota:
   [02-4](../notes/02-4-titulos-y-descripciones.md).
+- 2026-10-16. Paso 5 hecho, por la API de Cloudflare con el OK de Carlos.
+  Lista de Bulk Redirects `pages_dev_a_dominio` (cuenta, no zona) con una
+  entrada: `landingcarmen.pages.dev/` → `https://estimadacarmela.com/`,
+  301, con subpath matching, preserve path suffix y preserve query string;
+  **sin** include subdomains, para no tocar staging ni las previews. La
+  activa la regla de la fase `http_request_redirect` de la cuenta, que no
+  existía. Comprobado con `curl`: `/catalogo/?x=1` → 301 a
+  `https://estimadacarmela.com/catalogo/?x=1`; staging sigue con su 302 al
+  login de Cloudflare Access (no da 200: está protegido); el dominio da
+  200 y `www` su 301. Para deshacerlo, desactivar esa regla. Nota:
+  [02-5](../notes/02-5-redireccion-pages-dev.md).

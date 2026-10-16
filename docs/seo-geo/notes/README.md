@@ -22,6 +22,7 @@ lee.
 | [02-2 · Enlaces con barra final](02-2-enlaces-con-barra.md) | Que los botones de la web lleven directos a cada página, sin dar un rodeo |
 | [02-3 · La dirección completa: «local 7»](02-3-direccion-local-7.md) | Que la web diga exactamente la misma dirección que la ficha de Google |
 | [02-4 · El cartel de cada página en Google](02-4-titulos-y-descripciones.md) | Un título y una descripción propios para cada página, con las palabras que la gente busca y con «Málaga» |
+| [02-5 · Cerrar la puerta de atrás](02-5-redireccion-pages-dev.md) | Que la copia de la web en `landingcarmen.pages.dev` mande a la gente y a Google al dominio de verdad |
 
 ## Cómo se leen los trozos de código
 
