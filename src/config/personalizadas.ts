@@ -142,6 +142,30 @@ export const ESPECIALES = {
         },
       ],
     },
+    {
+      slug: "cafe-y-oro",
+      nombre: "Café y oro",
+      ocasiones: "Cumpleaños",
+      archivo: "tartaCafe1.jpg",
+      alt: "Tarta de glaseado de chocolate con leche, rodeada por una cinta de chocolate negro que guarda granos de café, sobre una base dorada.",
+      enfoque: "42% 55%",
+      descripcion:
+        "Bizcocho borracho de café, interior de chocolate al café, mousse de café y glaseado de chocolate con leche. Decorada con chocolate y puntos de papel de oro. Diseñada para un cumpleaños.",
+      galeria: [
+        {
+          archivo: "tartaCafe2.jpg",
+          alt: "La tarta de café vista desde arriba: granos de café dentro de la cinta de chocolate y pequeños puntos de papel de oro en el glaseado.",
+        },
+        {
+          archivo: "tartaCafe3.jpg",
+          alt: "La cinta de chocolate negro curvada sobre la tarta, con los granos de café y una pieza dorada dentro.",
+        },
+        {
+          archivo: "tartaCafe4.jpg",
+          alt: "La tarta de café de lado, con el glaseado brillante y la cinta de chocolate que sube en espiral.",
+        },
+      ],
+    },
   ] satisfies DisenoEspecial[],
   /** Los textos de cada tarjeta de diseño. */
   tarjeta: {
