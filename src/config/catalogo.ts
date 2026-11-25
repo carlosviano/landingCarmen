@@ -162,6 +162,13 @@ export interface Tarta {
   alergenos: Alergeno[];
   /** La descripción de la ficha para buscadores y al compartir el enlace (no se pinta en la página). Dos o tres frases. */
   descripcion: string;
+  /**
+   * Recién llegada a la carta. Enciende la pastilla «Nueva» de su tarjeta y
+   * la mete en la franja de temporada de /catalogo (ver `TEMPORADA`). Se
+   * quita a mano cuando deje de ser novedad: con ninguna marcada, la franja
+   * no sale.
+   */
+  nueva?: boolean;
 }
 
 export interface Catalogo {
@@ -174,11 +181,26 @@ export interface Catalogo {
   tartas: Tarta[];
 }
 
+/**
+ * La franja de /catalogo que enseña las tartas `nueva`, entre la entradilla y
+ * la rejilla. Habla de la temporada y no de "novedades" porque es lo que las
+ * trae: entran porque la fruta está en su punto, y saldrán cuando deje de
+ * estarlo. Al cambiar de temporada se cambia este texto, no el componente.
+ */
+export const TEMPORADA = {
+  antetitulo: "Otoño en el obrador",
+  titulo: "De temporada",
+  /** La leyenda de cada tarjeta de la franja, sobre el nombre. */
+  leyenda: "Nueva · de temporada",
+  /** El botón de cada tarjeta, a su ficha. */
+  accion: "Ver la tarta",
+} as const;
+
 // Las fotos son de Carmen y viven en `src/assets/images/`. Se nombran aquí y
 // las resuelve `fotoDe()` (src/lib/fotos.ts), que revienta el build si el
 // nombre no existe. Ver src/assets/README.md para cómo se hacen.
 //
-// Ahora mismo la carta tiene SIETE tartas, todas con recorte sin fondo.
+// Ahora mismo la carta tiene OCHO tartas, todas con recorte sin fondo.
 // Las siete de la maqueta original (con sus textos inventados) se quitaron a
 // la espera de fotos; están en el historial de git. Las fichas se irán añadiendo según lleguen los recortes.
 export const CATALOGO: Catalogo = {
@@ -295,50 +317,109 @@ export const CATALOGO: Catalogo = {
         "Tartaleta de sablé de chocolate con cremoso de chocolate y un toque de sal Maldon, bajo una cúpula de chocolate negro al 70,5% con glaseado espejo y cacao espolvoreado.",
     },
     {
-      id: "pavlova-de-melocoton",
-      nombre: "Pavlova de melocotón",
-      // TODO: foto con fondo para la tarjeta. Hay una de esta tarta
-      // (tarta_cumple_kika_2026.jpeg, la del escaparate), pero con ella
-      // sería la única tarjeta con foto y las demás con recorte.
+      id: "chocolate-y-mandarina",
+      nombre: "Tartaleta de chocolate y mandarina",
+      // TODO: foto con fondo para la tarjeta.
       archivo: null,
       // En el lienzo común (ver `Tarta.recorte`).
-      recorte: "pavlova-ficha.png",
-      alt: "Pavlova alta cubierta de picos redondos de merengue y coronada de gajos de melocotón asado, sobre una base dorada.",
+      recorte: "chocolate-petalos-ficha.png",
+      alt: "Tartaleta redonda de sablé dorado cubierta de chocolate negro brillante, con seis gajos bañados en chocolate en el centro.",
+      // Mismos tamaños y precios que la de chocolate negro.
+      tamanos: [
+        { personas: "4–6", precio: 27 },
+        { personas: "8–10", precio: 45 },
+      ],
+      // TODO: PROVISIONAL, sin confirmar por Carmen. Sale de la receta
+      // (sablé bretón: gluten, huevo y mantequilla). Falta confirmar la crema
+      // de mandarina y el chocolate (¿soja?). No publicar en producción sin
+      // confirmarlo.
+      alergenos: ["gluten", "huevo", "leche"],
+      nueva: true,
+      componentes: [
+        {
+          etiqueta: "Mandarina",
+          etiquetaMovil: "Gajos de mandarina bañados en chocolate",
+          descripcionCorta: "Gajos bañados en chocolate, como decoración",
+          punto: { x: 30, y: 30 },
+        },
+        {
+          etiqueta: "Cúpula",
+          etiquetaMovil: "Cúpula de chocolate negro 70%",
+          descripcionCorta: "De chocolate negro al 70%",
+          punto: { x: 12, y: 45 },
+        },
+        {
+          etiqueta: "Crema de mandarina",
+          descripcionCorta: "Debajo del chocolate, la fruta de temporada",
+          punto: { x: 8, y: 60 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Sablé bretón",
+          etiquetaMovil: "Base de sablé bretón",
+          descripcionCorta: "Una tartaleta más aireada que el sablé clásico",
+          punto: { x: 10, y: 72 },
+        },
+      ],
+      descripcion:
+        "Tartaleta de sablé bretón con crema de mandarina bajo una cúpula de chocolate negro al 70%, decorada con gajos de mandarina bañados en chocolate.",
+    },
+    {
+      // Sustituye a la pavlova de melocotón, que sale de la carta con su
+      // temporada. Id nuevo: la URL dice lo que hay. La antigua redirige aquí
+      // (public/_redirects) para no romper los enlaces ya compartidos.
+      id: "pavlova-de-mango",
+      nombre: "Pavlova de mango",
+      // TODO: foto con fondo para la tarjeta.
+      archivo: null,
+      // En el lienzo común (ver `Tarta.recorte`).
+      recorte: "pavlova-mango-ficha.png",
+      alt: "Pavlova redonda con un borde de picos redondos de merengue y chantilly, coronada de láminas de mango en abanico con unos toques de pan de oro.",
       tamanos: [
         { personas: "4–6", precio: 25 },
         { personas: "8–10", precio: 42 },
       ],
+      // Gluten, confirmado por Carmen: viene de la capa de bizcocho. Huevo y
+      // leche salen de la receta (merengue, bizcocho y chantilly).
+      // TODO: confirmar con Carmen que no lleva ninguno más.
       alergenos: ["gluten", "huevo", "leche"],
+      nueva: true,
       componentes: [
         {
-          etiqueta: "Melocotón",
-          etiquetaMovil: "Melocotón natural",
-          descripcionCorta: "Fruta natural como decoración",
-          punto: { x: 25, y: 25.5 },
+          etiqueta: "Mango",
+          etiquetaMovil: "Mango natural",
+          descripcionCorta: "Fruta natural en láminas, como corona",
+          punto: { x: 22, y: 28 },
         },
         {
-          etiqueta: "Crema pastelera",
-          etiquetaMovil: "Crema pastelera con chips de chocolate",
-          descripcionCorta:
-            "Con chips de chocolate: la suavidad de la crema con un toque crujiente",
-          punto: { x: 33, y: 45 },
+          etiqueta: "Crema de mango",
+          descripcionCorta: "Bajo la fruta, el mango otra vez en crema",
+          punto: { x: 30, y: 40 },
+          dentro: true,
+        },
+        {
+          etiqueta: "Bizcocho",
+          etiquetaMovil: "Capa fina de bizcocho",
+          descripcionCorta: "Una capa fina entre la crema y el chantilly",
+          punto: { x: 24, y: 52 },
+          dentro: true,
         },
         {
           etiqueta: "Chantilly",
           etiquetaMovil: "Chantilly de vainilla",
           descripcionCorta: "Crema de nata a la vainilla, en su justa medida",
-          punto: { x: 16, y: 61 },
+          punto: { x: 16, y: 64 },
           dentro: true,
         },
         {
           etiqueta: "Merengue seco",
           etiquetaMovil: "Base de merengue seco",
           descripcionCorta: "Merengue seco al horno, como base",
-          punto: { x: 9, y: 78 },
+          punto: { x: 12, y: 77 },
         },
       ],
       descripcion:
-        "Merengue seco con chantilly de vainilla y crema pastelera con chips de chocolate, coronada de melocotón.",
+        "Merengue seco con chantilly de vainilla, una capa fina de bizcocho y crema de mango, coronada de láminas de mango natural. La pavlova de la temporada del mango.",
     },
     {
       id: "tarta-de-la-abuela",

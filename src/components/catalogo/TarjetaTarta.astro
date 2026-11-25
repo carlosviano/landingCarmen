@@ -111,7 +111,7 @@ const SIZES = compacta
       LCP; con cortina se retrasaba hasta casi 2s. */}
   <div
     data-revelar="zoom"
-    class="aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15"
+    class="relative aspect-[4/5] overflow-hidden rounded-3xl bg-taupe/15"
   >
     {foto ? (
       <Foto
@@ -140,6 +140,23 @@ const SIZES = compacta
       /* El tono alterno del marco lo pone la rejilla, para que seis huecos
           no se lean como seis errores iguales. */
       <FotoPendiente class="h-full w-full" />
+    )}
+
+    {/* La pastilla de las recién llegadas (`Tarta.nueva`). Va sobre la foto y
+        no como línea sobre el nombre: la tarjeta sigue con UN solo título
+        (ver arriba). Rust con texto linen, como los botones: es la única
+        masa de color de la rejilla, así que se ve sin gritar. */}
+    {tarta.nueva && (
+      <span
+        class:list={[
+          "absolute rounded-full bg-rust leyenda text-linen",
+          compacta
+            ? "top-2 left-2 px-2 pt-1 pb-[3px]"
+            : "top-3 left-3 px-3 pt-1.5 pb-[5px] lg:top-3.5 lg:left-3.5",
+        ]}
+      >
+        Nueva
+      </span>
     )}
   </div>
 

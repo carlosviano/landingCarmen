@@ -1,0 +1,111 @@
+---
+// La franja "De temporada" de /catalogo: las tartas marcadas `nueva`, en
+// tarjeta horizontal, entre la cabecera de la página y la rejilla.
+//
+// Banda sand a todo el ancho: es el recurso del sitio para separar una
+// sección (linen y sand se distinguen a todo el ancho, no como tarjeta), y
+// dentro las tarjetas van en blanco con filete taupe, como las de
+// TarjetaEscaparate. No usa ese componente porque aquí la foto es el RECORTE
+// sin fondo, que con su `object-cover` perdería media tarta: va con
+// `object-contain`, como en la rejilla.
+//
+// La TARJETA ENTERA es el enlace a la ficha, como en TarjetaTarta: el
+// objetivo de toque es todo el bloque. El "Ver la tarta" es un span con
+// forma de botón, no otro enlace. Al pasar por encima, la foto se acerca, el
+// nombre se pone en rust y el botón se oscurece.
+//
+// Sin ninguna tarta `nueva`, no pinta nada: la franja sale y entra sola al
+// marcar o desmarcar tartas en config/catalogo.ts.
+import Foto from "@/components/Foto.astro";
+import FotoPendiente from "@/components/FotoPendiente.astro";
+import { TEMPORADA, type Tarta } from "@/config/catalogo";
+import { conFotos } from "@/lib/tartas";
+import { precioVisible } from "@/lib/pedido";
+
+interface Props {
+  tartas: Tarta[];
+  class?: string;
+}
+
+const { tartas, class: className } = Astro.props;
+
+const nuevas = tartas.filter((tarta) => tarta.nueva).map(conFotos);
+
+// Lo mismo que el filete de TarjetaTarta: para cuántos y desde cuánto.
+const precio = (tarta: Tarta) => {
+  const desde = `${tarta.tamanos.length > 1 ? "desde " : ""}${precioVisible(tarta.tamanos[0].precio)}`;
+  const personas = tarta.tamanos[0].personas
+    ? `${tarta.tamanos.map((tamano) => tamano.personas).join(" / ")} pers.`
+    : "Tamaño único";
+  return `${desde} · ${personas}`;
+};
+---
+
+{nuevas.length > 0 && (
+  <section aria-labelledby="temporada" class:list={["bg-sand", className]}>
+    <div class="mx-auto w-full max-w-7xl px-6 py-11 md:py-14">
+      <p data-revelar class="antetitulo text-rust">
+        {TEMPORADA.antetitulo}
+      </p>
+      <h2
+        id="temporada"
+        data-revelar
+        class="mt-2.5 titulo text-3xl leading-tight md:text-[2.375rem]"
+      >
+        {TEMPORADA.titulo}
+      </h2>
+
+      <div class="mt-6 grid gap-4 md:mt-8 md:gap-6 lg:grid-cols-2">
+        {nuevas.map(({ tarta, foto, recorte }) => (
+          <a
+            href={`/catalogo/${tarta.id}`}
+            data-revelar
+            class="group grid grid-cols-[8.5rem_minmax(0,1fr)] overflow-hidden rounded-3xl bg-white shadow-lg shadow-black/5 ring-1 ring-taupe/60 sm:grid-cols-[12.5rem_minmax(0,1fr)] lg:min-h-72"
+          >
+            <div class="relative min-h-52 bg-taupe/15">
+              {foto || recorte ? (
+                <Foto
+                  src={(foto ?? recorte)!}
+                  alt={tarta.alt}
+                  widths={[200, 320, 440]}
+                  sizes="(min-width: 640px) 12.5rem, 8.5rem"
+                  loading="lazy"
+                  decoding="async"
+                  class:list={[
+                    "absolute inset-0 h-full w-full object-center transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none",
+                    foto ? "object-cover" : "object-contain p-3",
+                  ]}
+                />
+              ) : (
+                <FotoPendiente class="absolute inset-0 p-3 text-center" />
+              )}
+            </div>
+
+            <div class="flex flex-col p-4.5 sm:p-7 lg:px-8">
+              <p class="leyenda text-rust">{TEMPORADA.leyenda}</p>
+              <h3 class="mt-2 titulo text-2xl transition-colors group-hover:text-rust leading-[1.1] text-balance sm:text-[1.75rem] lg:text-[2rem]">
+                {tarta.nombre}
+              </h3>
+              <p class="mt-2 text-[0.8125rem] leading-relaxed text-black/70 sm:text-sm">
+                {tarta.descripcion}
+              </p>
+              <div class="mt-auto flex flex-col gap-3 pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                <span class="dato text-[11px] text-black/55">
+                  {precio(tarta)}
+                </span>
+                {/* Parece un botón pero es parte del enlace: dentro de un
+                    <a> no puede ir otro elemento interactivo. */}
+                <span
+                  aria-hidden="true"
+                  class="inline-flex min-h-11 items-center justify-center rounded-full bg-rust px-5.5 text-center accion text-[10px] text-linen transition-colors group-hover:bg-rust-hondo sm:ml-auto sm:text-[11px]"
+                >
+                  {TEMPORADA.accion}
+                </span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
