@@ -12,6 +12,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/sections/Header.astro";
 import Footer from "@/sections/Footer.astro";
 import Carta from "@/components/catalogo/Carta.astro";
+import FranjaTemporada from "@/components/catalogo/FranjaTemporada.astro";
 import CompartirCarta from "@/components/catalogo/CompartirCarta.astro";
 import TextoRevelado from "@/components/TextoRevelado.astro";
 import { CATALOGO } from "@/config/catalogo";
@@ -21,7 +22,7 @@ import { CATALOGO } from "@/config/catalogo";
   <Header />
 
   <main>
-    <div class="mx-auto w-full max-w-7xl px-6 pt-14 pb-15 md:pt-20 lg:pb-17">
+    <div class="mx-auto w-full max-w-7xl px-6 pt-14 pb-11 md:pt-20 md:pb-12">
       {/* Cabecera centrada: antetítulo en mayúsculas y titular en serif. */}
       <p data-revelar class="text-center antetitulo text-rust">
         {CATALOGO.etiqueta}
@@ -39,9 +40,14 @@ import { CATALOGO } from "@/config/catalogo";
       <div data-revelar class="mt-6 flex justify-center">
         <CompartirCarta />
       </div>
+    </div>
 
+    {/* Las recién llegadas, a todo el ancho. Sin ninguna `nueva`, no sale. */}
+    <FranjaTemporada tartas={CATALOGO.tartas} />
+
+    <div class="mx-auto w-full max-w-7xl px-6 pt-11 pb-15 md:pt-12 lg:pb-17">
       {/* Las tarjetas cuelgan del h1 de esta página, así que su nombre es un h2. */}
-      <Carta tartas={CATALOGO.tartas} nivelTarjeta={2} class="mt-11 md:mt-12" />
+      <Carta tartas={CATALOGO.tartas} nivelTarjeta={2} />
     </div>
   </main>
 

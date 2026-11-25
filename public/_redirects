@@ -1,0 +1,6 @@
+# Redirecciones que sirve Cloudflare Pages. Se copia tal cual a la raíz del
+# sitio publicado.
+
+# La pavlova de melocotón dejó la carta con su temporada y la de mango ocupó su
+# sitio. Los enlaces que ya se compartieron a la antigua llevan a la nueva.
+/catalogo/pavlova-de-melocoton /catalogo/pavlova-de-mango 301
