@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Home escritorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600&amp;family=Playfair+Display:wght@400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#edf0da}
+a{color:inherit;text-decoration:none}
+.disp{font-family:'Playfair Display',Georgia,serif;font-weight:400;letter-spacing:-.005em}
+.ante{font-size:12px;line-height:16px;font-weight:600;letter-spacing:.25em;text-transform:uppercase}
+.ley{font-size:10px;line-height:1.4;font-weight:600;letter-spacing:.3em;text-transform:uppercase}
+.dato{font-weight:400;letter-spacing:.18em;text-transform:uppercase}
+.acc{font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:#7c2513;color:#edf0da;padding:12px 24px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;box-shadow:0 10px 15px -3px rgba(0,0,0,.25)}
+.pill:hover{background:#000;color:#fff}
+.vidrio{display:inline-flex;align-items:center;gap:12px;border-radius:999px;border:1.5px solid rgba(237,240,218,.9);background:rgba(124,37,19,.7);color:#edf0da;padding:16px 40px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;backdrop-filter:blur(2px)}
+.vidrio:hover{background:#7c2513}
+.foto{position:relative;overflow:hidden;border-radius:24px;background:rgba(168,155,140,.15);box-shadow:0 0 0 1px rgba(168,155,140,.4),0 4px 6px -1px rgba(0,0,0,.05)}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.subr{border-bottom:1px solid rgba(237,240,218,.45);padding-bottom:4px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#edf0da}
+.subr:hover{border-color:#edf0da;color:#fff}
+.cambia{outline:3px dashed #2f6bd8;outline-offset:-3px}
+.chip{position:absolute;top:12px;left:12px;z-index:40;font-family:Karla,sans-serif;font-size:11px;font-weight:600;letter-spacing:.06em;padding:5px 10px;border-radius:4px;color:#fff;background:#2f6bd8;text-transform:none}
+.chip.igual{background:rgba(20,20,20,.62)}
+</style>
+</helmet>
+<div style="font-family: Karla, sans-serif; color: #000; background: #edf0da; width: 100%; min-width: 0">
+
+<!-- HEADER -->
+<header class="cambia" style="position: relative; background: #7c2513; color: #f0dfad">
+<span class="chip" style="{{chip}}">3 · CAMBIA: menú con «Personalizadas» y en el orden de la página</span>
+<div style="max-width: 1280px; margin: 0 auto; padding: 16px 24px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap">
+<a href="#" class="disp" style="font-size: 20px; line-height: 1.25; color: #f0dfad">Estimada Carmela</a>
+<div style="display: flex; align-items: center; gap: 40px; flex-wrap: wrap">
+<nav aria-label="Principal">
+<ul style="display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; flex-wrap: wrap">
+<li><a href="#carta" class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">La carta</a></li>
+<li><a href="#personalizadas" class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Personalizadas</a></li>
+<li><a href="#eventos" class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Eventos</a></li>
+<li><a href="#sobre-mi" class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Sobre mí</a></li>
+<li><a href="#contacto" class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Contacto</a></li>
+</ul>
+</nav>
+<div style="display: flex; gap: 8px">
+<a href="#" aria-label="Instagram" style="width: 36px; height: 36px; border-radius: 999px; display: grid; place-items: center; color: rgba(240,223,173,.8)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor"></circle></svg></a>
+<a href="#" aria-label="WhatsApp" style="width: 36px; height: 36px; border-radius: 999px; display: grid; place-items: center; color: rgba(240,223,173,.8)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"></path></svg></a>
+</div>
+</div>
+</div>
+</header>
+
+<!-- HERO -->
+<section class="cambia" style="position: relative">
+<span class="chip" style="{{chip}}">3 · CAMBIA: entradilla que nombra los tres servicios + fila de tres enlaces (misma composición)</span>
+<div style="position: relative; background: #7c2513; min-height: 560px; display: flex; align-items: center">
+<svg aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(237,240,218,.12); z-index: 10; -webkit-mask-image: linear-gradient(to right, black 50%, transparent 65%); mask-image: linear-gradient(to right, black 50%, transparent 65%); pointer-events: none">
+<defs>
+<path id="m-os" fill="none" stroke="currentColor" stroke-width="1" d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"></path>
+<path id="m-oh" fill="none" stroke="currentColor" stroke-width="1" d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"></path>
+<pattern id="m-ondas" width="240" height="132" patternUnits="userSpaceOnUse">
+<use href="#m-os" transform="translate(0 18)"></use><use href="#m-oh" transform="translate(80 54)"></use><use href="#m-os" transform="translate(170 90)"></use><use href="#m-oh" transform="translate(45 118)"></use>
+</pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#m-ondas)"></rect>
+</svg>
+<div style="position: relative; z-index: 20; max-width: 1280px; width: 100%; margin: 0 auto; padding: 0 24px; box-sizing: border-box">
+<div style="width: 50%; padding-right: 48px; box-sizing: border-box">
+<p class="ante" style="margin: 0; color: #edf0da">Alta pastelería · Málaga</p>
+<h1 class="disp" style="margin: 20px 0 0; font-size: 72px; line-height: 1.05; color: #edf0da; text-wrap: balance">La estética y el sabor pesan lo mismo</h1>
+<p style="margin: 24px 0 0; max-width: 30rem; font-size: 18px; line-height: 1.625; color: rgba(237,240,218,.8)">Tartas de temporada, tartas a tu medida y mesas dulces para tus celebraciones. Cada pieza se hace una a una, para el día concreto que celebras.</p>
+<ul style="list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px 28px">
+<li><a href="#carta" class="subr">La carta</a></li>
+<li><a href="#personalizadas" class="subr">Personalizadas</a></li>
+<li><a href="#eventos" class="subr">Eventos</a></li>
+</ul>
+<p style="margin: 24px 0 0; font-size: 12px; color: rgba(237,240,218,.6)">Todo por encargo · con dos días laborables de antelación</p>
+</div>
+</div>
+<div style="position: absolute; top: 0; bottom: 0; right: 0; width: 50%; overflow: hidden">
+<img src="/_blob/01153347497ca2f3feb9338203e8c08c" alt="Preparando un postre con la manga pastelera en el obrador." style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(to right, #7c2513, transparent 30%)"></div>
+<span class="chip" style="{{chipIgual}}; left: auto; right: 12px; top: auto; bottom: 12px">Foto: propongo pasar a trabajando2.jpeg y liberar la mesa dulce para Eventos</span>
+</div>
+</div>
+<div style="position: relative">
+<span class="chip igual" style="{{chipIgual}}">SIN CAMBIOS · franja de credenciales</span>
+<ul class="dato" style="list-style: none; margin: 0 auto; max-width: 1280px; padding: 0 24px; box-sizing: border-box; height: 80px; display: flex; align-items: center; justify-content: center; gap: 20px; font-size: 11px; color: rgba(0,0,0,.5)">
+<li>Escuela Torreblanca</li><li aria-hidden="true" style="width: 4px; height: 4px; border-radius: 99px; background: #a89b8c"></li>
+<li>Marbella Club</li><li aria-hidden="true" style="width: 4px; height: 4px; border-radius: 99px; background: #a89b8c"></li>
+<li>Saddle</li><li aria-hidden="true" style="width: 4px; height: 4px; border-radius: 99px; background: #a89b8c"></li>
+<li>DSTAgE</li>
+</ul>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 732px; border-top: 2px dashed #2f6bd8; z-index: 45; {{plieguePos}}">
+<span style="position: absolute; right: 12px; top: -26px; font-size: 11px; font-weight: 600; color: #2f6bd8; background: #fff; padding: 3px 8px; border-radius: 4px">pliegue portátil · 800 px útiles</span>
+</div>
+</section>
+
+<!-- CATÁLOGO: díptico con dos entradas -->
+<section id="catalogo" class="cambia" style="position: relative">
+<span class="chip" style="{{chip}}">1 · CAMBIA: el díptico pasa a dos entradas (misma pieza: a sangre, sin canal, velo + botón)</span>
+<h2 style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Tartas por encargo</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))">
+<div id="carta" style="position: relative; height: 700px; overflow: hidden; background: #a89b8c">
+<img src="/_blob/b098a47de2df133be8975a5acc28d0bf" alt="Pavlova coronada de gajos de melocotón asado, vista desde arriba." style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 46%; display: block">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse 46% 34% at 50% 50%, rgba(48,18,9,.52) 0%, rgba(48,18,9,.22) 55%, rgba(48,18,9,0) 78%)"></div>
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px">
+<p class="ley" style="margin: 0; color: #edf0da">Temporada · precio cerrado</p>
+<a href="#" class="vidrio">La carta <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+</div>
+<div id="personalizadas" style="position: relative; height: 700px; overflow: hidden; background: #a89b8c">
+<img src="/_blob/d2e9adbb82b303a8191147b52680b76f" alt="Tarta de boda de varios pisos con volantes blancos de azúcar." style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; display: block">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse 46% 34% at 50% 50%, rgba(48,18,9,.52) 0%, rgba(48,18,9,.22) 55%, rgba(48,18,9,0) 78%)"></div>
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px">
+<p class="ley" style="margin: 0; color: #edf0da">A medida · bodas, cumpleaños</p>
+<a href="#" class="vidrio">Personalizadas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- EVENTOS -->
+<section id="eventos" class="cambia" style="position: relative">
+<span class="chip" style="{{chip}}">2 · CAMBIA: solo montajes, un único destino /eventos (versión con 1 foto; 2–3 en su tablero)</span>
+<div style="max-width: 1280px; margin: 0 auto; padding: 48px 24px 40px; box-sizing: border-box">
+<p class="ante" style="margin: 0; color: #7c2513">Eventos</p>
+<h2 class="disp" style="margin: 20px 0 0; max-width: 42rem; font-size: 48px; line-height: 1.05; text-wrap: balance">Cada celebración, una mesa distinta</h2>
+<p style="margin: 24px 0 0; max-width: 34rem; font-size: 18px; line-height: 1.625; color: rgba(0,0,0,.8)">Mesas dulces, tartas y postres para el día que celebras. El montaje se piensa con la fecha, el sitio y los invitados delante, así que no sale dos veces igual.</p>
+<div style="margin-top: 32px">
+<a href="#" class="foto" style="display: block; aspect-ratio: 3 / 1">
+<img src="/_blob/e569883f23b37852da4e9ca01b20d3d6" alt="Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces." style="object-position: 50% 62%">
+<span class="pill" style="position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%)">Ver todos los eventos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+</a>
+<p class="dato" style="margin: 16px 0 0; font-size: 11px; color: rgba(0,0,0,.5)">Mesa dulce sobre musgo y eucalipto · cumpleaños · Málaga</p>
+</div>
+</div>
+</section>
+
+<!-- SOBRE MÍ -->
+<section id="sobre-mi" style="position: relative; padding: 80px 0">
+<span class="chip igual" style="{{chipIgual}}">SIN CAMBIOS · Sobre mí</span>
+<div style="position: relative">
+<div style="position: absolute; left: 0; right: 0; top: 40px; bottom: 40px; background: #7c2513; overflow: hidden">
+<svg aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(237,240,218,.12)">
+<defs>
+<pattern id="m-ondas2" width="240" height="132" patternUnits="userSpaceOnUse">
+<use href="#m-os" transform="translate(0 18)"></use><use href="#m-oh" transform="translate(80 54)"></use><use href="#m-os" transform="translate(170 90)"></use><use href="#m-oh" transform="translate(45 118)"></use>
+</pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#m-ondas2)"></rect>
+</svg>
+</div>
+<div style="position: relative; max-width: 1280px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: center">
+<div style="grid-column: 1 / 8; grid-row: 1; padding: 56px 64px 56px 0">
+<h2 class="disp" style="margin: 0; font-size: 72px; line-height: 1; color: #edf0da">Sobre mí</h2>
+<div style="margin-top: 40px; display: flex; flex-direction: column; gap: 32px">
+<p style="margin: 0; max-width: 65ch; font-size: 16px; line-height: 1.625; color: rgba(237,240,218,.8)">Estudié ADE y trabajé en una consultora, hasta que me decidí por lo que de verdad me apasionaba: me formé en alta pastelería en la Escuela Torreblanca.</p>
+<p style="margin: 0; max-width: 65ch; font-size: 16px; line-height: 1.625; color: rgba(237,240,218,.8)">Después llegaron Marbella Club y restaurantes con estrella Michelin como Saddle y DSTAgE. Ahí aprendí el valor de la precisión, del producto y del cuidado por cada detalle.</p>
+<p style="margin: 0; max-width: 65ch; font-size: 16px; line-height: 1.625; color: rgba(237,240,218,.8)">La pastelería es una forma de expresar cariño. De ahí nace Estimada Carmela: alta pastelería de Málaga para ocasiones en las que estética y sabor pesan lo mismo.</p>
+</div>
+<p class="disp" style="margin: 40px 0 0; font-size: 24px; color: #edf0da">Espero que disfrutéis de recibirlo tanto como yo disfruto creándolo.</p>
+</div>
+<div style="grid-column: 8 / 13; grid-row: 1; height: 608px; border-radius: 24px; overflow: hidden; box-shadow: 0 0 0 1px rgba(237,240,218,.15), 0 20px 25px -5px rgba(0,0,0,.2)">
+<img src="/_blob/8df404eb050331c33171429a6b54b27f" alt="Emplatando un postre con pinzas en el obrador." style="width: 100%; height: 100%; object-fit: cover; display: block">
+</div>
+</div>
+</div>
+</section>
+
+<!-- GALERÍA -->
+<section id="galeria" style="position: relative; padding: 96px 0">
+<span class="chip igual" style="{{chipIgual}}">SIN CAMBIOS · Galería</span>
+<div style="position: relative; overflow: hidden">
+<ul style="list-style: none; margin: 0; padding: 12px 0 12px 40px; display: flex; gap: 24px">
+<li style="flex: 0 0 368px"><div class="foto" style="aspect-ratio: 4 / 5"><img src="/_blob/01153347497ca2f3feb9338203e8c08c" alt="Preparando un postre con la manga pastelera."></div></li>
+<li style="flex: 0 0 368px"><div class="foto" style="aspect-ratio: 4 / 5"><img src="/_blob/da76b54eabaa554ac73b2f2f13dae7e9" alt="En blanco y negro, colocando decoración sobre bocados de chocolate."></div></li>
+<li style="flex: 0 0 368px"><div class="foto" style="aspect-ratio: 4 / 5"><img src="/_blob/8df404eb050331c33171429a6b54b27f" alt="Emplatando un postre con pinzas."></div></li>
+<li style="flex: 0 0 368px"><div class="foto" style="aspect-ratio: 4 / 5"><img src="/_blob/b098a47de2df133be8975a5acc28d0bf" alt="Pavlova de melocotón."></div></li>
+<li style="flex: 0 0 368px"><div class="foto" style="aspect-ratio: 4 / 5"><img src="/_blob/e569883f23b37852da4e9ca01b20d3d6" alt="Mesa dulce."></div></li>
+</ul>
+<button type="button" aria-label="Ver las fotos siguientes" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; border-radius: 999px; background: #7c2513; color: #edf0da; display: grid; place-items: center; box-shadow: 0 10px 15px -3px rgba(0,0,0,.25)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"></path></svg></button>
+</div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" style="position: relative">
+<span class="chip igual" style="{{chipIgual}}">SIN CAMBIOS · Contacto (resumido)</span>
+<div style="max-width: 1280px; margin: 0 auto; padding: 96px 24px; box-sizing: border-box">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: hidden; border-radius: 24px; background: #fff; box-shadow: 0 0 0 1px rgba(168,155,140,.25), 0 20px 25px -5px rgba(0,0,0,.05)">
+<div style="padding: 56px; display: flex; flex-direction: column; justify-content: center">
+<p class="ante" style="margin: 0; color: #7c2513">Málaga</p>
+<p class="disp" style="margin: 12px 0 0; font-size: 48px; line-height: 1.25">Escultor Marín Higuero, 6</p>
+<p style="margin: 12px 0 0; font-size: 14px; color: rgba(0,0,0,.6)">Primera planta — 29017</p>
+<dl style="margin: 32px 0 0">
+<div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(168,155,140,.4); padding: 12px 0; font-size: 14px"><dt style="font-weight: 500">Lunes a viernes</dt><dd style="margin: 0; color: rgba(0,0,0,.6)">09:00 – 18:00</dd></div>
+<div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(168,155,140,.4); padding: 12px 0; font-size: 14px"><dt style="font-weight: 500">Sábados y domingos</dt><dd style="margin: 0; color: rgba(0,0,0,.6)">Cerrado</dd></div>
+</dl>
+<div style="margin-top: 32px"><a href="#" class="pill">WhatsApp</a></div>
+</div>
+<div style="min-height: 26rem; background-image: url(/_blob/ee19720f50626a14ccaa42160b1113fb); background-size: cover; background-position: center"></div>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer class="cambia" style="position: relative; background: #7c2513; color: #f0dfad">
+<span class="chip" style="{{chip}}">3 · CAMBIA solo: el pie lee el mismo NAV, así que hereda el menú nuevo</span>
+<div style="max-width: 1280px; margin: 0 auto; padding: 64px 24px 48px; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap">
+<div>
+<p class="disp" style="margin: 0; font-size: 20px">Estimada Carmela</p>
+<p class="ante" style="margin: 16px 0 0">Encuéntranos</p>
+<p style="margin: 6px 0 0; font-size: 14px; color: rgba(240,223,173,.8)">Escultor Marín Higuero, 6 · Primera planta<br>29017 Málaga</p>
+</div>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; gap: 12px 32px; flex-wrap: wrap">
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">La carta</li>
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Personalizadas</li>
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Eventos</li>
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Sobre mí</li>
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Contacto</li>
+</ul>
+</div>
+<p class="dato" style="margin: 56px 0 0; border-top: 1px solid rgba(240,223,173,.15); padding-top: 24px; text-align: center; font-size: 12px; color: rgba(240,223,173,.8)">© 2026 Estimada Carmela · Málaga</p>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"marcas":{"editor":"boolean","default":true},"$preview":{"width":1440,"height":4520}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const on = this.props.marcas ?? true;
+    return {
+      chip: on ? '' : 'display:none',
+      chipIgual: on ? '' : 'display:none',
+      plieguePos: on ? '' : 'display:none'
+    };
+  }
+}
+</script>
+</body>
+</html>

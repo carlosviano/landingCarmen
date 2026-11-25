@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Galería ampliada · Bodas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&amp;family=Karla:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#f0dfad}a:hover{color:#edf0da}
+.disp{font-family:'Cormorant Garamond',Georgia,serif}
+.dato{font-family:Karla,sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.ghost{all:unset;cursor:pointer;width:52px;height:52px;border-radius:26px;border:1px solid rgba(237,240,218,.35);display:flex;align-items:center;justify-content:center;color:#edf0da}
+.ghost:hover{background:rgba(237,240,218,.12)}
+.ghost:focus-visible,.th:focus-visible,.zm:focus-visible{outline:2px solid #f0dfad;outline-offset:3px}
+.th{all:unset;cursor:pointer;display:block;width:48px;height:60px;border-radius:6px;overflow:hidden}
+kbd{font:500 11px Karla,sans-serif;padding:2px 6px;border:1px solid rgba(237,240,218,.35);border-radius:4px;color:#edf0da}
+</style>
+</helmet>
+<div role="dialog" aria-modal="true" aria-label="Fotos de Bodas a pantalla completa" style="width:1440px;height:900px;background:#1b1411;font-family:Karla,sans-serif;color:#edf0da;display:flex;flex-direction:column">
+  <div style="height:76px;flex-shrink:0;box-sizing:border-box;padding:0 40px;display:flex;align-items:center;justify-content:space-between">
+    <span style="display:flex;align-items:baseline;gap:18px">
+      <span class="disp" style="font-size:28px;color:#f0dfad">Bodas</span>
+      <span aria-live="polite" class="dato" style="color:rgba(237,240,218,.8)">{{cur.n}} / {{total}}</span>
+    </span>
+    <a href="FichaEscritorio.dc.html" class="ghost" aria-label="Cerrar galería">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+    </a>
+  </div>
+
+  <div style="flex:1;min-height:0;display:flex;align-items:center;justify-content:space-between;padding:0 40px">
+    <button class="ghost" onClick="{{prev}}" aria-label="Foto anterior">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    </button>
+    <div style="width:520px;height:650px;border-radius:14px;overflow:hidden;background:#2a201b;position:relative">
+      <button class="zm" onClick="{{toggleZoom}}" aria-label="{{zoomLabel}}" style="all:unset;position:absolute;inset:0;cursor:{{cursor}}">
+        <img src="{{cur.src}}" alt="{{cur.alt}}" style="width:100%;height:100%;object-fit:cover;object-position:{{cur.pos}};transform:scale({{scale}});transform-origin:50% 40%;transition:transform .3s ease">
+      </button>
+    </div>
+    <button class="ghost" onClick="{{next}}" aria-label="Foto siguiente">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+    </button>
+  </div>
+
+  <div style="height:150px;flex-shrink:0;box-sizing:border-box;padding:18px 40px 24px;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:end;gap:24px">
+    <p style="margin:0;font-size:14px;line-height:1.5;color:rgba(237,240,218,.85);max-width:380px">{{cur.cap}}</p>
+    <div style="display:flex;gap:8px">
+      <sc-for list="{{thumbs}}" as="t" hint-placeholder-count="6">
+        <button class="th" onClick="{{t.pick}}" aria-label="{{t.label}}" aria-current="{{t.current}}" style="box-shadow:{{t.ring}}">
+          <img src="{{t.src}}" alt="" style="width:100%;height:100%;object-fit:cover;object-position:{{t.pos}};opacity:{{t.op}}">
+        </button>
+      </sc-for>
+    </div>
+    <p style="margin:0;justify-self:end;display:flex;gap:14px;align-items:center;font-size:12px;color:rgba(237,240,218,.8)">
+      <span><kbd>←</kbd> <kbd>→</kbd> pasar</span><span><kbd>Esc</kbd> cerrar</span><span>clic o <kbd>Z</kbd> acercar</span>
+    </p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { i: 0, z: false }; }
+  renderVals() {
+    const fotos = [
+      { src: '/_blob/f95055443cf48bc906c623071e991076', pos: '50% 55%', alt: 'Tarta de boda de tres pisos cubierta de volantes blancos de azúcar, en una terraza.', cap: 'Volantes de azúcar en tres pisos · Boda en [Málaga], [2026] · [120] personas' },
+      { src: '/_blob/688be946245bea8810fdc99a284b5d6d', pos: '50% 50%', alt: 'Foto en blanco y negro: la novia ríe junto a la tarta de volantes blancos.', cap: 'El momento del corte · Foto: [nombre del fotógrafo]' },
+      { src: '/_blob/735c55f37d8a32a529bb613e00ad7ff1', pos: '30% 50%', alt: 'Carmela pinta con pincel una tarta rosa en el obrador.', cap: 'Pintada a mano en el obrador, la víspera' },
+      { src: '/_blob/28402a7b58e2ffa1fc5676cd9878be18', pos: '50% 60%', alt: 'Mesa de postres individuales entre flores silvestres y musgo.', cap: 'Con mesa de postres a juego · [120] personas' },
+      { src: '/_blob/bf6e10e7416e6e27c1acb31ef3c9392b', pos: '50% 50%', alt: 'Pavlova con melocotón asado sobre base dorada.', cap: 'Versión de un piso para la preboda · [12] personas' },
+      { src: '/_blob/f60519b861855210078375f771be07e2', pos: '50% 50%', alt: 'Detalle del merengue y el melocotón asado.', cap: 'Detalle del acabado' }
+    ];
+    const n = fotos.length, i = this.state.i, z = this.state.z;
+    const go = (k) => this.setState({ i: (k + n) % n, z: false });
+    return {
+      total: n,
+      cur: { ...fotos[i], n: i + 1 },
+      prev: () => go(i - 1),
+      next: () => go(i + 1),
+      scale: z ? 2 : 1,
+      cursor: z ? 'zoom-out' : 'zoom-in',
+      zoomLabel: z ? 'Alejar' : 'Acercar',
+      toggleZoom: () => this.setState({ z: !z }),
+      thumbs: fotos.map((f, k) => ({
+        src: f.src, pos: f.pos,
+        label: 'Ver foto ' + (k + 1) + ' de ' + n,
+        current: k === i ? 'true' : 'false',
+        ring: k === i ? '0 0 0 2px #1b1411, 0 0 0 3px #f0dfad' : 'none',
+        op: k === i ? 1 : 0.5,
+        pick: () => go(k)
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

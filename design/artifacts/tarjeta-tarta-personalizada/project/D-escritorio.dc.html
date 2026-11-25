@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>D · Carta de diseños — escritorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&amp;family=Karla:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7c2513}a:hover{color:#57190d}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1280px; height: 900px; box-sizing: border-box; padding: 64px 56px; background: #edf0da; color: #1a1a1a; font-family: 'Karla', sans-serif; display: flex; flex-direction: column; gap: 44px">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 48px">
+    <div>
+      <p style="margin: 0; font-weight: 600; font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; color: #7c2513">Diseños de Carmela</p>
+      <h2 style="margin: 16px 0 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 52px; line-height: 1.05">Elige uno, o deja que te proponga</h2>
+    </div>
+    <p style="margin: 0; max-width: 400px; font-size: 15px; line-height: 1.6; color: rgba(26,26,26,0.7)">Cada diseño se adapta en tamaño, colores y sabores. Los sabores salen de <a href="#">la carta</a>.</p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 56px; align-items: start">
+
+    <nav aria-label="Diseños" style="display: flex; flex-direction: column">
+      <div style="border-top: 1px solid rgba(168,155,140,0.6)">
+        <sc-for list="{{designs}}" as="d" hint-placeholder-count="3">
+          <div style="border-bottom: 1px solid rgba(168,155,140,0.6)">
+            <sc-if value="{{d.selected}}" hint-placeholder-val="{{false}}">
+              <button type="button" onClick="{{d.pick}}" aria-current="true" style="width: 100%; min-height: 84px; display: flex; align-items: center; gap: 18px; padding: 0 18px; border: 0; border-radius: 16px; margin: 6px 0; background: #ffffff; box-shadow: 0 0 0 1px rgba(168,155,140,0.6); cursor: pointer; text-align: left; color: #1a1a1a">
+                <span style="font-size: 11px; letter-spacing: 0.2em; color: #7c2513">{{d.num}}</span>
+                <span style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+                  <span style="font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 26px; line-height: 1.1; color: #7c2513">{{d.name}}</span>
+                  <span style="font-size: 12px; color: rgba(26,26,26,0.6)">{{d.occ}}</span>
+                </span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c2513" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </button>
+            </sc-if>
+            <sc-if value="{{d.notSelected}}" hint-placeholder-val="{{true}}">
+              <button type="button" onClick="{{d.pick}}" style="width: 100%; min-height: 84px; display: flex; align-items: center; gap: 18px; padding: 0 18px; margin: 6px 0; border: 0; background: transparent; cursor: pointer; text-align: left; color: #1a1a1a">
+                <span style="font-size: 11px; letter-spacing: 0.2em; color: rgba(26,26,26,0.4)">{{d.num}}</span>
+                <span style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+                  <span style="font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 26px; line-height: 1.1">{{d.name}}</span>
+                  <span style="font-size: 12px; color: rgba(26,26,26,0.6)">{{d.occ}}</span>
+                </span>
+              </button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <a href="#" style="margin-top: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 22px; border-radius: 16px; background: #7c2513; color: #edf0da; text-decoration: none">
+        <span style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-weight: 600; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #f0dfad">¿No sabes cuál?</span>
+          <span style="font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 22px; line-height: 1.15">Te propongo uno para tu ocasión</span>
+        </span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f0dfad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+      </a>
+    </nav>
+
+    <section aria-live="polite" style="display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 40px; align-items: start">
+      <div style="aspect-ratio: 4 / 5; border-radius: 24px; overflow: hidden; background: rgba(168,155,140,0.18)">
+        <sc-if value="{{hasPhoto}}" hint-placeholder-val="{{true}}">
+          <img src="{{photo.src}}" alt="{{photo.alt}}" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: {{photo.pos}}">
+        </sc-if>
+        <sc-if value="{{noPhoto}}" hint-placeholder-val="{{false}}">
+          <div style="height: 100%; display: grid; place-items: center; font-weight: 600; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(124,37,19,0.7)">Foto pendiente</div>
+        </sc-if>
+      </div>
+
+      <div style="display: flex; flex-direction: column; padding-top: 8px">
+        <p style="margin: 0; font-weight: 600; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #7c2513">{{cur.occ}}</p>
+        <h3 style="margin: 12px 0 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 46px; line-height: 1.05">{{cur.name}}</h3>
+        <p style="margin: 16px 0 0; font-size: 15px; line-height: 1.6; color: rgba(26,26,26,0.72)">[Descripción del diseño: cómo es, qué lleva por fuera, para cuántas personas sale y qué se puede cambiar.]</p>
+
+        <sc-if value="{{hasPhoto}}" hint-placeholder-val="{{true}}">
+          <div style="margin-top: 24px">
+            <p style="margin: 0; font-weight: 600; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(26,26,26,0.55)">Fotos · {{count}}</p>
+            <div style="margin-top: 10px; display: flex; gap: 10px">
+              <sc-for list="{{thumbs}}" as="t" hint-placeholder-count="2">
+                <sc-if value="{{t.selected}}" hint-placeholder-val="{{false}}">
+                  <button type="button" onClick="{{t.pick}}" aria-label="{{t.label}}" aria-current="true" style="width: 64px; height: 64px; padding: 0; border: 0; border-radius: 12px; overflow: hidden; cursor: pointer; box-shadow: 0 0 0 2px #edf0da, 0 0 0 4px #7c2513"><img src="{{t.src}}" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: {{t.pos}}"></button>
+                </sc-if>
+                <sc-if value="{{t.notSelected}}" hint-placeholder-val="{{true}}">
+                  <button type="button" onClick="{{t.pick}}" aria-label="{{t.label}}" style="width: 64px; height: 64px; padding: 0; border: 0; border-radius: 12px; overflow: hidden; cursor: pointer; opacity: 0.75"><img src="{{t.src}}" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: {{t.pos}}"></button>
+                </sc-if>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(168,155,140,0.6); display: flex; align-items: center; justify-content: space-between; gap: 16px">
+          <span style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(26,26,26,0.55)">A presupuesto</span>
+          <a href="#" style="min-height: 48px; display: inline-flex; align-items: center; padding: 0 28px; border-radius: 999px; background: #7c2513; color: #edf0da; font-weight: 500; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none">Pedir esta tarta</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { picked: 0, foto: 0 };
+}
+renderVals() {
+var data = [
+{ num: '01', name: 'La rosa', occ: 'Cumpleaños · Aniversarios', photos: [
+{ src: '/_blob/61f521aa6f53671300c2c7d90874d5a7', pos: '28% 75%', alt: 'Tarta rosa con borde de merengue mientras se pinta a pincel su glaseado rojo.' },
+{ src: '/_blob/ec59c1b08efe0550e61b6012ef18bf95', pos: '50% 50%', alt: 'Manos decorando a pincel una pieza de pastelería, en blanco y negro.' }
+] },
+{ num: '02', name: 'Volantes de azúcar', occ: 'Bodas · Bautizos', photos: [
+{ src: '/_blob/4e8bb62d27e262706db3f90d202334f5', pos: '50% 55%', alt: 'Tarta de varios pisos cubierta de volantes blancos de azúcar.' },
+{ src: '/_blob/a04b35f30fc24f0bd8f68bf64fdf6235', pos: '50% 50%', alt: 'La novia junto a la tarta de volantes blancos, en blanco y negro.' }
+] },
+{ num: '03', name: '[Diseño 3]', occ: '[Ocasiones]', photos: [] }
+];
+var self = this;
+var picked = this.state.picked;
+var cur = data[picked];
+var foto = Math.min(this.state.foto, Math.max(cur.photos.length - 1, 0));
+var photo = cur.photos[foto] || { src: '', pos: '50% 50%', alt: '' };
+return {
+designs: data.map(function (d, i) {
+return { num: d.num, name: d.name, occ: d.occ, selected: i === picked, notSelected: i !== picked, pick: function () { self.setState({ picked: i, foto: 0 }); } };
+}),
+cur: cur,
+photo: photo,
+hasPhoto: cur.photos.length > 0,
+noPhoto: cur.photos.length === 0,
+count: cur.photos.length,
+thumbs: cur.photos.map(function (p, i) {
+return { src: p.src, pos: p.pos, label: 'Ver foto ' + (i + 1) + ' de ' + cur.photos.length, selected: i === foto, notSelected: i !== foto, pick: function () { self.setState({ foto: i }); } };
+})
+};
+}
+}
+</script>
+</body>
+</html>

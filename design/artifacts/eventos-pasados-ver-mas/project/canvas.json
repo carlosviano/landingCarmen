@@ -1,0 +1,104 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "CintaMovil.dc.html": {
+      "expand": "fill",
+      "h": 2560,
+      "is_interactive": true,
+      "title": "A · Cinta — móvil",
+      "w": 430,
+      "x": 0,
+      "y": 2960
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 1900,
+      "is_interactive": true,
+      "title": "A · Cinta — escritorio",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "Mosaico.dc.html": {
+      "expand": "fill",
+      "h": 2140,
+      "is_interactive": true,
+      "title": "B · Mosaico — escritorio",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "MosaicoMovil.dc.html": {
+      "expand": "fill",
+      "h": 3120,
+      "is_interactive": true,
+      "title": "B · Mosaico — móvil",
+      "w": 430,
+      "x": 1360,
+      "y": 2960
+    },
+    "Relato.dc.html": {
+      "expand": "fill",
+      "h": 2840,
+      "is_interactive": true,
+      "title": "C · Relato — escritorio",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    },
+    "RelatoMovil.dc.html": {
+      "expand": "fill",
+      "h": 3300,
+      "is_interactive": true,
+      "title": "C · Relato — móvil",
+      "w": 430,
+      "x": 2720,
+      "y": 2960
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-04T19:10:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "tA": {
+      "kind": "title1",
+      "maxW": 1280,
+      "text": "A · Cinta",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "tB": {
+      "kind": "title1",
+      "maxW": 1280,
+      "text": "B · Mosaico",
+      "w": 240,
+      "x": 1360,
+      "y": -300
+    },
+    "tC": {
+      "kind": "title1",
+      "maxW": 1280,
+      "text": "C · Relato",
+      "w": 240,
+      "x": 2720,
+      "y": -300
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Mosaico.dc.html",
+    "Relato.dc.html",
+    "CintaMovil.dc.html",
+    "MosaicoMovil.dc.html",
+    "RelatoMovil.dc.html"
+  ],
+  "pages": [],
+  "title": "Eventos pasados: ver más"
+}

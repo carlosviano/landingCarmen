@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Ficha personalizada · Bodas · móvil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&amp;family=Karla:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7c2513}a:hover{color:#561a0d}
+.disp{font-family:'Cormorant Garamond',Georgia,serif}
+.ante{font-family:Karla,sans-serif;font-size:11px;font-weight:600;letter-spacing:.25em;text-transform:uppercase}
+.ley{font-family:Karla,sans-serif;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase}
+.dato{font-family:Karla,sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase}
+.acc{font-family:Karla,sans-serif;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.circ{all:unset;cursor:pointer;width:44px;height:44px;border-radius:22px;background:rgba(237,240,218,.92);display:flex;align-items:center;justify-content:center;color:#141410}
+.chip{all:unset;cursor:pointer;box-sizing:border-box;min-height:44px;padding:0 16px;border-radius:22px;display:inline-flex;align-items:center;font-size:14px}
+.chip:focus-visible,.circ:focus-visible{outline:2px solid #7c2513;outline-offset:3px}
+.fld{box-sizing:border-box;width:100%;height:50px;border:1px solid rgba(20,20,16,.45);border-radius:25px;background:transparent;padding:0 18px;font:15px Karla,sans-serif;color:#141410}
+.cta{text-decoration:none;display:flex;align-items:center;justify-content:center;gap:10px;height:52px;border-radius:26px;background:#7c2513;color:#edf0da}
+</style>
+</helmet>
+<div style="position:relative;width:430px;height:2560px;background:#edf0da;font-family:Karla,sans-serif;color:#141410;overflow:hidden">
+  <header style="background:#7c2513;height:64px;box-sizing:border-box;padding:0 22px;display:flex;align-items:center;justify-content:space-between">
+    <span class="disp" style="font-size:24px;color:#f0dfad">Estimada Carmela</span>
+    <button aria-label="Abrir menú" style="all:unset;width:44px;height:44px;box-sizing:border-box;border:1px solid rgba(240,223,173,.5);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#f0dfad">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+    </button>
+  </header>
+
+  <div style="padding:20px 22px 0">
+    <a href="CatalogoMovil.dc.html" class="acc" style="display:inline-flex;align-items:center;height:44px;padding:0 18px;border:1px solid #a89b8c;border-radius:22px;font-size:10px;letter-spacing:.18em;text-decoration:none;color:#7c2513">Volver a personalizadas</a>
+    <p class="ante" style="margin:28px 0 0;text-align:center;color:#7c2513">Personalizada</p>
+    <h1 class="disp" style="margin:8px 0 0;text-align:center;font-weight:400;font-size:46px;line-height:1;color:#7c2513">Bodas</h1>
+  </div>
+
+  <section aria-label="Fotos de Bodas" aria-roledescription="carrusel" style="margin-top:22px">
+    <div style="width:430px;overflow:hidden">
+      <div style="display:flex;gap:10px;padding-left:22px;transform:translateX({{shift}}px);transition:transform .35s ease">
+        <sc-for list="{{slides}}" as="s" hint-placeholder-count="6">
+          <div style="position:relative;flex:0 0 372px;height:465px;border-radius:22px;overflow:hidden;background:#e3e4d0">
+            <button onClick="{{next}}" aria-label="Foto siguiente" style="all:unset;cursor:pointer;position:absolute;inset:0">
+              <img src="{{s.src}}" alt="{{s.alt}}" style="width:100%;height:100%;object-fit:cover;object-position:{{s.pos}}">
+            </button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="position:relative;margin:-465px 0 0;height:465px;width:394px;pointer-events:none">
+      <a href="Lightbox.dc.html" class="circ" aria-label="Ver a pantalla completa" style="position:absolute;top:12px;right:0;pointer-events:auto;margin-right:12px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"></path></svg>
+      </a>
+    </div>
+
+    <div style="padding:16px 22px 0;display:flex;align-items:center;justify-content:space-between">
+      <span aria-hidden="true" style="display:flex;gap:6px;align-items:center">
+        <sc-for list="{{dots}}" as="d" hint-placeholder-count="6">
+          <span style="height:6px;border-radius:3px;width:{{d.w}}px;background:{{d.c}};transition:width .25s"></span>
+        </sc-for>
+      </span>
+      <span aria-live="polite" class="dato" style="color:#7c2513">{{cur.n}} / {{total}}</span>
+    </div>
+    <p style="margin:10px 22px 0;font-size:13px;line-height:1.5;color:#4a4b42;min-height:40px">{{cur.cap}}</p>
+  </section>
+
+  <div style="padding:20px 22px 0">
+    <p style="margin:0;font-size:15px;line-height:1.7;color:#33342c">Tartas de varios pisos pensadas para el día. Partimos de lo que ves en las fotos y lo ajustamos a vuestra boda: pisos, sabores, flores y acabado.</p>
+
+    <p class="ley" style="margin:32px 0 8px;color:#7c2513">Qué se puede elegir</p>
+    <dl style="margin:0;font-size:14px">
+      <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-top:1px solid #c9cbb8"><dt class="dato" style="color:#4a4b42">Pisos</dt><dd style="margin:0">De 1 a [4]</dd></div>
+      <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-top:1px solid #c9cbb8"><dt class="dato" style="color:#4a4b42">Sabores</dt><dd style="margin:0">Cualquiera de la carta</dd></div>
+      <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-top:1px solid #c9cbb8"><dt class="dato" style="color:#4a4b42">Acabado</dt><dd style="margin:0;text-align:right">Volantes, flores, pintada</dd></div>
+      <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-top:1px solid #c9cbb8"><dt class="dato" style="color:#4a4b42">Personas</dt><dd style="margin:0">20–150</dd></div>
+      <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-top:1px solid #c9cbb8"><dt class="dato" style="color:#4a4b42">Antelación</dt><dd style="margin:0">[4–8 semanas]</dd></div>
+      <div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-top:1px solid #c9cbb8;border-bottom:1px solid #c9cbb8"><dt class="dato" style="color:#4a4b42">Orientativo</dt><dd style="margin:0;color:#7c2513;font-weight:500">desde [180 €]</dd></div>
+    </dl>
+
+    <section id="presupuesto" aria-labelledby="tit-presu" style="margin-top:44px;padding:28px 22px 26px;border-radius:24px;background:#e3e4d0;display:flex;flex-direction:column;gap:22px">
+      <div>
+        <p class="ley" style="margin:0;color:#7c2513">Pedir presupuesto</p>
+        <h2 id="tit-presu" class="disp" style="margin:8px 0 0;font-weight:400;font-size:32px;line-height:1.05">Cuéntame tu idea</h2>
+        <p style="margin:10px 0 0;font-size:14px;line-height:1.55;color:#33342c">Cuatro datos y se abre WhatsApp con el mensaje escrito. No se envía nada hasta que lo mandes tú.</p>
+      </div>
+
+      <fieldset style="border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+        <legend class="ley" style="padding:0;margin-bottom:10px;color:#141410">Ocasión</legend>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ocasiones}}" as="o" hint-placeholder-count="4">
+            <button class="chip" onClick="{{o.pick}}" aria-pressed="{{o.on}}" style="border:1px solid {{o.bd}};background:{{o.bg}};color:{{o.fg}}">{{o.t}}</button>
+          </sc-for>
+        </div>
+      </fieldset>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <label for="fecha" class="ley" style="color:#141410">Fecha del evento</label>
+        <input id="fecha" class="fld" type="text" inputmode="numeric" placeholder="Elige día">
+      </div>
+
+      <fieldset style="border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+        <legend class="ley" style="padding:0;margin-bottom:10px;color:#141410">Personas</legend>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+          <sc-for list="{{personas}}" as="o" hint-placeholder-count="4">
+            <button class="chip" onClick="{{o.pick}}" aria-pressed="{{o.on}}" style="justify-content:center;padding:0;border:1px solid {{o.bd}};background:{{o.bg}};color:{{o.fg}}">{{o.t}}</button>
+          </sc-for>
+        </div>
+      </fieldset>
+
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <label for="idea" class="ley" style="color:#141410">Tu idea <span style="font-weight:400;letter-spacing:.1em;text-transform:none;color:#4a4b42">(opcional)</span></label>
+        <textarea id="idea" rows="3" placeholder="Colores, flores, un tema, lo que te imagines…" style="box-sizing:border-box;width:100%;border:1px solid rgba(20,20,16,.45);border-radius:18px;background:transparent;padding:14px 18px;font:15px/1.5 Karla,sans-serif;color:#141410;resize:none"></textarea>
+      </div>
+
+      <label style="display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.45;cursor:pointer">
+        <input type="checkbox" checked="{{ref}}" onChange="{{toggleRef}}" style="width:20px;height:20px;margin:1px 0 0;accent-color:#7c2513;flex-shrink:0">
+        <span>Usar como referencia la foto que estaba viendo <span style="color:#7c2513">(foto {{cur.n}} de Bodas)</span></span>
+      </label>
+
+      <a href="Presupuesto.dc.html" class="cta acc" style="font-size:12px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 19l1.4-3.6A8 8 0 1 1 8.6 18.6z"></path></svg>
+        Seguir en WhatsApp
+      </a>
+      <p style="margin:-6px 0 0;font-size:12px;line-height:1.6;color:#4a4b42">Es una consulta, no una reserva. Te respondo en [24–48 h] con precio y disponibilidad. ¿Tienes fotos de referencia? Mándalas en el mismo chat.</p>
+    </section>
+  </div>
+
+  <div style="position:absolute;left:0;top:856px;width:430px;height:76px;box-sizing:border-box;padding:0 22px;background:rgba(237,240,218,.96);border-top:1px solid #c9cbb8;display:flex;align-items:center;justify-content:space-between;gap:16px">
+    <span style="display:flex;flex-direction:column;gap:2px"><span class="dato" style="color:#4a4b42">Orientativo</span><span style="font-size:17px;font-weight:500;color:#7c2513">desde [180 €]</span></span>
+    <a href="#presupuesto" class="acc" style="text-decoration:none;display:inline-flex;align-items:center;height:48px;padding:0 24px;border-radius:24px;background:#7c2513;color:#edf0da;font-size:12px">Pedir presupuesto</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":430,"height":2560}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { i: 0, oc: 'Boda', pe: '80–150', ref: true }; }
+  renderVals() {
+    const fotos = [
+      { src: '/_blob/f95055443cf48bc906c623071e991076', pos: '50% 55%', alt: 'Tarta de boda de tres pisos cubierta de volantes blancos de azúcar, en una terraza.', cap: 'Volantes de azúcar en tres pisos · Boda en [Málaga], [2026] · [120] personas' },
+      { src: '/_blob/688be946245bea8810fdc99a284b5d6d', pos: '50% 50%', alt: 'Foto en blanco y negro: la novia ríe junto a la tarta de volantes blancos.', cap: 'El momento del corte · Foto: [nombre del fotógrafo]' },
+      { src: '/_blob/735c55f37d8a32a529bb613e00ad7ff1', pos: '30% 50%', alt: 'Carmela pinta con pincel una tarta rosa en el obrador.', cap: 'Pintada a mano en el obrador, la víspera' },
+      { src: '/_blob/28402a7b58e2ffa1fc5676cd9878be18', pos: '50% 60%', alt: 'Mesa de postres individuales entre flores silvestres y musgo.', cap: 'Con mesa de postres a juego · [120] personas' },
+      { src: '/_blob/bf6e10e7416e6e27c1acb31ef3c9392b', pos: '50% 50%', alt: 'Pavlova con melocotón asado sobre base dorada.', cap: 'Versión de un piso para la preboda · [12] personas' },
+      { src: '/_blob/f60519b861855210078375f771be07e2', pos: '50% 50%', alt: 'Detalle del merengue y el melocotón asado.', cap: 'Detalle del acabado' }
+    ];
+    const n = fotos.length, i = this.state.i;
+    const chip = (t, on, pick) => ({ t, on: on ? 'true' : 'false', pick, bd: on ? '#7c2513' : 'rgba(20,20,16,.45)', bg: on ? '#7c2513' : 'transparent', fg: on ? '#edf0da' : '#141410' });
+    return {
+      total: n,
+      cur: { ...fotos[i], n: i + 1 },
+      shift: -(i * 382),
+      slides: fotos,
+      next: () => this.setState({ i: (i + 1) % n }),
+      dots: fotos.map((f, k) => ({ w: k === i ? 18 : 6, c: k === i ? '#7c2513' : '#a89b8c' })),
+      ref: this.state.ref,
+      toggleRef: () => this.setState({ ref: !this.state.ref }),
+      ocasiones: ['Boda', 'Cumpleaños', 'Bautizo', 'Otra'].map((t) => chip(t, this.state.oc === t, () => this.setState({ oc: t }))),
+      personas: ['<30', '30–80', '80–150', '150+'].map((t) => chip(t, this.state.pe === t, () => this.setState({ pe: t })))
+    };
+  }
+}
+</script>
+</body>
+</html>

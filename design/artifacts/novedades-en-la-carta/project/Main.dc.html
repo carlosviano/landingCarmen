@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>La carta con novedades</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&amp;family=Karla:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#edf0da}
+a{color:#7c2513}a:hover{color:#571a0d}
+.titular{font-family:'Fraunces',Georgia,serif;font-weight:300;letter-spacing:-0.015em}
+.titulo{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-0.005em}
+.antetitulo{font-family:'Karla',sans-serif;font-size:12px;line-height:16px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase}
+.leyenda{font-family:'Karla',sans-serif;font-size:10px;line-height:1.4;font-weight:600;letter-spacing:0.3em;text-transform:uppercase}
+.dato{font-family:'Karla',sans-serif;font-weight:400;letter-spacing:0.18em;text-transform:uppercase}
+.accion{font-family:'Karla',sans-serif;font-weight:500;letter-spacing:0.1em;text-transform:uppercase}
+.tarjeta:hover .nombre{color:#7c2513}
+.boton:hover{background:#571a0d !important}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 1960px; background: #edf0da; color: #000; font-family: 'Karla', sans-serif;">
+
+  <header style="background: #7c2513; color: #f0dfad;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+      <a href="#" class="titulo" style="font-size: 26px; color: #f0dfad; text-decoration: none;">Estimada Carmela</a>
+      <nav aria-label="Principal" style="display: flex; gap: 28px; flex-wrap: wrap;">
+        <a href="#" class="accion" style="font-size: 12px; color: #f0dfad; text-decoration: none;">Carta</a>
+        <a href="#" class="accion" style="font-size: 12px; color: rgba(240,223,173,0.8); text-decoration: none;">Personalizadas</a>
+        <a href="#" class="accion" style="font-size: 12px; color: rgba(240,223,173,0.8); text-decoration: none;">Eventos</a>
+      </nav>
+    </div>
+  </header>
+
+  <div style="max-width: 1280px; margin: 0 auto; padding: 80px 24px 0; box-sizing: border-box; text-align: center;">
+    <p class="antetitulo" style="margin: 0; color: #7c2513;">Nuestra carta</p>
+    <h1 class="titular" style="margin: 14px 0 0; font-size: 52px; line-height: 1.15;">La carta</h1>
+    <p style="margin: 18px auto 0; max-width: 54ch; line-height: 1.65; color: rgba(0,0,0,0.62);">Todas por encargo. El tamaño y la antelación de cada una están en su ficha.</p>
+  </div>
+
+  <sc-if value="{{ franja }}" hint-placeholder-val="{{ true }}">
+    <section aria-labelledby="novedades" style="margin-top: 48px; background: #f0dfad;">
+      <div style="max-width: 1280px; margin: 0 auto; padding: 56px 24px 60px; box-sizing: border-box;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap;">
+          <div>
+            <p class="antetitulo" style="margin: 0; color: #7c2513;">Recién salidas del obrador</p>
+            <h2 id="novedades" class="titulo" style="margin: 12px 0 0; font-size: 38px; line-height: 1.1;">Novedades en la carta</h2>
+          </div>
+          <p class="dato" style="margin: 0; font-size: 11px; color: rgba(0,0,0,0.6);">Otoño 2026 · 2 tartas nuevas</p>
+        </div>
+
+        <div style="margin-top: 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 24px;">
+          <sc-for list="{{ destacadas }}" as="d" hint-placeholder-count="2">
+            <article style="display: grid; grid-template-columns: 200px minmax(0, 1fr); overflow: hidden; border-radius: 24px; background: #ffffff; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); outline: 1px solid rgba(168,155,140,0.6); min-height: 300px;">
+              <div style="position: relative; background: rgba(168,155,140,0.15);">
+                <sc-if value="{{ d.foto }}" hint-placeholder-val="{{ true }}">
+                  <img src="{{ d.foto }}" alt="{{ d.alt }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 14px; box-sizing: border-box;">
+                </sc-if>
+                <sc-if value="{{ d.pendiente }}" hint-placeholder-val="{{ false }}">
+                  <div class="leyenda" style="position: absolute; inset: 12px; display: grid; place-items: center; text-align: center; border: 1px dashed rgba(168,155,140,0.9); border-radius: 16px; color: rgba(0,0,0,0.55);">Foto pendiente</div>
+                </sc-if>
+              </div>
+              <div style="display: flex; flex-direction: column; padding: 28px 32px;">
+                <p class="leyenda" style="margin: 0; color: #7c2513;">{{ d.etiqueta }}</p>
+                <h3 class="titulo" style="margin: 10px 0 0; font-size: 32px; line-height: 1.1;">{{ d.nombre }}</h3>
+                <p style="margin: 10px 0 0; font-size: 14px; line-height: 1.65; color: rgba(0,0,0,0.7);">{{ d.texto }}</p>
+                <div style="margin-top: auto; padding-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                  <span class="dato" style="font-size: 11px; color: rgba(0,0,0,0.6);">{{ d.precio }}</span>
+                  <a href="#" class="accion boton" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 999px; background: #7c2513; color: #edf0da; font-size: 11px; text-decoration: none;">Ver la tarta</a>
+                </div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <div style="max-width: 1280px; margin: 0 auto; padding: 56px 24px 96px; box-sizing: border-box;">
+    <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); column-gap: 28px; row-gap: 48px;">
+      <sc-for list="{{ tartas }}" as="t" hint-placeholder-count="8">
+        <li>
+          <a href="#" class="tarjeta" style="display: flex; flex-direction: column; height: 100%; color: #000; text-decoration: none;">
+            <div style="position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 24px; background: rgba(168,155,140,0.15);">
+              <sc-if value="{{ t.foto }}" hint-placeholder-val="{{ true }}">
+                <img src="{{ t.foto }}" alt="{{ t.alt }}" style="width: 100%; height: 100%; object-fit: contain; padding: 12px; box-sizing: border-box;">
+              </sc-if>
+              <sc-if value="{{ t.pendiente }}" hint-placeholder-val="{{ false }}">
+                <div class="leyenda" style="position: absolute; inset: 12px; display: grid; place-items: center; border: 1px dashed rgba(168,155,140,0.9); border-radius: 16px; color: rgba(0,0,0,0.55);">Foto pendiente</div>
+              </sc-if>
+              <sc-if value="{{ t.pastillaRust }}" hint-placeholder-val="{{ false }}">
+                <span class="leyenda" style="position: absolute; top: 14px; left: 14px; padding: 7px 12px 6px 14px; border-radius: 999px; background: #7c2513; color: #edf0da;">Nueva</span>
+              </sc-if>
+              <sc-if value="{{ t.pastillaSand }}" hint-placeholder-val="{{ false }}">
+                <span class="leyenda" style="position: absolute; top: 14px; left: 14px; padding: 7px 12px 6px 14px; border-radius: 999px; background: #f0dfad; color: #7c2513; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">Nueva</span>
+              </sc-if>
+            </div>
+            <sc-if value="{{ t.leyendaTexto }}" hint-placeholder-val="{{ false }}">
+              <p class="leyenda" style="margin: 16px 0 0; color: #7c2513;">Nueva en la carta</p>
+            </sc-if>
+            <div style="display: flex; align-items: baseline; gap: 10px; margin-top: {{ t.margenNombre }}; padding-bottom: 14px;">
+              <span aria-hidden="true" style="font-size: 10px; letter-spacing: 0.2em; color: rgba(0,0,0,0.4); font-variant-numeric: tabular-nums;">{{ t.num }}</span>
+              <h3 class="titulo nombre" style="margin: 0; font-size: 20px; line-height: 1.375;">{{ t.nombre }}</h3>
+            </div>
+            <div style="margin-top: auto; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; border-top: 1px solid rgba(168,155,140,0.5); padding-top: 10px;">
+              <span style="font-size: 12px; color: rgba(0,0,0,0.6);">{{ t.personas }}</span>
+              <span style="font-size: 14px; font-weight: 500; color: #7c2513; white-space: nowrap;">{{ t.desde }}</span>
+            </div>
+          </a>
+        </li>
+      </sc-for>
+    </ul>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"sello":{"editor":"enum","options":["pastilla rust","pastilla sand","leyenda sobre el nombre","sin sello"],"default":"pastilla rust","section":"Novedades"},"franja":{"editor":"boolean","default":true,"section":"Novedades"},"$preview":{"width":1280,"height":1960}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sello = this.props.sello ?? 'pastilla rust';
+    const franja = this.props.franja ?? true;
+    const base = [
+      { nombre: 'Tartaleta de lima', foto: '/_blob/b55fca157077693186f9080a63899c31', alt: 'Tartaleta de sablé cubierta de picos de merengue con ralladura de lima.', personas: '4–6 · 8–10 personas', desde: 'desde 25 €' },
+      { nombre: 'Tartaleta de chocolate negro 70,5%', foto: '/_blob/4ebbcdd931b4ab978554c00fa7ecfb90', alt: 'Cúpula de chocolate negro con glaseado espejo sobre tartaleta.', personas: '4–6 · 8–10 personas', desde: 'desde 27 €' },
+      { nombre: 'Pavlova de mango', foto: '/_blob/defb380326ce97364228164e9f5a4897', alt: 'Pavlova alta de merengue coronada de fruta.', personas: '4–6 · 8–10 personas', desde: 'desde 25 €', nueva: true },
+      { nombre: 'Tarta de la abuela', foto: '/_blob/ad4df2bb4b304a256569da10c217e24d', alt: 'Tarta de la abuela de galleta y chocolate.', personas: '4–6 · 8–10 personas', desde: 'desde 27 €' },
+      { nombre: 'Tarta de nueces de macadamia', foto: '/_blob/55a48bb7786c01e11711f92a8fff53a5', alt: 'Tarta de nueces de macadamia.', personas: '8–10 personas', desde: '45 €' },
+      { nombre: 'Galleta XL', foto: '/_blob/736e84a0ba9f281e08d9d0780ab89664', alt: 'Galleta grande con pepitas de chocolate.', personas: 'Tamaño único', desde: '16 €' },
+      { nombre: 'Paris-Brest', foto: '/_blob/47515aef1439f118d27b7b37139e8ada', alt: 'Corona de choux rellena de crema de avellana.', personas: '4–6 · 8–10 personas', desde: 'desde 27 €' },
+      { nombre: '[Nueva tarta]', foto: '', pendiente: true, alt: '', personas: '[personas]', desde: 'desde [PRECIO]', nueva: true }
+    ];
+    const tartas = base.map((t, i) => {
+      const n = !!t.nueva;
+      const texto = n && sello === 'leyenda sobre el nombre';
+      return {
+        ...t,
+        num: String(i + 1).padStart(2, '0'),
+        pendiente: !!t.pendiente,
+        pastillaRust: n && sello === 'pastilla rust',
+        pastillaSand: n && sello === 'pastilla sand',
+        leyendaTexto: texto,
+        margenNombre: texto ? '6px' : '18px'
+      };
+    });
+    const destacadas = [
+      { nombre: 'Pavlova de mango', etiqueta: 'Nueva · de temporada', foto: '/_blob/defb380326ce97364228164e9f5a4897', pendiente: false, alt: 'Pavlova alta de merengue coronada de fruta.', texto: '[Dos líneas de Carmen: qué lleva y por qué ahora. Ocupa el sitio de la de melocotón.]', precio: 'desde 25 € · 4–6 / 8–10 pers.' },
+      { nombre: '[Nueva tarta]', etiqueta: 'Nueva', foto: '', pendiente: true, alt: '', texto: '[Dos líneas de Carmen sobre la tarta nueva.]', precio: 'desde [PRECIO]' }
+    ];
+    return { tartas, destacadas, franja };
+  }
+}
+</script>
+</body>
+</html>

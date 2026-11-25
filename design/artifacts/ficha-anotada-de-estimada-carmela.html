@@ -1,0 +1,454 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Ficha anotada de Estimada Carmela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&display=swap">
+<style>:root{
+  --linen:#edf0da; --sand:#f0dfad; --taupe:#a89b8c; --rust:#7c2513; --ink:#000;
+  --ln: rgb(124 37 19 / .6);
+  --text: rgb(0 0 0 / .86); --mute: rgb(0 0 0 / .62);
+  --display: "Prata", Georgia, "Times New Roman", serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+body{background:var(--linen);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.55}
+.page{max-width:1240px;margin:0 auto;padding:40px 24px 96px}
+h1,h2,h3{text-wrap:balance}
+.eyebrow{font-size:10px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--rust);margin:0}
+.eyebrow.mute{color:var(--mute)} .eyebrow.sand{color:var(--sand)}
+code,pre{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px}
+:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
+
+/* ---------- documento ---------- */
+.intro{display:grid;gap:16px;max-width:780px}
+.intro h1{font-family:var(--display);font-weight:400;color:var(--rust);font-size:clamp(30px,5vw,46px);line-height:1.12;margin:0}
+.intro p{margin:0;max-width:68ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chips a{border:1px solid rgb(0 0 0 / .4);border-radius:999px;padding:7px 14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);text-decoration:none}
+.chips a:hover{background:var(--rust);color:var(--linen);border-color:var(--rust)}
+section.bloque{margin-top:64px;scroll-margin-top:16px}
+.ph{display:grid;gap:8px;max-width:780px;margin-bottom:22px}
+.ph .tag{font-family:var(--display);font-size:15px;color:var(--rust)}
+.ph h2{font-family:var(--display);font-weight:400;font-size:clamp(26px,4vw,36px);line-height:1.15;margin:0;color:var(--ink)}
+.ph p{margin:0;max-width:70ch}
+.cap{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:0 0 8px;display:flex;justify-content:space-between;gap:12px}
+.frame{border:1px solid rgb(168 155 140 / .7);border-radius:10px;overflow:hidden;background:var(--linen);box-shadow:0 12px 30px -18px rgb(60 30 10 / .35)}
+.scaler{overflow:hidden;width:100%}
+.msg{margin-top:14px;display:grid;gap:6px;font-size:13.5px}
+.msg output{display:block;background:rgb(255 255 255 / .55);border:1px dashed rgb(124 37 19 / .45);border-radius:8px;padding:10px 14px;color:#2a1a10;min-height:42px}
+.mobrow{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:28px 44px;align-items:start}
+.notes{display:grid;gap:22px}
+.notes h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin:0 0 6px;font-weight:600}
+.notes p,.notes li{margin:0;font-size:14px;max-width:66ch}
+.notes ul,.notes ol{margin:0;padding-left:18px;display:grid;gap:5px}
+pre{margin:0;background:rgb(255 255 255 / .55);border:1px solid rgb(168 155 140 / .6);border-radius:8px;padding:12px 14px;overflow-x:auto;line-height:1.5;color:#2a1a10}
+.tabla{width:100%;border-collapse:collapse;font-size:13.5px}
+.tabla th,.tabla td{text-align:left;vertical-align:top;padding:8px 12px 8px 0;border-bottom:1px solid rgb(168 155 140 / .5)}
+.tabla th{font-weight:600;color:var(--ink)}
+.scroll{overflow-x:auto}
+.answer{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 32px;margin-bottom:28px}
+.answer div{border-top:1px solid var(--rust);padding-top:12px}
+.answer b{display:block;color:var(--ink);margin-bottom:4px}
+.answer p{margin:0;font-size:14px}
+/* anotador */
+.anot{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:24px 36px;align-items:start}
+.anot-img{position:relative;aspect-ratio:1100/609;cursor:crosshair;background:
+  linear-gradient(rgb(0 0 0 / .05) 1px,transparent 1px) 0 0/10% 10%,linear-gradient(90deg,rgb(0 0 0 / .05) 1px,transparent 1px) 0 0/10% 10%;border:1px solid rgb(168 155 140 / .6);border-radius:8px}
+.anot-img img{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.anot-img i{position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);transform:translate(-50%,-50%);width:22px;height:22px;border-radius:50%;background:var(--rust);color:var(--linen);font:600 11px/22px var(--sans);text-align:center;font-style:normal;box-shadow:0 0 0 2px var(--linen);pointer-events:none}
+.anot-img i.on{box-shadow:0 0 0 2px var(--linen),0 0 0 4px var(--rust)}
+.anot-img b{position:absolute;left:0;width:6px;top:calc(var(--y1)*1%);height:calc((var(--y2) - var(--y1))*1%);border:1px solid var(--rust);border-right:0;pointer-events:none}
+.anot-list{display:grid;gap:8px}
+.anot-row{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;border:1px solid rgb(168 155 140 / .6);border-radius:8px;padding:8px 10px;background:rgb(255 255 255 / .3)}
+.anot-row.on{border-color:var(--rust);background:rgb(240 223 173 / .5)}
+.anot-row input[type=radio]{accent-color:var(--rust);margin:0}
+.anot-row .nm{font-weight:600;color:var(--ink);font-size:14px}
+.anot-row .xy{grid-column:2;font-size:12.5px;color:var(--mute);display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.anot-row .xy input[type=number]{width:52px;font:inherit;padding:2px 4px;border:1px solid rgb(0 0 0 / .3);border-radius:4px;background:var(--linen)}
+.anot-row .xy label{display:inline-flex;gap:4px;align-items:center}
+.anot pre{margin-top:12px;font-size:12px}
+.copy{margin-top:8px;font:inherit;font-size:11px;letter-spacing:.14em;text-transform:uppercase;border:1px solid rgb(0 0 0 / .4);border-radius:999px;padding:7px 14px;background:transparent;color:var(--rust);cursor:pointer}
+.copy:hover{background:var(--rust);color:var(--linen)}
+@media (max-width:860px){
+  .mobrow,.anot,.answer{grid-template-columns:minmax(0,1fr)}
+  .mobrow .phone{max-width:400px;width:100%;margin-inline:auto}
+}
+
+/* =================================================================
+   LA FICHA. Todo .mock es "la web", en px reales.
+   ================================================================= */
+.mock{container:ficha / inline-size;background:var(--linen);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;overflow:hidden;position:relative}
+.mock p,.mock h1,.mock h2,.mock ul,.mock ol,.mock dl,.mock dd,.mock figure,.mock fieldset{margin:0;padding:0}
+.mock ul,.mock ol{list-style:none}
+.mock fieldset{border:0;min-width:0}
+.mock img{display:block;max-width:100%}
+.sh{height:64px;background:var(--rust);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.sh-brand{font-family:var(--display);color:var(--linen);font-size:20px}
+.sh-nav{display:flex;gap:28px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--linen)}
+.sh-nav span{white-space:nowrap}
+.sh-burger{display:none;width:22px;height:12px;border-block:2px solid var(--linen)}
+.mc{padding:32px 24px 56px;max-width:1280px;margin:0 auto}
+.volver{display:inline-flex;align-items:center;gap:8px;border:1px solid rgb(0 0 0 / .4);border-radius:999px;padding:10px 20px;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--rust)}
+.h1{font-family:var(--display);font-weight:400;color:var(--rust);font-size:50px;line-height:1.12;text-wrap:balance;text-align:center}
+.desc{max-width:46ch;line-height:1.65;color:rgb(0 0 0 / .7)}
+.datos{border-top:1px solid rgb(168 155 140 / .45)}
+.datos>div{display:flex;align-items:baseline;justify-content:space-between;gap:24px;border-bottom:1px solid rgb(168 155 140 / .45);padding:10px 0}
+.datos dt{font-size:10px;letter-spacing:.2em;color:rgb(0 0 0 / .6);text-transform:uppercase}
+.datos dd{font-size:14px;color:rgb(0 0 0 / .8);text-align:right}
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--rust);color:var(--linen);border-radius:999px;padding:16px 24px;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;white-space:nowrap;box-shadow:0 10px 15px -3px rgb(0 0 0 / .25);transition:background-color .3s}
+.cta:hover{background:var(--ink);color:#fff}
+.cta svg{width:16px;height:16px;flex:none}
+.nota{max-width:42ch;font-size:12px;line-height:1.6;color:rgb(0 0 0 / .6)}
+.banda{background:var(--rust);color:var(--linen);padding:30px 24px 34px}
+.banda ol{display:grid;grid-template-columns:repeat(3,1fr);gap:44px;margin-top:22px!important}
+.banda li{display:flex;flex-direction:column;gap:12px}
+.banda .n{font-family:var(--display);font-size:30px;line-height:1;color:var(--sand)}
+.banda .rule{height:1px;background:rgb(240 223 173 / .35)}
+.banda p{color:rgb(237 240 218 / .85);line-height:1.6;font-size:15px}
+.otras{padding:36px 24px 44px}
+.otras-row{display:flex;gap:16px;margin-top:20px}
+.otras-row span{flex:none;width:160px;aspect-ratio:4/5;border-radius:16px;background:rgb(168 155 140 / .18);outline:1px solid rgb(168 155 140 / .3)}
+
+/* --- composición de escritorio: propuesta A --- */
+.ficha{--lab:238px;display:grid;grid-template-columns:190px minmax(0,1fr) 340px;grid-template-areas:". head aside" ". fig aside";column-gap:48px;row-gap:30px;margin-top:28px}
+.ficha>.h1{grid-area:head;align-self:end}
+.figcell{grid-area:fig;align-self:start}
+.aside{grid-area:aside;align-self:center;display:flex;flex-direction:column;gap:22px}
+.fig{position:relative}
+.stage{position:relative;aspect-ratio:1100/609}
+.stage>img{position:absolute;inset:0;width:100%;height:100%}
+.qll{position:absolute;left:calc(-1 * var(--lab));top:0}
+.pts{position:absolute;inset:0}
+.pts li{position:absolute;top:calc(var(--y) * 1%);left:calc(-1 * var(--lab));right:calc(100% - var(--x) * 1%);display:flex;align-items:center;gap:14px;transform:translateY(-50%)}
+.lbl{display:flex;flex-direction:column;gap:1px;width:176px;flex:none;text-align:right}
+.lbl .e{font-size:14px;font-weight:500;line-height:1.25}
+.lbl .d{font-size:12px;line-height:1.3;color:rgb(0 0 0 / .65)}
+.dentro .lbl .d{font-style:italic}
+.ln{height:1px;background:var(--ln);position:relative;flex:1}
+.ln::after{content:"";position:absolute;right:-4px;top:50%;width:8px;height:8px;border-radius:50%;background:var(--rust);transform:translateY(-50%);box-shadow:0 0 0 2px rgb(237 240 218 / .9)}
+.dentro .ln{background:repeating-linear-gradient(90deg,var(--ln) 0 4px,transparent 4px 7px)}
+.dentro .ln::after{background:var(--linen);border:1.5px solid var(--rust);width:10px;height:10px;right:-5px}
+.brk{display:none}
+.brk i{position:absolute;left:-9px;width:5px;top:calc(var(--y1) * 1%);height:calc((var(--y2) - var(--y1)) * 1%);border:1px solid var(--rust);border-right:0;opacity:.75}
+.brk i.dentro{border-style:dashed;background:repeating-linear-gradient(135deg,rgb(124 37 19 / .35) 0 1px,transparent 1px 4px)}
+
+/* --- formulario de pedido --- */
+.pedido{display:flex;flex-direction:column;gap:16px}
+.tam legend{margin-bottom:10px}
+.tam-opts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.tam-opts label{position:relative;cursor:pointer}
+.tam-opts input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.tam-opts span{display:flex;flex-direction:column;align-items:center;border:1px solid rgb(0 0 0 / .4);border-radius:14px;padding:9px 4px 8px;font-size:11px;letter-spacing:.06em;color:rgb(0 0 0 / .7);transition:background-color .2s,border-color .2s}
+.tam-opts b{font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:0;color:var(--ink);line-height:1.2}
+.tam-opts input:checked+span{background:var(--rust);border-color:var(--rust);color:rgb(237 240 218 / .9)}
+.tam-opts input:checked+span b{color:var(--linen)}
+.tam-opts label:hover input:not(:checked)+span{border-color:var(--rust)}
+.tam-opts input:focus-visible+span{outline:2px solid var(--rust);outline-offset:2px}
+.dos{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px}
+.campo{display:flex;flex-direction:column;gap:8px}
+.step{display:flex;align-items:center;border:1px solid rgb(0 0 0 / .4);border-radius:999px;height:44px}
+.step button{all:unset;width:40px;height:100%;display:grid;place-items:center;font-size:18px;color:var(--rust);cursor:pointer;border-radius:999px}
+.step button:hover{background:rgb(124 37 19 / .08)}
+.step button:focus-visible{outline:2px solid var(--rust)}
+.step input{width:34px;border:0;background:transparent;text-align:center;font:500 16px var(--sans);color:var(--ink);-moz-appearance:textfield;appearance:textfield}
+.step input::-webkit-inner-spin-button,.step input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.fecha{height:44px;border:1px solid rgb(0 0 0 / .4);border-radius:999px;padding:0 16px;background:transparent;font:15px var(--sans);color:var(--ink);width:100%;min-width:0;accent-color:var(--rust)}
+.fecha:hover{border-color:var(--rust)}
+.fecha[aria-invalid=true]{border-color:var(--rust);border-width:2px}
+.hint{font-size:12px;color:rgb(0 0 0 / .6);margin-top:-6px!important}
+.pedir{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:4px}
+.total{display:flex;flex-direction:column;line-height:1.1}
+.t-lbl{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgb(0 0 0 / .6)}
+.t-val{font-size:26px;font-weight:500;color:var(--rust);font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:4px}
+.err{font-size:13px;color:var(--rust);font-weight:500}
+
+/* --- móvil: propuesta B --- */
+@container ficha (max-width:700px){
+  .sh{height:56px;padding:0 20px}.sh-nav{display:none}.sh-burger{display:block}.sh-brand{font-size:18px}
+  .ficha{display:flex;flex-direction:column;gap:0;margin-top:26px}
+  .h1{font-size:36px}
+  /* la tarta, al 240 % y sangrando por la derecha: se ve la mitad izquierda,
+     que es donde apuntan las líneas. En CSS real: overflow-x: clip en la sección */
+  .figcell{--lab:140px;padding-left:var(--lab);margin-top:52px;align-self:stretch}
+  .fig{width:calc((100% + 24px) * 2.4)}
+  .qll{top:-30px}
+  .pts li{gap:6px}
+  .lbl{width:126px}
+  .lbl .e{font-size:13px}.lbl .d{font-size:11px}
+  .brk{display:block}
+  .aside{margin-top:36px;gap:24px;align-self:stretch}
+  .dos{grid-template-columns:auto minmax(0,1fr)}
+  .pedir{gap:14px}
+  .pedir .cta{flex:1;padding:16px 14px;font-size:11px;letter-spacing:.12em}
+  .t-val{font-size:24px}
+  .banda ol{grid-template-columns:1fr;gap:28px}
+  .otras-row span{width:144px}
+}
+@media (prefers-reduced-motion:reduce){.tam-opts span,.cta{transition:none}}
+</style>
+
+<main class="page">
+  <header class="intro">
+    <p class="eyebrow">Estimada Carmela · /catalogo/{tarta} · diseño elegido</p>
+    <h1>Ficha de tarta: web A, móvil B y pedido completo</h1>
+    <p>Un solo marcado. En escritorio se pinta como la propuesta A, con el nombre centrado encima de la tarta. En móvil se pinta como la B: la tarta sangra por la derecha y las etiquetas mantienen sus líneas. En los dos, la columna de pedido lleva tamaño, cantidad, fecha y el total junto al botón de WhatsApp.</p>
+    <p>Los controles funcionan: elige tamaño, cantidad y fecha y pulsa el botón. Aquí no se abre WhatsApp; debajo de la maqueta sale el mensaje que se enviaría.</p>
+    <nav class="chips" aria-label="Ir a"><a href="#web">Web</a><a href="#movil">Móvil</a><a href="#por-tarta">¿Un código por tarta?</a><a href="#decidir">Lo que falta decidir</a></nav>
+  </header>
+
+  <section class="bloque" id="web">
+    <p class="cap"><span>Escritorio · 1280 px</span><span>Los controles funcionan</span></p>
+    <div class="frame"><div class="scaler" data-w="1280"><div class="mock" style="width:1280px">
+<div class="sh"><span class="sh-brand">Estimada Carmela</span><span class="sh-nav"><span>Eventos</span><span>Catálogo</span><span>Sobre mí</span><span>Contacto</span></span><span class="sh-burger" aria-hidden="true"></span></div>
+<div class="mc"><span class="volver"><span aria-hidden="true">←</span> Volver a la carta</span>
+<div class="ficha">
+  <h1 class="h1">Limón y merengue</h1>
+  <div class="figcell"><figure class="fig">
+    <div class="stage"><img src="tarta-limon.png" alt="Tarta redonda de base de galleta gruesa, cubierta de picos de merengue con ralladura de lima." width="1100" height="609"><span class="brk" aria-hidden="true"><i style="--y1:22;--y2:50.5"></i><i class="dentro" style="--y1:51.5;--y2:59.5"></i><i style="--y1:60.5;--y2:97"></i></span></div>
+    <h2 class="eyebrow qll">Qué lleva</h2><ul class="pts"><li style="--x:24.9;--y:15.2"><span class="lbl"><span class="e">Ralladura de lima</span><span class="d">Rallada al servir, no antes</span></span><span class="ln" aria-hidden="true"></span></li><li style="--x:8.6;--y:38.7"><span class="lbl"><span class="e">Merengue italiano</span><span class="d">Picos a manga, uno a uno</span></span><span class="ln" aria-hidden="true"></span></li><li class="dentro" style="--x:6.4;--y:56.8"><span class="lbl"><span class="e">Crema de limón</span><span class="d">Por dentro, bajo el merengue</span></span><span class="ln" aria-hidden="true"></span></li><li style="--x:8.6;--y:76.1"><span class="lbl"><span class="e">Base de sablé</span><span class="d">Gruesa, de mantequilla y almendra</span></span><span class="ln" aria-hidden="true"></span></li></ul>
+  </figure></div>
+  <div class="aside">
+    <p class="desc">Ácida, con el merengue justo para calmarla. El sablé es grueso a propósito: aguanta la crema sin reblandecerse y cruje hasta el último trozo.</p>
+    <form class="pedido" novalidate>
+      <fieldset class="tam"><legend class="eyebrow">Tamaño</legend><div class="tam-opts"><label><input type="radio" name="tam-d" value="0" data-p="28" data-t="4–6" checked><span><b>4–6</b> personas</span></label><label><input type="radio" name="tam-d" value="1" data-p="38" data-t="8–10"><span><b>8–10</b> personas</span></label></div></fieldset>
+      <div class="dos">
+        <div class="campo"><label class="eyebrow" for="cant-d">Cantidad</label>
+          <div class="step"><button type="button" data-d="-1" aria-label="Quitar una">−</button><input id="cant-d" type="number" min="1" value="1" inputmode="numeric"><button type="button" data-d="1" aria-label="Añadir una">+</button></div></div>
+        <div class="campo"><label class="eyebrow" for="fecha-d">Fecha de entrega</label>
+          <input id="fecha-d" class="fecha" type="date" required aria-describedby="fh-d"></div>
+      </div>
+      <p class="hint" id="fh-d">De lunes a viernes, con dos días laborables de antelación.</p>
+      <dl class="datos"><div><dt>Conservación</dt><dd>Nevera, 48 h</dd></div></dl>
+      <div class="pedir">
+        <p class="total"><span class="t-lbl">Total</span><span class="t-val" aria-live="polite">[28 €]</span></p>
+        <a class="cta" href="#" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 2a8 8 0 1 1-4.1 14.9l-.3-.2-2.8.8.8-2.7-.2-.3A8 8 0 0 1 12 4Zm-3 4c-.3 0-.7.1-.9.5-.3.4-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.2 5 4.3 2.4.9 2.9.7 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4l-.5-.3-1.8-.9c-.2-.1-.4-.1-.6.1l-.8 1c-.2.2-.3.2-.6.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-2c-.2-.5-.4-.5-.6-.5H9Z"/></svg> Pedir por WhatsApp</a>
+      </div>
+      <p class="err" role="alert" hidden>Elige una fecha de entrega para poder pedirla.</p>
+      <p class="nota">Se abre WhatsApp con el pedido ya escrito: tamaño, cantidad y fecha. No se envía nada hasta que lo envíes tú.</p>
+    </form>
+  </div>
+</div></div>
+<div class="banda"><p class="eyebrow sand">Cómo se hace</p><ol><li><span class="n">01</span><span class="rule"></span><p>El sablé se hornea el día antes, grueso, y se enfría en el molde.</p></li><li><span class="n">02</span><span class="rule"></span><p>La crema se cuece al baño maría y se vierte templada sobre la base.</p></li><li><span class="n">03</span><span class="rule"></span><p>El merengue se escudilla pico a pico justo antes de entregar.</p></li></ol></div>
+<div class="otras"><p class="eyebrow mute">Otras tartas</p><div class="otras-row"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+</div></div></div>
+    <div class="msg"><span class="eyebrow">Mensaje que se abriría en WhatsApp</span><output id="msg">Elige una fecha y pulsa «Pedir por WhatsApp» en cualquiera de las dos maquetas.</output></div>
+  </section>
+
+  <section class="bloque" id="movil">
+    <div class="mobrow">
+      <div class="phone"><p class="cap"><span>Móvil · 390 px</span></p><div class="frame"><div class="scaler" data-w="390"><div class="mock" style="width:390px">
+<div class="sh"><span class="sh-brand">Estimada Carmela</span><span class="sh-nav"><span>Eventos</span><span>Catálogo</span><span>Sobre mí</span><span>Contacto</span></span><span class="sh-burger" aria-hidden="true"></span></div>
+<div class="mc"><span class="volver"><span aria-hidden="true">←</span> Volver a la carta</span>
+<div class="ficha">
+  <h1 class="h1">Limón y merengue</h1>
+  <div class="figcell"><figure class="fig">
+    <div class="stage"><img src="tarta-limon.png" alt="Tarta redonda de base de galleta gruesa, cubierta de picos de merengue con ralladura de lima." width="1100" height="609"><span class="brk" aria-hidden="true"><i style="--y1:22;--y2:50.5"></i><i class="dentro" style="--y1:51.5;--y2:59.5"></i><i style="--y1:60.5;--y2:97"></i></span></div>
+    <h2 class="eyebrow qll">Qué lleva</h2><ul class="pts"><li style="--x:24.9;--y:15.2"><span class="lbl"><span class="e">Ralladura de lima</span><span class="d">Rallada al servir, no antes</span></span><span class="ln" aria-hidden="true"></span></li><li style="--x:8.6;--y:38.7"><span class="lbl"><span class="e">Merengue italiano</span><span class="d">Picos a manga, uno a uno</span></span><span class="ln" aria-hidden="true"></span></li><li class="dentro" style="--x:6.4;--y:56.8"><span class="lbl"><span class="e">Crema de limón</span><span class="d">Por dentro, bajo el merengue</span></span><span class="ln" aria-hidden="true"></span></li><li style="--x:8.6;--y:76.1"><span class="lbl"><span class="e">Base de sablé</span><span class="d">Gruesa, de mantequilla y almendra</span></span><span class="ln" aria-hidden="true"></span></li></ul>
+  </figure></div>
+  <div class="aside">
+    <p class="desc">Ácida, con el merengue justo para calmarla. El sablé es grueso a propósito: aguanta la crema sin reblandecerse y cruje hasta el último trozo.</p>
+    <form class="pedido" novalidate>
+      <fieldset class="tam"><legend class="eyebrow">Tamaño</legend><div class="tam-opts"><label><input type="radio" name="tam-m" value="0" data-p="28" data-t="4–6" checked><span><b>4–6</b> personas</span></label><label><input type="radio" name="tam-m" value="1" data-p="38" data-t="8–10"><span><b>8–10</b> personas</span></label></div></fieldset>
+      <div class="dos">
+        <div class="campo"><label class="eyebrow" for="cant-m">Cantidad</label>
+          <div class="step"><button type="button" data-d="-1" aria-label="Quitar una">−</button><input id="cant-m" type="number" min="1" value="1" inputmode="numeric"><button type="button" data-d="1" aria-label="Añadir una">+</button></div></div>
+        <div class="campo"><label class="eyebrow" for="fecha-m">Fecha de entrega</label>
+          <input id="fecha-m" class="fecha" type="date" required aria-describedby="fh-m"></div>
+      </div>
+      <p class="hint" id="fh-m">De lunes a viernes, con dos días laborables de antelación.</p>
+      <dl class="datos"><div><dt>Conservación</dt><dd>Nevera, 48 h</dd></div></dl>
+      <div class="pedir">
+        <p class="total"><span class="t-lbl">Total</span><span class="t-val" aria-live="polite">[28 €]</span></p>
+        <a class="cta" href="#" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 2a8 8 0 1 1-4.1 14.9l-.3-.2-2.8.8.8-2.7-.2-.3A8 8 0 0 1 12 4Zm-3 4c-.3 0-.7.1-.9.5-.3.4-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.2 5 4.3 2.4.9 2.9.7 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4l-.5-.3-1.8-.9c-.2-.1-.4-.1-.6.1l-.8 1c-.2.2-.3.2-.6.1a6.6 6.6 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-2c-.2-.5-.4-.5-.6-.5H9Z"/></svg> Pedir por WhatsApp</a>
+      </div>
+      <p class="err" role="alert" hidden>Elige una fecha de entrega para poder pedirla.</p>
+      <p class="nota">Se abre WhatsApp con el pedido ya escrito: tamaño, cantidad y fecha. No se envía nada hasta que lo envíes tú.</p>
+    </form>
+  </div>
+</div></div>
+<div class="banda"><p class="eyebrow sand">Cómo se hace</p><ol><li><span class="n">01</span><span class="rule"></span><p>El sablé se hornea el día antes, grueso, y se enfría en el molde.</p></li><li><span class="n">02</span><span class="rule"></span><p>La crema se cuece al baño maría y se vierte templada sobre la base.</p></li><li><span class="n">03</span><span class="rule"></span><p>El merengue se escudilla pico a pico justo antes de entregar.</p></li></ol></div>
+<div class="otras"><p class="eyebrow mute">Otras tartas</p><div class="otras-row"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+</div></div></div></div>
+      <div class="notes">
+        <div><h3>Qué ha cambiado respecto a A y B</h3><ul>
+          <li><b>Web:</b> el nombre va centrado encima de la tarta. Precio y raciones ya no van arriba: las raciones las da el tamaño elegido y el precio sale junto al botón, como total.</li>
+          <li><b>Móvil:</b> la B tal cual (tarta al 240 %, llaves de capa, «Qué lleva» a la izquierda). Solo cambia una cosa: el nombre sube encima de la tarta, igual que en web, para que el marcado sea uno y el orden de lectura empiece por el título. Si lo preferís debajo, es una línea de CSS.</li>
+        </ul></div>
+        <div><h3>El pedido</h3><ul>
+          <li><b>Tamaño:</b> dos opciones, 4–6 y 8–10 personas, en un <code>&lt;fieldset&gt;</code> con radios de verdad. Viene marcado el pequeño.</li>
+          <li><b>Cantidad:</b> desde 1 y sin máximo, con botones − y +. Solo sirve para el mensaje: la cantidad final la confirma Carmen con el cliente.</li>
+          <li><b>Fecha:</b> entrega solo de lunes a viernes, con dos días laborables de antelación (un pedido del viernes o del fin de semana sale como pronto el martes). El mínimo lo calcula el navegador, no el build: la web es estática y un mínimo fijado al compilar se quedaría viejo. El calendario nativo no deja apagar sábados y domingos, así que si se elige uno, avisa en el momento y el botón no abre WhatsApp. Si preferís que ni se puedan pulsar, hace falta un calendario propio, que es más código.</li>
+          <li><b>Total:</b> precio del tamaño × cantidad, junto al botón. Se actualiza al cambiar cualquiera de los dos.</li>
+          <li><b>CTA:</b> sigue siendo el único y sigue siendo un <code>&lt;a&gt;</code> a WhatsApp. El JS solo reescribe su <code>href</code> con tamaño, cantidad y fecha. Sin JS abre WhatsApp con el nombre de la tarta, como hoy.</li>
+        </ul></div>
+        <div><h3>Cambios en <code>site.ts</code></h3>
+<pre>interface TamanoTarta {
+  personas: string;   // "4–6"
+  precio: number;     // euros; se suma, así que número
+}
+interface Tarta {
+  // sustituye a `precio` y `raciones`
+  tamanos: TamanoTarta[];
+  recorte?: string;   // PNG sin fondo
+  componentes: ComponenteTarta[];
+  …
+}
+interface ComponenteTarta {
+  etiqueta: string;
+  descripcionCorta: string;
+  punto?: { x: number; y: number };  // % del recorte
+  franja?: [desde: number, hasta: number]; // llave en móvil
+  dentro?: boolean;                  // línea discontinua
+}
+// PEDIDO.enlace(nombre) pasa a
+// PEDIDO.enlace(nombre, { personas, cantidad, fecha })</pre></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque" id="por-tarta">
+    <div class="ph"><span class="tag">Tu duda</span><h2>¿Hay que hacer un diseño o un código para cada tarta?</h2>
+      <p>No. La ficha es una sola plantilla, <code>[tarta].astro</code>, para todas. Lo que cambia de una tarta a otra son datos en <code>site.ts</code>, y la plantilla pinta las líneas donde digan esos datos.</p></div>
+    <div class="answer">
+      <div><b>Lo que cambia por tarta</b><p>El recorte y, por cada componente, adónde apunta su línea (x e y, en % de la foto). Si es una capa, también su franja, de qué altura a qué altura va. Son dos o cuatro números por componente.</p></div>
+      <div><b>Tartas con otra estructura</b><p>Da igual cómo esté montada. Una tarta de capas como esta lleva puntos y franjas. Un bundt, un brazo o un hojaldre llevan solo puntos, sin llaves, y apuntan a lo que se vea: la ganache, el corte, la superficie. Siempre entre 2 y 4 componentes.</p></div>
+      <div><b>Si falta algo, no se rompe</b><p>Sin recorte, o con algún componente sin punto, la ficha sale con la foto normal (o «Foto pendiente») y la lista sin líneas. Se puede publicar una tarta y anotarla más tarde.</p></div>
+    </div>
+    <div class="ph"><h2 style="font-size:24px">Cómo se sacan los números: anotador</h2>
+      <p>Elige un componente y haz clic en la foto donde tiene que acabar su línea. Las franjas se escriben a mano (desde y hasta, en % de alto). Abajo sale el trozo de <code>site.ts</code> listo para pegar. En el proyecto se puede dejar como una página interna, fuera del menú y sin indexar, y usarla cada vez que llegue un recorte nuevo.</p></div>
+    <div class="anot">
+      <div><div class="anot-img" id="anot-img" role="img" aria-label="Recorte de la tarta de limón con los puntos de cada componente. Haz clic para colocar el punto del componente elegido."><img src="tarta-limon.png" alt=""></div>
+        <p class="cap" style="margin-top:8px"><span>Cuadrícula cada 10 %</span><span>En móvil solo se ve hasta x ≈ 42 %</span></p></div>
+      <div><div class="anot-list" id="anot-list"></div>
+        <pre id="anot-code"></pre><button type="button" class="copy" id="anot-copy">Copiar</button></div>
+    </div>
+    <div class="notes" style="margin-top:24px"><div><h3>Dos reglas para las fotos</h3><ul>
+      <li>En móvil solo se ve la mitad izquierda de la tarta, así que todos los puntos tienen que caer en el 42 % izquierdo de la foto. El anotador avisa si alguno se sale.</li>
+      <li>Recortar el PNG pegado a la tarta, sin margen transparente, y hacer todas las fotos con el mismo ángulo. No es obligatorio, pero así las fichas se parecen entre sí y los números salen parecidos.</li>
+      <li>La clienta puede subir el recorte desde el CMS, pero no va a medir porcentajes. Lo realista es que anote quien suba el recorte, con esta herramienta. Mientras tanto, la tarta sale sin líneas.</li>
+    </ul></div></div>
+  </section>
+
+  <section class="bloque" id="decidir">
+    <div class="ph"><span class="tag">Antes de implementar</span><h2>Lo que queda abierto</h2></div>
+    <div class="scroll"><table class="tabla"><tbody>
+      <tr><th>Precios</th><td>Los de la maqueta ([28] y [38] €) son de relleno. Los rellenáis vosotros cuando estén cerrados; mientras, van entre corchetes para que no se publiquen sin querer.</td></tr>
+      <tr><th>Festivos</th><td>La fecha solo descarta sábados y domingos. Un festivo entre semana (15 de agosto, Semana Santa, feria) se podría elegir. Se puede añadir una lista de fechas cerradas en <code>site.ts</code> cuando haga falta.</td></tr>
+      <tr><th>El recorte de limón</th><td>Es el PNG <code>tarta-limon-sin-fondo.png</code> que está en <code>src/assets/images/</code>, sin subir a git, y es la foto de todas estas maquetas. Ninguna tarta del catálogo es de limón. ¿Va como tarta nueva o era solo una foto de prueba?</td></tr>
+    </tbody></table></div>
+    <p class="fbnote" style="margin-top:12px;font-size:13.5px">Decidido: dos tamaños (4–6 y 8–10 personas), cantidad sin máximo, entrega de lunes a viernes con dos días laborables de antelación, sin fecha máxima, y «desde [precio]» en la tarjeta de la carta.</p>
+  </section>
+</main>
+
+<script>
+(function(){
+  var NOMBRE = "Limón y merengue";
+  document.querySelectorAll('.scaler').forEach(function(s){
+    var w = +s.dataset.w, c = s.firstElementChild;
+    function fit(){ c.style.zoom = Math.min(1, s.clientWidth / w); }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(s);
+    fit();
+  });
+
+  function iso(d){ return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+  // Solo se entrega de lunes a viernes, con dos días laborables de antelación.
+  // Viernes → martes; sábado o domingo → martes. Festivos: sin contemplar aún.
+  function laborable(d){ var w = d.getDay(); return w !== 0 && w !== 6; }
+  var minD = new Date(), k = 0;
+  while (k < 2){ minD.setDate(minD.getDate() + 1); if (laborable(minD)) k++; }
+  var MIN = iso(minD);
+  function finde(v){ var p = v.split('-'); return !laborable(new Date(+p[0], p[1]-1, +p[2])); }
+  var largo = function(v){ var p = v.split('-'); return new Date(+p[0], p[1]-1, +p[2]).toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'}); };
+  var out = document.getElementById('msg');
+
+  document.querySelectorAll('.pedido').forEach(function(f){
+    var cant = f.querySelector('input[type=number]'), fecha = f.querySelector('.fecha'),
+        tv = f.querySelector('.t-val'), err = f.querySelector('.err'), cta = f.querySelector('.cta');
+    fecha.min = MIN;
+    function tam(){ return f.querySelector('input[type=radio]:checked'); }
+    function n(){ return Math.max(1, Math.round(+cant.value || 1)); }
+    function total(){ tv.textContent = '[' + (+tam().dataset.p * n()) + ' €]'; }
+    f.querySelectorAll('.step button').forEach(function(b){
+      b.addEventListener('click', function(){ cant.value = Math.max(1, n() + +b.dataset.d); total(); });
+    });
+    cant.addEventListener('change', function(){ cant.value = n(); total(); });
+    cant.addEventListener('input', total);
+    f.addEventListener('change', total);
+    fecha.addEventListener('change', function(){
+      var v = fecha.value;
+      if (v && finde(v)){ err.textContent = 'Solo se entrega de lunes a viernes. Elige otro día.'; err.hidden = false; fecha.setAttribute('aria-invalid', 'true'); }
+      else { err.hidden = true; fecha.removeAttribute('aria-invalid'); }
+    });
+    cta.addEventListener('click', function(e){
+      e.preventDefault(); // en la maqueta no se abre WhatsApp
+      var v = fecha.value;
+      if (!v || v < MIN || finde(v)){
+        err.textContent = !v ? 'Elige una fecha de entrega para poder pedirla.'
+          : v < MIN ? 'Hacen falta dos días laborables de antelación: a partir del ' + largo(MIN) + '.'
+          : 'Solo se entrega de lunes a viernes. Elige otro día.';
+        err.hidden = false; fecha.setAttribute('aria-invalid', 'true'); fecha.focus(); return;
+      }
+      var k = n();
+      var txt = 'Hola Carmen, quería pedir ' + (k === 1 ? 'una tarta' : k + ' tartas') + ' «' + NOMBRE + '» para ' + tam().dataset.t + ' personas, para el ' + largo(v) + '.';
+      cta.href = 'https://wa.me/34600000000?text=' + encodeURIComponent(txt);
+      out.textContent = txt;
+    });
+    total();
+  });
+
+  // ---- anotador ----
+  var comps = [{"e": "Ralladura de lima", "d": "Rallada al servir, no antes", "x": 24.9, "y": 15.2}, {"e": "Merengue italiano", "d": "Picos a manga, uno a uno", "x": 8.6, "y": 38.7, "f": [22, 50.5]}, {"e": "Crema de limón", "d": "Por dentro, bajo el merengue", "x": 6.4, "y": 56.8, "f": [51.5, 59.5], "dentro": true}, {"e": "Base de sablé", "d": "Gruesa, de mantequilla y almendra", "x": 8.6, "y": 76.1, "f": [60.5, 97]}], act = 0;
+  var img = document.getElementById('anot-img'), list = document.getElementById('anot-list'), code = document.getElementById('anot-code');
+  function r1(v){ return Math.round(v * 10) / 10; }
+  function draw(){
+    img.querySelectorAll('i,b').forEach(function(el){ el.remove(); });
+    comps.forEach(function(c, i){
+      if (c.f){ var b = document.createElement('b'); b.style.setProperty('--y1', c.f[0]); b.style.setProperty('--y2', c.f[1]); img.appendChild(b); }
+      if (c.x != null){ var d = document.createElement('i'); d.textContent = i + 1; d.className = i === act ? 'on' : ''; d.style.setProperty('--x', c.x); d.style.setProperty('--y', c.y); img.appendChild(d); }
+    });
+    list.innerHTML = '';
+    comps.forEach(function(c, i){
+      var row = document.createElement('div'); row.className = 'anot-row' + (i === act ? ' on' : '');
+      var warn = c.x > 42 ? ' · <b style="color:var(--rust)">fuera en móvil</b>' : '';
+      row.innerHTML = '<input type="radio" name="anot-act" id="aa' + i + '"' + (i === act ? ' checked' : '') + '>' +
+        '<label class="nm" for="aa' + i + '">' + (i + 1) + '. ' + c.e + '</label>' +
+        '<div class="xy"><span>x ' + (c.x != null ? c.x : '—') + ' · y ' + (c.y != null ? c.y : '—') + warn + '</span>' +
+        '<label>franja <input type="number" step="0.5" min="0" max="100" aria-label="Franja desde, ' + c.e + '" value="' + (c.f ? c.f[0] : '') + '" data-k="0"></label>' +
+        '<label>– <input type="number" step="0.5" min="0" max="100" aria-label="Franja hasta, ' + c.e + '" value="' + (c.f ? c.f[1] : '') + '" data-k="1"></label>' +
+        '<label><input type="checkbox"' + (c.dentro ? ' checked' : '') + ' data-dentro> dentro</label></div>';
+      row.querySelector('input[type=radio]').addEventListener('change', function(){ act = i; draw(); });
+      row.querySelectorAll('input[data-k]').forEach(function(inp){
+        inp.addEventListener('change', function(){
+          var a = row.querySelector('[data-k="0"]').value, z = row.querySelector('[data-k="1"]').value;
+          c.f = (a !== '' && z !== '') ? [+a, +z] : undefined; draw();
+        });
+      });
+      row.querySelector('[data-dentro]').addEventListener('change', function(e){ c.dentro = e.target.checked || undefined; draw(); });
+      list.appendChild(row);
+    });
+    code.textContent = 'componentes: [\n' + comps.map(function(c){
+      var s = '  { etiqueta: "' + c.e + '", descripcionCorta: "' + c.d + '"';
+      if (c.x != null) s += ', punto: { x: ' + c.x + ', y: ' + c.y + ' }';
+      if (c.f) s += ', franja: [' + c.f[0] + ', ' + c.f[1] + ']';
+      if (c.dentro) s += ', dentro: true';
+      return s + ' },';
+    }).join('\n') + '\n],';
+  }
+  img.addEventListener('click', function(e){
+    var r = img.getBoundingClientRect();
+    comps[act].x = r1((e.clientX - r.left) / r.width * 100);
+    comps[act].y = r1((e.clientY - r.top) / r.height * 100);
+    act = (act + 1) % comps.length; draw();
+  });
+  document.getElementById('anot-copy').addEventListener('click', function(){
+    var b = this;
+    function sel(){ var rg = document.createRange(); rg.selectNodeContents(code); var s = getSelection(); s.removeAllRanges(); s.addRange(rg); b.textContent = 'Seleccionado: copia con ⌘C'; }
+    try { navigator.clipboard.writeText(code.textContent).then(function(){ b.textContent = 'Copiado'; }, sel); } catch(_){ sel(); }
+  });
+  draw();
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,19 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Eventos.dc.html": {"h": 3140, "title": "Eventos · con 1, 2 o 3 fotos", "w": 1840, "x": 3170, "y": 0},
+    "HomeMovil.dc.html": {"h": 5700, "title": "Home · iPhone 390", "w": 390, "x": 2700, "y": 0},
+    "Main.dc.html": {"expand": "fill", "h": 4520, "title": "Home · escritorio 1440", "w": 1440, "x": 1180, "y": 0},
+    "Notas.dc.html": {"h": 4400, "title": "Notas · qué cambia y por qué", "w": 1100, "x": 0, "y": 0}
+  },
+  "createdOnFiles": {"at": "2026-10-04T12:00:00Z", "v": 1},
+  "designSystems": [],
+  "launch": {"view": "canvas"},
+  "notes": {
+    "titulo": {"kind": "title1", "maxW": 5010, "text": "Home · tres cambios sobre la web actual", "w": 240, "x": 0, "y": -300}
+  },
+  "order": ["Notas.dc.html", "Main.dc.html", "HomeMovil.dc.html", "Eventos.dc.html"],
+  "pages": [],
+  "title": "Home Estimada Carmela · propuesta"
+}

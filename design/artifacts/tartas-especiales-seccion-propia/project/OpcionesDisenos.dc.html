@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Opciones para mostrar los diseños</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&amp;family=Karla:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7c2513}a:hover{color:#561a0d}
+.disp{font-family:'Cormorant Garamond',Georgia,serif}
+.ley{font-family:Karla,sans-serif;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase}
+.mock{height:420px;border-radius:20px;background:#edf0da;border:1px solid #d7d9c6;box-sizing:border-box;padding:22px;position:relative;overflow:hidden}
+.t{background:#e3e4d0;border-radius:10px;overflow:hidden}
+.t img{width:100%;height:100%;object-fit:cover}
+.ln{height:5px;border-radius:3px;background:#c9cbb8}
+ul{margin:6px 0 0;padding-left:18px;font-size:13.5px;line-height:1.55;color:#33342c}
+li{margin-bottom:5px}
+h4{margin:20px 0 0}
+</style>
+</helmet>
+<div style="width:1440px;height:1300px;box-sizing:border-box;padding:52px 56px;background:#f6f7ea;font-family:Karla,sans-serif;color:#141410">
+  <span class="ley" style="color:#7c2513">Debajo del hero</span>
+  <h2 class="disp" style="margin:8px 0 0;font-weight:400;font-size:42px;line-height:1">Tres formas de enseñar los diseños</h2>
+
+  <div style="margin-top:36px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px">
+
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <span class="disp" style="font-size:34px;color:#7c2513">A</span>
+        <span style="font-size:16px;font-weight:500">Rejilla + ficha de cada diseño</span>
+        <span class="ley" style="margin-left:auto;font-size:9px;letter-spacing:.2em;padding:6px 10px;border-radius:12px;background:#7c2513;color:#edf0da">Recomendada</span>
+      </div>
+      <div class="mock" style="display:flex;gap:18px;align-items:center">
+        <div style="width:150px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+          <div class="t" style="aspect-ratio:4/5;box-shadow:0 0 0 2px #edf0da,0 0 0 3px #7c2513"><img src="/_blob/735c55f37d8a32a529bb613e00ad7ff1" alt="" style="object-position:30% 50%"></div>
+          <div class="t" style="aspect-ratio:4/5"><img src="/_blob/688be946245bea8810fdc99a284b5d6d" alt=""></div>
+          <div class="t" style="aspect-ratio:4/5"></div>
+          <div style="aspect-ratio:4/5;border-radius:10px;background:#7c2513"></div>
+        </div>
+        <svg width="26" height="14" viewBox="0 0 26 14" fill="none" stroke="#a89b8c" stroke-width="1.5" aria-hidden="true"><path d="M0 7h22M17 2l5 5-5 5"></path></svg>
+        <div style="flex:1;height:100%;border-radius:12px;background:#f6f7ea;border:1px solid #d7d9c6;box-sizing:border-box;padding:12px;display:flex;flex-direction:column;gap:8px">
+          <span class="disp" style="font-size:18px;color:#7c2513">La rosa</span>
+          <div class="t" style="height:170px"><img src="/_blob/735c55f37d8a32a529bb613e00ad7ff1" alt="" style="object-position:30% 50%"></div>
+          <div style="display:flex;gap:4px"><div class="t" style="width:22px;height:28px;border-radius:4px"></div><div class="t" style="width:22px;height:28px;border-radius:4px"></div><div class="t" style="width:22px;height:28px;border-radius:4px"></div></div>
+          <div class="ln" style="width:90%"></div><div class="ln" style="width:70%"></div>
+          <span style="margin-top:auto;height:24px;border-radius:12px;background:#7c2513;color:#edf0da;font-size:8px;letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;justify-content:center">La quiero</span>
+        </div>
+      </div>
+      <p class="ley" style="margin:20px 0 0;color:#4a4b42">Cuándo encaja</p>
+      <p style="margin:6px 0 0;font-size:13.5px;line-height:1.55">Desde 3 diseños, y si queréis que cada uno se encuentre en Google y se pueda mandar por WhatsApp.</p>
+      <p class="ley" style="margin:18px 0 0;color:#7c2513">A favor</p>
+      <ul>
+        <li>Se lee como «piezas que se eligen», de la misma familia visual que la carta.</li>
+        <li>Cada diseño tiene URL propia (/tartas-especiales/la-rosa): Carmela la manda cuando propone.</li>
+        <li>Reutiliza la ficha, la galería y el lightbox de la V1.</li>
+      </ul>
+      <p class="ley" style="margin:14px 0 0;color:#4a4b42">En contra</p>
+      <ul>
+        <li>Una página por diseño que mantener en el CMS.</li>
+        <li>Con 2 diseños la fila queda corta; la tarjeta «A tu medida» la completa.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <span class="disp" style="font-size:34px;color:#7c2513">B</span>
+        <span style="font-size:16px;font-weight:500">Zigzag con «Ver más», como Eventos</span>
+      </div>
+      <div class="mock" style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;gap:14px;align-items:center;background:#fff;border-radius:12px;padding:10px">
+          <div style="flex:1;display:flex;flex-direction:column;gap:7px"><span class="disp" style="font-size:18px">La rosa</span><div class="ln" style="width:95%"></div><div class="ln" style="width:80%"></div><div class="ln" style="width:60%"></div><span style="margin-top:4px;align-self:flex-start;height:20px;padding:0 10px;border-radius:10px;background:#f0dfad;font-size:8px;letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center">Ver más</span></div>
+          <div class="t" style="width:150px;height:110px"><img src="/_blob/735c55f37d8a32a529bb613e00ad7ff1" alt="" style="object-position:30% 50%"></div>
+        </div>
+        <div style="display:flex;gap:6px;padding:0 10px"><div class="t" style="flex:1;height:54px"></div><div class="t" style="flex:1;height:54px"></div><div class="t" style="flex:1;height:54px"></div><div class="t" style="flex:1;height:54px"></div></div>
+        <div style="display:flex;gap:14px;align-items:center;background:#fff;border-radius:12px;padding:10px">
+          <div class="t" style="width:150px;height:110px"><img src="/_blob/688be946245bea8810fdc99a284b5d6d" alt=""></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:7px"><span class="disp" style="font-size:18px">Volantes de azúcar</span><div class="ln" style="width:95%"></div><div class="ln" style="width:75%"></div><div class="ln" style="width:55%"></div></div>
+        </div>
+      </div>
+      <p class="ley" style="margin:20px 0 0;color:#4a4b42">Cuándo encaja</p>
+      <p style="margin:6px 0 0;font-size:13.5px;line-height:1.55">Si cada tarta se cuenta como una historia: para quién fue, qué se celebraba.</p>
+      <p class="ley" style="margin:18px 0 0;color:#7c2513">A favor</p>
+      <ul>
+        <li>Coherencia total con /eventos; el componente (TarjetaEvento + cinta) ya existe.</li>
+        <li>Sin páginas de detalle.</li>
+      </ul>
+      <p class="ley" style="margin:14px 0 0;color:#4a4b42">En contra</p>
+      <ul>
+        <li>Misma estructura que Eventos, así que la clienta lee «es lo mismo». Es justo la redundancia que os preocupa.</li>
+        <li>Cuenta un caso pasado, no un diseño que se pueda pedir.</li>
+        <li>Cada diseño ocupa una pantalla: con 6 se hace largo.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <span class="disp" style="font-size:34px;color:#7c2513">C</span>
+        <span style="font-size:16px;font-weight:500">Rejilla + panel, sin páginas</span>
+      </div>
+      <div class="mock">
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;width:250px">
+          <div class="t" style="aspect-ratio:4/5"><img src="/_blob/735c55f37d8a32a529bb613e00ad7ff1" alt="" style="object-position:30% 50%"></div>
+          <div class="t" style="aspect-ratio:4/5"><img src="/_blob/688be946245bea8810fdc99a284b5d6d" alt=""></div>
+          <div class="t" style="aspect-ratio:4/5"></div>
+          <div style="aspect-ratio:4/5;border-radius:10px;background:#7c2513"></div>
+        </div>
+        <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px;width:250px"><div class="ln" style="width:80%"></div><div class="ln" style="width:60%"></div></div>
+        <div aria-hidden="true" style="position:absolute;inset:0;background:rgba(20,15,10,.35)"></div>
+        <div style="position:absolute;top:0;right:0;bottom:0;width:200px;background:#edf0da;box-sizing:border-box;padding:14px;display:flex;flex-direction:column;gap:8px;box-shadow:-12px 0 30px -12px rgba(0,0,0,.35)">
+          <span style="align-self:flex-end;width:20px;height:20px;border-radius:10px;border:1px solid #a89b8c"></span>
+          <span class="disp" style="font-size:18px;color:#7c2513">La rosa</span>
+          <div class="t" style="height:170px"><img src="/_blob/735c55f37d8a32a529bb613e00ad7ff1" alt="" style="object-position:30% 50%"></div>
+          <div style="display:flex;gap:4px;justify-content:center"><span style="width:12px;height:4px;border-radius:2px;background:#7c2513"></span><span style="width:4px;height:4px;border-radius:2px;background:#a89b8c"></span><span style="width:4px;height:4px;border-radius:2px;background:#a89b8c"></span></div>
+          <div class="ln" style="width:90%"></div><div class="ln" style="width:65%"></div>
+          <span style="margin-top:auto;height:24px;border-radius:12px;background:#7c2513;color:#edf0da;font-size:8px;letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;justify-content:center">La quiero</span>
+        </div>
+      </div>
+      <p class="ley" style="margin:20px 0 0;color:#4a4b42">Cuándo encaja</p>
+      <p style="margin:6px 0 0;font-size:13.5px;line-height:1.55">Con pocos diseños (2–5) y prisa por publicar.</p>
+      <p class="ley" style="margin:18px 0 0;color:#7c2513">A favor</p>
+      <ul>
+        <li>Rápido de montar, sin páginas nuevas.</li>
+        <li>La rejilla sigue detrás: se compara sin perder el sitio.</li>
+      </ul>
+      <p class="ley" style="margin:14px 0 0;color:#4a4b42">En contra</p>
+      <ul>
+        <li>Sin URL propia: un #la-rosa se puede compartir, pero Google no lo trata como página.</li>
+        <li>Más JS: foco atrapado, Esc, scroll bloqueado.</li>
+        <li>En móvil el panel ocupa la pantalla entera: acaba siendo una ficha igualmente.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1300}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

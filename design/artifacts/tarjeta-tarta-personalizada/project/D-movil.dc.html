@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>D · Carta de diseños — móvil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&amp;family=Karla:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7c2513}a:hover{color:#57190d}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 430px; height: 1240px; box-sizing: border-box; padding: 48px 24px; background: #edf0da; color: #1a1a1a; font-family: 'Karla', sans-serif; display: flex; flex-direction: column; gap: 28px; overflow: hidden">
+  <div>
+    <p style="margin: 0; font-weight: 600; font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; color: #7c2513">Diseños de Carmela</p>
+    <h2 style="margin: 14px 0 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 38px; line-height: 1.05">Elige uno, o deja que te proponga</h2>
+  </div>
+
+  <nav aria-label="Diseños" style="margin: 0 -24px; padding: 0 24px; display: flex; gap: 8px; overflow-x: auto">
+    <button type="button" aria-current="true" style="flex: none; min-height: 44px; padding: 0 18px; border: 1px solid #7c2513; border-radius: 999px; background: #7c2513; color: #edf0da; font-weight: 500; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase">La rosa</button>
+    <button type="button" style="flex: none; min-height: 44px; padding: 0 18px; border: 1px solid rgba(168,155,140,0.9); border-radius: 999px; background: transparent; color: #1a1a1a; font-weight: 500; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase">Volantes de azúcar</button>
+    <button type="button" style="flex: none; min-height: 44px; padding: 0 18px; border: 1px solid rgba(168,155,140,0.9); border-radius: 999px; background: transparent; color: #1a1a1a; font-weight: 500; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase">[Diseño 3]</button>
+    <a href="#" style="flex: none; min-height: 44px; display: inline-flex; align-items: center; padding: 0 18px; border-radius: 999px; background: #f0dfad; color: #7c2513; font-weight: 500; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none">A tu medida</a>
+  </nav>
+
+  <section style="display: flex; flex-direction: column">
+    <div style="position: relative; aspect-ratio: 4 / 5; border-radius: 20px; overflow: hidden; background: rgba(168,155,140,0.18)">
+      <img src="/_blob/61f521aa6f53671300c2c7d90874d5a7" alt="Tarta rosa con borde de merengue mientras se pinta a pincel su glaseado rojo." style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: 28% 75%">
+      <span style="position: absolute; right: 12px; bottom: 12px; padding: 6px 11px; border-radius: 999px; background: rgba(237,240,218,0.94); font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase">1 / 2</span>
+    </div>
+    <div style="margin-top: 10px; display: flex; gap: 8px">
+      <button type="button" aria-label="Ver foto 1 de 2" aria-current="true" style="width: 56px; height: 56px; padding: 0; border: 0; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 2px #edf0da, 0 0 0 4px #7c2513"><img src="/_blob/61f521aa6f53671300c2c7d90874d5a7" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: 28% 75%"></button>
+      <button type="button" aria-label="Ver foto 2 de 2" style="width: 56px; height: 56px; padding: 0; border: 0; border-radius: 10px; overflow: hidden; opacity: 0.75"><img src="/_blob/ec59c1b08efe0550e61b6012ef18bf95" alt="" style="display: block; width: 100%; height: 100%; object-fit: cover"></button>
+    </div>
+
+    <p style="margin: 24px 0 0; font-weight: 600; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #7c2513">Cumpleaños · Aniversarios</p>
+    <h3 style="margin: 10px 0 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; font-size: 36px; line-height: 1.05">La rosa</h3>
+    <p style="margin: 12px 0 0; font-size: 15px; line-height: 1.6; color: rgba(26,26,26,0.72)">[Descripción del diseño: cómo es, qué lleva por fuera, para cuántas personas sale y qué se puede cambiar.]</p>
+
+    <div style="margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(168,155,140,0.6); display: flex; flex-direction: column; gap: 14px">
+      <span style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(26,26,26,0.55)">A presupuesto</span>
+      <a href="#" style="min-height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 999px; background: #7c2513; color: #edf0da; font-weight: 500; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none">Pedir esta tarta</a>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":430,"height":1240}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

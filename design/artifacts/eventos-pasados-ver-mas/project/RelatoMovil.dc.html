@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>C · Relato — móvil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&amp;family=Karla:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#edf0da}
+a{color:#7c2513}a:hover{color:#571a0d}
+.titulo{font-family:Fraunces,Georgia,serif;font-weight:400}
+.antetitulo{font-family:Karla,sans-serif;font-weight:600;font-size:12px;letter-spacing:.25em;text-transform:uppercase}
+.leyenda{font-family:Karla,sans-serif;font-weight:600;font-size:10px;letter-spacing:.3em;text-transform:uppercase}
+.dato{font-family:Karla,sans-serif;font-weight:400;font-size:11px;letter-spacing:.18em;text-transform:uppercase}
+.accion{font-family:Karla,sans-serif;font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.btn-ver{background:transparent;color:#7c2513;border:1px solid #7c2513;cursor:pointer;transition:background .2s,color .2s}
+.btn-ver:hover{background:#7c2513;color:#edf0da}
+.btn-play{background:#f0dfad;color:#7c2513;cursor:pointer;transition:background .2s}
+.btn-play:hover{background:#fff}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #edf0da; color: #000; font-family: Karla, sans-serif; padding: 48px 0 64px">
+<section style="width: 100%; padding: 0 24px; box-sizing: border-box">
+<p class="antetitulo" style="margin: 0; color: #7c2513">Montajes ya servidos</p>
+<h2 class="titulo" style="margin: 16px 0 0; font-size: 36px; line-height: 1.08">Cada celebración, una mesa distinta</h2>
+<div style="margin-top: 40px; display: flex; flex-direction: column; gap: 40px">
+<sc-for list="{{eventos}}" as="ev" hint-placeholder-count="2">
+<article style="background: #ffffff; border-radius: 24px; overflow: hidden; border: 1px solid rgba(168,155,140,.6); box-shadow: 0 12px 28px -8px rgba(0,0,0,.14)">
+<div style="aspect-ratio: 4 / 3; overflow: hidden; background: rgba(168,155,140,.15)">
+<img src="{{ev.foto}}" alt="{{ev.alt}}" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: {{ev.enfoque}}">
+</div>
+<div style="padding: 32px 24px">
+<p class="antetitulo" style="margin: 0; color: #7c2513">{{ev.tipo}}</p>
+<h3 class="titulo" style="margin: 12px 0 0; font-size: 30px; line-height: 1.1">{{ev.titulo}}</h3>
+<p style="margin: 18px 0 0; font-size: 14px; line-height: 1.65; color: rgba(0,0,0,.7)">{{ev.desc}}</p>
+<div class="dato" style="margin-top: 28px; padding-top: 20px; border-top: 1px solid rgba(168,155,140,.45); display: flex; justify-content: space-between; gap: 16px; color: rgba(0,0,0,.55)">
+<span>{{ev.mes}}</span>
+<span>{{ev.lugar}}</span>
+</div>
+<button type="button" class="btn-ver accion" onClick="{{ev.alternar}}" aria-expanded="{{ev.expandido}}" style="margin-top: 24px; width: 100%; border-radius: 999px; min-height: 52px">{{ev.etiqueta}}</button>
+</div>
+<sc-if value="{{ev.abierto}}" hint-placeholder-val="{{ true }}">
+<div style="border-top: 1px solid rgba(168,155,140,.45); padding: 32px 24px 28px">
+<p class="leyenda" style="margin: 0; color: #7c2513">Cómo se hizo</p>
+<div style="margin-top: 8px; display: flex; flex-direction: column">
+<sc-for list="{{ev.capitulos}}" as="cap" hint-placeholder-count="3">
+<div style="padding: 24px 0 28px; border-bottom: 1px solid rgba(168,155,140,.3)">
+<div style="display: flex; align-items: baseline; gap: 14px">
+<span class="titulo" style="font-size: 32px; line-height: 1; color: #7c2513">{{cap.num}}</span>
+<h4 class="antetitulo" style="margin: 0; color: #000">{{cap.titulo}}</h4>
+</div>
+<p style="margin: 12px 0 0; font-size: 14px; line-height: 1.65; color: rgba(0,0,0,.7)">{{cap.texto}}</p>
+<div style="margin-top: 16px; display: flex; gap: 10px">
+<sc-for list="{{cap.media}}" as="m" hint-placeholder-count="2">
+<figure style="{{m.estilo}}; margin: 0; position: relative; border-radius: 14px; overflow: hidden; background: rgba(168,155,140,.18)">
+<sc-if value="{{m.conImagen}}" hint-placeholder-val="{{ true }}">
+<img src="{{m.src}}" alt="{{m.alt}}" style="display: block; width: 100%; height: 100%; object-fit: cover; object-position: {{m.pos}}">
+</sc-if>
+<sc-if value="{{m.esVideo}}" hint-placeholder-val="{{ false }}">
+<div style="position: absolute; inset: 0; background: rgba(0,0,0,.22)"></div>
+<button type="button" class="btn-play" aria-label="{{m.etiquetaPlay}}" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 52px; height: 52px; border-radius: 999px; border: 0; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg></button>
+<span class="dato" style="position: absolute; left: 8px; bottom: 8px; color: #fff; background: rgba(0,0,0,.5); border-radius: 999px; padding: 4px 8px">{{m.dur}}</span>
+</sc-if>
+<sc-if value="{{m.esHueco}}" hint-placeholder-val="{{ false }}">
+<div class="leyenda" style="position: absolute; inset: 0; border: 1px dashed rgba(124,37,19,.35); border-radius: 14px; display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,.55); text-align: center; padding: 8px">Foto pendiente</div>
+</sc-if>
+</figure>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="margin-top: 28px; padding: 28px 24px; border-radius: 20px; background: #7c2513; display: flex; flex-direction: column; gap: 20px">
+<div>
+<p class="antetitulo" style="margin: 0; color: #f0dfad">¿Te imaginas la tuya?</p>
+<p class="titulo" style="margin: 10px 0 0; font-size: 24px; line-height: 1.2; color: #edf0da">Cuéntame la fecha, el sitio y los invitados</p>
+</div>
+<a href="#solicitud" class="accion" style="background: #f0dfad; color: #7c2513; text-decoration: none; border-radius: 999px; padding: 18px 24px; text-align: center">Pedir presupuesto</a>
+<button type="button" class="accion" onClick="{{ev.alternar}}" style="align-self: center; min-height: 44px; background: transparent; border: 0; color: #edf0da; cursor: pointer; text-decoration: underline; text-underline-offset: 6px">Cerrar</button>
+</div>
+</div>
+</sc-if>
+</article>
+</sc-for>
+</div>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"primeraAbierta":{"editor":"boolean","default":true},"altoCapitulo":{"editor":"range","default":250,"min":180,"max":360,"step":10,"unit":"px"},"$preview":{"width":430,"height":3300}}'>
+const F = {
+  mesa: '/_blob/2e13ba3f12e9c9325f1a6051964e500d',
+  pav: '/_blob/ca8918a18627e0b430d3e287f6ac13a1',
+  pavDetalle: '/_blob/caf03663ea8ae55856ee2fa8035cc31a',
+  obrador: '/_blob/26c48646eec4f74359335ef9b178add8',
+  manga: '/_blob/cf3aca9af2fa90183aa107af28f35b39'
+};
+const EVENTOS = [
+  { id: 'mesa', tipo: 'Cumpleaños', titulo: 'Mesa dulce sobre musgo y eucalipto',
+    desc: 'Un montaje largo sobre mantel negro, con el verde haciendo de estructura: musgo, eucalipto y paniculata sostienen la línea y los dulces se apoyan en ella. Cada bocado va en su propia pieza, con su cucharilla, para cogerlo de pie y sin tener que cortar nada.',
+    foto: F.mesa, enfoque: '50% 62%', alt: 'Mesa larga con mantel negro, musgo y ramas de eucalipto entre bocados dulces servidos en piezas individuales.',
+    mes: '[MES 2026]', lugar: 'Málaga',
+    media: [
+      { tipo: 'foto', src: F.mesa, pos: '15% 30%', pie: 'La mesa, de punta a punta', alt: 'Detalle de la mesa dulce: bocados entre musgo y eucalipto.' },
+      { tipo: 'foto', src: F.obrador, pos: '50% 40%', pie: 'La víspera, en el obrador', alt: 'En blanco y negro, rematando a mano piezas pequeñas sobre la encimera del obrador.' },
+      { tipo: 'video', src: F.mesa, pos: '70% 60%', pie: 'El montaje en un minuto', dur: '0:58' },
+      { tipo: 'foto', src: F.manga, pos: '50% 55%', pie: 'Bocado a bocado', alt: 'Una mano sostiene un bocado verde mientras la otra lo remata con la manga.' },
+      { tipo: 'hueco', pie: '[PIE DE FOTO]' },
+      { tipo: 'hueco', pie: '[PIE DE FOTO]' }
+    ],
+    capitulos: [
+      { num: '01', titulo: 'La víspera', texto: '[Qué se preparó y cuándo: una o dos líneas sobre el obrador.]', idx: [1, 3] },
+      { num: '02', titulo: 'El montaje', texto: 'El verde hace de estructura: musgo, eucalipto y paniculata sostienen la línea y los dulces se apoyan en ella.', idx: [2, 0] },
+      { num: '03', titulo: 'La mesa servida', texto: 'Cada bocado en su propia pieza, con su cucharilla, para cogerlo de pie y sin cortar nada.', idx: [4, 5] }
+    ] },
+  { id: 'pav', tipo: 'Cumpleaños', titulo: 'Pavlova de melocotón',
+    desc: 'Merengue, nata montada a mano y melocotón en gajos colocado uno a uno hasta cerrar la corona. Se monta el mismo día de la fiesta: ni la fruta ni el merengue aguantan una noche de nevera sin perder el punto.',
+    foto: F.pav, enfoque: '50% 55%', alt: 'Tarta redonda de merengue y nata coronada con gajos de melocotón, sobre una bandeja dorada.',
+    mes: '[MES 2026]', lugar: 'Málaga',
+    media: [
+      { tipo: 'foto', src: F.pavDetalle, pos: '50% 50%', pie: 'Gajo a gajo', alt: 'Detalle de los gajos de melocotón sobre la nata.' },
+      { tipo: 'video', src: F.pav, pos: '50% 30%', pie: 'Cerrando la corona', dur: '0:32' },
+      { tipo: 'foto', src: F.pav, pos: '50% 90%', pie: 'Lista para salir', alt: 'La pavlova terminada sobre su bandeja dorada.' },
+      { tipo: 'hueco', pie: '[PIE DE FOTO]' }
+    ],
+    capitulos: [
+      { num: '01', titulo: 'La fruta', texto: 'Melocotón en gajos, colocado uno a uno hasta cerrar la corona.', idx: [0, 2] },
+      { num: '02', titulo: 'El montaje', texto: 'Se monta el mismo día de la fiesta: ni la fruta ni el merengue aguantan una noche de nevera.', idx: [1, 3] }
+    ] }
+];
+class Component extends DCLogic {
+  renderVals() {
+    const ab = (this.state && this.state.abiertos) || { mesa: this.props.primeraAbierta ?? true };
+    const alto = this.props.altoCapitulo ?? 250;
+    const deco = (m) => ({
+      ...m,
+      alt: m.alt || '',
+      dur: m.dur || '',
+      conImagen: m.tipo !== 'hueco' && !!m.src,
+      esVideo: m.tipo === 'video',
+      esHueco: m.tipo === 'hueco',
+      etiquetaPlay: 'Reproducir vídeo: ' + m.pie,
+      estilo: 'height: ' + alto + 'px; ' + (m.tipo === 'video' ? 'flex: 0 0 ' + Math.round(alto * 9 / 16) + 'px' : 'flex: 1 1 0; min-width: 0')
+    });
+    const eventos = EVENTOS.map((ev) => {
+      const abierto = !!ab[ev.id];
+      return {
+        ...ev,
+        abierto,
+        expandido: abierto ? 'true' : 'false',
+        etiqueta: abierto ? 'Ver menos' : 'Ver cómo se hizo',
+        alternar: () => this.setState({ abiertos: { ...ab, [ev.id]: !abierto } }),
+        capitulos: ev.capitulos.map((c) => ({ ...c, media: c.idx.map((k) => deco(ev.media[k])) }))
+      };
+    });
+    return { eventos };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Home iPhone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600&amp;family=Playfair+Display:wght@400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#edf0da}
+a{color:inherit;text-decoration:none}
+.disp{font-family:'Playfair Display',Georgia,serif;font-weight:400;letter-spacing:-.005em}
+.ante{font-size:12px;line-height:16px;font-weight:600;letter-spacing:.25em;text-transform:uppercase}
+.ley{font-size:10px;line-height:1.4;font-weight:600;letter-spacing:.3em;text-transform:uppercase}
+.dato{font-weight:400;letter-spacing:.18em;text-transform:uppercase}
+.acc{font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:#7c2513;color:#edf0da;padding:12px 24px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;box-shadow:0 10px 15px -3px rgba(0,0,0,.25)}
+.vidrio{display:inline-flex;align-items:center;gap:12px;border-radius:999px;border:1.5px solid rgba(237,240,218,.9);background:rgba(124,37,19,.7);color:#edf0da;padding:16px 32px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.foto{position:relative;overflow:hidden;border-radius:24px;background:rgba(168,155,140,.15);box-shadow:0 0 0 1px rgba(168,155,140,.4),0 4px 6px -1px rgba(0,0,0,.05)}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.subr{border-bottom:1px solid rgba(237,240,218,.45);padding-bottom:4px;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#edf0da}
+.cambia{outline:3px dashed #2f6bd8;outline-offset:-3px}
+.chip{position:absolute;top:8px;left:8px;right:8px;z-index:40;font-family:Karla,sans-serif;font-size:10px;line-height:1.3;font-weight:600;letter-spacing:.04em;padding:4px 8px;border-radius:4px;color:#fff;background:#2f6bd8;width:max-content;max-width:calc(100% - 16px);box-sizing:border-box}
+.chip.igual{background:rgba(20,20,20,.62)}
+</style>
+</helmet>
+<div style="width: 390px; font-family: Karla, sans-serif; color: #000; background: #edf0da; position: relative">
+
+<header class="cambia" style="position: relative; background: #7c2513; color: #f0dfad; height: 68px; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-sizing: border-box">
+<a href="#" class="disp" style="font-size: 20px; color: #f0dfad">Estimada Carmela</a>
+<button type="button" aria-label="Abrir el menú" style="width: 44px; height: 44px; border: 0; background: transparent; color: #f0dfad; display: grid; place-items: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg></button>
+<span class="chip" style="{{chip}}; top: auto; bottom: -22px; left: auto; right: 8px">3 · el panel del menú suma «Personalizadas»</span>
+</header>
+
+<section class="cambia" style="position: relative">
+<div style="position: relative; background: #7c2513">
+<svg aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; color: rgba(237,240,218,.12); pointer-events: none">
+<defs>
+<path id="v-os" fill="none" stroke="currentColor" stroke-width="1" d="M-240 0C-210-8-150-8-120 0S-30 8 0 0S90-8 120 0S210 8 240 0"></path>
+<path id="v-oh" fill="none" stroke="currentColor" stroke-width="1" d="M-240 0C-210-12-150-12-120 0S-30 12 0 0S90-12 120 0S210 12 240 0"></path>
+<pattern id="v-ondas" width="240" height="132" patternUnits="userSpaceOnUse">
+<use href="#v-os" transform="translate(0 18)"></use><use href="#v-oh" transform="translate(80 54)"></use><use href="#v-os" transform="translate(170 90)"></use><use href="#v-oh" transform="translate(45 118)"></use>
+</pattern>
+</defs>
+<rect width="100%" height="100%" fill="url(#v-ondas)"></rect>
+</svg>
+<div style="position: relative; padding: 56px 24px">
+<span class="chip" style="{{chip}}; top: 18px; left: 24px">3 · CAMBIA: entradilla + tres enlaces</span>
+<p class="ante" style="margin: 0; color: #edf0da">Alta pastelería · Málaga</p>
+<h1 class="disp" style="margin: 20px 0 0; font-size: 36px; line-height: 1.05; color: #edf0da; text-wrap: balance">La estética y el sabor pesan lo mismo</h1>
+<p style="margin: 24px 0 0; font-size: 16px; line-height: 1.625; color: rgba(237,240,218,.8)">Tartas de temporada, tartas a tu medida y mesas dulces para tus celebraciones. Cada pieza se hace una a una, para el día concreto que celebras.</p>
+<ul style="list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px 24px">
+<li><a href="#" class="subr">La carta</a></li>
+<li><a href="#" class="subr">Personalizadas</a></li>
+<li><a href="#" class="subr">Eventos</a></li>
+</ul>
+<p style="margin: 24px 0 0; font-size: 12px; color: rgba(237,240,218,.6)">Todo por encargo · con dos días laborables de antelación</p>
+</div>
+<div style="position: relative; height: 416px; overflow: hidden">
+<img src="/_blob/01153347497ca2f3feb9338203e8c08c" alt="Preparando un postre con la manga pastelera en el obrador." style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; display: block">
+</div>
+</div>
+<div style="position: relative">
+<span class="chip igual" style="{{chipIgual}}">SIN CAMBIOS</span>
+<ul class="dato" style="list-style: none; margin: 0; padding: 24px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 24px; font-size: 11px; color: rgba(0,0,0,.5)">
+<li>Escuela Torreblanca</li><li>Marbella Club</li><li>Saddle</li><li>DSTAgE</li>
+</ul>
+</div>
+<div aria-hidden="true" style="position: absolute; left: 0; right: 0; top: 776px; border-top: 2px dashed #2f6bd8; z-index: 45; {{chip}}">
+<span style="position: absolute; right: 8px; top: -22px; font-size: 10px; font-weight: 600; color: #2f6bd8; background: #fff; padding: 2px 6px; border-radius: 4px">pliegue iPhone · 844</span>
+</div>
+</section>
+
+<section class="cambia" style="position: relative">
+<span class="chip" style="{{chip}}">1 · CAMBIA: dos entradas apiladas</span>
+<div id="carta-m" style="position: relative; height: 288px; overflow: hidden; background: #a89b8c">
+<img src="/_blob/b098a47de2df133be8975a5acc28d0bf" alt="Pavlova coronada de gajos de melocotón asado." style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 46%; display: block">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(48,18,9,.52) 0%, rgba(48,18,9,.22) 55%, rgba(48,18,9,0) 78%)"></div>
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px">
+<p class="ley" style="margin: 0; color: #edf0da">Temporada · precio cerrado</p>
+<a href="#" class="vidrio">La carta <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+</div>
+<div style="position: relative; height: 288px; overflow: hidden; background: #a89b8c">
+<img src="/_blob/d2e9adbb82b303a8191147b52680b76f" alt="Tarta de boda con volantes blancos de azúcar." style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; display: block">
+<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(48,18,9,.52) 0%, rgba(48,18,9,.22) 55%, rgba(48,18,9,0) 78%)"></div>
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px">
+<p class="ley" style="margin: 0; color: #edf0da">A medida · bodas, cumpleaños</p>
+<a href="#" class="vidrio">Personalizadas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a>
+</div>
+</div>
+</section>
+
+<section class="cambia" style="position: relative; padding: 64px 24px">
+<span class="chip" style="{{chip}}">2 · CAMBIA: una foto, un destino</span>
+<p class="ante" style="margin: 0; color: #7c2513">Eventos</p>
+<h2 class="disp" style="margin: 20px 0 0; font-size: 36px; line-height: 1.05; text-wrap: balance">Cada celebración, una mesa distinta</h2>
+<p style="margin: 24px 0 0; font-size: 16px; line-height: 1.625; color: rgba(0,0,0,.8)">Mesas dulces, tartas y postres para el día que celebras. El montaje se piensa con la fecha, el sitio y los invitados delante, así que no sale dos veces igual.</p>
+<a href="#" class="foto" style="display: block; margin-top: 48px; aspect-ratio: 4 / 5">
+<img src="/_blob/e569883f23b37852da4e9ca01b20d3d6" alt="Mesa larga con mantel negro, musgo y eucalipto entre bocados dulces." style="object-position: 50% 62%">
+<span class="pill" style="position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%)">Ver todos los eventos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+</a>
+<p class="dato" style="margin: 16px 0 0; font-size: 11px; color: rgba(0,0,0,.5)">Mesa dulce · cumpleaños · Málaga</p>
+</section>
+
+<section style="position: relative; padding: 64px 0">
+<span class="chip igual" style="{{chipIgual}}">SIN CAMBIOS · Sobre mí</span>
+<div style="background: #7c2513; padding: 56px 24px">
+<h2 class="disp" style="margin: 0; font-size: 48px; line-height: 1; color: #edf0da">Sobre mí</h2>
+<p style="margin: 32px 0 0; font-size: 14px; line-height: 1.625; color: rgba(237,240,218,.8)">Estudié ADE y trabajé en una consultora, hasta que me decidí por lo que de verdad me apasionaba: me formé en alta pastelería en la Escuela Torreblanca.</p>
+<p style="margin: 24px 0 0; font-size: 14px; line-height: 1.625; color: rgba(237,240,218,.8)">Después llegaron Marbella Club y restaurantes con estrella Michelin como Saddle y DSTAgE. Ahí aprendí el valor de la precisión, del producto y del cuidado por cada detalle.</p>
+<p style="margin: 24px 0 0; font-size: 14px; line-height: 1.625; color: rgba(237,240,218,.8)">La pastelería es una forma de expresar cariño. De ahí nace Estimada Carmela: alta pastelería de Málaga para ocasiones en las que estética y sabor pesan lo mismo.</p>
+<p class="disp" style="margin: 40px 0 0; font-size: 20px; color: #edf0da">Espero que disfrutéis de recibirlo tanto como yo disfruto creándolo.</p>
+<div style="margin-top: 40px; aspect-ratio: 2 / 3; border-radius: 24px; overflow: hidden; box-shadow: 0 0 0 1px rgba(237,240,218,.15), 0 20px 25px -5px rgba(0,0,0,.2)">
+<img src="/_blob/8df404eb050331c33171429a6b54b27f" alt="Emplatando un postre con pinzas." style="width: 100%; height: 100%; object-fit: cover; display: block">
+</div>
+</div>
+</section>
+
+<section style="position: relative; padding: 64px 0; overflow: hidden">
+<span class="chip igual" style="{{chipIgual}}">SIN CAMBIOS · Galería</span>
+<ul style="list-style: none; margin: 0; padding: 12px; display: flex; gap: 16px">
+<li style="flex: 0 0 304px"><div class="foto" style="aspect-ratio: 4 / 5"><img src="/_blob/da76b54eabaa554ac73b2f2f13dae7e9" alt="Colocando decoración sobre bocados de chocolate."></div></li>
+<li style="flex: 0 0 304px"><div class="foto" style="aspect-ratio: 4 / 5"><img src="/_blob/8df404eb050331c33171429a6b54b27f" alt="Emplatando un postre."></div></li>
+</ul>
+</section>
+
+<section style="position: relative; padding: 64px 24px">
+<span class="chip igual" style="{{chipIgual}}">SIN CAMBIOS · Contacto (resumido)</span>
+<div style="overflow: hidden; border-radius: 24px; background: #fff; box-shadow: 0 0 0 1px rgba(168,155,140,.25), 0 20px 25px -5px rgba(0,0,0,.05)">
+<div style="padding: 32px">
+<p class="ante" style="margin: 0; color: #7c2513">Málaga</p>
+<p class="disp" style="margin: 12px 0 0; font-size: 30px; line-height: 1.25">Escultor Marín Higuero, 6</p>
+<p style="margin: 12px 0 0; font-size: 14px; color: rgba(0,0,0,.6)">Primera planta — 29017</p>
+<div style="margin-top: 32px"><a href="#" class="pill">WhatsApp</a></div>
+</div>
+<div style="height: 288px; background-image: url(/_blob/ee19720f50626a14ccaa42160b1113fb); background-size: cover; background-position: center"></div>
+</div>
+</section>
+
+<footer class="cambia" style="position: relative; background: #7c2513; color: #f0dfad; padding: 48px 24px; text-align: center">
+<span class="chip" style="{{chip}}">3 · hereda el menú nuevo</span>
+<p class="disp" style="margin: 16px 0 0; font-size: 20px">Estimada Carmela</p>
+<p class="ante" style="margin: 16px 0 0">Encuéntranos</p>
+<p style="margin: 6px 0 0; font-size: 14px; color: rgba(240,223,173,.8)">Escultor Marín Higuero, 6 · Primera planta<br>29017 Málaga</p>
+<ul style="list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 32px">
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">La carta</li>
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Personalizadas</li>
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Eventos</li>
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Sobre mí</li>
+<li class="acc" style="font-size: 14px; color: rgba(240,223,173,.8)">Contacto</li>
+</ul>
+<p class="dato" style="margin: 40px 0 0; border-top: 1px solid rgba(240,223,173,.15); padding-top: 24px; font-size: 12px; color: rgba(240,223,173,.8)">© 2026 Estimada Carmela</p>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"marcas":{"editor":"boolean","default":true},"$preview":{"width":390,"height":5700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const on = this.props.marcas ?? true;
+    return { chip: on ? '' : 'display:none', chipIgual: on ? '' : 'display:none' };
+  }
+}
+</script>
+</body>
+</html>

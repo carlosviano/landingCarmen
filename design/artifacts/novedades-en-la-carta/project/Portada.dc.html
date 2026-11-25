@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Novedades en portada y ficha</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400&amp;family=Karla:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#7c2513}a:hover{color:#571a0d}
+.titular{font-family:'Fraunces',Georgia,serif;font-weight:300;letter-spacing:-0.015em}
+.titulo{font-family:'Fraunces',Georgia,serif;font-weight:400;letter-spacing:-0.005em}
+.antetitulo{font-family:'Karla',sans-serif;font-size:12px;line-height:16px;font-weight:600;letter-spacing:0.25em;text-transform:uppercase}
+.leyenda{font-family:'Karla',sans-serif;font-size:10px;line-height:1.4;font-weight:600;letter-spacing:0.3em;text-transform:uppercase}
+.dato{font-family:'Karla',sans-serif;font-weight:400;letter-spacing:0.18em;text-transform:uppercase}
+.accion{font-family:'Karla',sans-serif;font-weight:500;letter-spacing:0.1em;text-transform:uppercase}
+</style>
+</helmet>
+<div style="width: 1280px; height: 1240px; background: #edf0da; color: #000; font-family: 'Karla', sans-serif; display: flex; flex-direction: column;">
+
+  <p class="leyenda" style="margin: 0; padding: 20px 24px 12px; color: rgba(0,0,0,0.55);">C · Portada: aviso en la franja del hero</p>
+
+  <section style="background: #7c2513; color: #edf0da;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 72px 24px 64px; box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 56px; align-items: center;">
+      <div>
+        <p class="antetitulo" style="margin: 0; color: #f0dfad;">Alta pastelería · Málaga</p>
+        <h1 class="titular" style="margin: 16px 0 0; font-size: 60px; line-height: 1.05;">Cuando la estética y el sabor van de la mano</h1>
+        <div style="margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="#" class="accion" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; background: #f0dfad; color: #7c2513; font-size: 12px; text-decoration: none;">La carta</a>
+          <a href="#" class="accion" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; outline: 1px solid #f0dfad; color: #edf0da; font-size: 12px; text-decoration: none;">Personalizadas</a>
+        </div>
+      </div>
+      <div style="height: 300px; border-radius: 24px; background: rgba(237,240,218,0.08); outline: 1px dashed rgba(240,223,173,0.5); display: grid; place-items: center;">
+        <span class="leyenda" style="color: #f0dfad;">Foto del hero (sin cambios)</span>
+      </div>
+    </div>
+  </section>
+
+  <div style="background: #f0dfad;">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 0 24px; box-sizing: border-box; height: 80px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <span class="leyenda" style="padding: 7px 12px 6px 14px; border-radius: 999px; background: #7c2513; color: #edf0da;">Nuevo</span>
+        <p class="titulo" style="margin: 0; font-size: 22px;">Pavlova de mango <span style="color: #a89b8c; padding: 0 8px;" aria-hidden="true">·</span> [Nueva tarta]</p>
+      </div>
+      <a href="#" class="accion" style="display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-size: 12px; color: #7c2513; text-decoration: none;">Ver las novedades
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+    </div>
+  </div>
+
+  <p class="leyenda" style="margin: 0; padding: 48px 24px 12px; color: rgba(0,0,0,0.55);">D · Ficha de la tarta: antetítulo «Nueva en la carta»</p>
+
+  <section style="flex: 1; border-top: 1px solid rgba(168,155,140,0.5);">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 48px 24px; box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 64px; align-items: center;">
+      <div style="position: relative; height: 480px; display: grid; place-items: center;">
+        <img src="/_blob/defb380326ce97364228164e9f5a4897" alt="Pavlova alta de merengue coronada de fruta." style="max-width: 100%; max-height: 100%; object-fit: contain;">
+      </div>
+      <div>
+        <p class="antetitulo" style="margin: 0; color: #7c2513; display: flex; align-items: center; gap: 12px;">
+          <span style="width: 8px; height: 8px; border-radius: 999px; background: #7c2513;" aria-hidden="true"></span>Nueva en la carta
+        </p>
+        <h1 class="titular" style="margin: 14px 0 0; font-size: 56px; line-height: 1.05;">Pavlova de mango</h1>
+        <p style="margin: 18px 0 0; max-width: 46ch; line-height: 1.65; color: rgba(0,0,0,0.7);">[Descripción de Carmen. El resto de la ficha —qué lleva, alérgenos, tamaños y pedido— se queda igual.]</p>
+        <div style="margin-top: 28px; display: flex; gap: 10px;">
+          <button type="button" aria-pressed="true" class="accion" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid #7c2513; background: #7c2513; color: #edf0da; font-size: 11px;">4–6 personas · 25 €</button>
+          <button type="button" aria-pressed="false" class="accion" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid rgba(0,0,0,0.4); background: transparent; color: #000; font-size: 11px;">8–10 personas · 42 €</button>
+        </div>
+        <a href="#" class="accion" style="margin-top: 20px; display: inline-flex; align-items: center; min-height: 48px; padding: 0 26px; border-radius: 999px; background: #7c2513; color: #edf0da; font-size: 12px; text-decoration: none;">Encargar por WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
