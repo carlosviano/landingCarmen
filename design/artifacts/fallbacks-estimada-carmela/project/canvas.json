@@ -1,0 +1,29 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-11T12:00:00Z" },
+  "title": "Fallbacks Estimada Carmela",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 900, "title": "404 · Escritorio", "radius": 8 },
+    "NoEncontrada-movil.dc.html": { "x": 1520, "y": 0, "w": 430, "h": 932, "title": "404 · Móvil (430×932)", "radius": 8 },
+    "Navegacion-escritorio.dc.html": { "x": 0, "y": 1332, "w": 1440, "h": 900, "title": "Fallo al cambiar de pantalla · Escritorio", "radius": 8 },
+    "Navegacion-movil.dc.html": { "x": 1520, "y": 1332, "w": 430, "h": 932, "title": "Fallo al cambiar de pantalla · Móvil", "radius": 8 },
+    "WhatsApp-escritorio.dc.html": { "x": 0, "y": 2664, "w": 1440, "h": 900, "title": "WhatsApp no se abre · Escritorio", "radius": 8 },
+    "WhatsApp-movil.dc.html": { "x": 1520, "y": 2664, "w": 430, "h": 932, "title": "WhatsApp no se abre · Móvil", "radius": 8 }
+  },
+  "order": [
+    "Main.dc.html",
+    "NoEncontrada-movil.dc.html",
+    "Navegacion-escritorio.dc.html",
+    "Navegacion-movil.dc.html",
+    "WhatsApp-escritorio.dc.html",
+    "WhatsApp-movil.dc.html"
+  ],
+  "notes": {
+    "t1": { "x": 0, "y": -260, "text": "1 · Página no encontrada (404)", "kind": "title1", "maxW": 1950 },
+    "t2": { "x": 0, "y": 1072, "text": "2 · No se ha podido cargar la pantalla", "kind": "title1", "maxW": 1950 },
+    "t3": { "x": 0, "y": 2404, "text": "3 · WhatsApp no se abre", "kind": "title1", "maxW": 1950 }
+  },
+  "designSystems": []
+}

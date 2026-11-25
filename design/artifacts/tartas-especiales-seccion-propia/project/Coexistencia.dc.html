@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Coexistencia de tarjetas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&amp;family=Karla:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7c2513}a:hover{color:#561a0d}
+.disp{font-family:'Cormorant Garamond',Georgia,serif}
+.ley{font-family:Karla,sans-serif;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase}
+</style>
+</helmet>
+<div style="width:1040px;height:900px;box-sizing:border-box;padding:48px 56px;background:#edf0da;font-family:Karla,sans-serif;color:#141410;display:flex;flex-direction:column;gap:32px">
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <span class="ley" style="color:#7c2513">Anatomía compartida</span>
+    <h2 class="disp" style="margin:0;font-weight:400;font-size:40px;line-height:1.05">Mismo marco, distinto contenido</h2>
+  </div>
+
+  <div style="display:flex;gap:28px;align-items:flex-start">
+    <div style="width:220px;display:flex;flex-direction:column;gap:10px">
+      <div style="aspect-ratio:4/5;border-radius:22px;background:#e3e4d0;display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <img src="/_blob/c9cc295504251a84da7eab6029ea720e" alt="Tarta de limón y merengue recortada, sin fondo." style="width:92%;height:auto">
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:9px;letter-spacing:.2em;color:#8b8c7f">01</span><span class="disp" style="font-size:22px">Limón y merengue</span></div>
+      <div style="height:1px;background:#c9cbb8"></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#4a4b42">4–6 · 8–10 personas</span><span style="color:#7c2513;font-weight:500;font-size:13px">desde [28 €]</span></div>
+      <span class="ley" style="margin-top:6px;color:#4a4b42">De la carta</span>
+    </div>
+    <div style="width:220px;display:flex;flex-direction:column;gap:10px">
+      <div style="position:relative;aspect-ratio:4/5;border-radius:22px;background:#e3e4d0;overflow:hidden">
+        <img src="/_blob/f95055443cf48bc906c623071e991076" alt="Tarta de boda de varios pisos cubierta de volantes blancos de azúcar." style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 55%">
+        <span style="position:absolute;left:10px;bottom:10px;display:flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:12px;background:rgba(237,240,218,.92);font-size:11px;font-weight:500">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="2"></rect><path d="M7 3h12a2 2 0 0 1 2 2v12"></path></svg>6
+        </span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:9px;letter-spacing:.2em;color:#8b8c7f">01</span><span class="disp" style="font-size:22px">Bodas</span></div>
+      <div style="height:1px;background:#c9cbb8"></div>
+      <div style="display:flex;justify-content:space-between;font-size:11px"><span style="color:#4a4b42">20–150 personas</span><span style="color:#7c2513;font-weight:500;font-size:13px">a presupuesto</span></div>
+      <span class="ley" style="margin-top:6px;color:#4a4b42">Personalizada</span>
+    </div>
+
+    <dl style="margin:0;flex:1;display:grid;grid-template-columns:118px minmax(0,1fr);row-gap:14px;column-gap:16px;font-size:13px;line-height:1.5;padding-top:4px">
+      <dt class="ley" style="color:#7c2513;padding-top:3px">Igual</dt>
+      <dd style="margin:0">Proporción 4:5, radio 22–24 px, fondo de pieza #e3e4d0, número + nombre en serif, raya, fila de datos. La rejilla nunca cambia de columnas.</dd>
+      <dt class="ley" style="color:#7c2513;padding-top:3px">Imagen</dt>
+      <dd style="margin:0">Carta: recorte centrado sobre el fondo de pieza. Personalizada: foto real a sangre dentro del mismo marco. El fondo de pieza es también el placeholder mientras carga.</dd>
+      <dt class="ley" style="color:#7c2513;padding-top:3px">Precio</dt>
+      <dd style="margin:0">Carta: «desde [28 €]». Personalizada: «a presupuesto». El precio orientativo vive en la ficha.</dd>
+      <dt class="ley" style="color:#7c2513;padding-top:3px">Contador</dt>
+      <dd style="margin:0">Píldora con nº de fotos, solo si hay 2 o más. Es la única señal nueva y dice «aquí hay más que ver».</dd>
+      <dt class="ley" style="color:#7c2513;padding-top:3px">Hover</dt>
+      <dd style="margin:0">Solo escritorio: fundido a la 2.ª foto. Sin flechas ni swipe en la tarjeta: el toque siempre abre la ficha.</dd>
+    </dl>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <span class="ley" style="color:#4a4b42">Vista mezclada (portada, búsqueda o «Todas»)</span>
+    <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px">
+      <div style="aspect-ratio:4/5;border-radius:18px;background:#e3e4d0;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="/_blob/c9cc295504251a84da7eab6029ea720e" alt="" style="width:90%"></div>
+      <div style="aspect-ratio:4/5;border-radius:18px;background:#e3e4d0;overflow:hidden"><img src="/_blob/f95055443cf48bc906c623071e991076" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 55%"></div>
+      <div style="aspect-ratio:4/5;border-radius:18px;background:#e3e4d0;display:flex;align-items:center;justify-content:center"><span class="ley" style="color:#8b8c7f;letter-spacing:.2em">[recorte]</span></div>
+      <div style="aspect-ratio:4/5;border-radius:18px;background:#e3e4d0;overflow:hidden"><img src="/_blob/735c55f37d8a32a529bb613e00ad7ff1" alt="" style="width:100%;height:100%;object-fit:cover;object-position:30% 50%"></div>
+      <div style="aspect-ratio:4/5;border-radius:18px;background:#e3e4d0;display:flex;align-items:center;justify-content:center"><span class="ley" style="color:#8b8c7f;letter-spacing:.2em">[recorte]</span></div>
+    </div>
+    <p style="margin:0;font-size:13px;line-height:1.5;color:#4a4b42">El ritmo lo dan los marcos, no las fotos: alternar recorte y foto se lee como intención, igual que en una revista. Lo que no se puede mezclar es tamaños de tarjeta.</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1040,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

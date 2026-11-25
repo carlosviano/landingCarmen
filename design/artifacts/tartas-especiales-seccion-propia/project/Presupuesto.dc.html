@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Flujo de presupuesto</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&amp;family=Karla:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7c2513}a:hover{color:#561a0d}
+.disp{font-family:'Cormorant Garamond',Georgia,serif}
+.ley{font-family:Karla,sans-serif;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase}
+.acc{font-family:Karla,sans-serif;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.ph{width:272px;height:540px;border-radius:34px;border:1px solid #c9cbb8;background:#edf0da;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 18px 40px -28px rgba(60,30,10,.45)}
+.bar{height:44px;flex-shrink:0;background:#7c2513;display:flex;align-items:center;padding:0 16px}
+.cap{margin:0;font-size:13px;line-height:1.55;color:#33342c;width:272px}
+.arr{align-self:center;margin-top:-90px;color:#a89b8c}
+.chip{height:30px;padding:0 12px;border-radius:15px;display:inline-flex;align-items:center;font-size:12px;border:1px solid rgba(20,20,16,.45)}
+.on{background:#7c2513;border-color:#7c2513;color:#edf0da}
+</style>
+</helmet>
+<div style="width:1440px;height:900px;box-sizing:border-box;padding:52px 56px;background:#f6f7ea;font-family:Karla,sans-serif;color:#141410">
+  <span class="ley" style="color:#7c2513">Recorrido</span>
+  <h2 class="disp" style="margin:8px 0 0;font-weight:400;font-size:42px;line-height:1">De la foto al presupuesto</h2>
+
+  <div style="margin-top:40px;display:flex;justify-content:space-between;align-items:flex-start">
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <span class="ley" style="color:#141410">1 · Mira y decide</span>
+      <div class="ph">
+        <div class="bar"><span class="disp" style="font-size:16px;color:#f0dfad">Estimada Carmela</span></div>
+        <div style="padding:14px 14px 0;display:flex;flex-direction:column;align-items:center;gap:10px">
+          <span class="disp" style="font-size:28px;color:#7c2513">Bodas</span>
+          <div style="width:244px;height:300px;border-radius:16px;overflow:hidden;background:#e3e4d0"><img src="/_blob/688be946245bea8810fdc99a284b5d6d" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <span style="font-size:11px;letter-spacing:.18em;color:#7c2513">2 / 6</span>
+        </div>
+        <div style="margin-top:auto;height:60px;border-top:1px solid #c9cbb8;display:flex;align-items:center;justify-content:space-between;padding:0 14px">
+          <span style="font-size:13px;font-weight:500;color:#7c2513">desde [180 €]</span>
+          <span class="acc" style="height:36px;padding:0 14px;border-radius:18px;background:#7c2513;color:#edf0da;font-size:10px;display:inline-flex;align-items:center;box-shadow:0 0 0 3px #f6f7ea,0 0 0 5px #7c2513">Pedir presupuesto</span>
+        </div>
+      </div>
+      <p class="cap">La barra fija lleva el botón siempre a mano. El precio orientativo filtra a quien no encaja antes de escribir.</p>
+    </div>
+
+    <svg class="arr" width="40" height="16" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 8h36M30 2l6 6-6 6"></path></svg>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <span class="ley" style="color:#141410">2 · Cuatro datos</span>
+      <div class="ph">
+        <div class="bar"><span class="disp" style="font-size:16px;color:#f0dfad">Estimada Carmela</span></div>
+        <div style="padding:18px 16px;display:flex;flex-direction:column;gap:14px">
+          <span class="disp" style="font-size:24px">Cuéntame tu idea</span>
+          <span class="ley" style="font-size:9px">Ocasión</span>
+          <span style="display:flex;flex-wrap:wrap;gap:6px"><span class="chip on">Boda</span><span class="chip">Cumpleaños</span><span class="chip">Otra</span></span>
+          <span class="ley" style="font-size:9px">Fecha</span>
+          <span style="height:36px;border-radius:18px;border:1px solid rgba(20,20,16,.45);display:flex;align-items:center;padding:0 14px;font-size:13px">14 may 2027</span>
+          <span class="ley" style="font-size:9px">Personas</span>
+          <span style="display:flex;gap:6px"><span class="chip">&lt;30</span><span class="chip">30–80</span><span class="chip on">80–150</span></span>
+          <span class="ley" style="font-size:9px">Tu idea (opcional)</span>
+          <span style="height:54px;border-radius:14px;border:1px solid rgba(20,20,16,.45);padding:8px 12px;box-sizing:border-box;font-size:12px;color:#4a4b42">Tres pisos, flores blancas…</span>
+          <span class="acc" style="height:40px;border-radius:20px;background:#7c2513;color:#edf0da;font-size:10px;display:flex;align-items:center;justify-content:center">Seguir en WhatsApp</span>
+        </div>
+      </div>
+      <p class="cap">Solo lo que Carmela necesita para dar precio: ocasión, fecha, personas. La idea es opcional para no frenar a nadie.</p>
+    </div>
+
+    <svg class="arr" width="40" height="16" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 8h36M30 2l6 6-6 6"></path></svg>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <span class="ley" style="color:#141410">3 · Mensaje ya escrito</span>
+      <div class="ph" style="background:#e9e4d8">
+        <div class="bar" style="background:#3a3a33"><span style="font-size:14px;color:#edf0da">Estimada Carmela</span></div>
+        <div style="padding:18px 12px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:1">
+          <div style="max-width:228px;background:#fdfdf8;border-radius:14px 14px 4px 14px;padding:12px 14px;font-size:12.5px;line-height:1.5;color:#141410;white-space:pre-line">Hola, Carmela. Quería pedir presupuesto para una tarta personalizada:
+· Ocasión: boda
+· Fecha: 14/05/2027
+· Personas: 80–150
+· Idea: tres pisos, flores blancas
+Me gustó la de «Bodas», foto 2 de 6:
+[enlace a la foto]</div>
+        </div>
+        <div style="height:52px;border-top:1px solid #d6d0c2;display:flex;align-items:center;padding:0 12px;gap:8px">
+          <span style="flex:1;height:34px;border-radius:17px;background:#fdfdf8;font-size:12px;color:#6b6a60;display:flex;align-items:center;padding:0 12px">Adjunta tus fotos de referencia</span>
+        </div>
+      </div>
+      <p class="cap">Mismo mecanismo que el pedido de la carta: nada se envía hasta que la clienta pulsa. El enlace a la foto le dice a Carmela qué estaba mirando.</p>
+    </div>
+
+    <svg class="arr" width="40" height="16" viewBox="0 0 40 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 8h36M30 2l6 6-6 6"></path></svg>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <span class="ley" style="color:#141410">4 · Qué pasa después</span>
+      <div class="ph">
+        <div class="bar"><span class="disp" style="font-size:16px;color:#f0dfad">Estimada Carmela</span></div>
+        <ol style="list-style:none;margin:0;padding:22px 18px;display:flex;flex-direction:column;gap:0">
+          <li style="display:flex;gap:14px;padding-bottom:22px;border-left:1px solid #c9cbb8;margin-left:10px;padding-left:20px;position:relative"><span style="position:absolute;left:-6px;top:3px;width:11px;height:11px;border-radius:6px;background:#7c2513"></span><span><span class="disp" style="display:block;font-size:20px">Presupuesto</span><span style="font-size:12px;color:#4a4b42;line-height:1.5">En [24–48 h], con precio cerrado y si la fecha está libre.</span></span></li>
+          <li style="display:flex;gap:14px;padding-bottom:22px;border-left:1px solid #c9cbb8;margin-left:10px;padding-left:20px;position:relative"><span style="position:absolute;left:-6px;top:3px;width:11px;height:11px;border-radius:6px;border:1px solid #7c2513;background:#edf0da;box-sizing:border-box"></span><span><span class="disp" style="display:block;font-size:20px">Reserva</span><span style="font-size:12px;color:#4a4b42;line-height:1.5">La fecha queda tuya con una señal de [x %].</span></span></li>
+          <li style="display:flex;gap:14px;padding-bottom:22px;border-left:1px solid #c9cbb8;margin-left:10px;padding-left:20px;position:relative"><span style="position:absolute;left:-6px;top:3px;width:11px;height:11px;border-radius:6px;border:1px solid #7c2513;background:#edf0da;box-sizing:border-box"></span><span><span class="disp" style="display:block;font-size:20px">Boceto</span><span style="font-size:12px;color:#4a4b42;line-height:1.5">[Opcional] Un dibujo o prueba de sabores antes de cerrar.</span></span></li>
+          <li style="display:flex;gap:14px;margin-left:10px;padding-left:20px;position:relative;border-left:1px solid transparent"><span style="position:absolute;left:-6px;top:3px;width:11px;height:11px;border-radius:6px;border:1px solid #7c2513;background:#edf0da;box-sizing:border-box"></span><span><span class="disp" style="display:block;font-size:20px">Entrega</span><span style="font-size:12px;color:#4a4b42;line-height:1.5">Recogida en el obrador o [entrega en el lugar].</span></span></li>
+        </ol>
+      </div>
+      <p class="cap">Estos cuatro pasos van en la ficha, bajo el botón, para que «presupuesto» no suene a compromiso ni a espera indefinida.</p>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

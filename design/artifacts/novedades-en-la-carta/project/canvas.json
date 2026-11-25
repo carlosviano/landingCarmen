@@ -1,0 +1,19 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-11-25T14:40:00Z" },
+  "title": "Novedades en la carta",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1280, "h": 1960, "title": "A + B · /catalogo, escritorio", "expand": "fill", "is_interactive": true },
+    "Movil.dc.html": { "x": 1360, "y": 0, "w": 430, "h": 2240, "title": "A + B · /catalogo, móvil (430)" },
+    "Portada.dc.html": { "x": 1870, "y": 0, "w": 1280, "h": 1240, "title": "C + D · portada y ficha" }
+  },
+  "order": ["Main.dc.html", "Movil.dc.html", "Portada.dc.html"],
+  "notes": {
+    "titulo": { "x": 0, "y": -320, "text": "Novedades: Pavlova de mango + [Nueva tarta]", "kind": "title1", "maxW": 3150 },
+    "propuesta": { "x": 3230, "y": 0, "w": 420, "size": "m", "fill": "orange", "text": "Propuesta (usa solo la paleta y los papeles de global.css)\n\nA · Sello «Nueva» en la tarjeta de la carta. Va en la foto, no como segundo titular (la tarjeta mantiene UN título). Tres variantes en Tweaks: pastilla rust, pastilla sand o leyenda sobre el nombre.\n\nB · Franja «Novedades» en /catalogo, entre la entradilla y la rejilla: las dos nuevas en tarjeta horizontal (la de TarjetaEscaparate).\n\nC · Aviso en la franja del hero de la portada (slot=\"franja\" de Hero.astro), enlazando a las dos fichas.\n\nD · Antetítulo «Nueva en la carta» en la ficha.\n\nRecomendado: A + B siempre; C solo mientras dure el lanzamiento.\n\nUn dato `nueva: true` (o `nuevaHasta: fecha`) en catalogo.ts enciende A, B, C y D a la vez; sin él, todo desaparece solo." },
+    "fotos": { "x": 3230, "y": 620, "w": 420, "size": "s", "fill": "gray", "text": "Fotos: la pavlova de mango usa el recorte de la de melocotón como sustituto, y la [Nueva tarta] el marco de «foto pendiente». Nombre, descripción y precio de la nueva son huecos a rellenar." }
+  },
+  "designSystems": []
+}

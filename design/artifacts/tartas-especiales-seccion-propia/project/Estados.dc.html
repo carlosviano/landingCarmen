@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Casos límite de la galería</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&amp;family=Karla:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7c2513}a:hover{color:#561a0d}
+.disp{font-family:'Cormorant Garamond',Georgia,serif}
+.ley{font-family:Karla,sans-serif;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase}
+.vis{height:260px;border-radius:20px;background:#f6f7ea;border:1px solid #d7d9c6;box-sizing:border-box;padding:20px;display:flex;align-items:center;justify-content:center;gap:12px}
+.ph{background:#e3e4d0;border-radius:12px;overflow:hidden}
+.t{margin:18px 0 0;font-size:24px;font-weight:400;line-height:1.1}
+ul.r{margin:10px 0 0;padding-left:18px;font-size:13px;line-height:1.6;color:#33342c}
+</style>
+</helmet>
+<div style="width:1440px;height:1180px;box-sizing:border-box;padding:52px 56px;background:#edf0da;font-family:Karla,sans-serif;color:#141410">
+  <span class="ley" style="color:#7c2513">Galería</span>
+  <h2 class="disp" style="margin:8px 0 0;font-weight:400;font-size:42px;line-height:1">Casos límite</h2>
+
+  <div style="margin-top:36px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:32px;row-gap:44px">
+
+    <div>
+      <div class="vis">
+        <div class="ph" style="width:168px;height:210px"><img src="/_blob/bf6e10e7416e6e27c1acb31ef3c9392b" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+      </div>
+      <h3 class="disp t">1 foto</h3>
+      <ul class="r">
+        <li>Sin miniaturas, flechas, puntos ni contador. Solo «ampliar».</li>
+        <li>En la tarjeta, sin píldora de contador.</li>
+        <li>Si esa foto es un recorte, se pinta centrada como las de la carta.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="vis">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="ph" style="width:34px;height:42px;border-radius:5px;box-shadow:0 0 0 2px #f6f7ea,0 0 0 3px #7c2513"><img src="/_blob/f95055443cf48bc906c623071e991076" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <div class="ph" style="width:34px;height:42px;border-radius:5px"><img src="/_blob/688be946245bea8810fdc99a284b5d6d" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <div class="ph" style="width:34px;height:42px;border-radius:5px"><img src="/_blob/735c55f37d8a32a529bb613e00ad7ff1" alt="" style="width:100%;height:100%;object-fit:cover;object-position:30% 50%"></div>
+          <div class="ph" style="width:34px;height:42px;border-radius:5px"><img src="/_blob/28402a7b58e2ffa1fc5676cd9878be18" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+        </div>
+        <div class="ph" style="width:168px;height:210px"><img src="/_blob/f95055443cf48bc906c623071e991076" alt="" style="width:100%;height:100%;object-fit:cover;object-position:50% 55%"></div>
+      </div>
+      <h3 class="disp t">De 2 a 6 fotos</h3>
+      <ul class="r">
+        <li>El caso normal: todas las miniaturas visibles en la columna.</li>
+        <li>Móvil: un punto por foto, el activo alargado en rust.</li>
+        <li>Las flechas no dan la vuelta en móvil (el swipe se para al final); en escritorio sí.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="vis">
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div class="ph" style="width:34px;height:42px;border-radius:5px;box-shadow:0 0 0 2px #f6f7ea,0 0 0 3px #7c2513"><img src="/_blob/f95055443cf48bc906c623071e991076" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <div class="ph" style="width:34px;height:42px;border-radius:5px"><img src="/_blob/688be946245bea8810fdc99a284b5d6d" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <div class="ph" style="width:34px;height:42px;border-radius:5px"><img src="/_blob/735c55f37d8a32a529bb613e00ad7ff1" alt="" style="width:100%;height:100%;object-fit:cover;object-position:30% 50%"></div>
+          <div style="position:relative;width:34px;height:42px;border-radius:5px;overflow:hidden"><img src="/_blob/28402a7b58e2ffa1fc5676cd9878be18" alt="" style="width:100%;height:100%;object-fit:cover"><span style="position:absolute;inset:0;background:rgba(124,37,19,.82);color:#edf0da;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center">+11</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+          <div class="ph" style="width:168px;height:210px"><img src="/_blob/688be946245bea8810fdc99a284b5d6d" alt="" style="width:100%;height:100%;object-fit:cover"></div>
+          <span aria-hidden="true" style="display:flex;gap:5px;align-items:center">
+            <span style="width:4px;height:4px;border-radius:2px;background:#a89b8c"></span>
+            <span style="width:6px;height:6px;border-radius:3px;background:#a89b8c"></span>
+            <span style="width:18px;height:6px;border-radius:3px;background:#7c2513"></span>
+            <span style="width:6px;height:6px;border-radius:3px;background:#a89b8c"></span>
+            <span style="width:4px;height:4px;border-radius:2px;background:#a89b8c"></span>
+          </span>
+        </div>
+      </div>
+      <h3 class="disp t">15 fotos</h3>
+      <ul class="r">
+        <li>Columna con 4 miniaturas + «+11», que abre el lightbox.</li>
+        <li>Móvil: como mucho 5 puntos; los de los extremos encogen para decir «hay más». El contador «2 / 15» manda.</li>
+        <li>Tope recomendado: 12 en la ficha (límite en el CMS). Más fotos no venden más; cansan.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="vis">
+        <div class="ph" style="position:relative;width:168px;height:210px">
+          <img src="/_blob/f95055443cf48bc906c623071e991076" alt="" style="width:100%;height:100%;object-fit:cover;filter:blur(14px);transform:scale(1.15);opacity:.85">
+        </div>
+        <div class="ph" style="width:168px;height:210px"></div>
+      </div>
+      <h3 class="disp t">Cargando y conexión lenta</h3>
+      <ul class="r">
+        <li>Primero el fondo de pieza (#e3e4d0) con el 4:5 reservado: nada salta.</li>
+        <li>Encima, una miniatura de 20 px desenfocada; la foto buena entra con fundido.</li>
+        <li>Solo la foto 1 con prioridad; el resto <code>loading="lazy"</code>. AVIF/WebP con el &lt;Picture&gt; de Astro, miniaturas de 160 px.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="vis">
+        <div class="ph" style="width:168px;height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+          <span class="disp" style="font-size:24px;color:#7c2513">Bodas</span>
+          <span class="ley" style="font-size:9px;color:#4a4b42;letter-spacing:.22em">Foto en camino</span>
+        </div>
+      </div>
+      <h3 class="disp t">Foto rota o sin foto</h3>
+      <ul class="r">
+        <li>Nunca el icono roto del navegador: el marco con el nombre en serif.</li>
+        <li>Una personalizada sin ninguna foto no se publica (el CMS pide mínimo 1, recomienda 4).</li>
+        <li>Si falla una del carrusel, se salta y el contador se ajusta.</li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="vis" style="flex-direction:column;gap:14px">
+        <div style="display:flex;gap:10px;align-items:center">
+          <div class="ph" style="width:44px;height:55px;border-radius:6px;outline:2px solid #7c2513;outline-offset:3px"><img src="/_blob/735c55f37d8a32a529bb613e00ad7ff1" alt="" style="width:100%;height:100%;object-fit:cover;object-position:30% 50%"></div>
+          <span style="font-size:13px;color:#33342c">«Ver foto 3 de 6»</span>
+        </div>
+        <span style="font-size:12px;color:#4a4b42;text-align:center;line-height:1.5">aria-live: «Foto 3 de 6. Carmela pinta con<br>pincel una tarta rosa en el obrador.»</span>
+      </div>
+      <h3 class="disp t">Teclado, lector y sin JS</h3>
+      <ul class="r">
+        <li>Miniaturas y flechas son &lt;button&gt;; ← → con la galería enfocada; Esc cierra y devuelve el foco a «ampliar».</li>
+        <li>Alt describe la tarta («tres pisos con volantes de azúcar»), no «foto de tarta». Miniaturas alt="" porque el botón ya lleva nombre.</li>
+        <li>Sin JS: scroll-snap y miniaturas como enlaces #foto-n. Con reduced-motion, sin deslizamientos.</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "A-movil.dc.html": {
+      "h": 1260,
+      "title": "A · Etiqueta limpia — móvil",
+      "w": 430,
+      "x": 1360,
+      "y": 0
+    },
+    "B-escritorio.dc.html": {
+      "h": 1000,
+      "title": "B · Ficha de escaparate — escritorio",
+      "w": 1280,
+      "x": 0,
+      "y": 1500
+    },
+    "B-movil.dc.html": {
+      "h": 1180,
+      "title": "B · Ficha de escaparate — móvil",
+      "w": 430,
+      "x": 1360,
+      "y": 1500
+    },
+    "C-escritorio.dc.html": {
+      "h": 860,
+      "title": "C · Foto protagonista — escritorio",
+      "w": 1280,
+      "x": 0,
+      "y": 3000
+    },
+    "C-movil.dc.html": {
+      "h": 1040,
+      "title": "C · Foto protagonista — móvil",
+      "w": 430,
+      "x": 1360,
+      "y": 3000
+    },
+    "D-escritorio.dc.html": {
+      "h": 900,
+      "is_interactive": true,
+      "title": "D · Carta de diseños — escritorio",
+      "w": 1280,
+      "x": 0,
+      "y": 4500
+    },
+    "D-movil.dc.html": {
+      "h": 1240,
+      "title": "D · Carta de diseños — móvil",
+      "w": 430,
+      "x": 1360,
+      "y": 4500
+    },
+    "Main.dc.html": {
+      "h": 900,
+      "title": "A · Etiqueta limpia — escritorio",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-07T11:05:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "tA": {
+      "kind": "title1",
+      "maxW": 1790,
+      "text": "A · Etiqueta limpia: un botón por tarjeta y la foto dice cuántas hay",
+      "w": 240,
+      "x": 0,
+      "y": -280
+    },
+    "tB": {
+      "kind": "title1",
+      "maxW": 1790,
+      "text": "B · Ficha de escaparate: horizontal, con miniaturas a la vista",
+      "w": 240,
+      "x": 0,
+      "y": 1220
+    },
+    "tC": {
+      "kind": "title1",
+      "maxW": 1790,
+      "text": "C · Foto protagonista: el nombre sobre la foto y una sola acción",
+      "w": 240,
+      "x": 0,
+      "y": 2720
+    },
+    "tD": {
+      "kind": "title1",
+      "maxW": 1790,
+      "text": "D · Carta de diseños: la sección rediseñada (último recurso)",
+      "w": 240,
+      "x": 0,
+      "y": 4220
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "A-movil.dc.html",
+    "B-escritorio.dc.html",
+    "B-movil.dc.html",
+    "C-escritorio.dc.html",
+    "C-movil.dc.html",
+    "D-escritorio.dc.html",
+    "D-movil.dc.html"
+  ],
+  "pages": [],
+  "title": "Tarjeta tarta personalizada"
+}

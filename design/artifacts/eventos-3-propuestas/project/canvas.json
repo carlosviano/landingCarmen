@@ -1,0 +1,55 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "B-Mosaico.dc.html": {
+      "expand": "fill",
+      "h": 5000,
+      "title": "B · Mosaico",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "C-Inmersivo.dc.html": {
+      "expand": "fill",
+      "h": 5200,
+      "title": "C · Foto a sangre",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 4700,
+      "title": "A · Editorial partido",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-01T14:55:11Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "t1": {
+      "kind": "title1",
+      "maxW": 4480,
+      "text": "/eventos — tres cabeceras y un formulario de solicitud",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "B-Mosaico.dc.html",
+    "C-Inmersivo.dc.html"
+  ],
+  "pages": [],
+  "title": "Eventos · 3 propuestas"
+}

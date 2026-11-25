@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Notas de la propuesta</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600&amp;family=Playfair+Display:wght@400&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#edf0da}
+.disp{font-family:'Playfair Display',Georgia,serif;font-weight:400;letter-spacing:-.005em}
+.ante{font-size:12px;line-height:16px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:#7c2513}
+.ley{font-size:10px;line-height:1.4;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,0,0,.55)}
+p,li{font-size:15px;line-height:1.6}
+code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:rgba(168,155,140,.18);padding:1px 5px;border-radius:4px}
+ul,ol{margin:8px 0 0;padding-left:20px}
+li{margin:6px 0}
+.card{background:#fff;border-radius:24px;padding:36px 40px;box-shadow:0 0 0 1px rgba(168,155,140,.25),0 20px 25px -5px rgba(0,0,0,.05)}
+.fila{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 24px;margin-top:20px}
+.fila dt{margin:0}
+.fila dd{margin:0}
+</style>
+</helmet>
+<div style="width: 1100px; box-sizing: border-box; padding: 64px; font-family: Karla, sans-serif; color: #000; background: #edf0da; display: flex; flex-direction: column; gap: 28px">
+
+<div>
+<p class="ante" style="margin: 0">Propuesta · home</p>
+<h1 class="disp" style="margin: 16px 0 0; font-size: 52px; line-height: 1.05; font-weight: 400">Tres cambios, con las piezas que ya tiene la web</h1>
+<p style="margin: 20px 0 0; max-width: 46rem; color: rgba(0,0,0,.75)">Ningún color, fuente ni efecto nuevo. Las secciones con marca azul discontinua cambian; las de chip gris se quedan como están. En el lienzo, The Seasons está sustituida por Playfair Display porque el kit de Adobe no carga aquí: en la web real todo sale en The Seasons. Las marcas se apagan con el ajuste «marcas» de cada tablero.</p>
+</div>
+
+<div class="card">
+<p class="ante" style="margin: 0">Cambio 1</p>
+<h2 class="disp" style="margin: 10px 0 0; font-size: 32px; font-weight: 400">Catálogo → dos entradas: La carta y Personalizadas</h2>
+<dl class="fila">
+<dt class="ley">Cómo queda</dt><dd><p style="margin: 0">El mismo díptico a sangre, dos mitades sin canal y con las mismas alturas (288 / 320 / 544 / 700 px). Cada mitad pasa a ser una entrada, con su foto, el velo oscuro centrado y el botón de cristal que ya lleva hoy el díptico. Encima de cada botón, una línea en <code>leyenda</code>. Nada más de texto.</p></dd>
+<dt class="ley">Reutiliza</dt><dd><p style="margin: 0"><code>Catalogo.astro</code> tal cual: <code>grid md:grid-cols-2</code>, <code>h-72 sm:h-80 md:h-[34rem] lg:h-[43.75rem]</code>, la constante <code>VELO</code> y el botón <code>border-linen/90 bg-rust/70</code>. Lo único que se repite es el panel derecho, ahora en las dos mitades.</p></dd>
+<dt class="ley">Fotos</dt><dd><p style="margin: 0">Izquierda: <code>tarta_cumple_kika_2026.jpeg</code> (la pavlova entera que ya está). Derecha: <code>tarta-boda-nati.jpeg</code> (nueva en esta rama). El detalle de la pavlova sale de la home.</p></dd>
+<dt class="ley">Textos</dt><dd><p style="margin: 0">«Temporada · precio cerrado» → botón <b>La carta</b> (a /catalogo). «A medida · bodas, cumpleaños» → botón <b>Personalizadas</b> (a /tartas-personalizadas). El h2 oculto pasa a «Tartas por encargo». Cada mitad lleva su ancla: <code>#carta</code> y <code>#personalizadas</code>.</p></dd>
+<dt class="ley">Qué se pierde</dt><dd><p style="margin: 0">La idea de «una tarta partida en dos». Ahora son dos historias, así que no tiene sentido mantenerla. Sigue sin canal para que se lea como un bloque a sangre y para que lo que asoma bajo el hero siga siendo foto.</p></dd>
+</dl>
+</div>
+
+<div class="card">
+<p class="ante" style="margin: 0">Cambio 2</p>
+<h2 class="disp" style="margin: 10px 0 0; font-size: 32px; font-weight: 400">Eventos → solo montajes, un único destino</h2>
+<dl class="fila">
+<dt class="ley">Cómo queda</dt><dd><p style="margin: 0">El antetítulo, el titular y la entradilla no cambian. Debajo van 1, 2 o 3 fotos de montajes. Cada foto es un enlace a /eventos, y una sola píldora, «Ver todos los eventos», va sobre la primera. Debajo de cada foto, su pie en <code>dato</code>.</p></dd>
+<dt class="ley">Reutiliza</dt><dd><p style="margin: 0">La foto-enlace actual (<code>rounded-3xl ring-1 ring-taupe/40 shadow-md</code>, píldora rust <code>bottom-6</code>, zoom 1.03 al pasar por encima). En móvil, con 2 o 3 fotos, la tira deslizable de Galería (tarjetas al 78 % y 4:5) en vez de apilarlas: así la sección no pasa de una pantalla y media en un iPhone.</p></dd>
+<dt class="ley">Según las fotos</dt><dd><ul style="margin: 0"><li><b>1 foto</b> (lo que hay hoy): a todo el ancho, <code>aspect-[4/5] md:aspect-[2/1] lg:aspect-[3/1]</code>.</li><li><b>2 fotos</b>: la retícula de hoy, <code>md:grid-cols-2 lg:aspect-[3/2]</code>.</li><li><b>3 fotos</b>: <code>md:grid-cols-3 aspect-square</code>.</li></ul><p style="margin: 8px 0 0">En lg las tres opciones miden entre 395 y 411 px de alto, así que la sección se queda en unos 790 px y cabe en un portátil.</p></dd>
+<dt class="ley">Foto</dt><dd><p style="margin: 0"><code>mesa_cumple_nati.jpeg</code>, con encuadre 50% 62%. Ojo: es vertical (1200×1600), y a 3:1 solo se aprovecha una franja de 1200×400. A 1232 px de ancho se ve bien, pero va justa. En cuanto haya una foto horizontal de una mesa, va aquí.</p></dd>
+<dt class="ley">Datos</dt><dd><p style="margin: 0"><code>ESCAPARATE_EVENTOS</code> deja de ser <code>primero/segundo</code> y pasa a <code>fotos: {archivo, alt, pie, enfoque}[]</code> (entre 1 y 3), con un solo <code>cta</code>. Salen la pavlova y el botón de personalizadas.</p></dd>
+</dl>
+</div>
+
+<div class="card">
+<p class="ante" style="margin: 0">Cambio 3</p>
+<h2 class="disp" style="margin: 10px 0 0; font-size: 32px; font-weight: 400">Los tres servicios a la vista desde arriba</h2>
+<dl class="fila">
+<dt class="ley">Cómo queda</dt><dd><p style="margin: 0">En el hero, entre la entradilla y la nota del plazo, va una fila de tres enlaces subrayados: <b>LA CARTA · PERSONALIZADAS · EVENTOS</b>. La entradilla nombra los tres servicios. La composición no cambia: texto a la izquierda, foto a la derecha y la misma franja de credenciales. El bloque de texto crece unos 50 px dentro de su <code>min-h</code>, sin tocar el <code>calc()</code>.</p></dd>
+<dt class="ley">Reutiliza</dt><dd><p style="margin: 0">El enlace secundario de Contacto (<code>border-b pb-1 accion text-xs</code>), en la versión que pide <code>global.css</code> para las bandas rust: texto <code>text-linen</code> y borde <code>border-linen/45</code>. Al pasar por encima, el borde se pone en linen pleno.</p></dd>
+<dt class="ley">Por qué anclas</dt><dd><p style="margin: 0">Llevan a <code>#carta</code>, <code>#personalizadas</code> y <code>#eventos</code> de la propia home. No son botones y no sacan a nadie de la portada, que es la regla de la clienta para el hero.</p></dd>
+<dt class="ley">Texto</dt><dd><p style="margin: 0">«Tartas de temporada, tartas a tu medida y mesas dulces para tus celebraciones. Cada pieza se hace una a una, para el día concreto que celebras.»</p></dd>
+<dt class="ley">Menú</dt><dd><p style="margin: 0">La carta · Personalizadas · Eventos · Sobre mí · Contacto. Propongo cambiar «Catálogo» por «La carta» y ordenar el menú como las secciones de la página. El pie y el panel móvil leen <code>NAV</code>, así que se actualizan solos.</p></dd>
+<dt class="ley">Foto del hero</dt><dd><p style="margin: 0">Propongo cambiarla a <code>trabajando2.jpeg</code> (obrador). Hoy el hero usa la mesa dulce, que es la única foto de evento, y Eventos la repetiría justo debajo. El propio <code>Hero.astro</code> ya avisa de esto.</p></dd>
+<dt class="ley">Descartado</dt><dd><p style="margin: 0">Usar la franja de credenciales. Es la prueba de lo que dice el titular (así lo explica <code>site.ts</code>), y en lg sus 80 px de alto dan justo para los cuatro nombres. Meter los servicios ahí obliga a quitar las credenciales o a convertirla en un segundo menú.</p></dd>
+<dt class="ley">Pliegue</dt><dd><p style="margin: 0">En un iPhone (844 px de alto), entre la cabecera y el texto del hero suman unos 570 px, así que los tres enlaces quedan por encima del pliegue. En portátil caben de sobra.</p></dd>
+</dl>
+</div>
+
+<div class="card">
+<p class="ante" style="margin: 0">Orden de las secciones</p>
+<h2 class="disp" style="margin: 10px 0 0; font-size: 32px; font-weight: 400">Propongo dejarlo como está</h2>
+<p style="margin: 16px 0 0">Hero → Tartas (carta y personalizadas) → Eventos → Sobre mí → Galería → Contacto.</p>
+<ul>
+<li>El díptico a sangre es lo que asoma bajo el hero, y el <code>17.25rem</code> del hero cuenta con eso. Si se pusiera Eventos ahí, asomaría linen vacío.</li>
+<li>Las tartas son el pedido más frecuente y el más directo. Eventos necesita presupuesto, así que va después.</li>
+<li>El ritmo se mantiene: rust / foto a sangre / linen / rust / linen / tarjeta blanca / rust. Bajar Eventos por debajo de Sobre mí juntaría dos secciones linen con fotos redondeadas (Eventos y Galería).</li>
+<li>No hace falta subir Personalizadas: ya está a la misma altura que La carta.</li>
+</ul>
+</div>
+
+<div class="card">
+<p class="ante" style="margin: 0">Incoherencias</p>
+<h2 class="disp" style="margin: 10px 0 0; font-size: 32px; font-weight: 400">Entre servicios, menú y secciones</h2>
+<ol>
+<li><b>Cinco nombres para lo mismo</b>: «Catálogo» en el menú, «La carta» en el título de /catalogo, «Nuestra carta» en el antetítulo, «Ver la carta» en el botón y «Tartas de temporada» en el h2 oculto. Propongo «La carta» en todas partes; la URL /catalogo puede quedarse.</li>
+<li>El orden del menú (Eventos primero) no es el de la página (Catálogo primero).</li>
+<li><b>La pavlova no está en la carta.</b> La carta solo tiene Limón y merengue, y de esa tarta no hay foto con fondo, solo el PNG recortado, que no aguanta un <code>object-cover</code>. El panel «La carta» enseña una tarta que no se puede pedir. Hace falta una foto con fondo de una tarta de la carta.</li>
+<li>/eventos presenta dos pavlovas y un emplatado como «montajes». Es lo mismo que arreglamos en la home. Queda fuera de este encargo, pero conviene revisarlo.</li>
+<li>La entradilla de Eventos dice «Mesas dulces, tartas y postres». La mantengo como pides, pero «tartas» es justo lo que sacamos de la sección. Alternativa: «Mesas dulces y postres para el día que celebras…».</li>
+<li>/tartas-personalizadas todavía no existe (está como TODO en <code>site.ts</code>). Hasta que exista, el botón lleva a un 404.</li>
+<li>Paleta: el encargo habla de cuatro colores sin sand, pero la web usa sand (#f0dfad) para el texto de la cabecera y el pie. Lo dejo donde está y no lo uso en nada nuevo.</li>
+<li>La mesa dulce sale en el hero, en Eventos, en Galería y en /eventos. La pavlova, en el díptico, en Galería y en /eventos.</li>
+<li>El trato cambia: «Sobre mí» va en primera persona y «Encuéntranos» en plural (ya está anotado en <code>site.ts</code>).</li>
+</ol>
+</div>
+
+<div class="card">
+<p class="ante" style="margin: 0">Recursos que no existen hoy</p>
+<h2 class="disp" style="margin: 10px 0 0; font-size: 32px; font-weight: 400">Ninguno de estilo</h2>
+<ul>
+<li>Dos ids de ancla en el díptico.</li>
+<li>El enlace subrayado en linen sobre rust. Es la regla de color de <code>global.css</code> aplicada a una pieza que ya existe, no un estilo nuevo.</li>
+<li>En Eventos, que el número de columnas dependa de cuántas fotos haya. Es lógica, no estilo.</li>
+<li>La tira de Galería dentro de Eventos en móvil. Para no duplicar el script, el carrusel tendría que pasar a ser un componente.</li>
+</ul>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1100,"height":4400}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

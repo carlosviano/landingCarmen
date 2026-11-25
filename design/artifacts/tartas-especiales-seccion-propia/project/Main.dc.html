@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>La carta · Personalizadas · escritorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&amp;family=Karla:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#7c2513}a:hover{color:#561a0d}
+.disp{font-family:'Cormorant Garamond',Georgia,serif}
+.ante{font-family:Karla,sans-serif;font-size:12px;font-weight:600;letter-spacing:.25em;text-transform:uppercase}
+.acc{font-family:Karla,sans-serif;font-weight:500;letter-spacing:.1em;text-transform:uppercase}
+.card{text-decoration:none;color:#141410;display:flex;flex-direction:column;gap:14px}
+.card:focus-visible{outline:2px solid #7c2513;outline-offset:6px;border-radius:24px}
+.navl{color:rgba(240,223,173,.85);text-decoration:none}
+.navl:hover{color:#f0dfad}
+</style>
+</helmet>
+<div style="width:1440px;height:1240px;background:#edf0da;font-family:Karla,sans-serif;color:#141410;display:flex;flex-direction:column">
+  <header style="background:#7c2513;height:56px;flex-shrink:0;display:flex;align-items:center">
+    <div style="width:1232px;margin:0 auto;display:flex;align-items:center;justify-content:space-between">
+      <span class="disp" style="font-size:26px;color:#f0dfad;letter-spacing:-.005em">Estimada Carmela</span>
+      <nav aria-label="Principal" style="display:flex;gap:32px;align-items:center;font-size:12px">
+        <a class="navl acc" href="#">La carta</a>
+        <a class="navl acc" href="#" aria-current="page" style="color:#f0dfad">Personalizadas</a>
+        <a class="navl acc" href="#">Eventos</a>
+        <a class="navl acc" href="#">Sobre mí</a>
+        <a class="navl acc" href="#">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main style="width:1232px;margin:0 auto;display:flex;flex-direction:column;align-items:center;padding-top:84px">
+    <p class="ante" style="margin:0;color:#7c2513">Nuestra carta</p>
+    <h1 class="disp" style="margin:18px 0 0;font-weight:300;font-size:64px;line-height:1;letter-spacing:-.015em">La carta</h1>
+    <p style="margin:26px 0 0;max-width:520px;text-align:center;font-size:15px;line-height:1.7;color:#4a4b42">Todas por encargo. El tamaño, la conservación y la antelación de cada una están en su ficha.</p>
+
+    <div role="tablist" aria-label="Tipo de tarta" style="margin-top:48px;width:100%;border-top:1px solid #c9cbb8;display:flex;justify-content:center;gap:24px">
+      <button role="tab" aria-selected="false" style="all:unset;cursor:pointer;padding:22px 24px 0;border-top:2px solid transparent;margin-top:-1px;font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#4a4b42">De la carta <span style="margin-left:8px;color:#8b8c7f">4</span></button>
+      <button role="tab" aria-selected="true" style="all:unset;cursor:pointer;padding:22px 24px 0;border-top:2px solid #7c2513;margin-top:-1px;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#7c2513">Personalizadas <span style="margin-left:8px;color:#7c2513;opacity:.7">4</span></button>
+    </div>
+
+    <ol aria-label="Cómo funciona" style="list-style:none;margin:40px 0 0;padding:0;display:flex;gap:40px;align-items:center;font-size:13px;color:#4a4b42">
+      <li style="display:flex;gap:10px;align-items:baseline"><span class="disp" style="font-size:22px;color:#7c2513">1</span>Eliges un punto de partida</li>
+      <li aria-hidden="true" style="width:32px;height:1px;background:#c9cbb8"></li>
+      <li style="display:flex;gap:10px;align-items:baseline"><span class="disp" style="font-size:22px;color:#7c2513">2</span>Me cuentas tu idea y tu fecha</li>
+      <li aria-hidden="true" style="width:32px;height:1px;background:#c9cbb8"></li>
+      <li style="display:flex;gap:10px;align-items:baseline"><span class="disp" style="font-size:22px;color:#7c2513">3</span>Te paso presupuesto en [24–48 h]</li>
+    </ol>
+
+    <div style="margin-top:44px;width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px">
+      <sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+        <a class="card" href="FichaEscritorio.dc.html" onMouseEnter="{{c.enter}}" onMouseLeave="{{c.leave}}">
+          <div style="position:relative;aspect-ratio:4/5;border-radius:24px;overflow:hidden;background:#e3e4d0">
+            <img src="{{c.src}}" alt="{{c.alt}}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:{{c.pos}};transition:opacity .35s">
+            <span style="position:absolute;left:12px;bottom:12px;display:flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:13px;background:rgba(237,240,218,.92);font-size:11px;font-weight:500;letter-spacing:.06em;color:#141410">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="14" height="14" rx="2"></rect><path d="M7 3h12a2 2 0 0 1 2 2v12"></path></svg>
+              <span>{{c.count}}</span><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">fotos</span>
+            </span>
+            <sc-if value="{{c.hover}}" hint-placeholder-val="{{false}}">
+              <span aria-hidden="true" style="position:absolute;right:14px;bottom:20px;display:flex;gap:5px">
+                <span style="width:6px;height:6px;border-radius:3px;background:rgba(237,240,218,.55)"></span>
+                <span style="width:6px;height:6px;border-radius:3px;background:#edf0da"></span>
+                <span style="width:6px;height:6px;border-radius:3px;background:rgba(237,240,218,.55)"></span>
+              </span>
+            </sc-if>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:14px;padding-top:4px">
+            <span style="font-size:9px;letter-spacing:.2em;color:#8b8c7f">{{c.num}}</span>
+            <span class="disp" style="font-size:26px;line-height:1.1">{{c.name}}</span>
+          </div>
+          <div style="height:1px;background:#c9cbb8"></div>
+          <div style="display:flex;justify-content:space-between;font-size:11px">
+            <span style="color:#4a4b42">{{c.meta}}</span>
+            <span style="color:#7c2513;font-weight:500;font-size:13px">a presupuesto</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+
+    <a href="Presupuesto.dc.html" style="margin-top:56px;width:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;padding:28px 0;border-top:1px solid #c9cbb8;border-bottom:1px solid #c9cbb8;text-decoration:none;color:#141410">
+      <span style="display:flex;align-items:baseline;gap:20px">
+        <span class="disp" style="font-size:30px">¿Ninguna se parece a lo que tienes en mente?</span>
+        <span style="font-size:14px;color:#4a4b42">Cuéntamelo desde cero: tema, fecha y personas.</span>
+      </span>
+      <span class="acc" style="font-size:12px;display:inline-flex;align-items:center;height:46px;padding:0 26px;border-radius:23px;border:1px solid #7c2513;color:#7c2513">Contar mi idea</span>
+    </a>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1240}}'>
+class Component extends DCLogic {
+  constructor(p){ super(p); this.state = { hov: null }; }
+  renderVals() {
+    const base = [
+      { id: 'bodas', num: '01', name: 'Bodas', meta: '20–150 personas', count: 6, a: '/_blob/f95055443cf48bc906c623071e991076', b: '/_blob/688be946245bea8810fdc99a284b5d6d', pos: '50% 55%', alt: 'Tarta de boda de varios pisos cubierta de volantes blancos de azúcar.' },
+      { id: 'cumple', num: '02', name: 'Cumpleaños', meta: '8–40 personas', count: 4, a: '/_blob/bf6e10e7416e6e27c1acb31ef3c9392b', b: '/_blob/f60519b861855210078375f771be07e2', pos: '50% 50%', alt: 'Pavlova con melocotón asado sobre base dorada, vista desde arriba.' },
+      { id: 'pintadas', num: '03', name: 'Pintadas a mano', meta: '6–30 personas', count: 3, a: '/_blob/735c55f37d8a32a529bb613e00ad7ff1', b: '/_blob/735c55f37d8a32a529bb613e00ad7ff1', pos: '32% 50%', alt: 'Carmela pintando con pincel una tarta rosa con cobertura de fresa.' },
+      { id: 'mesas', num: '04', name: 'Mesas dulces', meta: '30–200 personas', count: 8, a: '/_blob/28402a7b58e2ffa1fc5676cd9878be18', b: '/_blob/28402a7b58e2ffa1fc5676cd9878be18', pos: '50% 60%', alt: 'Mesa de postres individuales entre flores silvestres y musgo.' }
+    ];
+    const cards = base.map((c) => ({
+      ...c,
+      hover: this.state.hov === c.id,
+      src: this.state.hov === c.id ? c.b : c.a,
+      enter: () => this.setState({ hov: c.id }),
+      leave: () => this.setState({ hov: null })
+    }));
+    return { cards };
+  }
+}
+</script>
+</body>
+</html>
